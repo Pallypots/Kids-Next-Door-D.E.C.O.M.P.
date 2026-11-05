@@ -8,13 +8,11 @@
 #include <cstring>
 #include <vector>
 
-// The executable is linked at 0x00010000 with a large executable section, so nearly the whole address range of the XBE
-// belongs to this image from process creation, before any stack or heap exists (CMakeLists.txt). The harness's own
-// code occupies the start of that range, so original code below the section is unavailable: the code under test starts
-// at 0x00075000, and map_image refuses to run if the section does not cover what is needed.
-static const uint32_t kNeedLow = 0x00070000, kNeedHigh = 0x003B4000;
-#pragma section(".aorig", read, execute)
-__declspec(allocate(".aorig")) static unsigned char g_low[0x003A0000] = {1};
+// The executable is linked at 0x00010000, and tests/oracle/reserve.asm reserves the XBE's whole address range ahead of
+// all compiled code, so that range belongs to this image from process creation, before any stack or heap exists.
+// map_image refuses to run if the reservation does not cover what is needed.
+static const uint32_t kNeedLow = 0x00011000, kNeedHigh = 0x003B4000, kReserved = 0x003EF000;
+extern "C" unsigned char g_low[kReserved];
 
 static bool map_image(const char* path) {
     FILE* f = std::fopen(path, "rb");
@@ -28,12 +26,12 @@ static bool map_image(const char* path) {
     if (n < 0x178 || std::memcmp(d.data(), "XBEH", 4) != 0) { std::printf("not an XBE\n"); return false; }
     const uint32_t base = *(uint32_t*)&d[0x104], nsec = *(uint32_t*)&d[0x11C], sec = *(uint32_t*)&d[0x120] - base;
     if (sec + (uint64_t)nsec * 0x38 > (uint64_t)n) { std::printf("bad section table\n"); return false; }
-    const uint32_t low = (uint32_t)(uintptr_t)g_low, high = low + (uint32_t)sizeof g_low;
+    const uint32_t low = (uint32_t)(uintptr_t)g_low, high = low + kReserved;
     if (low > kNeedLow || high < kNeedHigh) {
         std::printf("harness link error: section covers 0x%08X-0x%08X\n", low, high);
         return false;
     }
-    std::memset(g_low, 0, sizeof g_low);
+    std::memset(g_low, 0, kReserved);
     for (uint32_t i = 0; i < nsec; i++) {
         const uint8_t* h = &d[sec + i * 0x38];
         const uint32_t va = *(uint32_t*)(h + 4), raw = *(uint32_t*)(h + 12), rsize = *(uint32_t*)(h + 16);

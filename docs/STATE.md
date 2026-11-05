@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 3 (JAM directory reader). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 4 (JAM file objects and header lifecycle). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,25 +14,27 @@ Last updated: 2026-11-05, dev cycle 3 (JAM directory reader). Per-function resul
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 76 functions and 10 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 110 functions and 17 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
-* `at/jam` (29 functions), **partial**: info header, name table, and the directory lookups of the FSTA, FSTR and JAM2 header
-  classes. Not recovered: `vInit`, listing, destructors, open-file objects, `AtIoJamFileSystem`. Those vftable slots are in
-  `src/at/AtIoJamPending.cpp`, where they stop with a diagnostic; that file is never recorded and never counts. For the same
-  reason the JAM header vftables are not checked yet, apart from the abstract base's pointer.
+* `at/jam` (63 functions), **partial**: info header, name table, directory lookups, header `vInit`, `Shutdown` and destructors for FSTA,
+  FSTR and JAM2, the base file class and both archive file classes, `OpenFile`, `CloseFile`. Given an open archive file and a
+  filled-in info header, this source loads a directory, opens files inside the archive and reads them. **Not recovered:**
+  `AtIoJamFileSystem`, which opens the archive and creates the header class, and directory listing (`AtIoDirectoryListing`, the two
+  `List` slots, which stop with a diagnostic in `src/at/AtIoJamPending.cpp`; that file is never recorded and never counts).
+  Host stand-ins for the heap and error helpers are in `platform/fatal.cpp`; those helpers are not recovered either.
 
 | Measure | Result |
 | --- | --- |
-| Relocation-aware match, host compiler only | see docs/PROGRESS.md (for `at/jam`, only the 7-byte base destructor) |
+| Relocation-aware match, host compiler only | see docs/PROGRESS.md (for `at/jam`, 8 small functions) |
 | Vftables matching by symbol | see docs/PROGRESS.md |
 | Match with original compiler | 0 (blocked) |
 | Behaviour vs. original code | see "Differential oracle" in docs/PROGRESS.md |
 
 State of each function: **Semantic-tested** (differential oracle plus host tests); those with a MATCH line in docs/PROGRESS.md
 are also a relocation-aware match under MSVC 19.44, which does **not** show which compiler shipped the game. The freeing path of
-deleting destructors is not run by the oracle. The game cannot load an archive from this source yet.
+deleting destructors is not run by the oracle. The game itself cannot run from this source yet.
 
 The JAM directory layout is also recovered as a format (docs/formats.md, tools/jam.py), validated against all 56 archives.
 
@@ -67,8 +69,9 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 * Original compiler = VC++ 7.1 with XDK 5849 (hypothesis; docs/toolchain.md).
 * Core units apparently built with `/GR-` and game units with `/GR` (inferred from locators; docs/toolchain.md).
-* JAM: meaning of info header +0x04; whether the two JAM2 record sizes can differ; FSTA alignment rule; the unread
-  byte in file entries. `FSTR` is implemented from code and has never met a real file.
+* JAM: meaning of info header +0x04; what the two JAM2 record sizes mean (Open bounds reads by the first, GetFileInfo reports the
+  second); FSTA alignment rule; the unread byte in file entries; `AtIoFile` slot 8, whose argument count is inferred.
+  `FSTR` is implemented from code and has never met a real file.
 * `GmSocket::m_context`: role unknown. `GmConnection`, `GmLinkedListNode` and all method names are inferred.
 * Static initialisers (0x00200ED0, 0x00203CD0) are compiler-generated and not recorded; `GmLinkedListIteratorOf<T>`
   (vftable 0x0027BCF0) is not recorded.
@@ -79,10 +82,10 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. Recover the open-file object (0xA8 bytes, 0x000827E0 and 0x00082DA0 families) and `OpenFile`/`CloseFile`, then `vInit` and the
-   destructors of both header classes, then `AtIoJamFileSystem`. `vInit` allocates through the game's heap helpers at
-   0x000111F0, 0x00011240 and 0x00011260, which sit in the part of the address range the oracle cannot map today (the harness's
-   own code is there), so the harness needs a way to serve those calls first.
-2. Finish the sorted container at 0x000761B0-0x00076600.
+1. Recover `AtIoJamFileSystem`: `vInit` 0x0007D770, the rest of its class, then the code at 0x00076640-0x00076BF0 that builds
+   `JamFiles\XBox\%s%s.JAM` paths. It reaches out to a device layer (0x00019300 and the object at 0x002C62F0), so the first step is to
+   read how far that goes. After that, one end-to-end host test: open a real archive through recovered source and read a file.
+2. `AtIoDirectoryListing` and the two `List` slots.
+3. Finish the sorted container at 0x000761B0-0x00076600.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

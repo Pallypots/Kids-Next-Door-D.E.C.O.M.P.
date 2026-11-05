@@ -21,6 +21,15 @@ AtIoJamNameTable::~AtIoJamNameTable() {
     m_extensionCount = 0;
 }
 
+void AtIoJamNameTable::Clear() {
+    m_names = 0;
+    m_extensions = 0;
+    m_unknown08 = -1;
+    m_unknown0C = -1;
+    m_nameCount = 0;
+    m_extensionCount = 0;
+}
+
 void AtIoJamNameTable::Init(const char* names, unsigned int nameCount, unsigned int extensionCount) {
     if (m_names) {
         m_names = 0;

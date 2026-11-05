@@ -72,7 +72,9 @@ File entries differ by class:
 | JAM2 | 8 | u16 name index, u8 extension index, 1 byte, u32 record offset |
 
 A JAM2 record starts on a 0x20 boundary: u32 size, u32 size (equal in all 21 archives; whether they can differ, for
-example for compressed data, is unknown; `GetFileInfo` 0x00080BA0 reads the second), padding to 0x20, then the data. The next record starts at the next 0x20
+example for compressed data, is unknown), padding to 0x20, then the data. The game treats them differently: `AtIoFastJamFile::Open`
+0x00082DD0 uses the first as the size that bounds reads and keeps the second separately, while `GetFileInfo` 0x00080BA0 reports the
+second. The next record starts at the next 0x20
 boundary. FSTA data has no such prefix; alignment rules there have not been established.
 
 Lookup, recovered as source in `src/at/` and compared with the original (docs/verification.md): the requested path is folded

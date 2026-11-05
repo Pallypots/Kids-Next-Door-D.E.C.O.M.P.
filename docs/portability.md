@@ -14,6 +14,9 @@ Applied from the first recovered unit:
   null current node; `At()` with an empty list and index <= 0 dereferences null). A port-time hardening must be an
   explicit, separately tested change, never a silent "fix" in recovered source. Also preserved:
   `GmLinkedList::Append` does not check `Allocate`, so more than 4000 live list memberships writes through null.
+  In the JAM reader: paths go into fixed buffers unchecked, `AtIoFastAlignedJamFile::Seek` adds the current position when it
+  moves the archive file (harmless to reads, which seek for themselves), and a read failure in `vInit` reports through `AtFatal`
+  and parses what is there if that returns. `platform/fatal.cpp` stops, so a host build does not reach that last path.
   Static capacity limits of this kind (4000 list nodes; 2200 entries in the sorted container's pool, 0x000763B0) are
   candidates for a port-time diagnostic.
 * ARM64 compile tests should start as soon as there is more than containers code (alignment, intrinsics).

@@ -70,7 +70,7 @@ template <class H>
 static void prepare(H& h, const std::vector<unsigned char>& v, unsigned names, unsigned exts) {
     h.m_table.Init((const char*)v.data() + 0x20, names, exts);
     const unsigned char* root = v.data() + 0x20 + 4 * (exts + 2 * names);
-    h.m_buffer = v.data();
+    h.m_buffer = const_cast<unsigned char*>(v.data());
     h.m_rootDirs = root[0] + (root[1] << 8);
     h.m_rootFiles = root[2] + (root[3] << 8);
     h.m_root = root + 4;
@@ -191,31 +191,107 @@ public:
 class MemoryFile : public AtIoFile {
 public:
     std::vector<unsigned char> data;
-    unsigned position = 0;
     int read_result = 0;
     bool seek_fails = false;
     int releases = 0;
     MemoryRequest request;
-    void Unknown0() override {}
-    void Unknown1() override {}
-    void Unknown2() override {}
-    void Unknown3() override {}
-    int Seek(unsigned offset) override { position = offset; return seek_fails || offset >= data.size() ? 1 : 0; }
-    int Read(void* out, unsigned size, int, AtIoFileRequest** req) override {
+    int Close() override { return 0; }
+    int Open(const char*, const char*, int) override { return 0; }
+    void Clear() override {}
+    int Seek(unsigned offset) override { m_position = offset; return seek_fails || offset >= data.size() ? 1 : 0; }
+    int Read(void* out, unsigned size, unsigned* done, AtIoFileRequest** req) override {
         if (read_result != 0 && read_result != kPending) return read_result;
-        std::memcpy(out, data.data() + position, size);
-        *req = &request;
+        std::memcpy(out, data.data() + m_position, size);
+        m_position += size;
+        if (done) *done = size;
+        if (req) *req = &request;
         return read_result;
     }
-    void Unknown6() override {}
-    void Unknown7() override {}
-    void Unknown8() override {}
-    void Release(AtIoFileRequest*) override { releases++; }
+    int Write(const void*, unsigned, unsigned*) override { return kUnsupported; }
+    int Flush() override { return kUnsupported; }
+    int Unknown8(void*) override { return 0; }
+    int Release(AtIoFileRequest*) override { releases++; return 0; }
 };
+
+static AtIoJamFileSystem* make_fs(MemoryFile* file, const std::vector<unsigned char>& v, unsigned max_open) {
+    AtIoJamFileSystem* fs = new AtIoJamFileSystem;
+    std::memset(static_cast<void*>(fs), 0, sizeof *fs);
+    fs->m_info.Init((const char*)v.data());
+    fs->m_maxOpen = max_open;
+    fs->m_file = file;
+    fs->m_overrideFile = nullptr;
+    return fs;
+}
+
+// Header loaded through vInit from a file, then files opened, read, sought and closed through OpenFile.
+template <class Header>
+static void test_loaded_archive(const char* token, bool jam2) {
+    auto v = build(token, jam2);
+    MemoryFile disc;
+    disc.data = v;
+    disc.data.resize(0x5000, 0);
+    unsigned char* data = disc.data.data();
+    for (int k = 0; k < 0x40; k++) data[0x1000 + (jam2 ? 0x20 : 0) + k] = (unsigned char)(k + 1);
+    if (jam2) {
+        data[0x1000] = 11;  // record: first size, second size
+        data[0x1004] = 99;
+    }
+    Header::SetHeap(&disc);
+    Header& h = *new Header;
+    AtIoJamFileSystem* fs = make_fs(&disc, v, 2);
+    h.vInit(fs);
+    CHECK(h.m_fs == fs);
+    CHECK(h.m_rootDirs == 1 && h.m_rootFiles == 2);
+    CHECK(h.IsDirectoryMissing("ART") == 0);
+    CHECK(h.m_table.FindName("ROOT") == 4);
+
+    AtIoJamFile* a = h.OpenFile();
+    AtIoJamFile* b = h.OpenFile();
+    CHECK(a != nullptr && b != nullptr && a != b);
+    CHECK(a->m_owner == &h);
+    CHECK(h.OpenFile() == nullptr);  // all m_maxOpen in use
+
+    CHECK(a->Open("NOPE.AFA", "shown", 0) == AtIoFile::kNotFound);
+    CHECK(a->Open("FILEA.AFA", "shown", 0x4) == AtIoFile::kUnsupported);  // write access
+    CHECK(a->m_flags == 0);
+    CHECK(a->Open("FILEA.AFA", "shown", 0x21) == AtIoFile::kOk);
+    CHECK(a->m_flags == AtIoFile::kOpen);                                 // the ignored bits are gone
+    CHECK(!std::strcmp(a->m_path, "shown"));
+    CHECK(a->m_size == 11 && a->m_position == 0);
+    CHECK(a->m_base == (jam2 ? 0x1020u : 0x1000u));
+    if (jam2) CHECK(a->m_secondSize == 99);
+
+    unsigned char out[32] = {};
+    unsigned done = 0;
+    AtIoFileRequest* request = nullptr;
+    CHECK(a->Read(out, 0, &done, &request) == AtIoFile::kOk);
+    CHECK(a->Read(out, 4, &done, &request) == AtIoFile::kOk && done == 4);
+    CHECK(out[0] == 1 && out[3] == 4 && a->m_position == 4);
+    CHECK(a->Read(out, 32, &done, &request) == AtIoFile::kOk && done == 7);  // clipped to what is left
+    CHECK(out[0] == 5 && (a->m_flags & AtIoFile::kReachedEnd));
+    CHECK(a->Read(out, 1, &done, &request) == AtIoFile::kEndOfFile);
+    CHECK(a->Seek(11) == AtIoFile::kEndOfFile);
+    CHECK(a->Write(out, 1, &done) == AtIoFile::kUnsupported && done == 0);
+    CHECK(a->Flush() == AtIoFile::kUnsupported);
+    CHECK(a->Seek(2) == AtIoFile::kOk);
+    CHECK(a->m_position == 2 && !(a->m_flags & AtIoFile::kReachedEnd));
+    // Original behaviour: the FSTA file adds its current position (11 here) to the target, the JAM2 file does not.
+    CHECK(disc.m_position == a->m_base + (jam2 ? 2u : 13u));
+    CHECK(a->Read(out, 1, &done, &request) == AtIoFile::kOk);  // Read seeks for itself, so the data is right either way.
+    CHECK(out[0] == 3);
+
+    CHECK(h.CloseFile(a) == 0);
+    CHECK(a->m_owner == nullptr && a->m_flags != AtIoFile::kOpen);
+    CHECK(h.OpenFile() == a);        // the slot is free again
+    CHECK(a->Read(out, 1, &done, &request) == AtIoFile::kNotFound);  // attached but not open
+    h.vInit(fs);                     // a second vInit shuts down first
+    CHECK(h.OpenFile() != nullptr);
+    delete &h;
+}
 
 static void test_jam2() {
     auto v = build("JAM2", true);
-    AtIoFastJamHeader& h = *new AtIoFastJamHeader;  // The destructor is not recovered yet.
+    AtIoFastJamHeader& h = *new AtIoFastJamHeader;
     prepare(h, v, 5, 3);
     test_directories(h);
     CHECK(h.FindRecord("FILEA.AFA") == 0x1000);
@@ -262,12 +338,15 @@ int main() {
     test_info_header();
     test_name_table();
     test_search_large();
-    test_fsta("FSTA", *new AtIoFastAlignedJamHeader);  // Leaked on purpose: the destructor is not recovered yet.
+    test_fsta("FSTA", *new AtIoFastAlignedJamHeader);
     AtIoFastRawJamHeader* raw = new AtIoFastRawJamHeader;
     CHECK(raw->m_swappedFields == 1);
     test_fsta("FSTR", *raw);
     CHECK(raw->m_swappedFields == 1);  // Reset keeps the FSTR form
     test_jam2();
+    test_loaded_archive<AtIoFastAlignedJamHeader>("FSTA", false);
+    test_loaded_archive<AtIoFastRawJamHeader>("FSTR", false);
+    test_loaded_archive<AtIoFastJamHeader>("JAM2", true);
     std::printf("%s (%d failures)\n", g_fail ? "FAILED" : "OK", g_fail);
     return g_fail ? 1 : 0;
 }

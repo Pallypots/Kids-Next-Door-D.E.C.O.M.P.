@@ -5,7 +5,8 @@
 //   ORIGINAL  AtIoJamInfoHeader, AtIoFastAlignedJamHeader, AtIoFastJamHeader, AtIoJamFileSystem: the game's own names,
 //             from error strings and from name strings stored after the vftables.
 //   OBSERVED  offsets, slot order and control flow: instructions cited below.
-//   INFERRED  AtIoJamNameTable, AtIoJamHeader, AtIoFastRawJamHeader, AtIoFile, AtIoFileRequest, and every method/member name.
+//   INFERRED  AtIoJamNameTable, AtIoJamHeader, AtIoJamDirectoryHeader, AtIoFastRawJamHeader, AtIoFile, AtIoFileRequest,
+//             AtIoJamFile, AtIoFastAlignedJamFile, AtIoFastJamFile, and every method/member name.
 //
 // Field reads go through ReadU16/ReadU32, byte by byte, as the original does; they work on any host byte order.
 // Paths are copied into fixed buffers with no length check. This is original behaviour and is preserved here: a port must
@@ -13,6 +14,11 @@
 #pragma once
 
 void AtFatal(const char* message, int a, int b, int c);  // 0x00011070: not recovered; platform/ supplies a diagnostic.
+void AtRaise(int code, int a, int b, int c);             // 0x00011170: -2 heap not set, -4 out of memory. Not recovered.
+void AtPushHeap(void* heap);                             // 0x00011240: operator new allocates from the top heap.
+void AtPopHeap();                                        // 0x00011260
+
+class AtIoJamDirectoryHeader;
 
 // Asynchronous read in progress. Only the slot used here is known.
 class AtIoFileRequest {
@@ -22,31 +28,70 @@ public:
     virtual int Wait() = 0;  // slot 2, returns the read's status
 };
 
-// Open file. Only slots used by recovered code are known; the rest keep their positions.
+// Open file. vftable 0x00273004: ten pure slots. Used both for the archive on disc and for files inside it.
 class AtIoFile {
 public:
-    enum { kPending = 7 };  // Read status: finished later through the request
-    virtual void Unknown0() = 0;
-    virtual void Unknown1() = 0;
-    virtual void Unknown2() = 0;
-    virtual void Unknown3() = 0;
-    virtual int Seek(unsigned int offset) = 0;                                               // slot 4, 0 on success
-    virtual int Read(void* out, unsigned int size, int flags, AtIoFileRequest** request) = 0;  // slot 5
-    virtual void Unknown6() = 0;
-    virtual void Unknown7() = 0;
-    virtual void Unknown8() = 0;
-    virtual void Release(AtIoFileRequest* request) = 0;                                      // slot 9
+    enum Status { kOk = 0, kNotFound = 2, kIoError = 3, kPending = 7, kEndOfFile = 8, kUnsupported = 9 };
+    enum Flags { kFlagsIgnored = 0x21, kFlagsWrite = 0x0C, kOpen = 0x10000, kReachedEnd = 0x20000 };
+
+    AtIoFile();                                                                    // 0x00025B80
+    virtual ~AtIoFile() = 0;                                                       // slot 0; 0x00025BB0
+    virtual int Close() = 0;                                                       // slot 1
+    virtual int Open(const char* path, const char* displayName, int flags) = 0;    // slot 2
+    virtual void Clear() = 0;                                                      // slot 3
+    virtual int Seek(unsigned int offset) = 0;                                     // slot 4, 0 on success
+    virtual int Read(void* out, unsigned int size, unsigned int* done, AtIoFileRequest** request) = 0;  // slot 5
+    virtual int Write(const void* in, unsigned int size, unsigned int* done) = 0;  // slot 6
+    virtual int Flush() = 0;                                                       // slot 7
+    virtual int Unknown8(void* request) = 0;                                       // slot 8; argument count inferred
+    virtual int Release(AtIoFileRequest* request) = 0;                             // slot 9
+
+    int ResetFile();                                                               // 0x00025BC0
+
+    unsigned int m_position;                 // +0x04
+    unsigned int m_size;                     // +0x08
+    unsigned int m_sizeCopy;                 // +0x0C
+    int m_flags;                             // +0x10
+    char m_path[0x80];                       // +0x14
+    int m_unknown94;                         // +0x94
+    int m_unknown98;                         // +0x98
 };
 
-// Only the two fields recovered code reads. The class is far larger; see 0x0007D770.
-class AtIoJamFileSystem {
+// A file inside an archive. The methods here are shared by both kinds: their vftables hold the same addresses.
+class AtIoJamFile : public AtIoFile {
 public:
-    AtIoFile* File() const { return m_overrideFile ? m_overrideFile : m_file; }
+    AtIoJamFile();
+    virtual int Close();                                                           // 0x00082860
+    virtual void Clear();                                                          // 0x00082810
+    virtual int Read(void* out, unsigned int size, unsigned int* done, AtIoFileRequest** request);  // 0x00082FB0
+    virtual int Write(const void* in, unsigned int size, unsigned int* done);      // 0x00083140, always kUnsupported
+    virtual int Flush();                                                           // 0x00083160, always kUnsupported
+    virtual int Unknown8(void* request);                                           // 0x000829E0, forwards to the archive file
+    virtual int Release(AtIoFileRequest* request);                                 // 0x00082A00, forwards to the archive file
 
-    char m_unknown000[0x6E4];
-    AtIoFile* m_file;          // +0x6E4
-    char m_unknown6E8[0x808 - 0x6E8];
-    AtIoFile* m_overrideFile;  // +0x808
+    void Attach(AtIoJamDirectoryHeader* owner);                                    // 0x00082830
+
+    AtIoJamDirectoryHeader* m_owner;         // +0x9C null when free
+    unsigned int m_base;                     // +0xA0 offset of the data in the archive
+    unsigned int m_secondSize;               // +0xA4 JAM2 only: the record's second size field
+};
+
+// vftable 0x00279F1C.
+class AtIoFastAlignedJamFile : public AtIoJamFile {
+public:
+    AtIoFastAlignedJamFile();                                                      // 0x000827E0
+    virtual ~AtIoFastAlignedJamFile();                                             // 0x00082A20
+    virtual int Open(const char* path, const char* displayName, int flags);        // 0x000828A0
+    virtual int Seek(unsigned int offset);                                         // 0x00082970
+};
+
+// vftable 0x00279F48.
+class AtIoFastJamFile : public AtIoJamFile {
+public:
+    AtIoFastJamFile();                                                             // 0x00082DA0
+    virtual ~AtIoFastJamFile();                                                    // 0x00083090
+    virtual int Open(const char* path, const char* displayName, int flags);        // 0x00082DD0
+    virtual int Seek(unsigned int offset);                                         // 0x00082F40
 };
 
 // The fixed 0x20-byte header at the start of every archive.
@@ -68,11 +113,27 @@ public:
     static const char* s_tokens[4];         // 0x002B35FC
 };
 
+// Only the fields recovered code reads. The class is larger; see 0x0007D770.
+class AtIoJamFileSystem {
+public:
+    AtIoFile* File() const { return m_overrideFile ? m_overrideFile : m_file; }
+
+    char m_unknown000[0x6AC];
+    unsigned int m_maxOpen;    // +0x6AC
+    char m_unknown6B0[0x6BC - 0x6B0];
+    AtIoJamInfoHeader m_info;  // +0x6BC
+    void* m_header;            // +0x6E0
+    AtIoFile* m_file;          // +0x6E4
+    char m_unknown6E8[0x808 - 0x6E8];
+    AtIoFile* m_overrideFile;  // +0x808
+};
+
 // Sorted name and extension tables inside the loaded header.
 class AtIoJamNameTable {
 public:
     AtIoJamNameTable();                     // 0x00082B50
     ~AtIoJamNameTable();                    // 0x00082C50
+    void Clear();                           // 0x00082C50 (same code as the destructor: folded)
     void Init(const char* names, unsigned int nameCount, unsigned int extensionCount);  // 0x00082C70
     int GetFullName(unsigned int name, unsigned int extension, char* out);              // 0x00082B70
     int FindName(const char* name);         // 0x00082BF0, -1 if absent
@@ -95,84 +156,91 @@ public:
 
     AtIoJamHeader() {}
     virtual ~AtIoJamHeader() = 0;                                    // slot 0; 0x00082D90
-    virtual void vInit(AtIoJamFileSystem* fs) = 0;                   // slot 1 (not recovered)
-    virtual void* OpenFile() = 0;                                    // slot 2 (not recovered)
-    virtual void CloseFile(void* file) = 0;                          // slot 3 (not recovered)
+    virtual void vInit(AtIoJamFileSystem* fs) = 0;                   // slot 1
+    virtual AtIoJamFile* OpenFile() = 0;                             // slot 2
+    virtual int CloseFile(AtIoFile* file) = 0;                       // slot 3
     virtual void Unknown4() = 0;                                     // slot 4
     virtual void Unknown5() = 0;                                     // slot 5
     virtual int IsDirectoryMissing(const char* path) = 0;            // slot 6
     virtual int IsFileMissing(const char* path) = 0;                 // slot 7
     virtual int GetEntryType(const char* path, int* type) = 0;       // slot 8
-    virtual void List(void* a, void* b, void* c) = 0;                // slot 9 (not recovered)
+    virtual void List(void* a, void* b, void* c) = 0;                // slot 9
+};
+
+// What the FSTA and JAM2 classes hold in common, at the same offsets. Whether this class existed in the original is
+// INFERRED: the name table's destructor runs in each derived destructor, so these members are not in AtIoJamHeader.
+// OpenFile and CloseFile are shared by both vftables.
+class AtIoJamDirectoryHeader : public AtIoJamHeader {
+public:
+    AtIoJamDirectoryHeader() {}
+    virtual AtIoJamFile* OpenFile();                                 // 0x000806A0
+    virtual int CloseFile(AtIoFile* file);                           // 0x00080D90
+    virtual void Unknown4();                                         // 0x001CC9F0 empty (folded)
+    virtual void Unknown5();                                         // 0x001CC9F0 empty (folded)
+
+    AtIoJamNameTable m_table;                // +0x04
+    AtIoJamFileSystem* m_fs;                 // +0x1C
+    AtIoJamFile* m_files;                    // +0x20 array of m_fs->m_maxOpen, 0xA8 bytes each
+    unsigned char* m_buffer;                 // +0x24 the whole header as loaded
+    const unsigned char* m_root;             // +0x28
+    unsigned int m_rootFiles;                // +0x2C
+    unsigned int m_rootDirs;                 // +0x30
 };
 
 // FSTA. vftable 0x00279A84. Directory words: subdirectory count in bits 12-20, file count in bits 21-31.
-class AtIoFastAlignedJamHeader : public AtIoJamHeader {
+class AtIoFastAlignedJamHeader : public AtIoJamDirectoryHeader {
 public:
     AtIoFastAlignedJamHeader();                                      // 0x0007F650
-    virtual ~AtIoFastAlignedJamHeader();                             // 0x0007F6B0 (not recovered)
-    virtual void vInit(AtIoJamFileSystem* fs);                       // 0x0007F750 (not recovered)
-    virtual void* OpenFile();                                        // 0x000806A0 (not recovered)
-    virtual void CloseFile(void* file);                              // 0x00080D90 (not recovered)
-    virtual void Unknown4();                                         // 0x001CC9F0 empty (folded)
-    virtual void Unknown5();                                         // 0x001CC9F0 empty (folded)
+    virtual ~AtIoFastAlignedJamHeader();                             // 0x0007F6B0
+    virtual void vInit(AtIoJamFileSystem* fs);                       // 0x0007F750
     virtual int IsDirectoryMissing(const char* path);                // 0x0007F9A0
     virtual int IsFileMissing(const char* path);                     // 0x0007F9C0
     virtual int GetEntryType(const char* path, int* type);           // 0x0007F1F0
     virtual void List(void* a, void* b, void* c);                    // 0x0007F9E0 (not recovered)
     virtual void Reset();                                            // slot 10, 0x0007F120
 
+    void Shutdown();                                                 // 0x0007F1A0
     // Returns the directory's table, with its subdirectory and file counts. Null if the last path component is absent.
     const unsigned char* FindDirectory(const char* path, unsigned int* dirs, unsigned int* files);  // 0x0007F220
     // Returns the data offset and writes the size; -1 if absent.
     int FindFile(const char* path, unsigned int* size);              // 0x0007F4B0
+    int FindFileInfo(const char* path, unsigned int* offset, unsigned int* size);  // 0x0007FDE0
+    static void SetHeap(void* heap);                                 // 0x0007F110
 
-    AtIoJamNameTable m_table;                // +0x04
-    AtIoJamFileSystem* m_fs;                 // +0x1C
-    void* m_files;                           // +0x20 open-file objects, 0xA8 bytes each
-    const unsigned char* m_buffer;           // +0x24 the whole header as loaded
-    const unsigned char* m_root;             // +0x28
-    unsigned int m_rootFiles;                // +0x2C
-    unsigned int m_rootDirs;                 // +0x30
     int m_swappedFields;                     // +0x34 set for FSTR: the two counts swap places
+
+    static void* s_heap;                     // 0x00301B5C
 };
 
 // FSTR. vftable 0x002793D8.
 class AtIoFastRawJamHeader : public AtIoFastAlignedJamHeader {
 public:
     AtIoFastRawJamHeader();                  // 0x0007D190
+    virtual ~AtIoFastRawJamHeader();         // 0x0007D700
     virtual void Reset();                    // 0x0007D170
 };
 
 // JAM2. vftable 0x00279B88. Same directory layout as FSTA; file entries are 8 bytes and address a record.
-class AtIoFastJamHeader : public AtIoJamHeader {
+class AtIoFastJamHeader : public AtIoJamDirectoryHeader {
 public:
     AtIoFastJamHeader();                                             // 0x00080390
-    virtual ~AtIoFastJamHeader();                                    // 0x000803F0 (not recovered)
-    virtual void vInit(AtIoJamFileSystem* fs);                       // 0x00080450 (not recovered)
-    virtual void* OpenFile();                                        // 0x000806A0 (not recovered, shared)
-    virtual void CloseFile(void* file);                              // 0x00080D90 (not recovered, shared)
-    virtual void Unknown4();                                         // 0x001CC9F0 empty (folded)
-    virtual void Unknown5();                                         // 0x001CC9F0 empty (folded)
+    virtual ~AtIoFastJamHeader();                                    // 0x000803F0
+    virtual void vInit(AtIoJamFileSystem* fs);                       // 0x00080450
     virtual int IsDirectoryMissing(const char* path);                // 0x000806F0
     virtual int IsFileMissing(const char* path);                     // 0x00080C70
     virtual int GetEntryType(const char* path, int* type);           // 0x0007F1F0 (folded with the FSTA method)
     virtual void List(void* a, void* b, void* c);                    // 0x00080710 (not recovered)
 
+    void Shutdown();                                                 // 0x00080040
     const unsigned char* FindDirectory(const char* path, unsigned int* dirs, unsigned int* files);  // 0x000800A0
     // Splits a path, resolves the name and extension indexes, and finds the directory.
     const unsigned char* Locate(const char* path, unsigned int* dirs, unsigned int* files, int* name, int* ext);  // 0x00080280
     int FindRecord(const char* path);                                // 0x00080AE0, record offset or -1
     int GetFileInfo(const char* path, unsigned int* offset, unsigned int* size);  // 0x00080BA0, reads the record
     int GetRecordOffset(const char* path, unsigned int* offset);     // 0x00080C90
+    static void SetHeap(void* heap);                                 // 0x0007FFD0
 
-    AtIoJamNameTable m_table;                // +0x04
-    AtIoJamFileSystem* m_fs;                 // +0x1C
-    void* m_files;                           // +0x20
-    const unsigned char* m_buffer;           // +0x24
-    const unsigned char* m_root;             // +0x28
-    unsigned int m_rootFiles;                // +0x2C
-    unsigned int m_rootDirs;                 // +0x30
+    static void* s_heap;                     // 0x00301B60
 };
 
 // Original 32-bit layout. See the note in gm/GmLinkedList.h.
@@ -180,6 +248,13 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
+static_assert(offsetof(AtIoFile, m_path) == 0x14, "AtIoFile::m_path");
+static_assert(offsetof(AtIoJamFile, m_owner) == 0x9C, "AtIoJamFile::m_owner");
+static_assert(sizeof(AtIoFastAlignedJamFile) == 0xA8, "array stride at 0x0007F920");
+static_assert(sizeof(AtIoFastJamFile) == 0xA8, "array stride at 0x00080620");
+static_assert(offsetof(AtIoJamFileSystem, m_maxOpen) == 0x6AC, "AtIoJamFileSystem::m_maxOpen");
+static_assert(offsetof(AtIoJamFileSystem, m_info) == 0x6BC, "AtIoJamFileSystem::m_info");
+static_assert(offsetof(AtIoJamFileSystem, m_header) == 0x6E0, "AtIoJamFileSystem::m_header");
 static_assert(offsetof(AtIoJamFileSystem, m_file) == 0x6E4, "AtIoJamFileSystem::m_file");
 static_assert(offsetof(AtIoJamFileSystem, m_overrideFile) == 0x808, "AtIoJamFileSystem::m_overrideFile");
 static_assert(offsetof(AtIoJamInfoHeader, m_extensionCount) == 0x10, "AtIoJamInfoHeader::m_extensionCount");

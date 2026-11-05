@@ -78,8 +78,8 @@ are reached through the original vftables, so slot behaviour is exercised as wel
 This is analysis tooling, permitted by the charter as a behaviour oracle. It is never part of a release, contains no
 original bytes (they come from the owner's file at run time) and needs no emulator. It runs only code that touches no
 Xbox hardware or kernel, so it does not extend to most of the game without further work. How it gets the address range:
-linked at base 0x10000 with a large executable section, so the XBE's range belongs to the image from process creation.
-Original code below that section (under about 0x46000) is unavailable; the code under test starts at 0x75000.
+linked at base 0x10000 with `tests/oracle/reserve.asm` as the first code in the image, so the XBE's whole range, from 0x00011000
+up, belongs to the image from process creation (incremental linking must stay off: its thunks would land first).
 
 Result state: **Semantic-tested**. A pass means no difference was observed on these sequences. It is not a proof and
 not a byte match; paths not taken are untested. Known gaps: the freeing path of deleting destructors (needs the game's
@@ -102,19 +102,33 @@ A second suite covers the JAM reader (`tests/oracle/oracle_jam.cpp`, `--suite ja
 `python -I tools/jam.py cases <image> analysis-local/oracle-jam`, git-ignored). It runs 62 archives: 35 real FSTA headers, 20 real
 JAM2 files (those up to 4 MB), 4 FSTR forms derived from real headers (FSTR does not occur on this disc), and 3 hand-built
 adversarial archives. Each real file is checked three ways: `tools/jam.py`, original code, recovered source. Near-miss paths
-only need the two implementations to agree. I/O outcomes in `GetFileInfo` go through one shared test-double file, so both sides
-must make the same calls. Result on 2026-11-05: 174,373 paths, about 2.3 million comparisons, no difference; 29/29 entries
-reached; positive control passes; `--mutate` fails; 40/40 source mutants detected (39 as a reported difference, 1 by a crash).
+only need the two implementations to agree.
 
-Not covered by this suite: `vInit`, listing, destructors and the open-file objects (not recovered yet); `AtFatal` on an invalid
-token; the JAM2 archives over 4 MB (their records are not extracted; the 4 MB limit is only about file size in the cases
-directory).
+Object lifecycles run under each archive-file behaviour (immediate, pending, pending that fails, read failure, seek failure) and
+with a heap that was never set: `vInit` twice, direct `Shutdown`, files opened until none are left, open with various flags and
+paths, reads and seeks around every boundary, close, reopen, destruction through the deleting destructor. In the mapped copy of
+the original, the heap and error helpers (0x000111F0, 0x00011210, 0x00011240, 0x00011260, 0x00011070, 0x00011170) are redirected
+to logging stubs; this is test scaffolding, in memory only. Each side has its own test-double archive file. Their call logs
+(helper calls, seeks, reads, waits, releases, in order) must be identical, and fatal messages must match as text.
 
-The first reader run reported 30/40, and each survivor was explained rather than dropped. Eight were real blind spots, because
-real data never shows them: labels are short, no real file lacks an extension, no table has an empty name, record sizes are
-always equal, small JAM2 trees never reach the failed-component behaviour, and some fields already held the value being
-checked. The adversarial archives and sharper checks close them. Two were equivalent mutants: `order >= 0` in the scan (order
-0 has already returned) and not clearing GetFullName's first two words (`strncpy` pads them), and were replaced by real ones.
+Result on 2026-11-05: 174,373 paths, about 192 million comparisons, no difference; 63/63 entries reached; positive control
+passes; `--mutate` fails; 86/86 source mutants detected (80 as a reported difference, 6 by a crash).
+
+Not covered by this suite: directory listing and `AtIoJamFileSystem` (not recovered yet); the case where the helpers' failure
+paths really stop the game, because the stubs return; allocation failure; JAM2 archives over 4 MB (the limit is only about file size
+in the cases directory); `Prev`-style null cases where both sides crash.
+
+The reader's mutant runs were not clean the first time. 30/40 on the lookups: eight were real blind spots, because real data never
+shows them (labels are short, no real file lacks an extension, no table has an empty name, record sizes are always equal, small JAM2
+trees never reach the failed-component behaviour, some fields already held the value being checked); the adversarial archives and
+sharper checks close them. Two were equivalent mutants: `order >= 0` in the scan (order 0 has already returned) and not clearing
+GetFullName's first two words (`strncpy` pads them), and were replaced. 81/85 on the file objects and lifecycles: `Shutdown`'s field
+clearing is overwritten by its only caller, a `Clear` before every `Close` hid what `Close` does to the flags, and a destructor's
+stores are visible only by inspecting the memory afterwards. Each now has a direct test.
+
+Harness bugs the lifecycle run found in itself: the recovered side's global `operator new` logged the harness's own allocations, and
+storing a fatal message in a `std::string` allocated during logging. Both showed as extra entries in the call log, and the log
+dump identified them; neither was a code difference.
 
 Mistakes this qualification caught in the harness itself, recorded because they would have produced false confidence:
 copied sources kept old timestamps, so the build reused the previous mutant's object and later verdicts were wrong

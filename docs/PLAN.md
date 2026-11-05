@@ -1,8 +1,8 @@
 # Plan (no numbers here — measured progress is in docs/PROGRESS.md)
 
-1. **Resource loading, as source (in progress).** Done: info header, name table, directory lookups. Next: open-file objects,
-   `vInit`, destructors, listing, `AtIoJamFileSystem`, behind a file interface so it stays portable. tools/jam.py stays as a
-   cross-check.
+1. **Resource loading, as source (in progress).** Done: info header, name table, directory lookups, header lifecycle, file objects.
+   Next: `AtIoJamFileSystem` and its device layer, an end-to-end host test on a real archive, then listing.
+   tools/jam.py stays as a cross-check.
 2. **Rest of the first translation unit.** Sorted container at 0x000761B0-0x00076600, then what remains around it.
 3. **Library separation.** Grow the string-reference map into evidence-backed ranges for LIBCMT, XAPI, CRI
    (ADX/Sofdec), libjpeg and D3DX inside `.text`; keep an `unknown` bucket; never rename from an unreviewed signature

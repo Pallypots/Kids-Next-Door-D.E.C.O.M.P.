@@ -19,6 +19,7 @@ set(KND_AT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/at" CACHE PATH "Directory of the
 add_library(knd_at STATIC
     ${KND_AT_SRC}/AtIoFastAlignedJamHeader.cpp
     ${KND_AT_SRC}/AtIoFastJamHeader.cpp
+    ${KND_AT_SRC}/AtIoJamFile.cpp
     ${KND_AT_SRC}/AtIoJamNameTable.cpp
     ${KND_AT_SRC}/AtIoJamPending.cpp
 )
@@ -35,11 +36,12 @@ add_test(NAME at_jam COMMAND test_at_jam)
 # Local-only differential oracle: 32-bit Windows, runs original code from the owner's XBE beside recovered source.
 # Never part of a release. Build with: cmake -S . -B build/oracle -A Win32
 if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
-    add_executable(oracle_gm tests/oracle/oracle_gm.cpp)
+    enable_language(ASM_MASM)
+    add_executable(oracle_gm tests/oracle/reserve.asm tests/oracle/oracle_gm.cpp)
     target_link_libraries(oracle_gm PRIVATE knd_gm)
-    add_executable(oracle_jam tests/oracle/oracle_jam.cpp platform/fatal.cpp)
+    add_executable(oracle_jam tests/oracle/reserve.asm tests/oracle/oracle_jam.cpp)
     target_link_libraries(oracle_jam PRIVATE knd_at)
-    target_link_options(oracle_jam PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.aorig,ERW)
-    # Base 0x10000: section .aorig (see the source) owns the XBE's address range from process creation.
-    target_link_options(oracle_gm PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.aorig,ERW)
+    target_link_options(oracle_jam PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    # Base 0x10000: tests/oracle/reserve.asm owns the XBE's address range from process creation.
+    target_link_options(oracle_gm PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
 endif()

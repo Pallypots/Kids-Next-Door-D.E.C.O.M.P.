@@ -3,6 +3,12 @@
 #include "at/AtIoJam.h"
 #include "AtIoJamCommon.h"
 
+void* AtIoFastJamHeader::s_heap;
+
+void AtIoFastJamHeader::SetHeap(void* heap) {
+    s_heap = heap;
+}
+
 AtIoFastJamHeader::AtIoFastJamHeader() {
     m_fs = 0;
     m_files = 0;
@@ -180,8 +186,66 @@ int AtIoFastJamHeader::GetEntryType(const char* path, int* type) {
     return 1;
 }
 
-void AtIoFastJamHeader::Unknown4() {
+void AtIoFastJamHeader::vInit(AtIoJamFileSystem* fs) {
+    if (m_fs) {
+        Shutdown();
+    }
+    m_fs = fs;
+    if (s_heap == 0) {
+        AtRaise(-2, 0, 0, 0);
+    }
+    AtPushHeap(s_heap);
+    m_buffer = (unsigned char*)operator new(m_fs->m_info.m_headerSize);
+    AtPopHeap();
+    if (m_buffer == 0) {
+        AtRaise(-4, 0, 0, 0);
+    }
+    if (fs->File()->Seek(0) != 0) {
+        AtFatal("AtIoFastJamHeader::vInit:  error seeking back to the beginning of the Jam File!\n", 0, 0, 0);
+    }
+    unsigned int done;
+    AtIoFileRequest* request;
+    int status = fs->File()->Read(m_buffer, m_fs->m_info.m_headerSize, &done, &request);
+    if (status == AtIoFile::kPending) {
+        if (request->Wait() != 0) {
+            AtFatal("AtIoFastJamHeader::vInit:  error reading header!\n", 0, 0, 0);
+        }
+        fs->File()->Release(request);
+    } else if (status != 0) {
+        AtFatal("AtIoFastJamHeader::vInit:  error reading header!\n", 0, 0, 0);
+    }
+    const unsigned int names = m_fs->m_info.m_nameCount;
+    const unsigned int extensions = m_fs->m_info.m_extensionCount;
+    m_table.Init((const char*)m_buffer + 0x20, names, extensions);
+    const unsigned char* root = m_buffer + 4 * (extensions + 2 * names + 8);
+    m_rootDirs = AtReadU16(root);
+    root += 2;
+    m_rootFiles = AtReadU16(root);
+    root += 2;
+    m_root = root;
+    if (s_heap == 0) {
+        AtRaise(-2, 0, 0, 0);
+    }
+    AtPushHeap(s_heap);
+    m_files = new AtIoFastJamFile[m_fs->m_maxOpen];
+    AtPopHeap();
+    if (m_files == 0) {
+        AtRaise(-4, 0, 0, 0);
+    }
 }
 
-void AtIoFastJamHeader::Unknown5() {
+void AtIoFastJamHeader::Shutdown() {
+    operator delete(m_buffer);
+    delete[] static_cast<AtIoFastJamFile*>(m_files);
+    m_table.Clear();
+    m_fs = 0;
+    m_files = 0;
+    m_buffer = 0;
+    m_root = 0;
+    m_rootFiles = 0;
+    m_rootDirs = 0;
+}
+
+AtIoFastJamHeader::~AtIoFastJamHeader() {
+    Shutdown();
 }

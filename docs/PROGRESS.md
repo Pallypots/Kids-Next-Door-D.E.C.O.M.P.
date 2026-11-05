@@ -109,9 +109,43 @@ name. See docs/STATE.md for the evidence-based partial map.
 | 0x00082C70 | 59 | `?Init@AtIoJamNameTable@@QAEXPBDII@Z` | at/jam | SIZE |
 | 0x00082CB0 | 214 | `?Matches@AtIoJamNameTable@@QAEHPBD00@Z` | at/jam | SIZE |
 | 0x00082D90 | 7 | `??1AtIoJamHeader@@UAE@XZ` | at/jam | MATCH |
+| 0x00025B80 | 35 | `??0AtIoFile@@QAE@XZ` | at/jam | SIZE |
+| 0x00025BB0 | 7 | `??1AtIoFile@@UAE@XZ` | at/jam | MATCH |
+| 0x00025BC0 | 27 | `?ResetFile@AtIoFile@@QAEHXZ` | at/jam | SIZE |
+| 0x0007D6E0 | 30 | `??_GAtIoFastRawJamHeader@@UAEPAXI@Z` | at/jam | SIZE |
+| 0x0007D700 | 5 | `??1AtIoFastRawJamHeader@@UAE@XZ` | at/jam | SIZE |
+| 0x0007F110 | 10 | `?SetHeap@AtIoFastAlignedJamHeader@@SAXPAX@Z` | at/jam | MATCH |
+| 0x0007F1A0 | 69 | `?Shutdown@AtIoFastAlignedJamHeader@@QAEXXZ` | at/jam | SIZE |
+| 0x0007F6B0 | 155 | `??1AtIoFastAlignedJamHeader@@UAE@XZ` | at/jam | SIZE |
+| 0x0007F750 | 588 | `?vInit@AtIoFastAlignedJamHeader@@UAEXPAVAtIoJamFileSystem@@@Z` | at/jam | SIZE |
+| 0x0007FDE0 | 49 | `?FindFileInfo@AtIoFastAlignedJamHeader@@QAEHPBDPAI1@Z` | at/jam | SIZE |
+| 0x0007FE20 | 30 | `??_GAtIoFastAlignedJamHeader@@UAEPAXI@Z` | at/jam | MATCH |
+| 0x0007FFD0 | 10 | `?SetHeap@AtIoFastJamHeader@@SAXPAX@Z` | at/jam | MATCH |
+| 0x00080040 | 85 | `?Shutdown@AtIoFastJamHeader@@QAEXXZ` | at/jam | SIZE |
+| 0x000803F0 | 92 | `??1AtIoFastJamHeader@@UAE@XZ` | at/jam | SIZE |
+| 0x00080450 | 588 | `?vInit@AtIoFastJamHeader@@UAEXPAVAtIoJamFileSystem@@@Z` | at/jam | SIZE |
+| 0x000806A0 | 75 | `?OpenFile@AtIoJamDirectoryHeader@@UAEPAVAtIoJamFile@@XZ` | at/jam | MISMATCH |
+| 0x00080C50 | 30 | `??_GAtIoFastJamHeader@@UAEPAXI@Z` | at/jam | SIZE |
+| 0x00080D90 | 12 | `?CloseFile@AtIoJamDirectoryHeader@@UAEHPAVAtIoFile@@@Z` | at/jam | MATCH |
+| 0x000827E0 | 38 | `??0AtIoFastAlignedJamFile@@QAE@XZ` | at/jam | SIZE |
+| 0x00082810 | 24 | `?Clear@AtIoJamFile@@UAEXXZ` | at/jam | SIZE |
+| 0x00082830 | 46 | `?Attach@AtIoJamFile@@QAEXPAVAtIoJamDirectoryHeader@@@Z` | at/jam | SIZE |
+| 0x00082860 | 54 | `?Close@AtIoJamFile@@UAEHXZ` | at/jam | SIZE |
+| 0x000828A0 | 202 | `?Open@AtIoFastAlignedJamFile@@UAEHPBD0H@Z` | at/jam | SIZE |
+| 0x00082970 | 106 | `?Seek@AtIoFastAlignedJamFile@@UAEHI@Z` | at/jam | SIZE |
+| 0x000829E0 | 29 | `?Unknown8@AtIoJamFile@@UAEHPAX@Z` | at/jam | SIZE |
+| 0x00082A00 | 29 | `?Release@AtIoJamFile@@UAEHPAVAtIoFileRequest@@@Z` | at/jam | SIZE |
+| 0x00082A20 | 121 | `??1AtIoFastAlignedJamFile@@UAE@XZ` | at/jam | SIZE |
+| 0x00082DA0 | 38 | `??0AtIoFastJamFile@@QAE@XZ` | at/jam | SIZE |
+| 0x00082DD0 | 364 | `?Open@AtIoFastJamFile@@UAEHPBD0H@Z` | at/jam | SIZE |
+| 0x00082F40 | 99 | `?Seek@AtIoFastJamFile@@UAEHI@Z` | at/jam | SIZE |
+| 0x00082FB0 | 222 | `?Read@AtIoJamFile@@UAEHPAXIPAIPAPAVAtIoFileRequest@@@Z` | at/jam | SIZE |
+| 0x00083090 | 121 | `??1AtIoFastJamFile@@UAE@XZ` | at/jam | SIZE |
+| 0x00083140 | 18 | `?Write@AtIoJamFile@@UAEHPBXIPAI@Z` | at/jam | MATCH |
+| 0x00083160 | 6 | `?Flush@AtIoJamFile@@UAEHXZ` | at/jam | MATCH |
 
-Relocation-aware matches with the host compiler: 15 functions, 271 unique bytes.
-Share of `.text` raw bytes: 0.0133% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 22 functions, 364 unique bytes.
+Share of `.text` raw bytes: 0.0178% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -129,12 +163,19 @@ Exact linked match (whole XBE): not attempted.
 | 0x0027BCC4 | 10 | `??_7GmLinkedListIterator@@6B@` | MATCH |
 | 0x0027BCA4 | 5 | `??_7?$GmLinkedListOf@PAVFaUiBase@@@@6BGmLinkedList@@@` | MATCH |
 | 0x0027BCBC | 1 | `??_7?$GmLinkedListOf@PAVFaUiBase@@@@6BGmPlug@@@` | MATCH |
+| 0x00273004 | 10 | `??_7AtIoFile@@6B@` | MATCH |
+| 0x00279F1C | 10 | `??_7AtIoFastAlignedJamFile@@6B@` | MATCH |
+| 0x00279F48 | 10 | `??_7AtIoFastJamFile@@6B@` | MATCH |
+| 0x00279A5C | 10 | `??_7AtIoJamHeader@@6B@` | MATCH |
+| 0x00279A84 | 11 | `??_7AtIoFastAlignedJamHeader@@6B@` | MATCH |
+| 0x002793D8 | 11 | `??_7AtIoFastRawJamHeader@@6B@` | MATCH |
+| 0x00279B88 | 10 | `??_7AtIoFastJamHeader@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
 Suite `gm`: runs with no observed difference 20 / 20 (NO DIFFERENCE OBSERVED: seed 1, 5000 random operations, 20273883 comparisons, 0 differences). Recorded function entries reached in every run: 47 / 47. Source mutants detected: 23 / 23. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 2286845 comparisons, 0 differences). Recorded function entries reached in every run: 29 / 29. Source mutants detected: 40 / 40. Positive control exit: 0. Harness mutation exit: 1.
+Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 191600298 comparisons, 0 differences). Recorded function entries reached in every run: 63 / 63. Source mutants detected: 86 / 86. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

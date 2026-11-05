@@ -5,6 +5,11 @@
 #include "AtIoJamCommon.h"
 
 const char* AtIoJamInfoHeader::s_tokens[4] = {"JAM1", "JAM2", "FSTA", "FSTR"};
+void* AtIoFastAlignedJamHeader::s_heap;
+
+void AtIoFastAlignedJamHeader::SetHeap(void* heap) {
+    s_heap = heap;
+}
 
 AtIoJamInfoHeader::AtIoJamInfoHeader() {
     Clear();
@@ -214,8 +219,78 @@ int AtIoFastAlignedJamHeader::GetEntryType(const char* path, int* type) {
     return 1;
 }
 
-void AtIoFastAlignedJamHeader::Unknown4() {
+int AtIoFastAlignedJamHeader::FindFileInfo(const char* path, unsigned int* offset, unsigned int* size) {
+    int found = FindFile(path, size);
+    if (found == -1) {
+        *offset = 0;
+        return 0;
+    }
+    *offset = (unsigned int)found;
+    return 1;
 }
 
-void AtIoFastAlignedJamHeader::Unknown5() {
+// Original behaviour preserved: a failed read reports through AtFatal and, if that returns, carries on.
+void AtIoFastAlignedJamHeader::vInit(AtIoJamFileSystem* fs) {
+    if (m_fs) {
+        Shutdown();
+    }
+    m_fs = fs;
+    if (s_heap == 0) {
+        AtRaise(-2, 0, 0, 0);
+    }
+    AtPushHeap(s_heap);
+    m_buffer = (unsigned char*)operator new(m_fs->m_info.m_headerSize);
+    AtPopHeap();
+    if (m_buffer == 0) {
+        AtRaise(-4, 0, 0, 0);
+    }
+    if (fs->File()->Seek(0) != 0) {
+        AtFatal("AtIoFastAlignedJamHeader::vInit:  error seeking back to the beginning of the Jam File!\n", 0, 0, 0);
+    }
+    unsigned int done;
+    AtIoFileRequest* request;
+    int status = fs->File()->Read(m_buffer, m_fs->m_info.m_headerSize, &done, &request);
+    if (status == AtIoFile::kPending) {
+        if (request->Wait() != 0) {
+            AtFatal("AtIoFastAlignedJamHeader::vInit:  error reading header!\n", 0, 0, 0);
+        }
+        fs->File()->Release(request);
+    } else if (status != 0) {
+        AtFatal("AtIoFastAlignedJamHeader::vInit:  error reading header!\n", 0, 0, 0);
+    }
+    const unsigned int names = m_fs->m_info.m_nameCount;
+    const unsigned int extensions = m_fs->m_info.m_extensionCount;
+    m_table.Init((const char*)m_buffer + 0x20, names, extensions);
+    const unsigned char* root = m_buffer + 4 * (extensions + 2 * names + 8);
+    m_rootDirs = AtReadU16(root);
+    root += 2;
+    m_rootFiles = AtReadU16(root);
+    root += 2;
+    m_root = root;
+    if (s_heap == 0) {
+        AtRaise(-2, 0, 0, 0);
+    }
+    AtPushHeap(s_heap);
+    m_files = new AtIoFastAlignedJamFile[m_fs->m_maxOpen];
+    AtPopHeap();
+    if (m_files == 0) {
+        AtRaise(-4, 0, 0, 0);
+    }
+}
+
+void AtIoFastAlignedJamHeader::Shutdown() {
+    operator delete(m_buffer);
+    delete[] static_cast<AtIoFastAlignedJamFile*>(m_files);
+    m_table.Clear();
+    Reset();
+}
+
+AtIoFastAlignedJamHeader::~AtIoFastAlignedJamHeader() {
+    operator delete(m_buffer);
+    delete[] static_cast<AtIoFastAlignedJamFile*>(m_files);
+    m_table.Clear();
+    Reset();
+}
+
+AtIoFastRawJamHeader::~AtIoFastRawJamHeader() {
 }
