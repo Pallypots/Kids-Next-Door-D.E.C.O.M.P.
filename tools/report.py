@@ -40,6 +40,13 @@ def main():
         for n, c in cov.items():
             out.append("| %s | %d | %d | %d | %d / %d / %d |" % (n, c["raw_size"], c["unique_code_bytes_reached"],
                                                             c["functions"], c["high"], c["medium"], c["low"]))
+        totals = {}
+        for c in cov.values():
+            for k, n in c.get("kinds", {}).items():
+                totals[k] = totals.get(k, 0) + n
+        out += ["", "By kind across all sections: %s. Only `source` belongs in a function-count denominator; the rest are "
+                "compiler-generated or belong to a parent function, and stay listed because a whole-image reconstruction "
+                "must account for their bytes." % ", ".join("%s %d" % kv for kv in sorted(totals.items()))]
         out += ["", "Ownership (game vs. CRT/XDK/middleware) inside `.text` is NOT yet classified; the named library",
                 "sections (D3D, DSOUND, XACTENG, WMADEC, XPP, PSFD*, DOLBY, D3DX, XGRPH) are SDK/middleware by section",
                 "name. See docs/STATE.md for the evidence-based partial map.", ""]

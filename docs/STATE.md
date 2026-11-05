@@ -1,13 +1,13 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, end of dev cycle 2. Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 2 plus the Ghidra cross-check. Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
 | Milestone | State | Evidence |
 | --- | --- | --- |
 | M0 Identity | **passed** | docs/provenance.md: input hashes, both containers parsed, identical XBE `f5f48a6f…`, retail key, 17/17 section digests, XDK 5849 |
-| M1 Trustworthy tools | **partial** | inventory (tools/funcs.py), relocation-aware and vftable checker with negative controls, differential oracle qualified with source mutants; **original toolchain blocked**; Ghidra cross-check not done |
+| M1 Trustworthy tools | **partial** | inventory (tools/funcs.py), relocation-aware and vftable checker with negative controls, differential oracle qualified with source mutants, Ghidra cross-check done (docs/verification.md); **original toolchain blocked** |
 | M2 Reference reconstruction | blocked | needs an original-era MSVC (docs/toolchain.md) |
 | M3 Verified subsystem | **partial** | `gm/containers` recovered with type documentation, host tests and behaviour evidence against the original code; no original-compiler match, so "matching evidence" stays open |
 | M4–M7 | untested | — |
@@ -46,6 +46,8 @@ validated against all 56 archives on the disc.
   0x00278418), `Append`/`IsEmpty` are `GmLinkedList`'s (0x00278568). `GmLinkedListOf<T>` adds no vftable entries.
 * Answered from cycle 1: the iterator destructor shows two vptr stores for three levels because `~GmSocketIterator` is
   implicit and its store is dead. The vftable 0x0027842C with no locator is `GmIterator`.
+* 3,152 inventory entries are compiler-generated EH code, classified from `FuncInfo` metadata, and are excluded from
+  function-count denominators. No `catch` block was found in any FuncInfo.
 * Linker identical-code folding is in use (0x000DF720 and others), so one address can serve several source functions.
 * Translation units can be inferred from address clusters and adjacent vftables: 0x00075FB0-0x0007606E (socket and
   iterator bases), 0x00076C10-0x000770FE (plug, list, list iterator; shares a unit with the JAM-opening code at
@@ -67,8 +69,9 @@ validated against all 56 archives on the disc.
 * Static initialisers (0x00200ED0, 0x00203CD0) are compiler-generated and not recorded; `GmLinkedListIteratorOf<T>`
   (vftable 0x0027BCF0) is not recorded.
 * DOLBY and PSFD00 sections: no x86 reached; contents unknown (possibly non-x86 code or data).
-* Inventory: 453 bodies contain another function's start (shared tails / bad seeds); pointer and gap seeds are
-  medium/low confidence. Not yet cross-checked against Ghidra.
+* Inventory: 14,370 `source` candidates are still candidates. Open disagreements with Ghidra are listed in
+  docs/verification.md; 52 bodies contain another function's start.
+* Ownership of `.text` is not classified. The plugin's name hints could help here, but only as labelled hints.
 
 ## Next concrete task
 
@@ -77,5 +80,4 @@ validated against all 56 archives on the disc.
    becomes a cross-check of the recovered reader.
 2. Finish the sorted container at 0x000761B0-0x00076600 in the same unit (its node pool is 0x002CF180, 2200 entries).
 
-Waiting on the owner, neither blocks the above: approval to download Ghidra and XboxDev ghidra-xbe; an authorised
-original-era MSVC to unblock M2.
+Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

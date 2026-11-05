@@ -59,3 +59,17 @@ scope unless the owner decides otherwise; never mix their addresses.
 Not installed / not used yet: Ghidra (+ XboxDev ghidra-xbe), Java, objdiff, extract-xiso, nxdk.
 The installed `matching-decomp` skill was read; its `dk.py` supports only ELF/MIPS relocations (header and `R_MIPS`
 table), so it is kept as reference and **not** used on this build. Its principles are adopted in docs/verification.md.
+
+## Analysis tools downloaded (owner approved each, 2026-11-05; all under git-ignored `analysis-local/tools/`)
+
+| Tool | File | Source | SHA-256 (matched the published digest) |
+| --- | --- | --- | --- |
+| Ghidra 12.1.4 | `ghidra_12.1.4_PUBLIC_20260921.zip` | github.com/NationalSecurityAgency/ghidra release `Ghidra_12.1.4_build` | `ddac49f903da9d5bac833e5cc79395098b9c33cfd3279be5f31bd00387d2d4db` |
+| ghidra-xbe | `ghidra_12.1.4_PUBLIC_20261016_ghidra-xbe.zip` | github.com/XboxDev/ghidra-xbe release `build-202610161023` | `339b2f67563bbb8b5217740319b7f3eae9e9bbacf1f3a8aa29151f7ecb7d5152` |
+| Temurin JDK 21.0.13+9 | `OpenJDK21U-jdk_x64_windows_hotspot_21.0.13_9.zip` | github.com/adoptium/temurin21-binaries release `jdk-21.0.13+9` | `a4dbaa05fca4bd89d84584e58c459bd732efebb1722af80ab13c6516832004f9` |
+
+Ghidra 12.1.4 rather than 12.2 because the plugin's newest build targets it. The JDK is unzipped, not installed.
+
+ghidra-xbe runs XbSymbolDatabase and an XTLID table, which supply SDK and library function names (Ghidra source type
+ANALYSIS). They are **hints**: never copied into recovered source or counted as evidence without independent support.
+Those databases are public signature data for SDK libraries, not game symbols; their own provenance has not been audited.

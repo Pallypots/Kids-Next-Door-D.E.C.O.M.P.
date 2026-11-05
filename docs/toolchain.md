@@ -72,3 +72,19 @@ the first test set: if VC 7.1 reproduces them, the hypothesis is confirmed.
 
 While this is blocked, `tools/oracle_run.py` checks behaviour against the original code (docs/verification.md), so
 recovery does not stop. It does not replace matching.
+
+## Analysis: Ghidra
+
+Versions and hashes: docs/provenance.md. Local layout, all git-ignored: tools under `analysis-local/tools/`, project under
+`analysis-local/ghidra/project`, export under `analysis-local/ghidra/export`. From PowerShell:
+
+```
+$t='C:\KND\analysis-local\tools'; $env:JAVA_HOME="$t\jdk-21.0.13+9"
+& "$t\ghidra_12.1.4_PUBLIC\support\analyzeHeadless.bat" 'C:\KND\analysis-local\ghidra\project' KND `
+  -import 'C:\KND\orig\xiso\default.xbe' -overwrite -scriptPath 'C:\KND\tools\ghidra' `
+  -postScript ExportInventory.java 'C:\KND\analysis-local\ghidra\export'
+python -I tools/ghidra_compare.py
+```
+
+The plugin belongs in `Ghidra/Extensions/ghidra-xbe`. It loaded and analysed the reference XBE (language x86:LE:32:default,
+compiler spec `windows`, image base 0x00010000). Ghidra's decompiler output is a draft at most (CLAUDE.md section 1).

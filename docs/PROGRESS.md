@@ -9,12 +9,12 @@ Checker `tools/xcheck.py` SHA-256 `ad997f47ccc83a7f43870c14d1fe81e4b309889f82990
 
 | Section | Raw bytes | Code bytes reached | Candidate functions | high / medium / low |
 | --- | ---: | ---: | ---: | --- |
-| .text | 2044836 | 1857226 | 14361 | 8037 / 4877 / 1447 |
-| D3D | 68872 | 58438 | 273 | 273 / 0 / 0 |
-| D3DX | 36000 | 15231 | 57 | 57 / 0 / 0 |
+| .text | 2044836 | 1877623 | 16333 | 11193 / 3711 / 1429 |
+| D3D | 68872 | 58438 | 276 | 273 / 3 / 0 |
+| D3DX | 36000 | 15231 | 58 | 57 / 1 / 0 |
 | XGRPH | 7832 | 7723 | 30 | 30 / 0 / 0 |
-| DSOUND | 124420 | 37341 | 346 | 338 / 8 / 0 |
-| XACTENG | 44908 | 40777 | 314 | 314 / 0 / 0 |
+| DSOUND | 124420 | 37341 | 347 | 338 / 9 / 0 |
+| XACTENG | 44908 | 40777 | 315 | 314 / 1 / 0 |
 | PSFD_I | 1060 | 1048 | 1 | 0 / 1 / 0 |
 | PSFD_B | 2244 | 2209 | 4 | 3 / 1 / 0 |
 | PSFD_P | 1600 | 1596 | 1 | 0 / 1 / 0 |
@@ -22,6 +22,8 @@ Checker `tools/xcheck.py` SHA-256 `ad997f47ccc83a7f43870c14d1fe81e4b309889f82990
 | WMADEC | 102524 | 12290 | 51 | 49 / 2 / 0 |
 | XPP | 32388 | 13652 | 106 | 106 / 0 / 0 |
 | DOLBY | 29036 | 0 | 0 | 0 / 0 / 0 |
+
+By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 14370. Only `source` belongs in a function-count denominator; the rest are compiler-generated or belong to a parent function, and stay listed because a whole-image reconstruction must account for their bytes.
 
 Ownership (game vs. CRT/XDK/middleware) inside `.text` is NOT yet classified; the named library
 sections (D3D, DSOUND, XACTENG, WMADEC, XPP, PSFD*, DOLBY, D3DX, XGRPH) are SDK/middleware by section

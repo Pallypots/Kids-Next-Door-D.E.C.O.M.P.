@@ -29,7 +29,7 @@ so a symbol mapping asserts "calls this address", not "this is the only function
 
 ## Qualification — `python -I -m unittest discover -s tests -v`
 
-59 tests, all passing on 2026-11-05:
+69 tests, all passing on 2026-11-05:
 
 * `tests/test_parsers.py` (12, synthetic): XDVDFS listing, case-insensitive lookup, explicit base, bad magic,
   truncated file, directory-tree cycle; XBE retail/debug keys, zero-fill not file-backed, entry outside code
@@ -37,6 +37,9 @@ so a symbol mapping asserts "calls this address", not "this is the only function
 * `tests/test_jam.py` (18, synthetic): FSTA, FSTR and JAM2 parsing; bad token, JAM1, truncation, oversized header, child
   table outside header, directory cycle, bad name and extension index; extent, overlap, inside-header and misaligned
   record detection.
+* `tests/test_funcs.py` (6 synthetic, 4 local): FuncInfo parsing, null actions, bad magic, implausible counts, thunk
+  scan needs the magic, kind precedence; on the real inventory: a tail call is not absorbed, known funclet and thunk are
+  labelled, recovered functions stay `source`.
 * `tests/test_xcheck.py::CompareCore` (10, synthetic): exact match; wrong constant; reversed condition; REL32
   correct; REL32 wrong target; DIR32 data reference right/wrong; DIR32 addend respected; unknown symbol →
   UNRESOLVED; unsupported reloc; truncated and padded candidates → SIZE.
@@ -101,6 +104,44 @@ copied sources kept old timestamps, so the build reused the previous mutant's ob
 invisible because the object was deleted before comparing. One candidate mutant (removing the `return` in
 `GmPlug::Disconnect`) turned out to be equivalent, because `Unlink` zeroes `m_plugNext` and stops the loop anyway, and
 was replaced. A surviving mutant must be explained like this, never just dropped.
+
+## Independent cross-check: Ghidra (tools/ghidra_compare.py)
+
+Ghidra 12.1.4 with ghidra-xbe, headless (`docs/toolchain.md` has the command; the export script is
+`tools/ghidra/ExportInventory.java`; analysis took 147 s). Agreement between tools is corroboration, not proof, and neither is
+the reference. Results on 2026-11-05 after the fixes below:
+
+| Check | Result |
+| --- | --- |
+| Section map | 17/17 same address, size and execute flag |
+| Entry point | 0x00085375 in both |
+| Kernel import slots | 124/124 carry a Ghidra import symbol at the same slot |
+| `.text` bytes reached as code | ours 91.8%, Ghidra 90.5% |
+| Function starts | ours 17,522 (14,370 source, 3,152 compiler-generated); Ghidra 11,882; shared 11,352 |
+| Extents of shared starts | same end 11,307; different 45 |
+| Recorded functions | 47: 36 agree; 11 differ, all explained below |
+
+The 11 recorded differences, checked against the disassembly: 4 are recorded as contiguous extents and include alignment
+padding that Ghidra's flow analysis skips (`DisconnectAll`, `Disconnect`, `IsConnectedTo` 3 bytes; `Allocate` 6 bytes, Ghidra
+shows two ranges). 7 are functions reached only through vftables, which Ghidra disassembled but did not make functions.
+Those 7 are supported by the vftable checks and the oracle. Ghidra found no error in them.
+
+Open disagreements, not resolved: about 1,830 pointer-seeded and 700 gap-seeded starts where Ghidra has code but no function, most
+likely vftable-only or indirectly called functions, since Ghidra's RTTI analyzer targets PE files, though each one is
+unverified; 197 source starts of ours where Ghidra has no code; 22 of those are `call` targets, reached from code that Ghidra did not
+disassemble; 530 starts only Ghidra has (381 in library sections that funcs.py only partly explores); 45 differing extents,
+some still absorbing a jump target not preceded by padding (0x000C93B0). **The 14,370 is therefore still a candidate count.**
+
+What the cross-check corrected in tools/funcs.py:
+
+* 3,152 "functions" were compiler-generated EH code: 1,957 unwind funclets and 1,195 handler thunks. Found because Ghidra
+  did not disassemble the pointer seeds in 0x001F5xxx-0x00200xxx. Now classified from the `FuncInfo` metadata itself, not a
+  heuristic, as `kind`. Every thunk's handler is 0x00125784, which the plugin independently names `___CxxFrameHandler`.
+* Function extents depended on discovery order and absorbed tail calls (0x00013380 "ended" at 0x0001F2F4). Bodies containing
+  another start fell from 453 to 52.
+
+Denominator change, with the reason above: cycle 1's 15,544 candidates become 14,370 `source` candidates plus 3,152 generated.
+New starts appear from the tail-call rule. Compare only like with like.
 
 ## Other checks in place
 

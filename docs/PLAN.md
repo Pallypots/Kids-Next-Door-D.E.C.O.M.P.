@@ -9,7 +9,7 @@
    database. Report game/engine, middleware and SDK/CRT denominators separately.
 4. **First archived format.** Pick a type consumed by code that is already understood, and follow that code.
 5. **Application framework.** `AtAp*Application` vtables → main loop and subsystem start-up order.
-6. **Tool cross-check (needs owner approval to download).** Ghidra + ghidra-xbe import; compare section map, entry,
-   thunks, boundaries with tools/funcs.py; export a function list with Ghidra confidence for disagreements only.
+6. **Close the open Ghidra disagreements** where they affect work in hand (docs/verification.md); feed high-confidence
+   starts to Ghidra so that vftable-only functions become functions there too.
 7. **Original toolchain (needs an authorised VC 7.1 from the owner).** Add it to config/toolchain.toml and rerun
    everything; promote functions only on its results.

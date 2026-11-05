@@ -7,11 +7,20 @@ Evidence sources (each function records which ones found it):
   vtable      slot of a vtable recovered through MSVC RTTI (COL -> type descriptor)   (high, and gives a class)
   ptr         aligned pointer in .rdata/.data into code, after padding, decodes sanely (medium)
   gap         16-aligned uncovered .text address after 0xCC/ret padding, decodes sanely (low)
+  eh_unwind   destructor funclet listed in an MSVC FuncInfo unwind map                (high; compiler-generated)
+  eh_catch    catch block listed in an MSVC FuncInfo try-block map                    (high; holds source logic)
+  eh_thunk    `mov eax,<FuncInfo>; jmp <frame handler>` per-function handler thunk    (high; compiler-generated)
+  tailpad     target of a JMP, directly after 0xCC padding: a tail call                (medium)
   tailjmp     (annotation) target of a JMP from another function
 
 Function bodies come from recursive descent (conditional branches, in-function jumps, MSVC jump tables of the
 form `jmp [reg*4+table]`). Bodies that contain another function's start (shared tails, fall-through, or a mis-seed)
 are flagged in `contains_other_starts`, never silently merged. Counts from this tool are an inventory, not progress.
+
+Each record has a `kind`: `source` (a candidate function that existed in source), or `eh_unwind` / `eh_thunk` (generated
+by the compiler, no source function of their own), or `eh_catch` (logic that belongs to its parent's source function).
+Only `source` belongs in a function-count denominator. The others stay listed because a whole-image reconstruction must
+still account for their bytes.
 
   python -I tools/funcs.py <default.xbe> <out_dir>
 writes functions.json, classes.json, coverage.json and a summary to stdout.
@@ -30,7 +39,10 @@ from capstone import x86 as cx  # noqa: E402
 CODE_SECTIONS = (".text", "D3D", "D3DX", "XGRPH", "DSOUND", "XACTENG", "PSFD_I", "PSFD_B", "PSFD_P", "PSFD00",
                  "WMADEC", "XPP", "DOLBY")
 DATA_SECTIONS = (".rdata", ".data")
-CONFIDENCE = {"entry": "high", "call": "high", "vtable": "high", "ptr": "medium", "gap": "low", "tailjmp": "low"}
+CONFIDENCE = {"entry": "high", "call": "high", "vtable": "high", "ptr": "medium", "gap": "low", "tailjmp": "low",
+              "tailpad": "medium", "eh_unwind": "high", "eh_catch": "high", "eh_thunk": "high"}
+FUNCINFO_MAGIC = (0x19930520, 0x19930521, 0x19930522)
+MAX_EH_STATES = 1 << 16
 RANK = ["low", "medium", "high"]
 PAD = (b"\xcc", b"\xc3", b"\x90")
 
@@ -102,7 +114,7 @@ class Analyzer:
                     op = i.operands[0]
                     if op.type == cx.X86_OP_IMM:
                         t = op.imm & 0xFFFFFFFF
-                        if t in self.funcs and t != start:
+                        if t != start and (t in self.funcs or self.after_padding(t)):
                             tails.add(t)
                         else:
                             todo.append(t)
@@ -127,6 +139,14 @@ class Analyzer:
         self.funcs[va] = None
         return True
 
+    def after_padding(self, va):
+        """MSVC pads between functions with 0xCC and uses other fillers inside them, so code right after 0xCC starts a
+        function. Depends only on the bytes, so the answer cannot change with exploration order."""
+        sec = self.code_sec(va)
+        if sec is None or va <= sec.va:
+            return False
+        return self.x.read_va(va - 1, 1)[0] == 0xCC
+
     def grow(self, seeds, why):
         work = [v for v in seeds if self.add(v, why)]
         n = len(work)
@@ -139,7 +159,19 @@ class Analyzer:
                     work.append(c)
             for t in tails:
                 self.evidence[t].add("tailjmp")
+                if t not in self.funcs and self.after_padding(t) and self.add(t, "tailpad"):
+                    work.append(t)
         return n
+
+    def finalize(self):
+        """Re-explore every function now that all starts are known. explore() treats a jump to a known start as a tail
+        call, so a body explored early could absorb a function found later, making extents depend on processing order.
+        Coverage is unchanged by this; only the assignment of code to functions is."""
+        for f in sorted(self.funcs):
+            insns, calls, tails, jtabs = self.explore(f)
+            self.funcs[f] = {"insns": insns, "jtables": jtabs, "calls": sorted(calls), "tails": sorted(tails)}
+            for t in tails:
+                self.evidence[t].add("tailjmp")
 
     def covered(self):
         c = set()
@@ -240,6 +272,64 @@ def demangle_td(name):
     return kind, "::".join(reversed(parts))
 
 
+def zero_filled_u32(x):
+    """u32 reader that returns 0 in a section's mapped but not file-backed tail, as the loaded image would. Addresses
+    outside every section still raise. Trailing zero fields of a structure can fall in that tail."""
+    def u32(va):
+        try:
+            return x.u32_va(va)
+        except xbemod.XbeError:
+            if any(s.va <= va and va + 4 <= s.va + s.vsize for s in x.sections):
+                return 0
+            raise
+    return u32
+
+
+def function_kind(evidence):
+    """Direct evidence of an ordinary function wins: a call or vftable slot cannot target a funclet."""
+    if set(evidence) & {"entry", "call", "vtable"}:
+        return "source"
+    for kind in ("eh_catch", "eh_unwind", "eh_thunk"):
+        if kind in evidence:
+            return kind
+    return "source"
+
+
+def find_eh_thunks(data, base, u32):
+    """[(thunk VA, FuncInfo VA)] for `mov eax,imm32; jmp rel32` whose imm32 addresses a valid FuncInfo magic. A byte scan,
+    so the magic check is what makes a hit credible. u32(va) reads memory and raises on an unmapped address."""
+    out = []
+    i = data.find(b"\xB8")
+    while 0 <= i and i + 10 <= len(data):
+        if data[i + 5] == 0xE9:
+            info = struct.unpack_from("<I", data, i + 1)[0]
+            try:
+                if u32(info) in FUNCINFO_MAGIC:
+                    out.append((base + i, info))
+            except (xbemod.XbeError, KeyError):
+                pass
+        i = data.find(b"\xB8", i + 1)
+    return out
+
+
+def parse_funcinfo(u32, info):
+    """(unwind funclet VAs, catch handler VAs) from an MSVC FuncInfo. Raises ValueError on an implausible structure."""
+    magic, max_state, unwind_map, n_try, try_map = (u32(info + 4 * k) for k in range(5))
+    if magic not in FUNCINFO_MAGIC:
+        raise ValueError("bad FuncInfo magic at 0x%08X" % info)
+    if max_state > MAX_EH_STATES or n_try > MAX_EH_STATES:
+        raise ValueError("implausible FuncInfo counts at 0x%08X" % info)
+    unwind = {u32(unwind_map + 8 * k + 4) for k in range(max_state)} - {0}
+    catches = set()
+    for k in range(n_try):
+        entry = try_map + 20 * k
+        n_catch, handlers = u32(entry + 12), u32(entry + 16)
+        if n_catch > MAX_EH_STATES:
+            raise ValueError("implausible catch count at 0x%08X" % info)
+        catches.update(u32(handlers + 16 * c + 12) for c in range(n_catch))
+    return unwind, catches - {0}
+
+
 def main(argv):
     x = xbemod.load(argv[0])
     out = argv[1]
@@ -253,6 +343,22 @@ def main(argv):
             for k, sl in enumerate(vt["slots"]):
                 vt_names[int(sl, 16)].append("%s[%d]@+%d" % (demangle_td(cname)[1], k, vt["this_offset"]))
     n_vt = a.grow(sorted(vt_names), "vtable")
+    eh_unwind, eh_catch, eh_thunks, eh_bad = set(), set(), set(), []
+    for sec in a.code:
+        for thunk, info in find_eh_thunks(x.read_va(sec.va, sec.rsize), sec.va, x.u32_va):
+            eh_thunks.add(thunk)
+            try:
+                u, c = parse_funcinfo(zero_filled_u32(x), info)
+            except (ValueError, xbemod.XbeError) as e:
+                eh_bad.append("0x%08X: %s" % (thunk, e))
+                continue
+            eh_unwind |= u
+            eh_catch |= c
+    a.grow(sorted(eh_thunks), "eh_thunk")
+    a.grow(sorted(eh_unwind), "eh_unwind")
+    a.grow(sorted(eh_catch), "eh_catch")
+    print("EH: %d handler thunks, %d unwind funclets, %d catch blocks, %d malformed FuncInfo" % (
+        len(eh_thunks), len(eh_unwind), len(eh_catch), len(eh_bad)))
     n_ptr = a.grow(a.pointer_seeds(), "ptr")
     rounds = []
     for _ in range(30):
@@ -261,6 +367,7 @@ def main(argv):
             break
         rounds.append(a.grow(g, "gap"))
     print("new seeds: vtable %d, pointer %d, gap rounds %s" % (n_vt, n_ptr, rounds))
+    a.finalize()
 
     starts = set(a.funcs)
     funcs = []
@@ -271,7 +378,8 @@ def main(argv):
         rec = {"va": "0x%08X" % f, "section": a.code_sec(f).name,
                "insn_bytes": sum(a.decode_one(v).size for v in info["insns"]),
                "min": "0x%08X" % min(info["insns"]), "max_end": "0x%08X" % max(v + a.decode_one(v).size for v in info["insns"]),
-               "evidence": ev, "confidence": conf, "calls": ["0x%08X" % c for c in info["calls"]],
+               "evidence": ev, "confidence": conf, "kind": function_kind(ev),
+               "calls": ["0x%08X" % c for c in info["calls"]],
                "jtables": info["jtables"]}
         inner = sorted(v for v in info["insns"] if v in starts and v != f)
         if inner:
@@ -288,7 +396,9 @@ def main(argv):
     for s in a.code:
         fs = [r for r in funcs if r["section"] == s.name]
         cov[s.name] = {"raw_size": s.rsize, "unique_code_bytes_reached": len(reached[s.name]),
-                       "functions": len(fs), **{c: sum(1 for r in fs if r["confidence"] == c) for c in RANK}}
+                       "functions": len(fs), **{c: sum(1 for r in fs if r["confidence"] == c) for c in RANK},
+                       "kinds": {k: sum(1 for r in fs if r["kind"] == k)
+                                 for k in ("source", "eh_unwind", "eh_thunk", "eh_catch")}}
     cls = {}
     for td_va, n in sorted(tds.items()):
         k, nm = demangle_td(n)
@@ -298,6 +408,7 @@ def main(argv):
     json.dump(cov, open(os.path.join(out, "coverage.json"), "w"), indent=1)
     print("functions: %d  (%s)" % (len(funcs), ", ".join("%s %d" % (c, sum(1 for r in funcs if r["confidence"] == c))
                                                           for c in reversed(RANK))))
+    print("kinds: %s" % {k: sum(1 for r in funcs if r["kind"] == k) for k in ("source", "eh_unwind", "eh_thunk", "eh_catch")})
     print("flagged containing another start: %d" % sum(1 for r in funcs if "contains_other_starts" in r))
     print("RTTI type descriptors: %d, with vtables: %d, vtables: %d" % (
         len(cls), sum(1 for c in cls.values() if c["vtables"]), sum(len(c["vtables"]) for c in cls.values())))
