@@ -1,0 +1,44 @@
+# Owner inputs and anything derived from them: never commit.
+*.iso
+*.xiso
+*.xbe
+*.xbx
+*.bin
+*.img
+*.gdi
+*.cso
+orig/
+private/
+analysis-local/
+build/
+build-*/
+out/
+
+# Ghidra projects / analysis databases
+*.gpr
+*.rep/
+*.lock
+*.lock~
+ghidra-projects/
+
+# Generated disassembly, dumps, traces
+*.s.gen
+*.asm.gen
+*.trace
+*.dump
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Editors / OS
+.vs/
+.vscode/
+*.swp
+Thumbs.db
+desktop.ini
+
+# Loose owner notes dropped next to the discs
+Game Walkthrough.txt
+info.txt

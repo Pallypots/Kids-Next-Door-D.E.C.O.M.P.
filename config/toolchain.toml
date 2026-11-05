@@ -1,0 +1,13 @@
+# Compilers available for the verification loop. See docs/toolchain.md for the evidence behind each choice.
+#
+# The ORIGINAL toolchain is not established. XDK 5849 titles were built with Visual C++ .NET (7.x) — hypothesis,
+# not yet proven for this binary. No such compiler is installed. Results from "msvc14-host" are reported as
+# matches *with that compiler*; they prove the source reproduces those bytes, not which compiler shipped the game.
+
+[compiler.msvc14-host]
+description = "MSVC 19.44 (VS 2022 Build Tools 14.44.35207), x86 target — host compiler, NOT original-era"
+bin = "C:/Program Files (x86)/Microsoft Visual Studio/2022/BuildTools/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x86"
+# /arch:IA32: x87 floating point like the original (modern default is SSE2). /GS-: no security cookies.
+# /Gy: one COMDAT section per function (the checker extracts per-function sections). /Zl: no default lib refs.
+flags = ["/nologo", "/c", "/O2", "/Oy", "/GS-", "/Gy", "/Zl", "/arch:IA32", "/GR", "/EHsc",
+         "/Zc:threadSafeInit-", "/std:c++14", "/I", "include"]

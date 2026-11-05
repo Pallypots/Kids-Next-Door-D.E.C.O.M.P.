@@ -1,0 +1,14 @@
+# The single reference build for this project. Addresses anywhere in the repository refer to THIS build only.
+id = "knd-xbox-usa-5454008a-v1"
+platform = "Original Xbox"
+title = "Codename: Kids Next Door"   # certificate title name
+title_id = "5454008A"
+certificate_version = 1
+game_region = 0x00000001             # certificate field; region flags per xboxdevwiki
+allowed_media = 0x00000202
+xbe_path_in_disc = "/default.xbe"
+xbe_size = 2879488
+xbe_sha256 = "f5f48a6f31b33c86bea6737cc68aa9f600f5a42c084cc7d2d2dbbebbf5f96929"
+xbe_variant = "retail"               # entry point / kernel thunk decode only with the retail XOR keys
+xdk_library_version = "1.0.5849"     # all 8 library version records
+local_xbe = "orig/xiso/default.xbe"  # ignored by git; extracted with tools/xdvdfs.py

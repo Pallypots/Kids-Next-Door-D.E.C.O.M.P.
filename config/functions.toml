@@ -1,0 +1,109 @@
+# Recovered-function records for reference build knd-xbox-usa-5454008a-v1.
+# One [[function]] per original function. `size` = contiguous original extent excluding trailing 0xCC padding,
+# measured with tools/funcs.py (recursive descent) and cross-checked by eye against the disassembly.
+# `state` is written by hand ONLY as the target of the claim; tools/verify.py prints the measured result and
+# docs/STATE.md progress is generated from its report — never edit a status to green manually.
+
+reference_build = "knd-xbox-usa-5454008a-v1"
+
+[[function]]
+va = 0x00076EA0
+size = 10
+symbol = "?First@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 1"
+
+[[function]]
+va = 0x00076EB0
+size = 10
+symbol = "?Last@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 2"
+
+[[function]]
+va = 0x00076EC0
+size = 14
+symbol = "?Next@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 3"
+
+[[function]]
+va = 0x00076ED0
+size = 14
+symbol = "?Prev@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 4"
+
+[[function]]
+va = 0x00076F30
+size = 20
+symbol = "?NextData@GmLinkedListIterator@@UAEPAXXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 5"
+
+[[function]]
+va = 0x00076F50
+size = 20
+symbol = "?PrevData@GmLinkedListIterator@@UAEPAXXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 6"
+
+[[function]]
+va = 0x00076F20
+size = 12
+symbol = "?Current@GmLinkedListIterator@@UAEPAXXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 7"
+
+[[function]]
+va = 0x00076EE0
+size = 52
+symbol = "?At@GmLinkedListIterator@@UAEPAXH@Z"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 8"
+
+[[function]]
+va = 0x00076E80
+size = 25
+symbol = "?Count@GmLinkedListIterator@@UAEHXZ"
+source = "src/gm/GmLinkedListIterator.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCC4 slot 9"
+
+[[function]]
+va = 0x00076E40
+size = 11
+symbol = "?IsEmpty@?$GmLinkedListOf@PAVFaUiBase@@@@UAEHXZ"
+source = "src/gm/GmLinkedListOf_FaUiBase.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCA4 (GmLinkedListOf<FaUiBase*>) slot 4"
+
+[[function]]
+va = 0x00075FE0
+size = 13
+symbol = "?Contains@?$GmLinkedListOf@PAVFaUiBase@@@@UAEHPAVFaUiBase@@@Z"
+source = "src/gm/GmLinkedListOf_FaUiBase.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCA4 slot 3; calls 0x00076CB0"
+
+[[function]]
+va = 0x00075FF0
+size = 13
+symbol = "?Remove@?$GmLinkedListOf@PAVFaUiBase@@@@UAEXPAVFaUiBase@@@Z"
+source = "src/gm/GmLinkedListOf_FaUiBase.cpp"
+subsystem = "gm/containers"
+evidence = "RTTI vftable 0x0027BCA4 slot 2; calls 0x00076C80"
+
+# Symbols referenced by relocations in recovered code. Name -> original VA. A relocation whose symbol is missing
+# here makes the checker fail (UNRESOLVED); entries must cite their evidence.
+[symbols]
+"?IsMemberOf@FaUiBase@@QAEHPAVGmSocket@@@Z" = 0x00076CB0  # direct call target in 0x00075FE0; owner class inferred
+"?RemoveFrom@FaUiBase@@QAEXPAVGmSocket@@@Z" = 0x00076C80  # direct call target in 0x00075FF0; owner class inferred
