@@ -3,7 +3,7 @@
 Generated: 2026-11-05
 
 Reference build `knd-xbox-usa-5454008a-v1`, XBE SHA-256 `f5f48a6f31b33c86bea6737cc68aa9f600f5a42c084cc7d2d2dbbebbf5f96929`.
-Checker `tools/xcheck.py` SHA-256 `e9343f982547588d5473d031d9f8e56cb7f1b4df7649bdb3bd3c189e7cdbff12`; compiler: Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x86 (`msvc14-host`).
+Checker `tools/xcheck.py` SHA-256 `ad997f47ccc83a7f43870c14d1fe81e4b309889f82990d64f7733f755b2b6896`; compiler: Microsoft (R) C/C++ Optimizing Compiler Version 19.44.35229 for x86 (`msvc14-host`).
 
 ## Inventory denominators (tools/funcs.py, candidate functions — not verified boundaries)
 
@@ -31,21 +31,79 @@ name. See docs/STATE.md for the evidence-based partial map.
 
 | VA | Size | Symbol | Subsystem | Result |
 | --- | ---: | --- | --- | --- |
+| 0x00075FB0 | 18 | `??0GmSocket@@QAE@PAX@Z` | gm/containers | MISMATCH |
+| 0x00075FD0 | 7 | `??1GmSocket@@UAE@XZ` | gm/containers | MATCH |
+| 0x00075FE0 | 13 | `?Contains@GmSocket@@UAEHPAVGmPlug@@@Z` | gm/containers | MATCH |
+| 0x00075FF0 | 13 | `?Remove@GmSocket@@UAEXPAVGmPlug@@@Z` | gm/containers | MATCH |
+| 0x00076000 | 31 | `??_GGmIterator@@UAEPAXI@Z` | gm/containers | MATCH |
+| 0x00076020 | 18 | `??0GmSocketIterator@@QAE@PAVGmSocket@@@Z` | gm/containers | SIZE |
+| 0x00076040 | 7 | `??1GmIterator@@UAE@XZ` | gm/containers | MATCH |
+| 0x00076050 | 30 | `??_GGmSocketIterator@@UAEPAXI@Z` | gm/containers | SIZE |
+| 0x00076C10 | 16 | `??0GmPlug@@QAE@XZ` | gm/containers | MISMATCH |
+| 0x00076C20 | 40 | `?DisconnectAll@GmPlug@@QAEXXZ` | gm/containers | MISMATCH |
+| 0x00076C50 | 41 | `??1GmPlug@@UAE@XZ` | gm/containers | MISMATCH |
+| 0x00076C80 | 39 | `?Disconnect@GmPlug@@QAEXPAVGmSocket@@@Z` | gm/containers | MATCH |
+| 0x00076CB0 | 41 | `?IsConnectedTo@GmPlug@@QAEHPAVGmSocket@@@Z` | gm/containers | MATCH |
+| 0x00076CE0 | 61 | `??_GGmPlug@@UAEPAXI@Z` | gm/containers | MISMATCH |
+| 0x00076D20 | 25 | `??0GmLinkedListNode@@QAE@XZ` | gm/containers | SIZE |
+| 0x00076D40 | 81 | `?Disconnect@GmLinkedListNode@@UAEXXZ` | gm/containers | SIZE |
+| 0x00076DA0 | 34 | `??0GmLinkedList@@QAE@XZ` | gm/containers | SIZE |
+| 0x00076DD0 | 110 | `??1GmLinkedList@@UAE@XZ` | gm/containers | SIZE |
+| 0x00076E40 | 11 | `?IsEmpty@GmLinkedList@@UAEHXZ` | gm/containers | SIZE |
+| 0x00076E50 | 37 | `??0GmLinkedListIterator@@QAE@PAVGmLinkedList@@@Z` | gm/containers | SIZE |
+| 0x00076E80 | 25 | `?Count@GmLinkedListIterator@@UAEHXZ` | gm/containers | MATCH |
 | 0x00076EA0 | 10 | `?First@GmLinkedListIterator@@UAEXXZ` | gm/containers | MISMATCH |
 | 0x00076EB0 | 10 | `?Last@GmLinkedListIterator@@UAEXXZ` | gm/containers | MISMATCH |
 | 0x00076EC0 | 14 | `?Next@GmLinkedListIterator@@UAEXXZ` | gm/containers | MATCH |
 | 0x00076ED0 | 14 | `?Prev@GmLinkedListIterator@@UAEXXZ` | gm/containers | MATCH |
+| 0x00076EE0 | 52 | `?At@GmLinkedListIterator@@UAEPAXH@Z` | gm/containers | MISMATCH |
+| 0x00076F20 | 12 | `?Current@GmLinkedListIterator@@UAEPAXXZ` | gm/containers | MATCH |
 | 0x00076F30 | 20 | `?NextData@GmLinkedListIterator@@UAEPAXXZ` | gm/containers | SIZE |
 | 0x00076F50 | 20 | `?PrevData@GmLinkedListIterator@@UAEPAXXZ` | gm/containers | SIZE |
-| 0x00076F20 | 12 | `?Current@GmLinkedListIterator@@UAEPAXXZ` | gm/containers | MATCH |
-| 0x00076EE0 | 52 | `?At@GmLinkedListIterator@@UAEPAXH@Z` | gm/containers | MISMATCH |
-| 0x00076E80 | 25 | `?Count@GmLinkedListIterator@@UAEHXZ` | gm/containers | MATCH |
-| 0x00076E40 | 11 | `?IsEmpty@?$GmLinkedListOf@PAVFaUiBase@@@@UAEHXZ` | gm/containers | SIZE |
-| 0x00075FE0 | 13 | `?Contains@?$GmLinkedListOf@PAVFaUiBase@@@@UAEHPAVFaUiBase@@@Z` | gm/containers | MATCH |
-| 0x00075FF0 | 13 | `?Remove@?$GmLinkedListOf@PAVFaUiBase@@@@UAEXPAVFaUiBase@@@Z` | gm/containers | MATCH |
+| 0x00076F70 | 25 | `?RemoveCurrent@GmLinkedListIterator@@QAEXXZ` | gm/containers | MISMATCH |
+| 0x00076F90 | 85 | `?Allocate@GmLinkedListNode@@SAPAV1@XZ` | gm/containers | SIZE |
+| 0x00076FF0 | 79 | `??1GmLinkedListNode@@UAE@XZ` | gm/containers | SIZE |
+| 0x00077040 | 30 | `??_GGmLinkedList@@UAEPAXI@Z` | gm/containers | SIZE |
+| 0x00077060 | 71 | `?Append@GmLinkedList@@UAEXPAVGmPlug@@@Z` | gm/containers | SIZE |
+| 0x000770B0 | 45 | `?RemoveAll@GmLinkedListIterator@@QAEXXZ` | gm/containers | SIZE |
+| 0x000770E0 | 30 | `??_GGmLinkedListNode@@UAEPAXI@Z` | gm/containers | MATCH |
+| 0x0007CDF0 | 51 | `?Unlink@GmConnection@@QAEXXZ` | gm/containers | SIZE |
+| 0x0007CE30 | 26 | `??0GmConnection@@QAE@XZ` | gm/containers | SIZE |
+| 0x0007CE50 | 24 | `??1GmConnection@@UAE@XZ` | gm/containers | SIZE |
+| 0x0007CE70 | 61 | `?Connect@GmConnection@@QAEXPAVGmSocket@@PAVGmPlug@@@Z` | gm/containers | MISMATCH |
+| 0x0007CEB0 | 48 | `??_GGmConnection@@UAEPAXI@Z` | gm/containers | SIZE |
+| 0x00097930 | 88 | `??1?$GmLinkedListOf@PAVFaUiBase@@@@UAE@XZ` | gm/containers | SIZE |
+| 0x00097990 | 30 | `??_G?$GmLinkedListOf@PAVFaUiBase@@@@UAEPAXI@Z` | gm/containers | SIZE |
+| 0x00097A20 | 30 | `??_GGmLinkedListIterator@@UAEPAXI@Z` | gm/containers | MISMATCH |
+| 0x000DF720 | 10 | `?SetContext@GmSocket@@QAEXPAX@Z` | gm/containers | MATCH |
+| 0x00137C80 | 11 | `??1GmLinkedListIterator@@UAE@XZ` | gm/containers | SIZE |
+| 0x000979B0 | 8 | `??_E?$GmLinkedListOf@PAVFaUiBase@@@@WBA@AEPAXI@Z` | gm/containers | MATCH |
 
-Relocation-aware matches with the host compiler: 6 functions, 91 unique bytes.
-Share of `.text` raw bytes: 0.0045% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 14 functions, 264 unique bytes.
+Share of `.text` raw bytes: 0.0129% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
+
+## Vftables (tools/verify.py)
+
+| VA | Slots | Symbol | Result |
+| --- | ---: | --- | --- |
+| 0x00278418 | 5 | `??_7GmSocket@@6B@` | MATCH |
+| 0x0027842C | 10 | `??_7GmIterator@@6B@` | MATCH |
+| 0x00278454 | 10 | `??_7GmSocketIterator@@6B@` | MATCH |
+| 0x0027855C | 1 | `??_7GmPlug@@6B@` | MATCH |
+| 0x002793D0 | 2 | `??_7GmConnection@@6B@` | MATCH |
+| 0x00278560 | 2 | `??_7GmLinkedListNode@@6B@` | MATCH |
+| 0x00278568 | 5 | `??_7GmLinkedList@@6B@` | MATCH |
+| 0x0027BCC4 | 10 | `??_7GmLinkedListIterator@@6B@` | MATCH |
+| 0x0027BCA4 | 5 | `??_7?$GmLinkedListOf@PAVFaUiBase@@@@6BGmLinkedList@@@` | MATCH |
+| 0x0027BCBC | 1 | `??_7?$GmLinkedListOf@PAVFaUiBase@@@@6BGmPlug@@@` | MATCH |
+
+## Differential oracle against the original code (tools/oracle_run.py)
+
+Seeds with no observed difference: 20 / 20, 5000 operations each.
+Recorded function entries reached in every seed: 47 / 47.
+Source mutants detected: 23 / 23. Positive control exit: 0. Harness mutation exit: 1.
+
+This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

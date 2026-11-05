@@ -12,6 +12,9 @@ Rules (docs/verification.md):
     masked. DIR32: original u32 == map[sym] + addend. REL32: field_va + 4 + s32(original) == map[sym] + addend.
   * Other relocation types fail as UNSUPPORTED until a regression test exists for them.
 
+Vtables (check_vtable): the object's vftable must have exactly the recorded slot count, every slot must be a DIR32
+relocation, and the symbol it names (plus addend) must map to the address stored in the original slot.
+
 Result codes: MATCH, MISMATCH, SIZE, UNRESOLVED, UNSUPPORTED, MISSING.
 """
 import struct
@@ -20,6 +23,7 @@ IMAGE_FILE_MACHINE_I386 = 0x14C
 REL_I386 = {0x0006: "DIR32", 0x0014: "REL32", 0x0007: "DIR32NB", 0x000B: "SECREL", 0x000A: "SECTION"}
 IMAGE_SCN_LNK_COMDAT = 0x1000
 IMAGE_SCN_CNT_CODE = 0x20
+IMAGE_SYM_CLASS_WEAK_EXTERNAL = 105
 
 
 class CoffError(Exception):
@@ -48,7 +52,8 @@ class Coff:
             vsize, va, size, ptr, prel, _, nrel, _, ch = struct.unpack_from("<IIIIIIHHI", d, o + 8)
             if name.startswith("/"):
                 name = self._str(int(name[1:]))
-            if ptr + size > len(d) or prel + 10 * nrel > len(d):
+            # ptr == 0 means no raw data in the file (.bss): the size is then a memory size, not a file extent.
+            if (ptr and ptr + size > len(d)) or prel + 10 * nrel > len(d):
                 raise CoffError("section %s data/relocations outside file" % name)
             relocs = [struct.unpack_from("<IIH", d, prel + 10 * k) for k in range(nrel)]
             self.sections.append({"name": name, "raw": d[ptr:ptr + size] if ptr else b"\0" * size,
@@ -61,11 +66,25 @@ class Coff:
             name = self._str(struct.unpack_from("<I", raw, 4)[0]) if raw[:4] == b"\0\0\0\0" else \
                 raw.rstrip(b"\0").decode("latin-1")
             value, secno, typ, cls, naux = struct.unpack_from("<IhHBB", d, o + 8)
-            self.symbols.append({"name": name, "value": value, "section": secno, "type": typ, "class": cls,
-                                 "index": k})
+            sym = {"name": name, "value": value, "section": secno, "type": typ, "class": cls, "index": k}
+            if cls == IMAGE_SYM_CLASS_WEAK_EXTERNAL and naux:  # aux record: u32 index of the default definition
+                sym["weak_default"] = struct.unpack_from("<I", d, o + 18)[0]
+            self.symbols.append(sym)
             for _ in range(naux):
                 self.symbols.append(None)
             k += 1 + naux
+
+    def reloc_symbol_name(self, index):
+        """Name a relocation refers to. A weak external resolves to its default definition, as the linker would do
+        (modern MSVC vftables name ??_E, a weak alias of ??_G)."""
+        s = self.symbols[index]
+        if s is None:
+            return "?aux"
+        seen = set()
+        while "weak_default" in s and s["weak_default"] not in seen:
+            seen.add(s["weak_default"])
+            s = self.symbols[s["weak_default"]]
+        return s["name"]
 
     def _str(self, off):
         end = self.strtab.find(b"\0", off)
@@ -88,8 +107,7 @@ class Coff:
         relocs = []
         for off, symidx, typ in sec["relocs"]:
             if start <= off < end:
-                s = self.symbols[symidx]
-                relocs.append((off - start, typ, s["name"] if s else "?aux"))
+                relocs.append((off - start, typ, self.reloc_symbol_name(symidx)))
         return sec["raw"][start:end], relocs
 
     def defined_functions(self):
@@ -135,6 +153,48 @@ def check_function(coff, symbol, xbe, va, size, symmap):
     except Exception as e:  # noqa: BLE001 - report, do not hide
         return "SIZE", "cannot read original range: %s" % e
     return compare(cand, relocs, orig, va, symmap, size)
+
+
+def compare_vtable(section_tail, relocs, orig, symmap, slots):
+    """Pure core of check_vtable. section_tail: section bytes from the vftable symbol to the section end.
+    relocs: [(offset from vftable symbol, type, symbol name)]. orig: original bytes of the recorded slots."""
+    if len(section_tail) != 4 * slots:
+        return "SIZE", "candidate vftable has %d bytes, original %d slots" % (len(section_tail), slots)
+    if len(orig) != 4 * slots:
+        return "SIZE", "original range shorter than %d slots" % slots
+    by_off = {off: (typ, name) for off, typ, name in relocs}
+    for k in range(slots):
+        off = 4 * k
+        if off not in by_off:
+            return "MISMATCH", "slot %d has no relocation" % k
+        typ, name = by_off[off]
+        if REL_I386.get(typ) != "DIR32":
+            return "UNSUPPORTED", "slot %d relocation type 0x%X" % (k, typ)
+        if name not in symmap:
+            return "UNRESOLVED", "slot %d symbol %s is not in the symbol map" % (k, name)
+        addend = struct.unpack_from("<i", section_tail, off)[0]
+        want = (symmap[name] + addend) & 0xFFFFFFFF
+        got = struct.unpack_from("<I", orig, off)[0]
+        if got != want:
+            return "MISMATCH", "slot %d: original 0x%08X, candidate %s = 0x%08X" % (k, got, name, want)
+    return "MATCH", "%d slots resolved by symbol" % slots
+
+
+def check_vtable(coff, symbol, xbe, va, slots, symmap):
+    sym = next((s for s in coff.symbols if s and s["name"] == symbol and s["section"] > 0), None)
+    if sym is None:
+        return "MISSING", "vftable symbol %s not defined in object" % symbol
+    sec = coff.sections[sym["section"] - 1]
+    start = sym["value"]
+    relocs = []
+    for off, symidx, typ in sec["relocs"]:
+        if off >= start:
+            relocs.append((off - start, typ, coff.reloc_symbol_name(symidx)))
+    try:
+        orig = xbe.read_va(va, 4 * slots)
+    except Exception as e:  # noqa: BLE001 - report, do not hide
+        return "SIZE", "cannot read original range: %s" % e
+    return compare_vtable(sec["raw"][start:], relocs, orig, symmap, slots)
 
 
 def load(path):

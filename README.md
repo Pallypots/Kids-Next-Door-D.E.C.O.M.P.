@@ -13,8 +13,11 @@ This is not a static recompilation or an emulator wrapper. See [CLAUDE.md](CLAUD
 python -I tools/xdvdfs.py extract "<your disc>.iso" default.xbe orig/xiso/default.xbe
 python -I tools/xbe.py info orig/xiso/default.xbe
 python -I tools/funcs.py orig/xiso/default.xbe analysis-local/inv
+python -I tools/jam.py check "<your disc>.iso"
 python -I tools/verify.py
+python -I tools/oracle_run.py
 python -I -m unittest discover -s tests -v
 ```
 
 Requires Python 3.11+ with `capstone` and, for verification, MSVC (x86) as configured in `config/toolchain.toml`.
+`tools/oracle_run.py` also needs CMake and builds a 32-bit Windows analysis program; it never ships.

@@ -1,109 +1,452 @@
 # Recovered-function records for reference build knd-xbox-usa-5454008a-v1.
 # One [[function]] per original function. `size` = contiguous original extent excluding trailing 0xCC padding,
-# measured with tools/funcs.py (recursive descent) and cross-checked by eye against the disassembly.
-# `state` is written by hand ONLY as the target of the claim; tools/verify.py prints the measured result and
-# docs/STATE.md progress is generated from its report — never edit a status to green manually.
+# measured from the disassembly (tools/xdis.py). No record carries a status: tools/verify.py measures every result
+# and docs/PROGRESS.md is generated from its report.
 
 reference_build = "knd-xbox-usa-5454008a-v1"
 
 [[function]]
-va = 0x00076EA0
-size = 10
-symbol = "?First@GmLinkedListIterator@@UAEXXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00075FB0
+size = 18
+symbol = "??0GmSocket@@QAE@PAX@Z"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 1"
+evidence = "stores vftable 0x00278418; called by 0x00076DA0"
 
 [[function]]
-va = 0x00076EB0
-size = 10
-symbol = "?Last@GmLinkedListIterator@@UAEXXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00075FD0
+size = 7
+symbol = "??1GmSocket@@UAE@XZ"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 2"
+evidence = "stores vftable 0x00278418; tail of ~GmLinkedList"
 
 [[function]]
-va = 0x00076EC0
-size = 14
-symbol = "?Next@GmLinkedListIterator@@UAEXXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00075FE0
+size = 13
+symbol = "?Contains@GmSocket@@UAEHPAVGmPlug@@@Z"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 3"
+evidence = "vftable 0x00278418 slot 3; calls 0x00076CB0"
 
 [[function]]
-va = 0x00076ED0
-size = 14
-symbol = "?Prev@GmLinkedListIterator@@UAEXXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00075FF0
+size = 13
+symbol = "?Remove@GmSocket@@UAEXPAVGmPlug@@@Z"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 4"
+evidence = "vftable 0x00278418 slot 2; calls 0x00076C80"
 
 [[function]]
-va = 0x00076F30
-size = 20
-symbol = "?NextData@GmLinkedListIterator@@UAEPAXXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00076000
+size = 31
+symbol = "??_GGmIterator@@UAEPAXI@Z"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 5"
+evidence = "vftable 0x0027842C slot 0 (compiler-generated)"
 
 [[function]]
-va = 0x00076F50
-size = 20
-symbol = "?PrevData@GmLinkedListIterator@@UAEPAXXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00076020
+size = 18
+symbol = "??0GmSocketIterator@@QAE@PAVGmSocket@@@Z"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 6"
+evidence = "stores vftable 0x00278454"
 
 [[function]]
-va = 0x00076F20
-size = 12
-symbol = "?Current@GmLinkedListIterator@@UAEPAXXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00076040
+size = 7
+symbol = "??1GmIterator@@UAE@XZ"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 7"
+evidence = "stores vftable 0x0027842C"
 
 [[function]]
-va = 0x00076EE0
-size = 52
-symbol = "?At@GmLinkedListIterator@@UAEPAXH@Z"
-source = "src/gm/GmLinkedListIterator.cpp"
+va = 0x00076050
+size = 30
+symbol = "??_GGmSocketIterator@@UAEPAXI@Z"
+source = "src/gm/GmSocket.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 8"
+evidence = "vftable 0x00278454 slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x00076C10
+size = 16
+symbol = "??0GmPlug@@QAE@XZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftable 0x0027855C"
+
+[[function]]
+va = 0x00076C20
+size = 40
+symbol = "?DisconnectAll@GmPlug@@QAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "same walk as the destructor, no vftable store; caller 0x00071239"
+
+[[function]]
+va = 0x00076C50
+size = 41
+symbol = "??1GmPlug@@UAE@XZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftable 0x0027855C; base dtor of 0x00097930"
+
+[[function]]
+va = 0x00076C80
+size = 39
+symbol = "?Disconnect@GmPlug@@QAEXPAVGmSocket@@@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "called by 0x00075FF0"
+
+[[function]]
+va = 0x00076CB0
+size = 41
+symbol = "?IsConnectedTo@GmPlug@@QAEHPAVGmSocket@@@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "called by 0x00075FE0"
+
+[[function]]
+va = 0x00076CE0
+size = 61
+symbol = "??_GGmPlug@@UAEPAXI@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027855C slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x00076D20
+size = 25
+symbol = "??0GmLinkedListNode@@QAE@XZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "pool constructor passed at 0x00200ED5; stores vftable 0x00278560"
+
+[[function]]
+va = 0x00076D40
+size = 81
+symbol = "?Disconnect@GmLinkedListNode@@UAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x00278560 slot 1"
+
+[[function]]
+va = 0x00076DA0
+size = 34
+symbol = "??0GmLinkedList@@QAE@XZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftable 0x00278568"
+
+[[function]]
+va = 0x00076DD0
+size = 110
+symbol = "??1GmLinkedList@@UAE@XZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftable 0x00278568"
+
+[[function]]
+va = 0x00076E40
+size = 11
+symbol = "?IsEmpty@GmLinkedList@@UAEHXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x00278568 slot 4"
+
+[[function]]
+va = 0x00076E50
+size = 37
+symbol = "??0GmLinkedListIterator@@QAE@PAVGmLinkedList@@@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftable 0x0027BCC4; 66 callers"
 
 [[function]]
 va = 0x00076E80
 size = 25
 symbol = "?Count@GmLinkedListIterator@@UAEHXZ"
-source = "src/gm/GmLinkedListIterator.cpp"
+source = "src/gm/GmLinkedList.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCC4 slot 9"
+evidence = "vftable 0x0027BCC4 slot 9"
 
 [[function]]
-va = 0x00076E40
+va = 0x00076EA0
+size = 10
+symbol = "?First@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 1"
+
+[[function]]
+va = 0x00076EB0
+size = 10
+symbol = "?Last@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 2"
+
+[[function]]
+va = 0x00076EC0
+size = 14
+symbol = "?Next@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 3"
+
+[[function]]
+va = 0x00076ED0
+size = 14
+symbol = "?Prev@GmLinkedListIterator@@UAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 4"
+
+[[function]]
+va = 0x00076EE0
+size = 52
+symbol = "?At@GmLinkedListIterator@@UAEPAXH@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 8"
+
+[[function]]
+va = 0x00076F20
+size = 12
+symbol = "?Current@GmLinkedListIterator@@UAEPAXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 7"
+
+[[function]]
+va = 0x00076F30
+size = 20
+symbol = "?NextData@GmLinkedListIterator@@UAEPAXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 5"
+
+[[function]]
+va = 0x00076F50
+size = 20
+symbol = "?PrevData@GmLinkedListIterator@@UAEPAXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 6"
+
+[[function]]
+va = 0x00076F70
+size = 25
+symbol = "?RemoveCurrent@GmLinkedListIterator@@QAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "walks m_cur and calls connection slot 1; caller 0x0019597F"
+
+[[function]]
+va = 0x00076F90
+size = 85
+symbol = "?Allocate@GmLinkedListNode@@SAPAV1@XZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "called only by 0x00077060; scans the pool"
+
+[[function]]
+va = 0x00076FF0
+size = 79
+symbol = "??1GmLinkedListNode@@UAE@XZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "pool destructor passed at 0x00200ED0; stores vftable 0x00278560"
+
+[[function]]
+va = 0x00077040
+size = 30
+symbol = "??_GGmLinkedList@@UAEPAXI@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x00278568 slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x00077060
+size = 71
+symbol = "?Append@GmLinkedList@@UAEXPAVGmPlug@@@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x00278568 slot 1"
+
+[[function]]
+va = 0x000770B0
+size = 45
+symbol = "?RemoveAll@GmLinkedListIterator@@QAEXXZ"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "virtual First/Current loop with 0x00076F70 inlined; caller 0x00097A7C"
+
+[[function]]
+va = 0x000770E0
+size = 30
+symbol = "??_GGmLinkedListNode@@UAEPAXI@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x00278560 slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x0007CDF0
+size = 51
+symbol = "?Unlink@GmConnection@@QAEXXZ"
+source = "src/gm/GmConnection.cpp"
+subsystem = "gm/containers"
+evidence = "tail call of 0x00076D40"
+
+[[function]]
+va = 0x0007CE30
+size = 26
+symbol = "??0GmConnection@@QAE@XZ"
+source = "src/gm/GmConnection.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftable 0x002793D0; called by 0x00076D20"
+
+[[function]]
+va = 0x0007CE50
+size = 24
+symbol = "??1GmConnection@@UAE@XZ"
+source = "src/gm/GmConnection.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftable 0x002793D0; called by 0x00076FF0"
+
+[[function]]
+va = 0x0007CE70
+size = 61
+symbol = "?Connect@GmConnection@@QAEXPAVGmSocket@@PAVGmPlug@@@Z"
+source = "src/gm/GmConnection.cpp"
+subsystem = "gm/containers"
+evidence = "called by 0x00077060"
+
+[[function]]
+va = 0x0007CEB0
+size = 48
+symbol = "??_GGmConnection@@UAEPAXI@Z"
+source = "src/gm/GmConnection.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x002793D0 slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x00097930
+size = 88
+symbol = "??1?$GmLinkedListOf@PAVFaUiBase@@@@UAE@XZ"
+source = "src/gm/GmLinkedListInstances.cpp"
+subsystem = "gm/containers"
+evidence = "stores vftables 0x0027BCA4, 0x0027BCBC"
+
+[[function]]
+va = 0x00097990
+size = 30
+symbol = "??_G?$GmLinkedListOf@PAVFaUiBase@@@@UAEPAXI@Z"
+source = "src/gm/GmLinkedListInstances.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCA4 slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x00097A20
+size = 30
+symbol = "??_GGmLinkedListIterator@@UAEPAXI@Z"
+source = "src/gm/GmLinkedList.cpp"
+subsystem = "gm/containers"
+evidence = "vftable 0x0027BCC4 slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x000DF720
+size = 10
+symbol = "?SetContext@GmSocket@@QAEXPAX@Z"
+source = "src/gm/GmSocket.cpp"
+subsystem = "gm/containers"
+evidence = "direct call in 0x00076DD0 with this; also in unrelated vftables (folded)"
+
+[[function]]
+va = 0x00137C80
 size = 11
-symbol = "?IsEmpty@?$GmLinkedListOf@PAVFaUiBase@@@@UAEHXZ"
-source = "src/gm/GmLinkedListOf_FaUiBase.cpp"
+symbol = "??1GmLinkedListIterator@@UAE@XZ"
+source = "src/gm/GmLinkedList.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCA4 (GmLinkedListOf<FaUiBase*>) slot 4"
+evidence = "stores vftable 0x0027BCC4, tail-calls 0x00076040"
 
 [[function]]
-va = 0x00075FE0
-size = 13
-symbol = "?Contains@?$GmLinkedListOf@PAVFaUiBase@@@@UAEHPAVFaUiBase@@@Z"
-source = "src/gm/GmLinkedListOf_FaUiBase.cpp"
+va = 0x000979B0
+size = 8
+symbol = "??_E?$GmLinkedListOf@PAVFaUiBase@@@@WBA@AEPAXI@Z"
+source = "src/gm/GmLinkedListInstances.cpp"
 subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCA4 slot 3; calls 0x00076CB0"
+evidence = "vftable 0x0027BCBC slot 0: this-adjusting thunk (compiler-generated)"
 
-[[function]]
-va = 0x00075FF0
-size = 13
-symbol = "?Remove@?$GmLinkedListOf@PAVFaUiBase@@@@UAEXPAVFaUiBase@@@Z"
-source = "src/gm/GmLinkedListOf_FaUiBase.cpp"
-subsystem = "gm/containers"
-evidence = "RTTI vftable 0x0027BCA4 slot 2; calls 0x00076C80"
+# Vftables: slot count measured up to the next vftable or padding. Every slot is checked by symbol.
 
-# Symbols referenced by relocations in recovered code. Name -> original VA. A relocation whose symbol is missing
+[[vtable]]
+va = 0x00278418
+slots = 5
+symbol = "??_7GmSocket@@6B@"
+source = "src/gm/GmSocket.cpp"
+
+[[vtable]]
+va = 0x0027842C
+slots = 10
+symbol = "??_7GmIterator@@6B@"
+source = "src/gm/GmSocket.cpp"
+
+[[vtable]]
+va = 0x00278454
+slots = 10
+symbol = "??_7GmSocketIterator@@6B@"
+source = "src/gm/GmSocket.cpp"
+
+[[vtable]]
+va = 0x0027855C
+slots = 1
+symbol = "??_7GmPlug@@6B@"
+source = "src/gm/GmLinkedList.cpp"
+
+[[vtable]]
+va = 0x002793D0
+slots = 2
+symbol = "??_7GmConnection@@6B@"
+source = "src/gm/GmConnection.cpp"
+
+[[vtable]]
+va = 0x00278560
+slots = 2
+symbol = "??_7GmLinkedListNode@@6B@"
+source = "src/gm/GmLinkedList.cpp"
+
+[[vtable]]
+va = 0x00278568
+slots = 5
+symbol = "??_7GmLinkedList@@6B@"
+source = "src/gm/GmLinkedList.cpp"
+
+[[vtable]]
+va = 0x0027BCC4
+slots = 10
+symbol = "??_7GmLinkedListIterator@@6B@"
+source = "src/gm/GmLinkedList.cpp"
+
+[[vtable]]
+va = 0x0027BCA4
+slots = 5
+symbol = "??_7?$GmLinkedListOf@PAVFaUiBase@@@@6BGmLinkedList@@@"
+source = "src/gm/GmLinkedListInstances.cpp"
+
+[[vtable]]
+va = 0x0027BCBC
+slots = 1
+symbol = "??_7?$GmLinkedListOf@PAVFaUiBase@@@@6BGmPlug@@@"
+source = "src/gm/GmLinkedListInstances.cpp"
+
+# Symbols referenced by relocations but not recorded above. Name -> original VA. A relocation whose symbol is missing
 # here makes the checker fail (UNRESOLVED); entries must cite their evidence.
 [symbols]
-"?IsMemberOf@FaUiBase@@QAEHPAVGmSocket@@@Z" = 0x00076CB0  # direct call target in 0x00075FE0; owner class inferred
-"?RemoveFrom@FaUiBase@@QAEXPAVGmSocket@@@Z" = 0x00076C80  # direct call target in 0x00075FF0; owner class inferred
+"__purecall" = 0x00125F25  # abstract vftable slots; body raises runtime error 0x19 (R6025 pure virtual call)
+"??3@YAXPAX@Z" = 0x00011210  # operator delete: tail of every scalar deleting destructor
+"?s_cursor@GmLinkedListNode@@2HA" = 0x002E26E8  # 0x00076F91
+"?s_pool@GmLinkedListNode@@2PAV1@A" = 0x002E26F0  # 0x00076FDF; vector constructor call at 0x00200EE1

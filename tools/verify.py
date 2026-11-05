@@ -59,6 +59,14 @@ def load_config():
     return fcfg, tcfg
 
 
+def symbol_map(fcfg):
+    """Every symbol the config assigns an original address: [symbols], recorded functions, recorded vftables."""
+    symmap = dict(fcfg.get("symbols", {}))
+    for rec in fcfg["function"] + fcfg.get("vtable", []):
+        symmap.setdefault(rec["symbol"], rec["va"])
+    return symmap
+
+
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("--compiler", default="msvc14-host")
@@ -72,15 +80,15 @@ def main(argv):
         print("reference XBE not found: %s (owner input; see docs/provenance.md)" % args.xbe)
         return 2
     x = xbemod.load(args.xbe)
-    symmap = {k: v for k, v in fcfg.get("symbols", {}).items()}
+    symmap = symbol_map(fcfg)
     funcs = fcfg["function"]
-    for f in funcs:
-        symmap.setdefault(f["symbol"], f["va"])  # recovered functions may call each other by symbol
+    vtables = fcfg.get("vtable", [])
     if args.only:
         want = {int(v, 16) for v in args.only}
         funcs = [f for f in funcs if f["va"] in want]
+        vtables = [v for v in vtables if v["va"] in want]
     objs, logs, results = {}, {}, []
-    for src in sorted({f["source"] for f in funcs}):
+    for src in sorted({f["source"] for f in funcs} | {v["source"] for v in vtables}):
         obj = os.path.join(ROOT, "build", "obj", args.compiler, src.replace("/", "_") + ".obj")
         ok, log = compile_src(comp, src, obj)
         logs[src] = log
@@ -97,16 +105,31 @@ def main(argv):
                         "subsystem": f.get("subsystem"), "result": code, "detail": detail})
         print("%-11s 0x%08X %4d  %-48s %s" % (code, f["va"], f["size"], f["symbol"][:48],
                                               "" if code == "MATCH" else detail))
+    vresults = []
+    for v in vtables:
+        coff = objs[v["source"]]
+        if coff is None:
+            code, detail = "COMPILE_ERROR", logs[v["source"]][-300:]
+        else:
+            code, detail = xcheck.check_vtable(coff, v["symbol"], x, v["va"], v["slots"], symmap)
+        vresults.append({"va": "0x%08X" % v["va"], "slots": v["slots"], "symbol": v["symbol"], "source": v["source"],
+                         "result": code, "detail": detail})
+        print("%-11s 0x%08X %3ds  %-48s %s" % (code, v["va"], v["slots"], v["symbol"][:48],
+                                               "" if code == "MATCH" else detail))
     report = {"reference_build": fcfg["reference_build"], "xbe_sha256": sha256(args.xbe),
               "compiler": args.compiler, "compiler_version": compiler_version(comp), "flags": comp["flags"],
               "checker_sha256": sha256(os.path.join(ROOT, "tools", "xcheck.py")),
               "results": results,
-              "summary": {c: sum(1 for r in results if r["result"] == c) for c in sorted({r["result"] for r in results})}}
+              "vtables": vresults,
+              "summary": {c: sum(1 for r in results if r["result"] == c) for c in sorted({r["result"] for r in results})},
+              "vtable_summary": {c: sum(1 for r in vresults if r["result"] == c)
+                                 for c in sorted({r["result"] for r in vresults})}}
     os.makedirs(os.path.dirname(args.report), exist_ok=True)
     with open(args.report, "w") as fo:
         json.dump(report, fo, indent=1)
-    print("summary: %s  (compiler: %s)" % (report["summary"], report["compiler_version"]))
-    return 0 if all(r["result"] == "MATCH" for r in results) else 1
+    print("summary: functions %s, vtables %s  (compiler: %s)" % (report["summary"], report["vtable_summary"],
+                                                                 report["compiler_version"]))
+    return 0 if all(r["result"] == "MATCH" for r in results + vresults) else 1
 
 
 if __name__ == "__main__":
