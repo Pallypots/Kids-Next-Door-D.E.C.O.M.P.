@@ -98,6 +98,24 @@ comparisons; 47/47 entries reached in every seed; `--mutate` fails; positive con
 a reported difference, 10 by crash or hang, which also counts as visible). Numbers regenerate
 into docs/PROGRESS.md.
 
+A second suite covers the JAM reader (`tests/oracle/oracle_jam.cpp`, `--suite jam`; inputs from
+`python -I tools/jam.py cases <image> analysis-local/oracle-jam`, git-ignored). It runs 62 archives: 35 real FSTA headers, 20 real
+JAM2 files (those up to 4 MB), 4 FSTR forms derived from real headers (FSTR does not occur on this disc), and 3 hand-built
+adversarial archives. Each real file is checked three ways: `tools/jam.py`, original code, recovered source. Near-miss paths
+only need the two implementations to agree. I/O outcomes in `GetFileInfo` go through one shared test-double file, so both sides
+must make the same calls. Result on 2026-11-05: 174,373 paths, about 2.3 million comparisons, no difference; 29/29 entries
+reached; positive control passes; `--mutate` fails; 40/40 source mutants detected (39 as a reported difference, 1 by a crash).
+
+Not covered by this suite: `vInit`, listing, destructors and the open-file objects (not recovered yet); `AtFatal` on an invalid
+token; the JAM2 archives over 4 MB (their records are not extracted; the 4 MB limit is only about file size in the cases
+directory).
+
+The first reader run reported 30/40, and each survivor was explained rather than dropped. Eight were real blind spots, because
+real data never shows them: labels are short, no real file lacks an extension, no table has an empty name, record sizes are
+always equal, small JAM2 trees never reach the failed-component behaviour, and some fields already held the value being
+checked. The adversarial archives and sharper checks close them. Two were equivalent mutants: `order >= 0` in the scan (order
+0 has already returned) and not clearing GetFullName's first two words (`strncpy` pads them), and were replaced by real ones.
+
 Mistakes this qualification caught in the harness itself, recorded because they would have produced false confidence:
 copied sources kept old timestamps, so the build reused the previous mutant's object and later verdicts were wrong
 (sources are now rewritten fresh); `--mutate` triggered too rarely to ever fire; the list destructor's context clear was

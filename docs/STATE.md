@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 2 plus the Ghidra cross-check. Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 3 (JAM directory reader). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,23 +14,27 @@ Last updated: 2026-11-05, dev cycle 2 plus the Ghidra cross-check. Per-function 
 
 ## What is recovered
 
-Subsystem `gm/containers`, all source in `src/gm/`, types in `include/gm/`: socket/plug connection model, connection base,
-pooled linked-list node, linked list, iterators, one template instantiation. 47 functions and 10 vftables are recorded in
-`config/functions.toml`.
+All source is in `src/`, types in `include/`. 76 functions and 10 vftables are recorded in `config/functions.toml`.
+
+* `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
+  iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
+* `at/jam` (29 functions), **partial**: info header, name table, and the directory lookups of the FSTA, FSTR and JAM2 header
+  classes. Not recovered: `vInit`, listing, destructors, open-file objects, `AtIoJamFileSystem`. Those vftable slots are in
+  `src/at/AtIoJamPending.cpp`, where they stop with a diagnostic; that file is never recorded and never counts. For the same
+  reason the JAM header vftables are not checked yet, apart from the abstract base's pointer.
 
 | Measure | Result |
 | --- | --- |
-| Relocation-aware match, host compiler only | see docs/PROGRESS.md |
+| Relocation-aware match, host compiler only | see docs/PROGRESS.md (for `at/jam`, only the 7-byte base destructor) |
 | Vftables matching by symbol | see docs/PROGRESS.md |
 | Match with original compiler | 0 (blocked) |
 | Behaviour vs. original code | see "Differential oracle" in docs/PROGRESS.md |
 
-State of each function: **Semantic-tested** at least (differential oracle plus host tests); those with a MATCH line in
-docs/PROGRESS.md are also a relocation-aware match under MSVC 19.44. That does **not** show which compiler shipped the
-game. The freeing path of deleting destructors is not run by the oracle.
+State of each function: **Semantic-tested** (differential oracle plus host tests); those with a MATCH line in docs/PROGRESS.md
+are also a relocation-aware match under MSVC 19.44, which does **not** show which compiler shipped the game. The freeing path of
+deleting destructors is not run by the oracle. The game cannot load an archive from this source yet.
 
-Also recovered, as a format rather than game code: the JAM archive directory layout (docs/formats.md, tools/jam.py),
-validated against all 56 archives on the disc.
+The JAM directory layout is also recovered as a format (docs/formats.md, tools/jam.py), validated against all 56 archives.
 
 ## Confirmed findings
 
@@ -75,9 +79,10 @@ validated against all 56 archives on the disc.
 
 ## Next concrete task
 
-1. Recover the JAM reading code as source (`AtIoJamInfoHeader`, `AtIoFastAlignedJamHeader`, `AtIoFastJamHeader`,
-   `AtIoJamFileSystem`) and extend the oracle to it, with file access supplied by a test double. tools/jam.py then
-   becomes a cross-check of the recovered reader.
-2. Finish the sorted container at 0x000761B0-0x00076600 in the same unit (its node pool is 0x002CF180, 2200 entries).
+1. Recover the open-file object (0xA8 bytes, 0x000827E0 and 0x00082DA0 families) and `OpenFile`/`CloseFile`, then `vInit` and the
+   destructors of both header classes, then `AtIoJamFileSystem`. `vInit` allocates through the game's heap helpers at
+   0x000111F0, 0x00011240 and 0x00011260, which sit in the part of the address range the oracle cannot map today (the harness's
+   own code is there), so the harness needs a way to serve those calls first.
+2. Finish the sorted container at 0x000761B0-0x00076600.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

@@ -3,6 +3,7 @@
 
   python -I tools/jam.py check <image>            parse every .JAM on a disc image and validate each one
   python -I tools/jam.py ls <image> <jam name>    list the files in one archive (matched on the end of its path)
+  python -I tools/jam.py cases <image> <out dir>  write oracle inputs (git-ignored directory only: real game data)
 
 All integers are little-endian. Every read is bounds-checked; malformed input raises JamError. File values are never
 converted to host pointers. JAM1 uses another header class (0x00081020) and is rejected explicitly until a file using
@@ -183,7 +184,157 @@ def _load(img, entry):
     return Jam(img._read(base, info["header_size"]), entry.size, read_at)
 
 
+def perturbations(path):
+    """Paths that are near a real one and exercise lookup failures and quirks."""
+    leaf = path.rsplit("\\", 1)[-1]
+    parent = path[:-len(leaf)]
+    stem, _, ext = leaf.partition(".")
+    out = [path.lower(), parent + stem, parent + stem + ".ZZZ", parent + "ZZZZZZ." + ext, "ZZZZZZ\\" + path, leaf,
+           parent + stem + "." + ext + ".X", path + "\\", "\\" + path, parent + "\\" + leaf]
+    if parent:
+        first = parent.split("\\")[0]
+        out += [first + "\\" + first + "\\" + leaf, parent.rstrip("\\"), parent, parent.lower()]
+    return out
+
+
+def swap_to_fstr(header):
+    """An FSTR-form copy of a real FSTA header: the token and every directory word's two count fields. FSTR does not occur
+    on this disc, so this is the only way to run that code on realistic data; it is derived, not a real file."""
+    jam = Jam(header)
+    if jam.token != b"FSTA":
+        raise JamError("expected FSTA")
+    out = bytearray(header)
+    out[:4] = b"FSTR"
+
+    def walk(off, ndirs, nfiles):
+        children = []
+        for i in range(ndirs):
+            at = off + 8 * i
+            word, child = struct.unpack_from("<II", out, at)
+            d, f = (word >> 12) & 0x1FF, word >> 21
+            if d > 0x1FF or f > 0x1FF:
+                raise JamError("counts do not fit the swapped fields")
+            struct.pack_into("<I", out, at, (word & 0xFFF) | f << 12 | d << 21)
+            children.append((child, d, f))
+        for child, d, f in children:
+            walk(child, d, f)
+
+    root = 0x20 + 4 * (jam.info["exts"] + 2 * jam.info["names"])
+    walk(root + 4, jam.root_dirs, jam.root_files)
+    return bytes(out)
+
+
+def write_case(out_dir, name, data, jam):
+    with open(os.path.join(out_dir, name + ".bin"), "wb") as f:
+        f.write(data)
+    with open(os.path.join(out_dir, name + ".txt"), "w", encoding="latin-1", newline="\n") as f:
+        for path, off, size in jam.files:
+            f.write("F\t%s\t%d\t%d\n" % (path, off, size if size is not None else 0))
+        for d in jam.dirs:
+            f.write("D\t%s\t0\t0\n" % d.rstrip("\\"))
+        seen = {p[0] for p in jam.files} | {d.rstrip("\\") for d in jam.dirs}
+        for path, _, _ in jam.files[:400]:
+            for q in perturbations(path):
+                if q and q not in seen and len(q) < 200:
+                    seen.add(q)
+                    f.write("?\t%s\t0\t0\n" % q)
+
+
+def synthetic_archive(token):
+    """Hand-built archive reaching what the disc cannot: an empty name, a file with no extension, a full-length label, a
+    deep tree for the failed-component behaviour, and (JAM2) records whose two size fields differ. No game data."""
+    names = [b"", b"ART", b"FILEA", b"FILEB", b"LEVEL", b"ROOT", b"SUB"]
+    exts = [b"", b"AFA", b"AFD"]
+    swapped = token == b"FSTR"
+    jam2 = token == b"JAM2"
+
+    def word(name, dirs, files):
+        return name | files << 12 | dirs << 21 if swapped else name | dirs << 12 | files << 21
+
+    def file_entry(name, ext, off, size):
+        if jam2:
+            return struct.pack("<HB1xI", name, ext, off)
+        return struct.pack("<HB1xII", name, ext, off, size)
+
+    head = token + struct.pack("<II", 0x11223344, 0) + b"ABCDEFGHIJKLMNO" + b"\0" + struct.pack("<HBx", len(names), len(exts))
+    table = b"".join(n.ljust(8, b"\0") for n in names) + b"".join(e.ljust(4, b"\0") for e in exts)
+    entry = FILE_ENTRY[token]
+    root = 0x20 + len(table)
+    # root: dirs ART, ROOT; files FILEA.AFA, FILEB (no extension)
+    root_table = root + 4
+    art = root_table + 2 * 8 + 2 * entry      # dirs LEVEL, SUB; file FILEB.AFD
+    roots = art + 2 * 8 + entry               # dir LEVEL (a second one); file FILEA
+    level = roots + 8 + entry                 # file FILEA.AFD
+    sub = level + entry                       # dir LEVEL (a third); no files
+    level3 = sub + 8                          # file ROOT.AFA
+    end = level3 + entry
+    offset = (end + 0x1F) & ~0x1F
+    # Five data slots, 0x40 apart.
+    slots = [offset + 0x40 * k for k in range(6)]
+    body = struct.pack("<HH", 2, 2)
+    body += struct.pack("<II", word(1, 2, 1), art) + struct.pack("<II", word(5, 1, 1), roots)
+    body += file_entry(2, 1, slots[0], 0x11) + file_entry(3, 0, slots[1], 0x12)
+    body += struct.pack("<II", word(4, 0, 1), level) + struct.pack("<II", word(6, 1, 0), sub)
+    body += file_entry(3, 2, slots[2], 0x13)
+    body += struct.pack("<II", word(4, 0, 1), level) + file_entry(2, 0, slots[3], 0x14)
+    body += file_entry(2, 2, slots[4], 0x15)
+    body += struct.pack("<II", word(4, 0, 1), level3)
+    body += file_entry(5, 1, slots[5], 0x16)
+    data = bytearray(head + table + body)
+    struct.pack_into("<I", data, 8, len(data))
+    if jam2:
+        data.extend(b"\0" * (slots[-1] + 0x40 - len(data)))
+        for k, off in enumerate(slots):
+            struct.pack_into("<II", data, off, 0x1000 + k, 0x20 + k)  # first field != second field
+    return bytes(data)
+
+
+SYNTHETIC_QUERIES = [
+    "FILEA.AFA", "FILEB", "FILEA", "FILEB.AFA", "filea.afa", "ART", "ROOT", "LEVEL", "SUB", "FILEA.ZZZ", "NOPE", "NOPE.AFA",
+    "ART\\FILEB.AFD", "ART\\LEVEL", "ART\\LEVEL\\FILEA.AFD", "ART\\SUB", "ART\\SUB\\LEVEL", "ART\\SUB\\LEVEL\\ROOT.AFA",
+    "ROOT\\FILEA", "ROOT\\LEVEL", "ROOT\\LEVEL\\FILEA.AFD", "art\\sub\\level\\root.afa",
+    # Failed middle components: names that exist but are not children here, so the scan continues from where it stopped.
+    "FILEA\\ART", "FILEA\\ROOT", "ROOT\\ART", "SUB\\ROOT", "LEVEL\\ART", "FILEA\\FILEB\\ROOT", "ART\\ROOT",
+    "ART\\FILEA\\SUB", "ART\\FILEA\\LEVEL", "ART\\ART\\LEVEL", "SUB\\ART\\LEVEL\\FILEA.AFD", "FILEA\\ROOT\\FILEA",
+    "ROOT\\ART\\FILEB.AFD", "FILEA\\ROOT\\LEVEL\\FILEA.AFD", "ART\\NOPE", "NOPE\\ART", "NOPE\\FILEA.AFA",
+    # Odd separators and empty components.
+    "\\ART", "ART\\", "ART\\\\LEVEL", "\\", "\\\\", "\\FILEA.AFA", "ART\\\\FILEB.AFD", ".", ".AFA", "FILEA.", "ART\\.AFD",
+]
+
+
+def write_synthetic_cases(out_dir):
+    os.makedirs(out_dir, exist_ok=True)
+    for token, name in ((b"FSTA", "synth_fsta"), (b"FSTR", "synth_fstr"), (b"JAM2", "synth_jam2")):
+        with open(os.path.join(out_dir, name + ".bin"), "wb") as f:
+            f.write(synthetic_archive(token))
+        with open(os.path.join(out_dir, name + ".txt"), "w", encoding="latin-1", newline="\n") as f:
+            for q in SYNTHETIC_QUERIES:
+                f.write("?\t%s\t0\t0\n" % q)
+
+
+def write_cases(image, out_dir, whole_file_limit=1 << 22):
+    """Header of every FSTA archive (whole file for small JAM2, whose records live in the data), plus a derived FSTR."""
+    write_synthetic_cases(out_dir)
+    img, entries = _jams_on_image(image)
+    fstr_done = 0
+    for e in entries:
+        base = img.sector_offset(e.sector)
+        jam = _load(img, e)
+        name = e.path.rsplit("/", 1)[-1][:-4]
+        if jam.token == b"JAM2":
+            if e.size <= whole_file_limit:
+                write_case(out_dir, name, img._read(base, e.size), jam)
+            continue
+        write_case(out_dir, name, jam.buf, jam)
+        if fstr_done < 4 and len(jam.files) > 0:
+            write_case(out_dir, "fstr_" + name, swap_to_fstr(jam.buf), Jam(swap_to_fstr(jam.buf)))
+            fstr_done += 1
+
+
 def main(argv):
+    if len(argv) == 3 and argv[0] == "cases":
+        write_cases(argv[1], argv[2])
+        return 0
     if len(argv) == 2 and argv[0] == "check":
         img, entries = _jams_on_image(argv[1])
         bad = total_files = 0

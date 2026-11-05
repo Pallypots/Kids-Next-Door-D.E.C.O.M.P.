@@ -381,6 +381,238 @@ source = "src/gm/GmLinkedListInstances.cpp"
 subsystem = "gm/containers"
 evidence = "vftable 0x0027BCBC slot 0: this-adjusting thunk (compiler-generated)"
 
+[[function]]
+va = 0x0007D170
+size = 17
+symbol = "?Reset@AtIoFastRawJamHeader@@UAEXXZ"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x002793D8 slot 10"
+
+[[function]]
+va = 0x0007D190
+size = 80
+symbol = "??0AtIoFastRawJamHeader@@QAE@XZ"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x002793D8; allocated at 0x0007D9FC"
+
+[[function]]
+va = 0x0007F120
+size = 24
+symbol = "?Reset@AtIoFastAlignedJamHeader@@UAEXXZ"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279A84 slot 10"
+
+[[function]]
+va = 0x0007F1F0
+size = 35
+symbol = "?GetEntryType@AtIoFastAlignedJamHeader@@UAEHPBDPAH@Z"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279A84 slot 8; also 0x00279B88 slot 8 (folded)"
+
+[[function]]
+va = 0x0007F220
+size = 604
+symbol = "?FindDirectory@AtIoFastAlignedJamHeader@@QAEPBEPBDPAI1@Z"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "callers 0x0007F589, 0x0007F9A9, 0x0007FA21"
+
+[[function]]
+va = 0x0007F4B0
+size = 409
+symbol = "?FindFile@AtIoFastAlignedJamHeader@@QAEHPBDPAI@Z"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "callers 0x0007F9CA, 0x0007FDEA"
+
+[[function]]
+va = 0x0007F650
+size = 90
+symbol = "??0AtIoFastAlignedJamHeader@@QAE@XZ"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x00279A84; allocated at 0x0007D9B5"
+
+[[function]]
+va = 0x0007F9A0
+size = 22
+symbol = "?IsDirectoryMissing@AtIoFastAlignedJamHeader@@UAEHPBD@Z"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279A84 slot 6"
+
+[[function]]
+va = 0x0007F9C0
+size = 27
+symbol = "?IsFileMissing@AtIoFastAlignedJamHeader@@UAEHPBD@Z"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279A84 slot 7"
+
+[[function]]
+va = 0x0007FE40
+size = 27
+symbol = "??0AtIoJamInfoHeader@@QAE@XZ"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "inlined in the file system constructor pattern; clears the same fields as 0x0007FE60"
+
+[[function]]
+va = 0x0007FE60
+size = 25
+symbol = "?Clear@AtIoJamInfoHeader@@QAEXXZ"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "callers 0x0007D2D7, 0x0007D74B"
+
+[[function]]
+va = 0x0007FE80
+size = 327
+symbol = "?Init@AtIoJamInfoHeader@@QAEXPBD@Z"
+source = "src/at/AtIoFastAlignedJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "error string names AtIoJamInfoHeader::vInit"
+
+[[function]]
+va = 0x000800A0
+size = 477
+symbol = "?FindDirectory@AtIoFastJamHeader@@QAEPBEPBDPAI1@Z"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "callers 0x00080366, 0x000806F9, 0x00080751"
+
+[[function]]
+va = 0x00080280
+size = 261
+symbol = "?Locate@AtIoFastJamHeader@@QAEPBEPBDPAI1PAH2@Z"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "called by 0x00080AE0"
+
+[[function]]
+va = 0x00080390
+size = 87
+symbol = "??0AtIoFastJamHeader@@QAE@XZ"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x00279B88; allocated at 0x0007D968"
+
+[[function]]
+va = 0x000806F0
+size = 22
+symbol = "?IsDirectoryMissing@AtIoFastJamHeader@@UAEHPBD@Z"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279B88 slot 6"
+
+[[function]]
+va = 0x00080AE0
+size = 183
+symbol = "?FindRecord@AtIoFastJamHeader@@QAEHPBD@Z"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "callers 0x00080BAB, 0x00080C75, 0x00080C95"
+
+[[function]]
+va = 0x00080BA0
+size = 173
+symbol = "?GetFileInfo@AtIoFastJamHeader@@QAEHPBDPAI1@Z"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "calls file slots 4, 5, 9 and request slot 2"
+
+[[function]]
+va = 0x00080C70
+size = 22
+symbol = "?IsFileMissing@AtIoFastJamHeader@@UAEHPBD@Z"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279B88 slot 7"
+
+[[function]]
+va = 0x00080C90
+size = 44
+symbol = "?GetRecordOffset@AtIoFastJamHeader@@QAEHPBDPAI@Z"
+source = "src/at/AtIoFastJamHeader.cpp"
+subsystem = "at/jam"
+evidence = "next function in the cluster; calls 0x00080AE0"
+
+[[function]]
+va = 0x00082AA0
+size = 163
+symbol = "?Search@AtIoJamNameTable@@QAEHPBD0IH@Z"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "called by 0x00082BF0, 0x00082C20"
+
+[[function]]
+va = 0x00082B50
+size = 25
+symbol = "??0AtIoJamNameTable@@QAE@XZ"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "called by 0x0007F67D"
+
+[[function]]
+va = 0x00082B70
+size = 125
+symbol = "?GetFullName@AtIoJamNameTable@@QAEHIIPAD@Z"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "callers include 0x0007FADB"
+
+[[function]]
+va = 0x00082BF0
+size = 35
+symbol = "?FindName@AtIoJamNameTable@@QAEHPBD@Z"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "8-byte stride"
+
+[[function]]
+va = 0x00082C20
+size = 37
+symbol = "?FindExtension@AtIoJamNameTable@@QAEHPBD@Z"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "4-byte stride"
+
+[[function]]
+va = 0x00082C50
+size = 23
+symbol = "??1AtIoJamNameTable@@QAE@XZ"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "called from the header destructor 0x0007F726"
+
+[[function]]
+va = 0x00082C70
+size = 59
+symbol = "?Init@AtIoJamNameTable@@QAEXPBDII@Z"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "called by 0x0007F8A5"
+
+[[function]]
+va = 0x00082CB0
+size = 214
+symbol = "?Matches@AtIoJamNameTable@@QAEHPBD00@Z"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "12 callers in the listing methods"
+
+[[function]]
+va = 0x00082D90
+size = 7
+symbol = "??1AtIoJamHeader@@UAE@XZ"
+source = "src/at/AtIoJamNameTable.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x00279A5C"
+
 # Vftables: slot count measured up to the next vftable or padding. Every slot is checked by symbol.
 
 [[vtable]]
@@ -450,3 +682,12 @@ source = "src/gm/GmLinkedListInstances.cpp"
 "??3@YAXPAX@Z" = 0x00011210  # operator delete: tail of every scalar deleting destructor
 "?s_cursor@GmLinkedListNode@@2HA" = 0x002E26E8  # 0x00076F91
 "?s_pool@GmLinkedListNode@@2PAV1@A" = 0x002E26F0  # 0x00076FDF; vector constructor call at 0x00200EE1
+"?AtFatal@@YAXPBDHHH@Z" = 0x00011070  # error routine: every "...vInit: ..." message goes through it
+"_strncmp" = 0x001267D0  # name hint, confirmed by the 3-argument compare at 0x00082AD2
+"_strrchr" = 0x00125F40  # finds the last separator at 0x0007F4D6 (0x5C)
+"_strchr" = 0x00125E10  # name hint, finds separators and dots
+"_toupper" = 0x001261EA  # body subtracts 0x20 when the ctype table marks lower case
+"_strncpy" = 0x00125C20  # name hint, confirmed: the copy stops at a zero byte
+"_strncat" = 0x001252D0  # called at 0x00082BCB after the name
+"?s_tokens@AtIoJamInfoHeader@@2PAPBDA" = 0x002B35FC  # token pointer table read at 0x0007FEAD
+"??_7AtIoJamHeader@@6B@" = 0x00279A5C  # stored by 0x00082D90; ten __purecall slots

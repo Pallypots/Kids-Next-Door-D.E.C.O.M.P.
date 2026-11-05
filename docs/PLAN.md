@@ -1,8 +1,8 @@
 # Plan (no numbers here — measured progress is in docs/PROGRESS.md)
 
-1. **Resource loading, as source.** The layout is known (docs/formats.md); now recover the code: `AtIoJamInfoHeader`,
-   the header classes, `AtIoJamFileSystem`. Behind a file interface so it stays portable. Oracle-tested against the
-   original with a test-double file object. tools/jam.py becomes a cross-check.
+1. **Resource loading, as source (in progress).** Done: info header, name table, directory lookups. Next: open-file objects,
+   `vInit`, destructors, listing, `AtIoJamFileSystem`, behind a file interface so it stays portable. tools/jam.py stays as a
+   cross-check.
 2. **Rest of the first translation unit.** Sorted container at 0x000761B0-0x00076600, then what remains around it.
 3. **Library separation.** Grow the string-reference map into evidence-backed ranges for LIBCMT, XAPI, CRI
    (ADX/Sofdec), libjpeg and D3DX inside `.text`; keep an `unknown` bucket; never rename from an unreviewed signature

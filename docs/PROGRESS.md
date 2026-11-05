@@ -80,9 +80,38 @@ name. See docs/STATE.md for the evidence-based partial map.
 | 0x000DF720 | 10 | `?SetContext@GmSocket@@QAEXPAX@Z` | gm/containers | MATCH |
 | 0x00137C80 | 11 | `??1GmLinkedListIterator@@UAE@XZ` | gm/containers | SIZE |
 | 0x000979B0 | 8 | `??_E?$GmLinkedListOf@PAVFaUiBase@@@@WBA@AEPAXI@Z` | gm/containers | MATCH |
+| 0x0007D170 | 17 | `?Reset@AtIoFastRawJamHeader@@UAEXXZ` | at/jam | SIZE |
+| 0x0007D190 | 80 | `??0AtIoFastRawJamHeader@@QAE@XZ` | at/jam | SIZE |
+| 0x0007F120 | 24 | `?Reset@AtIoFastAlignedJamHeader@@UAEXXZ` | at/jam | SIZE |
+| 0x0007F1F0 | 35 | `?GetEntryType@AtIoFastAlignedJamHeader@@UAEHPBDPAH@Z` | at/jam | SIZE |
+| 0x0007F220 | 604 | `?FindDirectory@AtIoFastAlignedJamHeader@@QAEPBEPBDPAI1@Z` | at/jam | SIZE |
+| 0x0007F4B0 | 409 | `?FindFile@AtIoFastAlignedJamHeader@@QAEHPBDPAI@Z` | at/jam | SIZE |
+| 0x0007F650 | 90 | `??0AtIoFastAlignedJamHeader@@QAE@XZ` | at/jam | SIZE |
+| 0x0007F9A0 | 22 | `?IsDirectoryMissing@AtIoFastAlignedJamHeader@@UAEHPBD@Z` | at/jam | SIZE |
+| 0x0007F9C0 | 27 | `?IsFileMissing@AtIoFastAlignedJamHeader@@UAEHPBD@Z` | at/jam | SIZE |
+| 0x0007FE40 | 27 | `??0AtIoJamInfoHeader@@QAE@XZ` | at/jam | SIZE |
+| 0x0007FE60 | 25 | `?Clear@AtIoJamInfoHeader@@QAEXXZ` | at/jam | SIZE |
+| 0x0007FE80 | 327 | `?Init@AtIoJamInfoHeader@@QAEXPBD@Z` | at/jam | SIZE |
+| 0x000800A0 | 477 | `?FindDirectory@AtIoFastJamHeader@@QAEPBEPBDPAI1@Z` | at/jam | SIZE |
+| 0x00080280 | 261 | `?Locate@AtIoFastJamHeader@@QAEPBEPBDPAI1PAH2@Z` | at/jam | SIZE |
+| 0x00080390 | 87 | `??0AtIoFastJamHeader@@QAE@XZ` | at/jam | SIZE |
+| 0x000806F0 | 22 | `?IsDirectoryMissing@AtIoFastJamHeader@@UAEHPBD@Z` | at/jam | SIZE |
+| 0x00080AE0 | 183 | `?FindRecord@AtIoFastJamHeader@@QAEHPBD@Z` | at/jam | SIZE |
+| 0x00080BA0 | 173 | `?GetFileInfo@AtIoFastJamHeader@@QAEHPBDPAI1@Z` | at/jam | SIZE |
+| 0x00080C70 | 22 | `?IsFileMissing@AtIoFastJamHeader@@UAEHPBD@Z` | at/jam | SIZE |
+| 0x00080C90 | 44 | `?GetRecordOffset@AtIoFastJamHeader@@QAEHPBDPAI@Z` | at/jam | SIZE |
+| 0x00082AA0 | 163 | `?Search@AtIoJamNameTable@@QAEHPBD0IH@Z` | at/jam | SIZE |
+| 0x00082B50 | 25 | `??0AtIoJamNameTable@@QAE@XZ` | at/jam | SIZE |
+| 0x00082B70 | 125 | `?GetFullName@AtIoJamNameTable@@QAEHIIPAD@Z` | at/jam | SIZE |
+| 0x00082BF0 | 35 | `?FindName@AtIoJamNameTable@@QAEHPBD@Z` | at/jam | SIZE |
+| 0x00082C20 | 37 | `?FindExtension@AtIoJamNameTable@@QAEHPBD@Z` | at/jam | SIZE |
+| 0x00082C50 | 23 | `??1AtIoJamNameTable@@QAE@XZ` | at/jam | SIZE |
+| 0x00082C70 | 59 | `?Init@AtIoJamNameTable@@QAEXPBDII@Z` | at/jam | SIZE |
+| 0x00082CB0 | 214 | `?Matches@AtIoJamNameTable@@QAEHPBD00@Z` | at/jam | SIZE |
+| 0x00082D90 | 7 | `??1AtIoJamHeader@@UAE@XZ` | at/jam | MATCH |
 
-Relocation-aware matches with the host compiler: 14 functions, 264 unique bytes.
-Share of `.text` raw bytes: 0.0129% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 15 functions, 271 unique bytes.
+Share of `.text` raw bytes: 0.0133% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -103,9 +132,9 @@ Exact linked match (whole XBE): not attempted.
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
-Seeds with no observed difference: 20 / 20, 5000 operations each.
-Recorded function entries reached in every seed: 47 / 47.
-Source mutants detected: 23 / 23. Positive control exit: 0. Harness mutation exit: 1.
+Suite `gm`: runs with no observed difference 20 / 20 (NO DIFFERENCE OBSERVED: seed 1, 5000 random operations, 20273883 comparisons, 0 differences). Recorded function entries reached in every run: 47 / 47. Source mutants detected: 23 / 23. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 2286845 comparisons, 0 differences). Recorded function entries reached in every run: 29 / 29. Source mutants detected: 40 / 40. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

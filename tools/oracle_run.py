@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Build and run the differential oracle (tests/oracle/oracle_gm.cpp), and qualify it with deliberately broken source.
 
-  python -I tools/oracle_run.py [--seeds 5] [--ops 3000] [--no-mutants]
+  python -I tools/oracle_run.py [--seeds 5] [--ops 3000] [--no-mutants] [--suite gm|jam|all]
+
+The jam suite reads analysis-local/oracle-jam/ (python -I tools/jam.py cases <image> analysis-local/oracle-jam).
 
 Windows x86 only, local only: needs the owner's XBE. Writes build/oracle-report.json. Exit 0 only if every seed shows no
 difference, every recorded function's entry was reached, and every source mutant is detected.
@@ -26,8 +28,10 @@ MUTANT_SRC = os.path.join(ROOT, "build", "oracle-mutant-src")
 CONFIG = "RelWithDebInfo"
 XBE = os.path.join(ROOT, "orig", "xiso", "default.xbe")
 
+CASES = os.path.join(ROOT, "analysis-local", "oracle-jam")
+
 # (name, file, exact text to replace, replacement). The text must occur exactly once.
-MUTANTS = [
+GM_MUTANTS = [
     ("Append: prev link dropped", "GmLinkedList.cpp", "node->prev = last;", "node->prev = 0;"),
     ("Append: head never set", "GmLinkedList.cpp", "    if (!head) {\n        head = node;\n    }\n", ""),
     ("Node::Disconnect: tail not updated", "GmLinkedList.cpp", "list->tail = prev;", ""),
@@ -57,23 +61,81 @@ MUTANTS = [
     ("Socket::Remove: does nothing", "GmSocket.cpp", "    item->Disconnect(this);\n", ""),
 ]
 
+A = "AtIoFastAlignedJamHeader.cpp"
+J = "AtIoFastJamHeader.cpp"
+T = "AtIoJamNameTable.cpp"
+JAM_MUTANTS = [
+    ("Info: tokens swapped", A, "m_token = kFsta;", "m_token = kFstr;"),
+    ("Info: header size from the wrong field", A, "m_headerSize = AtReadU32(p + 8);", "m_headerSize = AtReadU32(p + 4);"),
+    ("Info: label one byte short", A, "for (int i = 0; i < 15; i++) {", "for (int i = 0; i < 14; i++) {"),
+    ("Info: extension count is 16 bits", A, "m_extensionCount = p[0x1E];", "m_extensionCount = AtReadU16(p + 0x1E) + 1;"),
+    ("Info: Init does not clear first", A, "    if (m_token != 0) {\n        Clear();\n    }\n", ""),
+    ("Info: Clear leaves the label", A, "    label[3] = 0;\n", ""),
+    ("FSTR: flag not set by the constructor", A, "AtIoFastRawJamHeader::AtIoFastRawJamHeader() {\n    AtIoFastAlignedJamHeader::Reset();\n    m_swappedFields = 1;",
+     "AtIoFastRawJamHeader::AtIoFastRawJamHeader() {\n    AtIoFastAlignedJamHeader::Reset();"),
+    ("FSTR: flag not kept by Reset", A, "void AtIoFastRawJamHeader::Reset() {\n    AtIoFastAlignedJamHeader::Reset();\n    m_swappedFields = 1;",
+     "void AtIoFastRawJamHeader::Reset() {\n    AtIoFastAlignedJamHeader::Reset();"),
+    ("FSTA dir: no case folding", A, "        copy[i] = (char)toupper(copy[i]);\n    }\n    unsigned int foundFiles", "    }\n    unsigned int foundFiles"),
+    ("FSTA dir: FSTR fields not swapped", A, "if (m_swappedFields) {\n                    count = word >> 21;\n                    foundFiles = (word & 0x1FF000) >> 12;",
+     "if (m_swappedFields) {\n                    count = (word & 0x1FF000) >> 12;\n                    foundFiles = word >> 21;"),
+    ("FSTA dir: quirk: entry rewound after a miss", A, "    do {\n        char* separator = strchr(cursor, '\\\\');", "    do {\n        if (!found) {\n            entry = m_root;\n        }\n        char* separator = strchr(cursor, '\\\\');"),
+    ("FSTA dir: quirk: a middle miss is an error", A, "        found = 0;\n        for (unsigned int i = 0; i < count; i++) {\n            unsigned int word = AtReadU32(entry);",
+     "        if (cursor != copy && !found) {\n            return 0;\n        }\n        found = 0;\n        for (unsigned int i = 0; i < count; i++) {\n            unsigned int word = AtReadU32(entry);"),
+    ("FSTA dir: child offset not from the buffer", A, "entry = m_buffer + offset;", "entry = m_root + offset;"),
+    ("FSTA file: separator found from the left", A, "char* separator = strrchr(copy, '\\\\');", "char* separator = strchr(copy, '\\\\');"),
+    ("FSTA file: extension ignored", A, "if (entryName == name && entryExt == ext) {\n            *size = entrySize;", "if (entryName == name) {\n            *size = entrySize;"),
+    ("FSTA file: offset and size swapped", A, "*size = entrySize;\n            return (int)offset;", "*size = offset;\n            return (int)entrySize;"),
+    ("FSTA file: no extension means absent", A, "    int ext = 0;\n    char* dot", "    int ext = -1;\n    char* dot"),
+    ("FSTA file: entries read from the table start", A, "const unsigned char* entry = table + dirs * 8;", "const unsigned char* entry = table;"),
+    ("FSTA: IsFileMissing inverted", A, "return FindFile(path, &size) < 0;", "return FindFile(path, &size) >= 0;"),
+    ("FSTA: GetEntryType wrong type", A, "*type = kEntryIsFile;", "*type = 1;"),
+    ("JAM2 dir: fields swapped", J, "count = (word >> 12) & 0x1FF;\n                foundFiles = word >> 21;", "count = word >> 21;\n                foundFiles = (word >> 12) & 0x1FF;"),
+    ("JAM2 dir: quirk: entry rewound after a miss", J, "    do {\n        char* separator = strchr(cursor, '\\\\');", "    do {\n        if (!found) {\n            entry = m_root;\n        }\n        char* separator = strchr(cursor, '\\\\');"),
+    ("JAM2 Locate: extension 0 when absent is lost", J, "    } else {\n        *ext = 0;\n    }", "    } else {\n        *ext = -1;\n    }"),
+    ("JAM2 record: entry stride wrong", J, "        entry += 8;\n        if (entryName == name", "        entry += 12;\n        if (entryName == name"),
+    ("JAM2 info: size from the first field", J, "*size = AtReadU32(sizes + 4);", "*size = AtReadU32(sizes);"),
+    ("JAM2 info: pending read not released", J, "        file->Release(request);\n", ""),
+    ("JAM2 info: pending status ignored", J, "        status = request->Wait();\n", "        request->Wait();\n        status = 0;\n"),
+    ("JAM2 info: seek failure ignored", J, "    if (file->Seek((unsigned int)record) != 0) {\n        return 0;\n    }\n", "    file->Seek((unsigned int)record);\n"),
+    ("JAM2 offset: missing keeps old output", J, "        *offset = 0;\n        return 0;", "        return 0;"),
+    ("Table: stride wrong for names", T, "return Search(name, m_names, 8, m_nameCount);", "return Search(name, m_names, 4, m_nameCount);"),
+    ("Table: empty extension absent", T, "    if (ext == 0 || *ext == 0) {\n        return 0;\n    }", "    if (ext == 0 || *ext == 0) {\n        return -1;\n    }"),
+    ("Table: empty name found", T, "    if (*name == 0) {\n        return -1;\n    }\n", ""),
+    ("Table: search bound moved too far", T, "            if (low < mid) {\n                low = mid;\n            }", "            low = mid + stride;"),
+    # Not used: `order >= 0` in the scan is equivalent, because order == 0 has already returned; removing the break is
+    # equivalent on a sorted table. Both were tried and explained (docs/verification.md).
+    ("Table: scan reports a hit on passing the key", T, "        if (order > 0) {\n            break;\n        }", "        if (order > 0) {\n            return i;\n        }"),
+    ("Table: extensions start in the wrong place", T, "m_extensions = names + nameCount * 8;", "m_extensions = names + nameCount * 4;"),
+    ("Table: GetFullName bounds off by one", T, "if (name >= m_nameCount || extension >= m_extensionCount) {", "if (name > m_nameCount || extension > m_extensionCount) {"),
+    # Not used: not clearing words 0 or 1 is equivalent, because strncpy pads those eight bytes itself.
+    ("Table: GetFullName not cleared", T, "    ((unsigned int*)out)[2] = 0;\n", ""),
+    ("Table: wildcard not honoured", T, "if (strncmp(namePattern, name, 8) != 0 && *namePattern != '*') {", "if (strncmp(namePattern, name, 8) != 0) {"),
+    ("Table: no-dot extension wrong", T, "        ext = name + strlen(name);", "        ext = name;"),
+    ("Table: destructor leaves the sentinel", T, "AtIoJamNameTable::~AtIoJamNameTable() {\n    m_names = 0;\n    m_extensions = 0;\n    m_unknown08 = -1;", "AtIoJamNameTable::~AtIoJamNameTable() {\n    m_names = 0;\n    m_extensions = 0;"),
+]
+
+SUITES = {
+    "gm": {"target": "oracle_gm", "subsystem": "gm/", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "jam": {"target": "oracle_jam", "subsystem": "at/", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
+}
+
 
 def run(cmd, **kw):
     return subprocess.run(cmd, capture_output=True, text=True, **kw)
 
 
-def configure_and_build(build_dir, extra=()):
+def configure_and_build(build_dir, target, extra=()):
     r = run(["cmake", "-S", ROOT, "-B", build_dir, "-A", "Win32"] + list(extra))
     if r.returncode:
         raise SystemExit("configure failed:\n" + r.stdout + r.stderr)
-    r = run(["cmake", "--build", build_dir, "--config", CONFIG, "--target", "oracle_gm"])
+    r = run(["cmake", "--build", build_dir, "--config", CONFIG, "--target", target])
     if r.returncode:
         return False, r.stdout + r.stderr
     return True, ""
 
 
-def exe(build_dir):
-    return os.path.join(build_dir, CONFIG, "oracle_gm.exe")
+def exe(build_dir, target):
+    return os.path.join(build_dir, CONFIG, target + ".exe")
 
 
 def write_variant(src, mutant):
@@ -90,14 +152,91 @@ def write_variant(src, mutant):
             text = text.replace(mutant[2], mutant[3])
         with open(os.path.join(MUTANT_SRC, leaf), "w", encoding="utf-8") as f:
             f.write(text)
-    return True
 
 
-def run_mutant():
+def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
+    target = SUITES[suite]["target"]
+    if suite == "gm":
+        cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
+    else:
+        cmd = [exe(build_dir, target), XBE, CASES]
+    if entries:
+        cmd += ["--entries", entries]
+    if mutate:
+        cmd += ["--mutate"]
+    return cmd
+
+
+def run_mutant(suite):
     try:
-        return run([exe(MUTANT_BUILD), XBE, "--ops", "500"], timeout=60).returncode
+        return run(command(suite, MUTANT_BUILD), timeout=90).returncode
     except subprocess.TimeoutExpired:
         return "timeout"
+
+
+def run_suite(suite, a, funcs):
+    cfg = SUITES[suite]
+    target = cfg["target"]
+    funcs = [f for f in funcs if f["subsystem"].startswith(cfg["subsystem"])]
+    ok, log = configure_and_build(BUILD, target)
+    if not ok:
+        print(log)
+        raise SystemExit(2)
+    entries = os.path.join(ROOT, "build", "oracle-entries-%s.txt" % suite)
+    with open(entries, "w") as f:
+        f.write("\n".join("%X" % fn["va"] for fn in funcs) + "\n")
+    report = {"ops_per_seed": a.ops if suite == "gm" else None, "seeds": [], "mutants": []}
+    good = True
+    unreached = set()
+    for seed in range(1, (a.seeds if suite == "gm" else 1) + 1):
+        r = run(command(suite, BUILD, a.ops, seed, entries), timeout=900)
+        print(r.stdout.strip().splitlines()[-1] if r.stdout.strip() else "no output, exit %d" % r.returncode)
+        missing = re.findall(r"entry not reached: 0x([0-9A-F]+)", r.stdout)
+        unreached.update(int(m, 16) for m in missing)
+        report["seeds"].append({"seed": seed, "exit": r.returncode, "summary": r.stdout.strip().splitlines()[-1:],
+                                "not_reached": missing})
+        good &= r.returncode == 0
+    distinct = len({fn["va"] for fn in funcs})
+    report["entries_reached"] = distinct - len(unreached)
+    report["entries_total"] = distinct
+    report["entries_not_reached"] = ["0x%08X" % v for v in sorted(unreached)]
+    print("entries reached in every run: %d / %d %s" % (report["entries_reached"], distinct,
+                                                        sorted(hex(v) for v in unreached) or ""))
+    good &= not unreached
+
+    r = run(command(suite, BUILD, mutate=True), timeout=300)
+    print("harness mutation (--mutate): exit %d" % r.returncode)
+    report["harness_mutation_exit"] = r.returncode
+    good &= r.returncode == 1
+
+    if not a.no_mutants:
+        src = os.path.join(ROOT, "src", cfg["src"])
+        var = ["-D%s=%s" % (cfg["var"], MUTANT_SRC.replace("\\", "/"))]
+        survived = []
+        write_variant(src, None)
+        ok, log = configure_and_build(MUTANT_BUILD, target, var)
+        if not ok:
+            raise SystemExit("positive control does not compile:\n" + log)
+        code = run_mutant(suite)
+        print("  %-46s %s" % ("(unmodified copy: positive control)", "passes" if code == 0 else "FAILS: %s" % code))
+        report["mutant_positive_control_exit"] = code
+        good &= code == 0
+        for mutant in cfg["mutants"]:
+            write_variant(src, mutant)
+            ok, log = configure_and_build(MUTANT_BUILD, target, var)
+            if not ok:
+                raise SystemExit("mutant %r does not compile:\n%s" % (mutant[0], log))
+            code = run_mutant(suite)
+            verdict = ("detected (difference)" if code == 1 else "survived" if code == 0
+                       else "detected (crash/hang: %s)" % code)
+            print("  %-46s %s" % (mutant[0], verdict))
+            report["mutants"].append({"name": mutant[0], "verdict": verdict})
+            if code == 0:
+                survived.append(mutant[0])
+        print("mutants detected: %d / %d" % (len(cfg["mutants"]) - len(survived), len(cfg["mutants"])))
+        good &= not survived
+        shutil.rmtree(MUTANT_BUILD, ignore_errors=True)  # The cached source directory belongs to this suite.
+    return good, report
 
 
 def main(argv):
@@ -105,70 +244,25 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
+    ap.add_argument("--suite", choices=["gm", "jam", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
         return 2
     with open(os.path.join(ROOT, "config", "functions.toml"), "rb") as f:
         funcs = tomllib.load(f)["function"]
-    ok, log = configure_and_build(BUILD)
-    if not ok:
-        print(log)
-        return 2
-
-    entries = os.path.join(ROOT, "build", "oracle-entries.txt")
-    with open(entries, "w") as f:
-        f.write("\n".join("%X" % fn["va"] for fn in funcs) + "\n")
-    report = {"xbe_sha256": hashlib.sha256(open(XBE, "rb").read()).hexdigest(), "ops_per_seed": a.ops, "seeds": [],
-              "mutants": []}
+    report = {"xbe_sha256": hashlib.sha256(open(XBE, "rb").read()).hexdigest(), "suites": {}}
+    path = os.path.join(ROOT, "build", "oracle-report.json")
+    if a.suite != "all" and os.path.exists(path):
+        with open(path) as f:
+            report["suites"] = json.load(f).get("suites", {})
     good = True
-    unreached = set()
-    for seed in range(1, a.seeds + 1):
-        r = run([exe(BUILD), XBE, "--seed", str(seed), "--ops", str(a.ops), "--entries", entries], timeout=900)
-        print(r.stdout.strip().splitlines()[-1] if r.stdout.strip() else "no output, exit %d" % r.returncode)
-        missing = re.findall(r"entry not reached: 0x([0-9A-F]+)", r.stdout)
-        unreached.update(int(m, 16) for m in missing)
-        report["seeds"].append({"seed": seed, "exit": r.returncode, "summary": r.stdout.strip().splitlines()[-1:],
-                                "not_reached": missing})
-        good &= r.returncode == 0
-    report["entries_reached"] = len(funcs) - len(unreached)
-    report["entries_total"] = len(funcs)
-    report["entries_not_reached"] = ["0x%08X" % v for v in sorted(unreached)]
-    print("entries reached in every seed: %d / %d %s" % (report["entries_reached"], len(funcs),
-                                                         sorted(hex(v) for v in unreached) or ""))
-    good &= not unreached
-
-    r = run([exe(BUILD), XBE, "--ops", "500", "--mutate"], timeout=300)
-    print("harness mutation (--mutate): exit %d" % r.returncode)
-    report["harness_mutation_exit"] = r.returncode
-    good &= r.returncode == 1
-
-    survived = []
-    if not a.no_mutants:
-        src = os.path.join(ROOT, "src", "gm")
-        if not write_variant(src, None):
-            raise SystemExit("unreachable")
-        ok, log = configure_and_build(MUTANT_BUILD, ["-DKND_GM_SRC=" + MUTANT_SRC.replace("\\", "/")])
-        if not ok:
-            raise SystemExit("positive control does not compile:\n" + log)
-        code = run_mutant()
-        print("  %-42s %s" % ("(unmodified copy: positive control)", "passes" if code == 0 else "FAILS: %s" % code))
-        report["mutant_positive_control_exit"] = code
-        good &= code == 0
-        for name, file, old, new in MUTANTS:
-            write_variant(src, (name, file, old, new))
-            ok, log = configure_and_build(MUTANT_BUILD, ["-DKND_GM_SRC=" + MUTANT_SRC.replace("\\", "/")])
-            if not ok:
-                raise SystemExit("mutant %r does not compile:\n%s" % (name, log))
-            code = run_mutant()
-            verdict = "detected (difference)" if code == 1 else "survived" if code == 0 else "detected (crash/hang: %s)" % code
-            print("  %-42s %s" % (name, verdict))
-            report["mutants"].append({"name": name, "verdict": verdict})
-            if code == 0:
-                survived.append(name)
-        print("mutants detected: %d / %d" % (len(MUTANTS) - len(survived), len(MUTANTS)))
-        good &= not survived
-    with open(os.path.join(ROOT, "build", "oracle-report.json"), "w") as f:
+    for suite in (["gm", "jam"] if a.suite == "all" else [a.suite]):
+        print("== suite %s" % suite)
+        ok, rep = run_suite(suite, a, funcs)
+        report["suites"][suite] = rep
+        good &= ok
+    with open(path, "w") as f:
         json.dump(report, f, indent=1)
     return 0 if good else 1
 

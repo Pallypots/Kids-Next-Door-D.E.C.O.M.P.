@@ -72,11 +72,17 @@ File entries differ by class:
 | JAM2 | 8 | u16 name index, u8 extension index, 1 byte, u32 record offset |
 
 A JAM2 record starts on a 0x20 boundary: u32 size, u32 size (equal in all 21 archives; whether they can differ, for
-example for compressed data, is unknown), padding to 0x20, then the data. The next record starts at the next 0x20
+example for compressed data, is unknown; `GetFileInfo` 0x00080BA0 reads the second), padding to 0x20, then the data. The next record starts at the next 0x20
 boundary. FSTA data has no such prefix; alignment rules there have not been established.
 
-Names are looked up case-insensitively: the lookup folds the requested path with a CRT case call (0x001261EA) before
-comparing. Path separator is a backslash.
+Lookup, recovered as source in `src/at/` and compared with the original (docs/verification.md): the requested path is folded
+to upper case (0x001261EA, `toupper`), and names and extensions are binary-searched in their sorted tables. A file with no
+extension uses extension index 0, which is the empty string. `FindFile` (0x0007F4B0) returns the FSTA `+4` value as the offset
+and writes the `+8` value as the size, confirming those two fields.
+
+Two original behaviours a port should know about: `FindDirectory` does not rewind after a path component misses and only
+checks the last component, so `FILEA\\ROOT` can succeed when `FILEA` is a name but no directory there; and paths are copied to
+fixed 256-byte stack buffers with no length check. Path separator is a backslash.
 
 Contents of the archived files (`.AGD`, `.AGM`, `.AGN`, `.AGT`, `.AFA`, `.AFD`, ... and `.DDS`) are not yet recovered.
 Next format work starts from the code that consumes one of these types, never from guessing at the bytes alone.
