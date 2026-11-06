@@ -88,9 +88,9 @@ def main():
                 clean = sum(1 for x in r["seeds"] if x["exit"] == 0)
                 det = [m for m in r["mutants"] if m["verdict"].startswith("detected")]
                 out += ["Suite `%s`: runs with no observed difference %d / %d (%s). Recorded function entries reached in "
-                        "every run: %d / %d. Source mutants detected" + (" (by an earlier run)" if r.get("mutants_from_earlier_run") else "") + ": %d / %d. Positive control exit: %s. Harness mutation "
+                        "every run: %d / %d. Source mutants detected%s: %d / %d. Positive control exit: %s. Harness mutation "
                         "exit: %s." % (name, clean, len(r["seeds"]), (r["seeds"][0]["summary"] or ["?"])[0],
-                                       r["entries_reached"], r["entries_total"], len(det), len(r["mutants"]),
+                                       r["entries_reached"], r["entries_total"], " (by an earlier run)" if r.get("mutants_from_earlier_run") else "", len(det), len(r["mutants"]),
                                        r.get("mutant_positive_control_exit"), r["harness_mutation_exit"]), ""]
             out += ["This is behaviour evidence (Semantic-tested), not a byte match and not a proof.", ""]
         else:

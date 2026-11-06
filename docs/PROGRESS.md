@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 467 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 481 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -530,9 +530,23 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00033B90 | 48 | `?SetAxisAngle@AtQuaternion@@QAEXABVAtVector3@@M@Z` | at/quaternion | SIZE |
 | 0x00033C00 | 57 | `?SetCross@AtVector3@@QAEXABV1@0@Z` | at/quaternion | MISMATCH |
 | 0x00033C40 | 35 | `?SetDifference@AtVector3@@QAEXABV1@0@Z` | at/quaternion | MISMATCH |
+| 0x00041270 | 52 | `?Read@AtColor@@QAEXPAVAtIoTokenizer@@@Z` | at/material | MISMATCH |
+| 0x000412B0 | 14 | `?SetWhite@AtColor@@QAEXXZ` | at/material | SIZE |
+| 0x00038E40 | 104 | `??0AtMaterialDesc@@QAE@XZ` | at/material | SIZE |
+| 0x00038EB0 | 78 | `??0AtMaterial@@QAE@XZ` | at/material | SIZE |
+| 0x00038F00 | 102 | `??_GAtMaterial@@UAEPAXI@Z` | at/material | SIZE |
+| 0x00038C50 | 72 | `?Reset@AtMaterial@@UAEXXZ` | at/material | SIZE |
+| 0x00038370 | 26 | `?SetAlphaCompare@AtMaterial@@UAEXEE@Z` | at/material | SIZE |
+| 0x00038390 | 5 | `?ClearAlphaCompare@AtMaterial@@UAEXXZ` | at/material | MATCH |
+| 0x000381A0 | 123 | `?ReadBlendMode@AtMaterial@@QAEHPAVAtIoTokenizer@@H@Z` | at/material | SIZE |
+| 0x00038250 | 105 | `?ReadStencilAction@AtMaterial@@QAEHPAVAtIoTokenizer@@@Z` | at/material | SIZE |
+| 0x000382E0 | 105 | `?ReadCompare@AtMaterial@@QAEHPAVAtIoTokenizer@@@Z` | at/material | SIZE |
+| 0x00038590 | 1191 | `?Read@AtMaterial@@QAEXPAUAtMaterialOwner@@PAUAtMaterialStore@@PAVAtIoTokenizer@@PBD@Z` | at/material | SIZE |
+| 0x00038AD0 | 373 | `?Copy@AtMaterial@@QAEXPAUAtMaterialOwner@@PAUAtMaterialStore@@ABV1@@Z` | at/material | SIZE |
+| 0x00038D60 | 224 | `?Describe@AtMaterial@@QBEXPAUAtMaterialDesc@@@Z` | at/material | SIZE |
 
-Relocation-aware matches with the host compiler: 69 functions, 1119 unique bytes.
-Share of `.text` raw bytes: 0.0547% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 70 functions, 1124 unique bytes.
+Share of `.text` raw bytes: 0.0550% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -575,38 +589,41 @@ Exact linked match (whole XBE): not attempted.
 | 0x0028DEB8 | 5 | `??_7GmManifestLoader@@6B@` | MATCH |
 | 0x00286694 | 4 | `??_7AtMemorySystem@@6B@` | MATCH |
 | 0x00284840 | 4 | `??_7AtRegionMemorySystem@@6B@` | MATCH |
+| 0x00274E20 | 5 | `??_7AtMaterial@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
-Suite `gm`: runs with no observed difference 20 / 20 (NO DIFFERENCE OBSERVED: seed 1, 5000 random operations, 20273883 comparisons, 0 differences). Recorded function entries reached in every run: 47 / 47. Source mutants detected: 23 / 23. Positive control exit: 0. Harness mutation exit: 1.
+Suite `gm`: runs with no observed difference 5 / 5 (NO DIFFERENCE OBSERVED: seed 1, 3000 random operations, 12183060 comparisons, 0 differences). Recorded function entries reached in every run: 47 / 47. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 196466943 comparisons, 0 differences). Recorded function entries reached in every run: 101 / 101. Source mutants detected: 136 / 136. Positive control exit: 0. Harness mutation exit: 1.
+Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 196466943 comparisons, 0 differences). Recorded function entries reached in every run: 101 / 101. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `tok`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 5864 files (60 binary samples), 12749375 bytes, 1372044 tokens, 22236514 comparisons, 0 differences, 0 x87 precision differences, 145 rumble keywords). Recorded function entries reached in every run: 99 / 99. Source mutants detected: 172 / 172. Positive control exit: 0. Harness mutation exit: 1.
+Suite `tok`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 5864 files (60 binary samples), 12749375 bytes, 1372044 tokens, 22236514 comparisons, 0 differences, 0 x87 precision differences, 145 rumble keywords). Recorded function entries reached in every run: 99 / 99. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `lvl`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: Levels.txt with 47 entries, 17 described; 1910 comparisons, 0 differences). Recorded function entries reached in every run: 11 / 11. Source mutants detected: 60 / 60. Positive control exit: 0. Harness mutation exit: 1.
+Suite `lvl`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: Levels.txt with 47 entries, 17 described; 1910 comparisons, 0 differences). Recorded function entries reached in every run: 11 / 11. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `mnt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 946 comparisons, 0 differences). Recorded function entries reached in every run: 23 / 23. Source mutants detected: 64 / 64. Positive control exit: 0. Harness mutation exit: 1.
+Suite `mnt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 946 comparisons, 0 differences). Recorded function entries reached in every run: 23 / 23. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `rmb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: seed 1, RUMBLE.RMB with 15 effects; 3525053 comparisons, 0 differences). Recorded function entries reached in every run: 55 / 55. Source mutants detected: 125 / 125. Positive control exit: 0. Harness mutation exit: 1.
+Suite `rmb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: seed 1, RUMBLE.RMB with 15 effects; 3525053 comparisons, 0 differences). Recorded function entries reached in every run: 55 / 55. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `txt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 72 .AIS files, 2685 strings, 27924 comparisons, 0 differences). Recorded function entries reached in every run: 39 / 39. Source mutants detected: 64 / 64. Positive control exit: 0. Harness mutation exit: 1.
+Suite `txt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 72 .AIS files, 2685 strings, 27924 comparisons, 0 differences). Recorded function entries reached in every run: 39 / 39. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `set`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 16705 comparisons, 0 differences). Recorded function entries reached in every run: 8 / 8. Source mutants detected: 140 / 140. Positive control exit: 0. Harness mutation exit: 1.
+Suite `set`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 16705 comparisons, 0 differences). Recorded function entries reached in every run: 8 / 8. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 files, 6 presets, 0 blocks (each file read twice); 638 comparisons, 0 differences). Recorded function entries reached in every run: 3 / 3. Source mutants detected: 53 / 53. Positive control exit: 0. Harness mutation exit: 1.
+Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 files, 6 presets, 0 blocks (each file read twice); 638 comparisons, 0 differences). Recorded function entries reached in every run: 3 / 3. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `ldr`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 51 files; 19502 comparisons, 0 differences). Recorded function entries reached in every run: 10 / 10. Source mutants detected: 56 / 56. Positive control exit: 0. Harness mutation exit: 1.
+Suite `ldr`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 51 files; 19502 comparisons, 0 differences). Recorded function entries reached in every run: 10 / 10. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `hep`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 40 seeds of 3000 operations; 3100506 comparisons, 0 differences). Recorded function entries reached in every run: 22 / 22. Source mutants detected: 154 / 154. Positive control exit: 0. Harness mutation exit: 1.
+Suite `hep`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 40 seeds of 3000 operations; 3100506 comparisons, 0 differences). Recorded function entries reached in every run: 22 / 22. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `mem`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 9715 comparisons, 0 differences). Recorded function entries reached in every run: 19 / 19. Source mutants detected: 61 / 61. Positive control exit: 0. Harness mutation exit: 1.
+Suite `mem`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 9715 comparisons, 0 differences). Recorded function entries reached in every run: 19 / 19. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `vec`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 44000024 comparisons, 0 differences). Recorded function entries reached in every run: 14 / 14. Source mutants detected: 41 / 41. Positive control exit: 0. Harness mutation exit: 1.
+Suite `vec`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 44000024 comparisons, 0 differences). Recorded function entries reached in every run: 14 / 14. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `fmt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 4590236 comparisons, 0 differences). Recorded function entries reached in every run: 27 / 27. Source mutants detected: 56 / 56. Positive control exit: 0. Harness mutation exit: 1.
+Suite `fmt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 4590236 comparisons, 0 differences). Recorded function entries reached in every run: 27 / 27. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
 
-Suite `qua`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 11250000 comparisons, 0 differences). Recorded function entries reached in every run: 11 / 11. Source mutants detected: 60 / 60. Positive control exit: 0. Harness mutation exit: 1.
+Suite `qua`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 11250000 comparisons, 0 differences). Recorded function entries reached in every run: 11 / 11. Source mutants detected: 0 / 0. Positive control exit: None. Harness mutation exit: 1.
+
+Suite `mat`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 645 files, 2684 materials; 59071 comparisons, 0 differences). Recorded function entries reached in every run: 14 / 14. Source mutants detected: 87 / 87. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 
