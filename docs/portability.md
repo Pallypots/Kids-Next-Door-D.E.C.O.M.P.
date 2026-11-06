@@ -46,3 +46,5 @@ File names: the game asks for `App.INI` and the disc has `app.ini`; it asks for 
 Native build today: `CMakeLists.txt` builds `knd_gm` and `knd_at` (`src/`) and the semantic tests for x64 with the VS 2022
 generator. Ninja is not installed; Linux/Android builds are untested. The 32-bit oracle target is Windows-only analysis
 tooling and is excluded from x64 builds.
+
+* Allocator (`src/at/AtHeap.cpp`): a block's header holds pointers, so every offset goes through `AtHeapBlock`. On a 64-bit host `AtHeap::Init` raises the alignment shift to at least 3, which changes nothing on x86. Sizes keep the original's 24 bits, so a heap of 16 MB or more does not work, on any host, until that is changed deliberately. `AtHeapManager::s_instance` is not yet set by any port code.

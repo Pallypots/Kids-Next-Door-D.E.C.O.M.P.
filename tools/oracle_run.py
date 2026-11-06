@@ -944,13 +944,13 @@ AUD_MUTANTS = [
 
 LDR_MUTANTS = [
     ('Configure: path', 'GmManifestLoader.cpp', '    strcpy(m_path, request->m_path);\n', ''),
-    ('Configure: tag', 'GmManifestLoader.cpp', '    m_tag = request->m_tag;\n', ''),
+    ('Configure: tag', 'GmManifestLoader.cpp', '    m_heap = request->m_heap;\n', ''),
     ('Configure: name', 'GmManifestLoader.cpp', '    AtCopyName8(m_name, request->m_name);\n', ''),
     ('Reset: path', 'GmManifestLoader.cpp', '    m_path[0] = 0;\n', ''),
     ('Reset: name', 'GmManifestLoader.cpp', '    m_name[0] = 0;\n', ''),
     ('Reset: tail', 'GmManifestLoader.cpp', '    m_tail = 0;\n    m_head = 0;\n', '    m_head = 0;\n'),
     ('Reset: head', 'GmManifestLoader.cpp', '    m_tail = 0;\n    m_head = 0;\n', '    m_tail = 0;\n'),
-    ('Reset: tag', 'GmManifestLoader.cpp', '    m_tag = 0;\n', ''),
+    ('Reset: heap', 'GmManifestLoader.cpp', '    m_heap = 0;\n', ''),
     ('Reset: done', 'GmManifestLoader.cpp', '    m_done = 0;\n', ''),
     ('Reset: state', 'GmManifestLoader.cpp', '    m_state = kOpening;\n', ''),
     ('Tokens: not passed', 'GmManifestLoader.cpp', '        OnToken(token, tokenizer);\n', ''),
@@ -960,8 +960,8 @@ LDR_MUTANTS = [
     ('Open: failure state', 'GmManifestLoader.cpp', '        m_state = kFailed;\n        return;\n', '        m_state = kDone;\n        return;\n'),
     ('Open: failure ignored', 'GmManifestLoader.cpp', '    if (m_file.Open(m_path, "MNG", 2, 0) != 0) {\n        m_state = kFailed;\n        return;\n    }\n', '    m_file.Open(m_path, "MNG", 2, 0);\n'),
     ('Open: success state', 'GmManifestLoader.cpp', '    m_state = kParsing;\n', '    m_state = kRunning;\n'),
-    ('Run: tag', 'GmManifestLoader.cpp', '    AtMemoryManager::s_instance->m_unknown24C = m_tag;\n', ''),
-    ('Run: restore', 'GmManifestLoader.cpp', '    AtMemoryManager::s_instance->m_unknown24C = saved;\n', ''),
+    ('Run: tag', 'GmManifestLoader.cpp', '    AtHeapManager::s_instance->m_override = m_heap;\n', ''),
+    ('Run: restore', 'GmManifestLoader.cpp', '    AtHeapManager::s_instance->m_override = saved;\n', ''),
     ('Run: not run', 'GmManifestLoader.cpp', '        m_head->Run();\n', ''),
     ('Run: no advance', 'GmManifestLoader.cpp', '        m_head = m_head->m_next;\n', '        if (m_head->m_next == 0) m_head = 0;\n'),
     ('Run: tail kept', 'GmManifestLoader.cpp', '            m_tail = 0;\n            Finished();\n', '            Finished();\n'),
@@ -1002,6 +1002,169 @@ LDR_MUTANTS = [
 ]
 
 
+HEP_MUTANTS = [
+    ('Overhead: round', 'AtHeap.cpp', '((unsigned int)offsetof(AtHeapBlock, m_nextFree) + mask) & ~mask', '(unsigned int)offsetof(AtHeapBlock, m_nextFree)'),
+    ('Size: flags lost', 'AtHeap.cpp', 'block->m_word = (block->m_word & ~(unsigned int)AtHeapBlock::kSizeMask) | (size & AtHeapBlock::kSizeMask);', 'block->m_word = size & AtHeapBlock::kSizeMask;'),
+    ('Size: uncut', 'AtHeap.cpp', '| (size & AtHeapBlock::kSizeMask);', '| size;'),
+    ('SizeOf: uncut', 'AtHeap.cpp', 'return block->m_word & AtHeapBlock::kSizeMask;', 'return block->m_word & 0x1FFFFFF;'),
+    ('Tag: flags lost', 'AtHeap.cpp', '(block->m_word & 0x3FFFFFF)', '(block->m_word & 0xFFFFFF)'),
+    ('Tag: shift', 'AtHeap.cpp', '((unsigned int)tag << AtHeapBlock::kTagShift);', '((unsigned int)tag << 25);'),
+    ('Ctor: shift', 'AtHeap.cpp', 'AtHeap::AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 2;', 'AtHeap::AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 3;'),
+    ('Ctor: alloc shift', 'AtHeap.cpp', 'AtHeap::AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 2;\n    m_allocShift = 2;', 'AtHeap::AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 2;\n    m_allocShift = 3;'),
+    ('Ctor: fixed', 'AtHeap.cpp', 'AtHeap::AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 2;\n    m_allocShift = 2;\n    m_tag = 0;\n    m_free = 0;\n    m_equivalencyId = 0;\n    m_fixed = 0;', 'AtHeap::AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 2;\n    m_allocShift = 2;\n    m_tag = 0;\n    m_free = 0;\n    m_equivalencyId = 0;'),
+    ('Dtor: size', 'AtHeap.cpp', 'AtHeap::~AtHeap() {\n    m_base = 0;\n    m_size = 0;\n', 'AtHeap::~AtHeap() {\n    m_base = 0;\n'),
+    ('Dtor: id', 'AtHeap.cpp', 'AtHeap::~AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 2;\n    m_allocShift = 2;\n    m_tag = 0;\n    m_free = 0;\n    m_equivalencyId = 0;\n', 'AtHeap::~AtHeap() {\n    m_base = 0;\n    m_size = 0;\n    m_used = 0;\n    m_alignShift = 2;\n    m_allocShift = 2;\n    m_tag = 0;\n    m_free = 0;\n'),
+    ('Init: tag', 'AtHeap.cpp', '    m_tag = tag;\n    m_equivalencyId = tag;\n', '    m_equivalencyId = tag;\n'),
+    ('Init: id', 'AtHeap.cpp', '    m_tag = tag;\n    m_equivalencyId = tag;\n', '    m_tag = tag;\n'),
+    ('Init: no reset', 'AtHeap.cpp', '    m_equivalencyId = tag;\n    Reset();\n', '    m_equivalencyId = tag;\n'),
+    ('Init: alloc shift', 'AtHeap.cpp', '    m_allocShift = (unsigned int)alignShift;\n', ''),
+    ('Reset: used', 'AtHeap.cpp', '    m_free = BlockAt(m_base);\n    m_used = 0;\n', '    m_free = BlockAt(m_base);\n'),
+    ('Reset: flags', 'AtHeap.cpp', '    m_free->m_word &= ~(unsigned int)(AtHeapBlock::kBackOffset | AtHeapBlock::kUsed);\n', ''),
+    ('Reset: back flag', 'AtHeap.cpp', '~(unsigned int)(AtHeapBlock::kBackOffset | AtHeapBlock::kUsed);', '~(unsigned int)AtHeapBlock::kUsed;'),
+    ('Reset: tag', 'AtHeap.cpp', '    SetTag(m_free, m_tag);\n', ''),
+    ('Reset: prev', 'AtHeap.cpp', '    m_free->m_prev = 0;\n', ''),
+    ('Reset: next', 'AtHeap.cpp', '    m_free->m_nextFree = 0;\n', ''),
+    ('Reset: prev free', 'AtHeap.cpp', '    m_free->m_prevFree = 0;\n', ''),
+    ('Alloc: no rounding', 'AtHeap.cpp', 'const unsigned int rounded = (size + mask) & ~mask;', 'const unsigned int rounded = size;'),
+    ('Alloc: wide gap', 'AtHeap.cpp', '((wide - unit) + wideMask + overhead + (unsigned int)offsetof(AtHeapBlock, m_nextFree)) & ~wideMask', '(wideMask + overhead + (unsigned int)offsetof(AtHeapBlock, m_nextFree)) & ~wideMask'),
+    ('Alloc: wide extra', 'AtHeap.cpp', '+ overhead + (unsigned int)offsetof(AtHeapBlock, m_nextFree)) & ~wideMask', '+ overhead) & ~wideMask'),
+    ('Alloc: minimum', 'AtHeap.cpp', '    if (need < sizeof(AtHeapBlock)) {\n        need = sizeof(AtHeapBlock);\n    }\n', ''),
+    ('Alloc: fit edge', 'AtHeap.cpp', 'SizeOf(block) < need', 'SizeOf(block) <= need'),
+    ('Alloc: best not first', 'AtHeap.cpp', 'while (block != 0 && SizeOf(block) < need) {\n        block = block->m_nextFree;\n    }', 'for (AtHeapBlock* b = m_free; b != 0; b = b->m_nextFree) {\n        if (SizeOf(b) >= need && (block == m_free && SizeOf(block) < need || SizeOf(b) < SizeOf(block))) block = b;\n    }\n    if (block != 0 && SizeOf(block) < need) block = 0;'),
+    ('Alloc: split edge', 'AtHeap.cpp', 'if (need + sizeof(AtHeapBlock) < have) {', 'if (need + sizeof(AtHeapBlock) <= have) {'),
+    ('Alloc: split size', 'AtHeap.cpp', '        SetSize(block, need);\n', ''),
+    ('Alloc: rest size', 'AtHeap.cpp', 'rest->m_word = (have - need) & AtHeapBlock::kSizeMask;', 'rest->m_word = have & AtHeapBlock::kSizeMask;'),
+    ('Alloc: rest next', 'AtHeap.cpp', '        rest->m_nextFree = block->m_nextFree;\n', '        rest->m_nextFree = 0;\n'),
+    ('Alloc: rest prev', 'AtHeap.cpp', '        rest->m_prevFree = block->m_prevFree;\n', '        rest->m_prevFree = 0;\n'),
+    ('Alloc: rest back link', 'AtHeap.cpp', '        if (rest->m_nextFree != 0) {\n            rest->m_nextFree->m_prevFree = rest;\n        }\n', ''),
+    ('Alloc: rest as head', 'AtHeap.cpp', '        if (m_free == block) {\n            m_free = rest;\n        } else if', '        if (0) {\n            m_free = rest;\n        } else if'),
+    ('Alloc: rest forward link', 'AtHeap.cpp', '        } else if (rest->m_prevFree != 0) {\n            rest->m_prevFree->m_nextFree = rest;\n        }\n', '        }\n'),
+    ('Alloc: rest prev block', 'AtHeap.cpp', '        rest->m_prev = block;\n', ''),
+    ('Alloc: after edge', 'AtHeap.cpp', '        if ((char*)after < m_base + m_size) {\n            after->m_prev = rest;\n        }\n', '        after->m_prev = rest;\n'),
+    ('Alloc: after not linked', 'AtHeap.cpp', '        if ((char*)after < m_base + m_size) {\n            after->m_prev = rest;\n        }\n', ''),
+    ('Alloc: rest tag', 'AtHeap.cpp', '        SetTag(rest, m_tag);\n', ''),
+    ('Alloc: taken split', 'AtHeap.cpp', '        taken = need;\n', '        taken = need + 1;\n'),
+    ('Alloc: unlink head', 'AtHeap.cpp', '        if (m_free == block) {\n            m_free = block->m_nextFree;\n        } else {\n            block->m_prevFree->m_nextFree = block->m_nextFree;\n        }\n        if (block->m_nextFree != 0) {\n            block->m_nextFree->m_prevFree = block->m_prevFree;\n        }\n        taken = have;', '        block->m_prevFree->m_nextFree = block->m_nextFree;\n        if (block->m_nextFree != 0) {\n            block->m_nextFree->m_prevFree = block->m_prevFree;\n        }\n        taken = have;'),
+    ('Alloc: unlink back', 'AtHeap.cpp', '            block->m_prevFree->m_nextFree = block->m_nextFree;\n        }\n        if (block->m_nextFree != 0) {\n            block->m_nextFree->m_prevFree = block->m_prevFree;\n        }\n        taken = have;', '            block->m_prevFree->m_nextFree = block->m_nextFree;\n        }\n        taken = have;'),
+    ('Alloc: taken whole', 'AtHeap.cpp', '        taken = have;\n', '        taken = need;\n'),
+    ('Alloc: used', 'AtHeap.cpp', '    m_used += taken;\n', ''),
+    ('Alloc: used flag', 'AtHeap.cpp', '    block->m_word |= AtHeapBlock::kUsed;\n', ''),
+    ('Alloc: tag', 'AtHeap.cpp', '    block->m_word |= AtHeapBlock::kUsed;\n    SetTag(block, m_tag);\n', '    block->m_word |= AtHeapBlock::kUsed;\n'),
+    ('Alloc: wide ignored', 'AtHeap.cpp', 'if (m_allocShift == m_alignShift) {\n        return (char*)block + overhead;', 'if (1) {\n        return (char*)block + overhead;'),
+    ('Alloc: marker top byte', 'AtHeap.cpp', '(marker->m_word & 0xFF000000) | ', ''),
+    ('Alloc: marker flag', 'AtHeap.cpp', ' | AtHeapBlock::kBackOffset;\n    return (char*)marker', ';\n    return (char*)marker'),
+    ('Alloc: marker distance', 'AtHeap.cpp', '((unsigned int)((char*)marker - (char*)block) & AtHeapBlock::kSizeMask)', '((unsigned int)((char*)marker - (char*)block + 4) & AtHeapBlock::kSizeMask)'),
+    ('Free: back ignored', 'AtHeap.cpp', '    if (block->m_word & AtHeapBlock::kBackOffset) {\n        block = BlockAt((char*)data - SizeOf(block) - overhead);\n    }\n', ''),
+    ('Free: used flag', 'AtHeap.cpp', '    block->m_word &= ~(unsigned int)AtHeapBlock::kUsed;\n', ''),
+    ('Free: used count', 'AtHeap.cpp', '    m_used -= size;\n', ''),
+    ('Free: end ignored', 'AtHeap.cpp', 'if ((char*)next < end && !(next->m_word & AtHeapBlock::kUsed)) {', 'if (!(next->m_word & AtHeapBlock::kUsed)) {'),
+    ('Free: no merge after', 'AtHeap.cpp', 'if ((char*)next < end && !(next->m_word & AtHeapBlock::kUsed)) {', 'if (0) {'),
+    ('Free: merged size', 'AtHeap.cpp', '        size += SizeOf(next);\n', ''),
+    ('Free: merged next', 'AtHeap.cpp', '        block->m_nextFree = next->m_nextFree;\n', ''),
+    ('Free: merged prev', 'AtHeap.cpp', '        block->m_prevFree = next->m_prevFree;\n', ''),
+    ('Free: head moves', 'AtHeap.cpp', '        if (m_free == next) {\n            m_free = block;\n        } else if', '        if (0) {\n            m_free = block;\n        } else if'),
+    ('Free: forward link', 'AtHeap.cpp', '        } else if (next->m_prevFree != 0) {\n            next->m_prevFree->m_nextFree = block;\n        }\n', '        }\n'),
+    ('Free: back link', 'AtHeap.cpp', '        if (next->m_nextFree != 0) {\n            next->m_nextFree->m_prevFree = block;\n        }\n', ''),
+    ('Free: after link', 'AtHeap.cpp', '        if ((char*)after < end) {\n            after->m_prev = block;\n        }\n', ''),
+    ('Free: flag merged', 'AtHeap.cpp', '        merged = 1;\n', ''),
+    ('Free: no merge before', 'AtHeap.cpp', 'if (before != 0 && !(before->m_word & AtHeapBlock::kUsed)) {', 'if (0) {'),
+    ('Free: before size', 'AtHeap.cpp', '        size += SizeOf(before);\n', ''),
+    ('Free: leave list', 'AtHeap.cpp', '            if (m_free == block) {\n                m_free = block->m_nextFree;\n            } else {\n                block->m_prevFree->m_nextFree = block->m_nextFree;\n            }\n', ''),
+    ('Free: leave back link', 'AtHeap.cpp', '            if (block->m_nextFree != 0) {\n                block->m_nextFree->m_prevFree = block->m_prevFree;\n            }\n', ''),
+    ('Free: after before', 'AtHeap.cpp', '        if ((char*)after < end) {\n            after->m_prev = before;\n        }\n', ''),
+    ('Free: list push next', 'AtHeap.cpp', '        block->m_nextFree = m_free;\n', ''),
+    ('Free: list push prev', 'AtHeap.cpp', '        block->m_prevFree = 0;\n', ''),
+    ('Free: list push back', 'AtHeap.cpp', '        if (m_free != 0) {\n            m_free->m_prevFree = block;\n        }\n', ''),
+    ('Free: list push head', 'AtHeap.cpp', '        m_free = block;\n    }\n}\n', '    }\n}\n'),
+    ('Owns: low', 'AtHeap.cpp', 'if (p < m_base || p >= m_base + m_size) {', 'if (p >= m_base + m_size) {'),
+    ('Owns: high', 'AtHeap.cpp', 'if (p < m_base || p >= m_base + m_size) {', 'if (p < m_base || p > m_base + m_size) {'),
+    ('Owns: odd', 'AtHeap.cpp', 'if ((back & 3) != 0 || back > 0x800) {', 'if (back > 0x800) {'),
+    ('Owns: far', 'AtHeap.cpp', 'if ((back & 3) != 0 || back > 0x800) {', 'if ((back & 3) != 0 || back >= 0x800) {'),
+    ('Owns: no limit', 'AtHeap.cpp', 'if ((back & 3) != 0 || back > 0x800) {', 'if ((back & 3) != 0) {'),
+    ('Owns: back ignored', 'AtHeap.cpp', '        block = (const AtHeapBlock*)(p - back - overhead);\n', ''),
+    ('Owns: tag', 'AtHeap.cpp', '== (unsigned int)m_tag ? 1 : 0', '!= 99 ? 1 : 0'),
+    ('Largest: first', 'AtHeap.cpp', 'if (SizeOf(b) > largest) {', 'if (largest == 0) {'),
+    ('Count: off', 'AtHeap.cpp', 'unsigned int count = 0;', 'unsigned int count = 1;'),
+    ('Aligned: not restored', 'AtHeap.cpp', '    m_allocShift = saved;\n', ''),
+    ('Aligned: narrower', 'AtHeap.cpp', 'alignShift > m_alignShift ? alignShift : m_alignShift', 'alignShift'),
+    ('Manager ctor: last id', 'AtHeap.cpp', 'AtHeapManager::AtHeapManager() {\n    m_base = 0;\n    m_chunks = 0;\n    m_size = 0;\n    m_lastId = 0;\n', 'AtHeapManager::AtHeapManager() {\n    m_base = 0;\n    m_chunks = 0;\n    m_size = 0;\n'),
+    ('Manager ctor: override', 'AtHeap.cpp', 'AtHeapManager::AtHeapManager() {\n    m_base = 0;\n    m_chunks = 0;\n    m_size = 0;\n    m_lastId = 0;\n    m_override = 0;\n', 'AtHeapManager::AtHeapManager() {\n    m_base = 0;\n    m_chunks = 0;\n    m_size = 0;\n    m_lastId = 0;\n'),
+    ('Init: second call keeps', 'AtHeap.cpp', '    if (m_size != 0) {\n        ResetAll();\n    }\n', ''),
+    ('Init: no aligning', 'AtHeap.cpp', '(char*)(((size_t)base + 0x3F) & ~(size_t)0x3F);', '(char*)base;'),
+    ('Init: size adjusted', 'AtHeap.cpp', '    m_size = (unsigned int)((char*)base - aligned) + size;\n', '    m_size = size;\n'),
+    ('Init: chunk size adjusted', 'AtHeap.cpp', '    m_chunks->m_size = (int)size;\n', '    m_chunks->m_size = (int)m_size;\n'),
+    ('Init: chunk next', 'AtHeap.cpp', '    m_chunks->m_next = 0;\n', ''),
+    ('Init: chunk prev', 'AtHeap.cpp', '    m_chunks->m_next = 0;\n    m_chunks->m_prev = 0;\n', '    m_chunks->m_next = 0;\n'),
+    ('ResetAll: heaps kept', 'AtHeap.cpp', '            m_heaps[i].~AtHeap();\n', ''),
+    ('ResetAll: last id', 'AtHeap.cpp', '    m_size = 0;\n    m_lastId = 0;\n    m_override = 0;\n}\n\nint AtHeapManager::NextId', '    m_size = 0;\n    m_override = 0;\n}\n\nint AtHeapManager::NextId'),
+    ('ResetAll: override', 'AtHeap.cpp', '    m_lastId = 0;\n    m_override = 0;\n}\n\nint AtHeapManager::NextId', '    m_lastId = 0;\n}\n\nint AtHeapManager::NextId'),
+    ('NextId: uses in use', 'AtHeap.cpp', '            if (m_heaps[i].m_equivalencyId == id) {\n                used = 1;\n                break;\n            }\n', ''),
+    ('Create: rounding', 'AtHeap.cpp', 'int need = (int)((size + 0x3F) & ~0x3Fu);', 'int need = (int)size;'),
+    ('Create: fit edge', 'AtHeap.cpp', 'chunk != 0 && chunk->m_size < need', 'chunk != 0 && chunk->m_size <= need'),
+    ('Create: rest edge', 'AtHeap.cpp', 'if (rest > 0x40) {', 'if (rest >= 0x40) {'),
+    ('Create: rest kept', 'AtHeap.cpp', '    } else {\n        need = chunk->m_size;\n    }\n', '    }\n'),
+    ('Create: after next', 'AtHeap.cpp', '        after->m_next = chunk->m_next;\n', '        after->m_next = 0;\n'),
+    ('Create: after back', 'AtHeap.cpp', '        if (chunk->m_next != 0) {\n            chunk->m_next->m_prev = after;\n        }\n', ''),
+    # Dropped, equivalent: Create: after prev: the next lines overwrite it: chunk's successor is that block on every path.
+    ('Create: unlink middle', 'AtHeap.cpp', '        chunk->m_prev->m_next = chunk->m_next;\n', ''),
+    # Dropped, equivalent: Create: unlink head prev: the next lines overwrite it with chunk's own prev.
+    ('Create: unlink back', 'AtHeap.cpp', '    if (chunk->m_next != 0) {\n        chunk->m_next->m_prev = chunk->m_prev;\n    }\n', ''),
+    ('Create: id', 'AtHeap.cpp', '    heap->Init(chunk, (unsigned int)need, slot, alignShift);\n    heap->m_equivalencyId = id;\n', '    heap->Init(chunk, (unsigned int)need, slot, alignShift);\n'),
+    ('Create: fixed', 'AtHeap.cpp', '    heap->m_equivalencyId = id;\n    heap->m_fixed = 0;\n', '    heap->m_equivalencyId = id;\n'),
+    ('Create at: id', 'AtHeap.cpp', '    heap->Init(base, size, slot, alignShift);\n    heap->m_equivalencyId = id;\n', '    heap->Init(base, size, slot, alignShift);\n'),
+    ('Create at: fixed', 'AtHeap.cpp', '    heap->m_fixed = 1;\n', ''),
+    ('Mgr alloc: override always', 'AtHeap.cpp', 'if (m_override != 0 && heap != (AtHeap*)AtIoTokenFile::s_heap) {', 'if (m_override != 0) {'),
+    ('Mgr alloc: override never', 'AtHeap.cpp', 'if (m_override != 0 && heap != (AtHeap*)AtIoTokenFile::s_heap) {', 'if (0) {'),
+    ('Mgr alloc: override plain', 'AtHeap.cpp', 'result = first->AllocateAligned(size, heap->m_allocShift);', 'result = first->Allocate(size);'),
+    ('Mgr alloc: no fallback', 'AtHeap.cpp', '    for (int i = 0; i < kHeaps; i++) {\n        AtHeap* const other = &m_heaps[i];\n        if (other != first && ', '    for (int i = 0; i < 0; i++) {\n        AtHeap* const other = &m_heaps[i];\n        if (other != first && '),
+    ('Mgr alloc: first again', 'AtHeap.cpp', 'if (other != first && other->m_size != 0 &&', 'if (other->m_size != 0 &&'),
+    ('Mgr alloc: empty slot', 'AtHeap.cpp', 'if (other != first && other->m_size != 0 &&', 'if (other != first &&'),
+    ('Mgr alloc: any heap', 'AtHeap.cpp', '&& other->m_equivalencyId == first->m_equivalencyId) {', ') {'),
+    ('Mgr alloc: group of asked', 'AtHeap.cpp', '&& other->m_equivalencyId == first->m_equivalencyId) {', '&& other->m_equivalencyId == heap->m_equivalencyId) {'),
+    ('Mgr alloc: fallback plain', 'AtHeap.cpp', 'result = other->AllocateAligned(size, heap->m_allocShift);', 'result = other->Allocate(size);'),
+    ('Mgr free: fixed order', 'AtHeap.cpp', 'for (int pass = 1; pass >= 0; pass--) {', 'for (int pass = 0; pass <= 1; pass++) {'),
+    # Dropped, equivalent: Mgr free: empty slot: Owns of a heap of size 0 is 0 for every pointer.
+    ('Mgr free: not freed', 'AtHeap.cpp', '                heap->Free(data);\n', ''),
+    ('Mgr free: result', 'AtHeap.cpp', '                heap->Free(data);\n                return 1;\n', '                heap->Free(data);\n                return 0;\n'),
+    ('Equivalent: first group', 'AtHeap.cpp', 'int group = a->m_equivalencyId;\n    for (int i = 0; i < kHeaps; i++) {\n        if (m_heaps[i].m_equivalencyId == group) {\n            m_heaps[i].m_equivalencyId = id;\n        }\n    }\n', 'int group = a->m_equivalencyId;\n'),
+    ('Equivalent: second group', 'AtHeap.cpp', '    group = b->m_equivalencyId;\n    for (int i = 0; i < kHeaps; i++) {\n        if (m_heaps[i].m_equivalencyId == group) {\n            m_heaps[i].m_equivalencyId = id;\n        }\n    }\n', '    group = b->m_equivalencyId;\n'),
+    # Dropped, equivalent: Equivalent: b read first: both orders leave the same ids: when the groups are one, neither second pass changes anything.
+    ('Destroy: id', 'AtHeap.cpp', '    heap->m_equivalencyId = NextId();\n', ''),
+    ('Destroy: range low', 'AtHeap.cpp', '(char*)chunk >= m_base && (char*)chunk < m_base + m_size && heap->m_fixed == 0', '(char*)chunk < m_base + m_size && heap->m_fixed == 0'),
+    ('Destroy: range high', 'AtHeap.cpp', '(char*)chunk >= m_base && (char*)chunk < m_base + m_size && heap->m_fixed == 0', '(char*)chunk >= m_base && heap->m_fixed == 0'),
+    ('Destroy: fixed too', 'AtHeap.cpp', ' && heap->m_fixed == 0) {', ') {'),
+    ('Destroy: unsorted', 'AtHeap.cpp', 'while (after != 0 && (char*)chunk > (char*)after) {', 'while (0) {'),
+    ('Destroy: size', 'AtHeap.cpp', '        chunk->m_size = (int)heap->m_size;\n', ''),
+    ('Destroy: links', 'AtHeap.cpp', '        chunk->m_prev = before;\n', ''),
+    ('Destroy: head', 'AtHeap.cpp', '            m_chunks = chunk;\n', ''),
+    ('Destroy: forward', 'AtHeap.cpp', '            before->m_next = chunk;\n', ''),
+    ('Destroy: no join after', 'AtHeap.cpp', 'if ((char*)chunk + chunk->m_size == (char*)after) {', 'if (0) {'),
+    ('Destroy: join next', 'AtHeap.cpp', '                chunk->m_next = after->m_next;\n', ''),
+    ('Destroy: join size', 'AtHeap.cpp', '                chunk->m_size += after->m_size;\n', ''),
+    ('Destroy: join back', 'AtHeap.cpp', '                if (after->m_next != 0) {\n                    after->m_next->m_prev = chunk;\n                }\n', ''),
+    ('Destroy: after prev', 'AtHeap.cpp', '            } else {\n                after->m_prev = chunk;\n', '            } else {\n'),
+    ('Destroy: no join before', 'AtHeap.cpp', 'if (before != 0 && (char*)before + before->m_size == (char*)chunk) {', 'if (0) {'),
+    ('Destroy: join before next', 'AtHeap.cpp', '            before->m_next = chunk->m_next;\n', ''),
+    ('Destroy: join before size', 'AtHeap.cpp', '            before->m_size += chunk->m_size;\n', ''),
+    ('Destroy: join before back', 'AtHeap.cpp', '            if (chunk->m_next != 0) {\n                chunk->m_next->m_prev = before;\n            }\n', ''),
+    ('Destroy: heap kept', 'AtHeap.cpp', '    heap->~AtHeap();\n}\n\nvoid AtHeapManager::Append', '}\n\nvoid AtHeapManager::Append'),
+    ('Append: full', 'AtHeap.cpp', '    if (*length >= capacity) {\n        return;\n    }\n', ''),
+    ('Append: edge', 'AtHeap.cpp', 'if (total < capacity) {', 'if (total <= capacity) {'),
+    ('Append: length', 'AtHeap.cpp', '        *length = total;\n', ''),
+    # Dropped, equivalent: Append: copy length: the extra byte copied is at capacity - 1, which the next line writes.
+    ('Append: terminator', 'AtHeap.cpp', '        out[capacity - 1] = 0;\n', ''),
+    ('Append: full length', 'AtHeap.cpp', '        *length = capacity;\n', ''),
+    ('Append: strcat at length', 'AtHeap.cpp', '        strcat(out, text);\n', '        strcpy(out + *length, text);\n'),
+    ('Report: empty slot', 'AtHeap.cpp', '        if (heap.m_size != 0) {\n            // The two zeros', '        if (1) {\n            // The two zeros'),
+    ('Report: cleared', 'AtHeap.cpp', '    out[0] = 0;\n', ''),
+    ('Report: index', 'AtHeap.cpp', 'Equivalency ID: %2d\\n", i,', 'Equivalency ID: %2d\\n", i + 1,'),
+    ('Report: free', 'AtHeap.cpp', 'heap.m_size - heap.m_used, 0, 0,', 'heap.m_used, 0, 0,'),
+    ('Report: fragments', 'AtHeap.cpp', 'heap.m_size, heap.FreeBlockCount(), heap.LargestFree()', 'heap.m_size, heap.LargestFree(), heap.FreeBlockCount()'),
+    ('Report: id', 'AtHeap.cpp', 'heap.m_alignShift, heap.m_equivalencyId);', 'heap.m_alignShift, heap.m_tag);'),
+    ('Report: shift', 'AtHeap.cpp', '0, 0, heap.m_alignShift,', '0, 0, heap.m_allocShift,'),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -1010,6 +1173,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "hep": {"target": "oracle_hep", "subsystem": "at/heap", "mutants": HEP_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "ldr": {"target": "oracle_ldr", "subsystem": "gm/loader", "mutants": LDR_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "aud": {"target": "oracle_aud", "subsystem": "gm/audiodata", "mutants": AUD_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -1056,6 +1220,8 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
+    elif suite == "hep":
+        cmd = [exe(build_dir, target), XBE]
     elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
@@ -1184,7 +1350,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1197,7 +1363,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

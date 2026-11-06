@@ -1,4 +1,5 @@
 // Not recovered code: the host's C library, for src/at. Kept apart because the matching build has no headers.
+#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -55,4 +56,12 @@ float AtWideToFloat(const unsigned short* text) {
     float value = 0;
     sscanf(narrow, "%f", &value);
     return value;
+}
+
+int AtFormat(char* out, const char* format, ...) {
+    va_list args;
+    va_start(args, format);
+    const int length = vsprintf(out, format, args);
+    va_end(args);
+    return length;
 }

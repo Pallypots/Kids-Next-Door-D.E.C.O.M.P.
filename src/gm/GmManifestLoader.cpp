@@ -8,11 +8,9 @@ char* strcpy(char* to, const char* from);
 char* strcat(char* to, const char* from);
 }
 
-AtMemoryManager* AtMemoryManager::s_instance;
-
 void GmManifestLoader::Configure(const GmManifestRequest* request) {
     strcpy(m_path, request->m_path);
-    m_tag = request->m_tag;
+    m_heap = request->m_heap;
     AtCopyName8(m_name, request->m_name);
 }
 
@@ -21,7 +19,7 @@ void GmManifestLoader::Reset() {
     m_name[0] = 0;
     m_tail = 0;
     m_head = 0;
-    m_tag = 0;
+    m_heap = 0;
     m_done = 0;
     m_state = kOpening;
 }
@@ -55,8 +53,8 @@ GmManifestLoader::~GmManifestLoader() {
 }
 
 void GmManifestLoader::RunNext() {
-    const int saved = AtMemoryManager::s_instance->m_unknown24C;
-    AtMemoryManager::s_instance->m_unknown24C = m_tag;
+    AtHeap* const saved = AtHeapManager::s_instance->m_override;
+    AtHeapManager::s_instance->m_override = m_heap;
     if (m_head != 0) {
         m_head->Run();
         m_head = m_head->m_next;
@@ -65,7 +63,7 @@ void GmManifestLoader::RunNext() {
             Finished();
         }
     }
-    AtMemoryManager::s_instance->m_unknown24C = saved;
+    AtHeapManager::s_instance->m_override = saved;
 }
 
 void GmManifestLoader::Enqueue(GmManifestItem* item, int unused) {

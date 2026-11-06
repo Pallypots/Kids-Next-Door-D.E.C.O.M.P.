@@ -24,6 +24,7 @@ target_include_directories(knd_gm PUBLIC include)
 # KND_AT_SRC: as KND_GM_SRC.
 set(KND_AT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/at" CACHE PATH "Directory of the at sources")
 add_library(knd_at STATIC
+    ${KND_AT_SRC}/AtHeap.cpp
     ${KND_AT_SRC}/AtIoFastAlignedJamHeader.cpp
     ${KND_AT_SRC}/AtIoFastJamHeader.cpp
     ${KND_AT_SRC}/AtIoFileSystem.cpp
@@ -58,6 +59,9 @@ add_executable(test_at_tok tests/native/test_at_tok.cpp)
 target_include_directories(test_at_tok PRIVATE tests/oracle)
 target_link_libraries(test_at_tok PRIVATE knd_at)
 add_test(NAME at_tok COMMAND test_at_tok)
+add_executable(test_at_heap tests/native/test_at_heap.cpp platform/fatal.cpp)
+target_link_libraries(test_at_heap PRIVATE knd_at knd_gm)
+add_test(NAME at_heap COMMAND test_at_heap)
 add_executable(test_gm_levels tests/native/test_gm_levels.cpp platform/fatal.cpp platform/host_file_system.cpp)
 target_include_directories(test_gm_levels PRIVATE platform)
 target_link_libraries(test_gm_levels PRIVATE knd_gm knd_at)
@@ -86,6 +90,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     add_executable(oracle_set tests/oracle/reserve.asm tests/oracle/oracle_set.cpp)
     target_link_libraries(oracle_set PRIVATE knd_gm knd_at)
     target_link_options(oracle_set PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    add_executable(oracle_hep tests/oracle/reserve.asm tests/oracle/oracle_hep.cpp)
+    target_link_libraries(oracle_hep PRIVATE knd_at knd_gm)
+    target_link_options(oracle_hep PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_ldr tests/oracle/reserve.asm tests/oracle/oracle_ldr.cpp)
     target_link_libraries(oracle_ldr PRIVATE knd_gm knd_at)
     target_link_options(oracle_ldr PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

@@ -50,7 +50,9 @@ static unsigned int read_clock(int side) {
 static unsigned int __cdecl o_clock() { return read_clock(0); }
 unsigned int AtPlatformMilliseconds() { return read_clock(1); }
 
-static AtMemoryManager g_manager[2];
+static AtHeapManager g_manager[2];
+static AtHeap* fake_heap(uint32_t v) { return (AtHeap*)(uintptr_t)v; }
+static long long as_number(const AtHeap* h) { return (long long)(uintptr_t)h; }
 
 class Item : public GmManifestItem {
 public:
@@ -60,7 +62,7 @@ public:
     void Run() override {
         if (g_recording) {
             g_log[side].add('R', (uint32_t)id);
-            g_log[side].add('t', (uint32_t)g_manager[side].m_unknown24C);
+            g_log[side].add('t', (uint32_t)(uintptr_t)g_manager[side].m_override);
         }
     }
 };
@@ -161,13 +163,13 @@ static void same(const char* what, Pair& p) {
     eq(what, place(p.items[0], p.o->m_tail), place(p.items[1], p.r->m_tail));
     eq(what, p.o->m_done, p.r->m_done);
     eq(what, p.o->m_state, p.r->m_state);
-    eq(what, p.o->m_tag, p.r->m_tag);
+    eq(what, as_number(p.o->m_heap), as_number(p.r->m_heap));
     eq(what, p.o->finished, p.r->finished);
     eq(what, p.o->m_name[0], p.r->m_name[0]);
     eq(what, std::memcmp(p.o->m_name, p.r->m_name, 8), 0);
     eqs(what, p.o->m_path, p.r->m_path);
     eq(what, p.o->m_file.m_tokenizer != nullptr, p.r->m_file.m_tokenizer != nullptr);
-    eq("manager", g_manager[0].m_unknown24C, g_manager[1].m_unknown24C);
+    eq("manager", as_number(g_manager[0].m_override), as_number(g_manager[1].m_override));
     for (size_t i = 0; i < p.items[0].size() && i < p.items[1].size(); i++) {
         eq("item link", place(p.items[0], p.items[0][i].m_next), place(p.items[1], p.items[1][i].m_next));
     }
@@ -188,7 +190,7 @@ static void configure(Pair& p, const char* name, const char* path, int tag) {
     std::memset(&req, 0, sizeof req);
     std::strncpy(req.m_name, name, 8);
     req.m_path = path;
-    req.m_tag = tag;
+    req.m_heap = fake_heap((uint32_t)tag);
     at<FnP>(0x00141E10)(p.o, nullptr, &req);
     p.r->Configure(&req);
 }
@@ -212,7 +214,7 @@ static void run_parts() {
         // Dirty what Reset must clear, with what it must leave.
         for (Loader* l : {p.o, p.r}) {
             std::memset((char*)l + 4, 0x77, 0x18);
-            l->m_tag = 0x77777777;
+            l->m_heap = fake_heap(0x77777777);
             std::memset(l->m_path, 0x77, sizeof l->m_path - 1);
             l->m_path[sizeof l->m_path - 1] = 0;
         }
@@ -260,7 +262,7 @@ static void run_parts() {
     g_context = "RunNext";
     {
         Pair p;
-        g_manager[0].m_unknown24C = g_manager[1].m_unknown24C = 0x99;
+        g_manager[0].m_override = g_manager[1].m_override = fake_heap(0x99);
         configure(p, "N", "P", 0x42);
         // Nothing queued: the field is swapped and restored, and nothing finishes.
         { On on(0); at<Fn0>(0x00141F80)(p.o, nullptr); }
@@ -277,7 +279,7 @@ static void run_parts() {
             { On on(1); p.r->RunNext(); }
             same("run", p);
             compare_logs("run");
-            eq("restored", g_manager[1].m_unknown24C, 0x99);
+            eq("restored", as_number(g_manager[1].m_override), 0x99);
         }
     }
     g_context = "ReadTokens";
@@ -319,7 +321,7 @@ static void run_parts() {
                 l->m_head = l->m_tail = (GmManifestItem*)(uintptr_t)4;
                 l->m_done = 1;
                 l->m_state = 2;
-                l->m_tag = 5;
+                l->m_heap = fake_heap(5);
                 l->m_name[0] = 'N';
             }
             void* after;
@@ -339,10 +341,10 @@ static void run_parts() {
                 eq("tail", (long long)(uintptr_t)o->m_tail, (long long)(uintptr_t)r->m_tail);
                 eq("done", o->m_done, r->m_done);
                 eq("state", o->m_state, r->m_state);
-                eq("tag", o->m_tag, r->m_tag);
+                eq("heap", as_number(o->m_heap), as_number(r->m_heap));
                 eq("name", o->m_name[0], r->m_name[0]);
                 eq("path", o->m_path[0], r->m_path[0]);
-                eq("the original clears them", o->m_state | o->m_tag | o->m_done, 0);
+                eq("the original clears them", o->m_state | (int)as_number(o->m_heap) | o->m_done, 0);
                 ::operator delete(o);
                 ::operator delete(r);
             }
@@ -357,7 +359,7 @@ static void run_machine(const std::string& name, const std::vector<unsigned char
     compare_logs("constructed");
     set_file(data);
     clock_start(step);
-    g_manager[0].m_unknown24C = g_manager[1].m_unknown24C = 0x31;
+    g_manager[0].m_override = g_manager[1].m_override = fake_heap(0x31);
     configure(p, "ABC", "DESIGN\\FILE", 0x77);
     p.o->read_in_parse = p.r->read_in_parse = read_in_parse;
     if (items >= 0) p.queue(items);
@@ -510,8 +512,8 @@ int main(int argc, char** argv) {
     for (uint32_t va : {0x002C60B0u, 0x002C63CCu}) *(void**)(uintptr_t)va = &g_heap_token;
     AtIoTokenFile::s_heap = &g_heap_token;
     AtIoStream::s_heap = &g_heap_token;
-    *(AtMemoryManager**)(uintptr_t)0x002C60AC = &g_manager[0];
-    AtMemoryManager::s_instance = &g_manager[1];
+    *(AtHeapManager**)(uintptr_t)0x002C60AC = &g_manager[0];
+    AtHeapManager::s_instance = &g_manager[1];
     g_fill = 0xCD;
 
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.

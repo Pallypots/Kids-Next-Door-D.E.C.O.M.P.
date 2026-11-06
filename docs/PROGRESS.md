@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 394 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 404 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -437,9 +437,31 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00141FF0 | 45 | `?Enqueue@GmManifestLoader@@QAEXPAVGmManifestItem@@H@Z` | gm/loader | SIZE |
 | 0x00142020 | 30 | `??_GGmManifestLoader@@UAEPAXI@Z` | gm/loader | SIZE |
 | 0x00142040 | 186 | `?Update@GmManifestLoader@@QAEHI@Z` | gm/loader | SIZE |
+| 0x00011C70 | 79 | `?ResetAll@AtHeapManager@@QAEXXZ` | at/heap | SIZE |
+| 0x00011CC0 | 57 | `?NextId@AtHeapManager@@QAEHXZ` | at/heap | SIZE |
+| 0x00011D00 | 317 | `?CreateHeap@AtHeapManager@@QAEPAVAtHeap@@IH@Z` | at/heap | SIZE |
+| 0x00011E40 | 110 | `?CreateHeapAt@AtHeapManager@@QAEPAVAtHeap@@PAXIH@Z` | at/heap | SIZE |
+| 0x00011EB0 | 140 | `?Allocate@AtHeapManager@@QAEPAXPAVAtHeap@@I@Z` | at/heap | SIZE |
+| 0x00011F40 | 126 | `?Free@AtHeapManager@@QAEHPAX@Z` | at/heap | SIZE |
+| 0x00011FC0 | 68 | `?MakeEquivalent@AtHeapManager@@QAEXPAVAtHeap@@0@Z` | at/heap | SIZE |
+| 0x00012010 | 137 | `?Append@AtHeapManager@@QAEXPADPBDPAII@Z` | at/heap | SIZE |
+| 0x000120A0 | 159 | `?Report@AtHeapManager@@QAEXPADI@Z` | at/heap | SIZE |
+| 0x00012140 | 52 | `??0AtHeapManager@@QAE@XZ` | at/heap | SIZE |
+| 0x00012180 | 67 | `?Init@AtHeapManager@@QAEXPAXIH@Z` | at/heap | SIZE |
+| 0x000121D0 | 170 | `?DestroyHeap@AtHeapManager@@QAEXPAVAtHeap@@@Z` | at/heap | SIZE |
+| 0x000164C0 | 89 | `?Reset@AtHeap@@QAEXXZ` | at/heap | SIZE |
+| 0x00016520 | 414 | `?Allocate@AtHeap@@QAEPAXI@Z` | at/heap | SIZE |
+| 0x000166C0 | 326 | `?Free@AtHeap@@QAEXPAX@Z` | at/heap | SIZE |
+| 0x00016810 | 109 | `?Owns@AtHeap@@QBEHPBX@Z` | at/heap | SIZE |
+| 0x00016880 | 38 | `?LargestFree@AtHeap@@QBEIXZ` | at/heap | SIZE |
+| 0x000168B0 | 25 | `?FreeBlockCount@AtHeap@@QBEIXZ` | at/heap | MATCH |
+| 0x000168D0 | 36 | `??0AtHeap@@QAE@XZ` | at/heap | SIZE |
+| 0x00016900 | 34 | `??1AtHeap@@QAE@XZ` | at/heap | SIZE |
+| 0x00016930 | 41 | `?Init@AtHeap@@QAEXPAXIHH@Z` | at/heap | SIZE |
+| 0x00016960 | 64 | `?AllocateAligned@AtHeap@@QAEPAXII@Z` | at/heap | SIZE |
 
-Relocation-aware matches with the host compiler: 64 functions, 995 unique bytes.
-Share of `.text` raw bytes: 0.0487% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 65 functions, 1020 unique bytes.
+Share of `.text` raw bytes: 0.0499% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -502,6 +524,8 @@ Suite `set`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 167
 Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 files, 6 presets, 0 blocks (each file read twice); 638 comparisons, 0 differences). Recorded function entries reached in every run: 3 / 3. Source mutants detected: 53 / 53. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `ldr`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 51 files; 19502 comparisons, 0 differences). Recorded function entries reached in every run: 10 / 10. Source mutants detected: 56 / 56. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `hep`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 40 seeds of 3000 operations; 3100506 comparisons, 0 differences). Recorded function entries reached in every run: 22 / 22. Source mutants detected: 154 / 154. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

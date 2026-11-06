@@ -3175,6 +3175,182 @@ source = "src/gm/GmManifestLoader.cpp"
 subsystem = "gm/loader"
 evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
 
+[[function]]
+va = 0x00011C70
+size = 79
+symbol = "?ResetAll@AtHeapManager@@QAEXXZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00011CC0
+size = 57
+symbol = "?NextId@AtHeapManager@@QAEHXZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00011D00
+size = 317
+symbol = "?CreateHeap@AtHeapManager@@QAEPAVAtHeap@@IH@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00011E40
+size = 110
+symbol = "?CreateHeapAt@AtHeapManager@@QAEPAVAtHeap@@PAXIH@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00011EB0
+size = 140
+symbol = "?Allocate@AtHeapManager@@QAEPAXPAVAtHeap@@I@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00011F40
+size = 126
+symbol = "?Free@AtHeapManager@@QAEHPAX@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00011FC0
+size = 68
+symbol = "?MakeEquivalent@AtHeapManager@@QAEXPAVAtHeap@@0@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00012010
+size = 137
+symbol = "?Append@AtHeapManager@@QAEXPADPBDPAII@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x000120A0
+size = 159
+symbol = "?Report@AtHeapManager@@QAEXPADI@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00012140
+size = 52
+symbol = "??0AtHeapManager@@QAE@XZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00012180
+size = 67
+symbol = "?Init@AtHeapManager@@QAEXPAXIH@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x000121D0
+size = 170
+symbol = "?DestroyHeap@AtHeapManager@@QAEXPAVAtHeap@@@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x000164C0
+size = 89
+symbol = "?Reset@AtHeap@@QAEXXZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00016520
+size = 414
+symbol = "?Allocate@AtHeap@@QAEPAXI@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x000166C0
+size = 326
+symbol = "?Free@AtHeap@@QAEXPAX@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00016810
+size = 109
+symbol = "?Owns@AtHeap@@QBEHPBX@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00016880
+size = 38
+symbol = "?LargestFree@AtHeap@@QBEIXZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x000168B0
+size = 25
+symbol = "?FreeBlockCount@AtHeap@@QBEIXZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x000168D0
+size = 36
+symbol = "??0AtHeap@@QAE@XZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00016900
+size = 34
+symbol = "??1AtHeap@@QAE@XZ"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00016930
+size = 41
+symbol = "?Init@AtHeap@@QAEXPAXIHH@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
+[[function]]
+va = 0x00016960
+size = 64
+symbol = "?AllocateAligned@AtHeap@@QAEPAXII@Z"
+source = "src/at/AtHeap.cpp"
+subsystem = "at/heap"
+evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -3376,7 +3552,7 @@ symbol = "??_7GmManifestLoader@@6B@"
 source = "src/gm/GmManifestLoader.cpp"
 
 [symbols]
-"?s_instance@AtMemoryManager@@2PAU1@A" = 0x002C60AC  # see include/gm/GmManifestLoader.h
+"?s_instance@AtHeapManager@@2PAV1@A" = 0x002C60AC  # see include/at/AtHeap.h
 "?s_argc@GmAppSettings@@2IA" = 0x002BF308  # see include/gm/GmAppSettings.h
 "?s_argv@GmAppSettings@@2PAPADA" = 0x002BF300  # see include/gm/GmAppSettings.h
 "?s_instance@GmAudioMemory@@2PAV1@A" = 0x003B355C  # see include/gm/GmAudioData.h

@@ -2,18 +2,11 @@
 // The file's extension is MNG. Start-up waits on one 30 milliseconds at a time. All names are inferred.
 // The one concrete class known, with its seven kinds of item, begins at 0x0015CD10 and is not recovered; on the disc its files are lists of what a level loads.
 #pragma once
+#include "at/AtHeap.h"
 #include "at/AtIoTokenizer.h"
 
 // Supplied by the platform layer. On Xbox: 0x00020640, from the performance counter.
 unsigned int AtPlatformMilliseconds();
-
-// The memory manager at 0x002C60AC, not recovered. Only one field is known: what the loader installs around each item.
-struct AtMemoryManager {
-    char m_unknown000[0x24C];
-    int m_unknown24C;
-
-    static AtMemoryManager* s_instance;  // 0x002C60AC
-};
 
 // What runs on the queue. Only these parts are known; a real one at 0x00142220 is 0x94 bytes.
 class GmManifestItem {
@@ -28,7 +21,7 @@ public:
 struct GmManifestRequest {
     char m_name[8];
     const char* m_path;                  // +0x08 without its extension
-    int m_tag;                           // +0x0C
+    AtHeap* m_heap;                      // +0x0C what its items allocate from
 };
 
 class GmManifestLoader {
@@ -58,7 +51,7 @@ public:
     int m_done;                          // +0x14
     int m_state;                         // +0x18
     AtIoTokenFile m_file;                // +0x1C
-    int m_tag;                           // +0x54
+    AtHeap* m_heap;                      // +0x54 the manager's override while an item runs
     char m_path[0x44];                   // +0x58 the size is inferred: the concrete class begins its fields after it
 };
 
@@ -66,12 +59,11 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(AtMemoryManager, m_unknown24C) == 0x24C, "AtMemoryManager::m_unknown24C");
 static_assert(offsetof(GmManifestItem, m_next) == 0x88, "GmManifestItem::m_next");
-static_assert(offsetof(GmManifestRequest, m_tag) == 0xC, "GmManifestRequest::m_tag");
+static_assert(offsetof(GmManifestRequest, m_heap) == 0xC, "GmManifestRequest::m_heap");
 static_assert(offsetof(GmManifestLoader, m_state) == 0x18, "GmManifestLoader::m_state");
 static_assert(offsetof(GmManifestLoader, m_file) == 0x1C, "GmManifestLoader::m_file");
-static_assert(offsetof(GmManifestLoader, m_tag) == 0x54, "GmManifestLoader::m_tag");
+static_assert(offsetof(GmManifestLoader, m_heap) == 0x54, "GmManifestLoader::m_heap");
 static_assert(sizeof(GmManifestLoader) == 0x9C, "GmManifestLoader");
 #pragma pop_macro("offsetof")
 #endif
