@@ -19,6 +19,7 @@ import re
 import shutil
 import subprocess
 import sys
+import time
 import tomllib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1154,7 +1155,7 @@ HEP_MUTANTS = [
     # Dropped, equivalent: Append: copy length: the extra byte copied is at capacity - 1, which the next line writes.
     ('Append: terminator', 'AtHeap.cpp', '        out[capacity - 1] = 0;\n', ''),
     ('Append: full length', 'AtHeap.cpp', '        *length = capacity;\n', ''),
-    ('Append: strcat at length', 'AtHeap.cpp', '        strcat(out, text);\n', '        strcpy(out + *length, text);\n'),
+    ('Append: strcat at length', 'AtHeap.cpp', '        strcat(out, text);\n', '        strncpy(out + *length, text, strlen(text) + 1);\n'),
     ('Report: empty slot', 'AtHeap.cpp', '        if (heap.m_size != 0) {\n            // The two zeros', '        if (1) {\n            // The two zeros'),
     ('Report: cleared', 'AtHeap.cpp', '    out[0] = 0;\n', ''),
     ('Report: index', 'AtHeap.cpp', 'Equivalency ID: %2d\\n", i,', 'Equivalency ID: %2d\\n", i + 1,'),
@@ -1330,6 +1331,12 @@ def run_suite(suite, a, funcs):
         for mutant in cfg["mutants"]:
             write_variant(src, mutant)
             ok, log = configure_and_build(MUTANT_BUILD, target, var)
+            # The output file can be held for a moment after the last run, by a scanner or the like. Only that error is retried: anything else stops the run.
+            for _ in range(5):
+                if ok or "LNK1104" not in log:
+                    break
+                time.sleep(2)
+                ok, log = configure_and_build(MUTANT_BUILD, target, var)
             if not ok:
                 raise SystemExit("mutant %r does not compile:\n%s" % (mutant[0], log))
             code = run_mutant(suite)
