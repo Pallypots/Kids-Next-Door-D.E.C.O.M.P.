@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-06, dev cycle 12 (audio data files). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-06, dev cycle 13 (time-sliced loader). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-06, dev cycle 12 (audio data files). Per-function results 
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 386 functions and 32 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 396 functions and 33 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -29,6 +29,7 @@ All source is in `src/`, types in `include/`. 386 functions and 32 vftables are 
   original on every text file on the disc.
 * `at/mount` (23 functions): what mounts archives, and the small manager it creates. A port supplies the factory of file systems. Start-up order: docs/startup.md.
 * `gm/audiodata` (3 functions), **partial**: the volume preset (`.GOV`) and memory block (`.GOB`) readers of the audio manager, which is not itself recovered. `MEMBLOCK.GOB` on this disc has only `PSX2` and `GCN` sections, so the Xbox game takes no blocks from it.
+* `gm/loader` (10 functions), **partial**: the base of the time-sliced `.MNG` loader start-up waits on. The concrete class from 0x0015CD10, its parser at 0x0015D000 and its seven kinds of item are not recovered. The clock is a platform seam; `AtMemoryManager` is known by one field, and the port does not yet set its instance.
 * `gm/settings` (8 functions): `app.ini`, the first file the game reads, what it sets, and the command line read after it. One original bug is held in a variable, not reproduced: see `s_levelUppercaseCount`.
 * `at/gametext` (39 functions): text strings of both kinds and the `.AIS` table. Every game text string on the disc reads the same as the original's.
 * `gm/names` (34 functions): the name-to-object hash table used across the engine, and the namespace tree above it. `gm/rumble` (21 functions): the reader of `RUMBLE.RMB`. What plays the effects is not recovered.

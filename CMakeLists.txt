@@ -11,6 +11,7 @@ add_library(knd_gm STATIC
     ${KND_GM_SRC}/GmConnection.cpp
     ${KND_GM_SRC}/GmAppSettings.cpp
     ${KND_GM_SRC}/GmAudioData.cpp
+    ${KND_GM_SRC}/GmManifestLoader.cpp
     ${KND_GM_SRC}/GmLevelManager.cpp
     ${KND_GM_SRC}/GmLevelPending.cpp
     ${KND_GM_SRC}/GmLinkedList.cpp
@@ -85,6 +86,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     add_executable(oracle_set tests/oracle/reserve.asm tests/oracle/oracle_set.cpp)
     target_link_libraries(oracle_set PRIVATE knd_gm knd_at)
     target_link_options(oracle_set PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    add_executable(oracle_ldr tests/oracle/reserve.asm tests/oracle/oracle_ldr.cpp)
+    target_link_libraries(oracle_ldr PRIVATE knd_gm knd_at)
+    target_link_options(oracle_ldr PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_aud tests/oracle/reserve.asm tests/oracle/oracle_aud.cpp)
     target_link_libraries(oracle_aud PRIVATE knd_gm knd_at)
     target_link_options(oracle_aud PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

@@ -317,3 +317,9 @@ New starts appear from the tail-call rule. Compare only like with like.
 `python -I tools/oracle_run.py --suite aud` compares 0x00136DA0, 0x00136E70 and 0x001370E0 with the recovered source over the disc's two files and 44 written inputs, each read twice, once with every third memory request refused. Result: no difference, 3/3 entries, 53/53 mutants.
 
 Limits: no real file exercises the block path, because the disc's `MEMBLOCK.GOB` has no `XBOX` section, so that path rests on written inputs only. The capacity of 100 blocks is inferred from field offsets; neither side checks it, and no test goes past it. The audio manager and its memory object are doubles.
+
+## Time-sliced loader: tests/oracle/oracle_ldr.cpp
+
+`python -I tools/oracle_run.py --suite ldr` compares the 10 base-class functions over the disc's 51 `.MNG` files and written cases: each state, clock steps against budgets, a clock that wraps, files that will not open, a null tokenizer with a file open, a stale link on the first item, destructors with a file open. Result on 2026-11-06: 19,502 comparisons, no difference, 10/10 entries, 56/56 mutants.
+
+Limits: the class is abstract, so a double supplies its four virtual slots and its items on both sides, and this says nothing of the concrete loader. The clock is replaced on both sides. The original builds a name ending `.txt` on opening and never reads it; the recovered source does the same, and no test can see it. The vftable is checked by position; four slots are pure.

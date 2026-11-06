@@ -37,3 +37,7 @@ Slot 6 of `App`. Mostly teardown, by its calls: frees many subsystems in sequenc
 From the callers of 0x000766E0: 0x0008E78C (`AppInit`), 0x0008EAEB (`Persist`), 0x0009A3FE, 0x0009AA79, 0x0009B48B, 0x0009E4E8. The name strings near those are `GameFramework`, `Level_%s`, `MainMenuFramework` and `Levels`, as list-file names. Not all confirmed.
 
 `AtIoMountManager::Mount` builds `JamFiles\XBox\<dir\><name>.JAM`, asks the device whether it exists, and silently does nothing if not, so **a missing archive shows up only later, as a missing file**.
+
+## The loader start-up waits on
+
+At 0x0008EB33 start-up configures a loader held at App+0x6D48, then calls its `Update(30)` (0x00142040) in a loop until it returns non-zero. Each call spends up to 30 milliseconds on: opening the `.MNG` file, reading its tokens, then running queued items one at a time. The base class is recovered as `GmManifestLoader`. On the disc, `LOADER.MNG` files list the sound and graphics databases of a level; which file this first wait reads has not been traced.

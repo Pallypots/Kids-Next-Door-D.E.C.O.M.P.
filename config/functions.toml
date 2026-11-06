@@ -3095,6 +3095,86 @@ source = "src/gm/GmAppSettings.cpp"
 subsystem = "gm/settings"
 evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
 
+[[function]]
+va = 0x00141E10
+size = 50
+symbol = "?Configure@GmManifestLoader@@QAEXPBUGmManifestRequest@@@Z"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00141E50
+size = 24
+symbol = "?Reset@GmManifestLoader@@QAEXXZ"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00141E70
+size = 44
+symbol = "?ReadTokens@GmManifestLoader@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00141EA0
+size = 113
+symbol = "?Open@GmManifestLoader@@QAEXXZ"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00141F20
+size = 44
+symbol = "??0GmManifestLoader@@QAE@XZ"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00141F50
+size = 37
+symbol = "??1GmManifestLoader@@UAE@XZ"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00141F80
+size = 106
+symbol = "?RunNext@GmManifestLoader@@QAEXXZ"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00141FF0
+size = 45
+symbol = "?Enqueue@GmManifestLoader@@QAEXPAVGmManifestItem@@H@Z"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00142020
+size = 30
+symbol = "??_GGmManifestLoader@@UAEPAXI@Z"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
+[[function]]
+va = 0x00142040
+size = 186
+symbol = "?Update@GmManifestLoader@@QAEHI@Z"
+source = "src/gm/GmManifestLoader.cpp"
+subsystem = "gm/loader"
+evidence = "tests/oracle/oracle_ldr.cpp; address noted beside the declaration in include/gm/GmManifestLoader.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -3289,7 +3369,14 @@ slots = 2
 symbol = "??_7AtTextTable@@6B@"
 source = "src/at/AtText.cpp"
 
+[[vtable]]
+va = 0x0028DEB8
+slots = 5
+symbol = "??_7GmManifestLoader@@6B@"
+source = "src/gm/GmManifestLoader.cpp"
+
 [symbols]
+"?s_instance@AtMemoryManager@@2PAU1@A" = 0x002C60AC  # see include/gm/GmManifestLoader.h
 "?s_argc@GmAppSettings@@2IA" = 0x002BF308  # see include/gm/GmAppSettings.h
 "?s_argv@GmAppSettings@@2PAPADA" = 0x002BF300  # see include/gm/GmAppSettings.h
 "?s_instance@GmAudioMemory@@2PAV1@A" = 0x003B355C  # see include/gm/GmAudioData.h

@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 384 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 394 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -427,6 +427,16 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00136E70 | 592 | `?LoadMemoryBlocks@GmAudioData@@QAEXPBD@Z` | gm/audiodata | SIZE |
 | 0x001370E0 | 703 | `?LoadVolumePresets@GmAudioData@@QAEXPBD@Z` | gm/audiodata | SIZE |
 | 0x00098410 | 1258 | `?ReadCommandLine@GmAppSettings@@QAEXXZ` | gm/settings | SIZE |
+| 0x00141E10 | 50 | `?Configure@GmManifestLoader@@QAEXPBUGmManifestRequest@@@Z` | gm/loader | SIZE |
+| 0x00141E50 | 24 | `?Reset@GmManifestLoader@@QAEXXZ` | gm/loader | SIZE |
+| 0x00141E70 | 44 | `?ReadTokens@GmManifestLoader@@QAEXPAVAtIoTokenizer@@@Z` | gm/loader | MISMATCH |
+| 0x00141EA0 | 113 | `?Open@GmManifestLoader@@QAEXXZ` | gm/loader | SIZE |
+| 0x00141F20 | 44 | `??0GmManifestLoader@@QAE@XZ` | gm/loader | SIZE |
+| 0x00141F50 | 37 | `??1GmManifestLoader@@UAE@XZ` | gm/loader | SIZE |
+| 0x00141F80 | 106 | `?RunNext@GmManifestLoader@@QAEXXZ` | gm/loader | SIZE |
+| 0x00141FF0 | 45 | `?Enqueue@GmManifestLoader@@QAEXPAVGmManifestItem@@H@Z` | gm/loader | SIZE |
+| 0x00142020 | 30 | `??_GGmManifestLoader@@UAEPAXI@Z` | gm/loader | SIZE |
+| 0x00142040 | 186 | `?Update@GmManifestLoader@@QAEHI@Z` | gm/loader | SIZE |
 
 Relocation-aware matches with the host compiler: 64 functions, 995 unique bytes.
 Share of `.text` raw bytes: 0.0487% (denominator includes unclassified library code).
@@ -469,6 +479,7 @@ Exact linked match (whole XBE): not attempted.
 | 0x002748C0 | 10 | `??_7AtTextUnicode@@6B@` | MATCH |
 | 0x002748F0 | 10 | `??_7AtTextAscii@@6B@` | MATCH |
 | 0x002726B4 | 2 | `??_7AtTextTable@@6B@` | MATCH |
+| 0x0028DEB8 | 5 | `??_7GmManifestLoader@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
@@ -489,6 +500,8 @@ Suite `txt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 72 
 Suite `set`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 16705 comparisons, 0 differences). Recorded function entries reached in every run: 8 / 8. Source mutants detected: 140 / 140. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 files, 6 presets, 0 blocks (each file read twice); 638 comparisons, 0 differences). Recorded function entries reached in every run: 3 / 3. Source mutants detected: 53 / 53. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `ldr`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 51 files; 19502 comparisons, 0 differences). Recorded function entries reached in every run: 10 / 10. Source mutants detected: 56 / 56. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

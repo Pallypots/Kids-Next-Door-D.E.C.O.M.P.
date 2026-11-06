@@ -942,6 +942,66 @@ AUD_MUTANTS = [
 ]
 
 
+LDR_MUTANTS = [
+    ('Configure: path', 'GmManifestLoader.cpp', '    strcpy(m_path, request->m_path);\n', ''),
+    ('Configure: tag', 'GmManifestLoader.cpp', '    m_tag = request->m_tag;\n', ''),
+    ('Configure: name', 'GmManifestLoader.cpp', '    AtCopyName8(m_name, request->m_name);\n', ''),
+    ('Reset: path', 'GmManifestLoader.cpp', '    m_path[0] = 0;\n', ''),
+    ('Reset: name', 'GmManifestLoader.cpp', '    m_name[0] = 0;\n', ''),
+    ('Reset: tail', 'GmManifestLoader.cpp', '    m_tail = 0;\n    m_head = 0;\n', '    m_head = 0;\n'),
+    ('Reset: head', 'GmManifestLoader.cpp', '    m_tail = 0;\n    m_head = 0;\n', '    m_tail = 0;\n'),
+    ('Reset: tag', 'GmManifestLoader.cpp', '    m_tag = 0;\n', ''),
+    ('Reset: done', 'GmManifestLoader.cpp', '    m_done = 0;\n', ''),
+    ('Reset: state', 'GmManifestLoader.cpp', '    m_state = kOpening;\n', ''),
+    ('Tokens: not passed', 'GmManifestLoader.cpp', '        OnToken(token, tokenizer);\n', ''),
+    ('Tokens: stop on one', 'GmManifestLoader.cpp', 'token != 0; token = tokenizer->Next()', 'token > 1; token = tokenizer->Next()'),
+    ('Open: extension', 'GmManifestLoader.cpp', '"MNG"', '"MNH"'),
+    ('Open: flags', 'GmManifestLoader.cpp', 'm_file.Open(m_path, "MNG", 2, 0)', 'm_file.Open(m_path, "MNG", 4, 0)'),
+    ('Open: failure state', 'GmManifestLoader.cpp', '        m_state = kFailed;\n        return;\n', '        m_state = kDone;\n        return;\n'),
+    ('Open: failure ignored', 'GmManifestLoader.cpp', '    if (m_file.Open(m_path, "MNG", 2, 0) != 0) {\n        m_state = kFailed;\n        return;\n    }\n', '    m_file.Open(m_path, "MNG", 2, 0);\n'),
+    ('Open: success state', 'GmManifestLoader.cpp', '    m_state = kParsing;\n', '    m_state = kRunning;\n'),
+    ('Run: tag', 'GmManifestLoader.cpp', '    AtMemoryManager::s_instance->m_unknown24C = m_tag;\n', ''),
+    ('Run: restore', 'GmManifestLoader.cpp', '    AtMemoryManager::s_instance->m_unknown24C = saved;\n', ''),
+    ('Run: not run', 'GmManifestLoader.cpp', '        m_head->Run();\n', ''),
+    ('Run: no advance', 'GmManifestLoader.cpp', '        m_head = m_head->m_next;\n', '        if (m_head->m_next == 0) m_head = 0;\n'),
+    ('Run: tail kept', 'GmManifestLoader.cpp', '            m_tail = 0;\n            Finished();\n', '            Finished();\n'),
+    ('Run: not finished', 'GmManifestLoader.cpp', '            m_tail = 0;\n            Finished();\n', '            m_tail = 0;\n'),
+    ('Run: finish before tail', 'GmManifestLoader.cpp', '            m_tail = 0;\n            Finished();\n', '            Finished();\n            m_tail = 0;\n'),
+    ('Enqueue: tail not set first', 'GmManifestLoader.cpp', '        m_head = item;\n        m_tail = item;\n', '        m_head = item;\n'),
+    ('Enqueue: head from tail', 'GmManifestLoader.cpp', 'if (m_head == 0) {\n        m_head = item;', 'if (m_tail == 0) {\n        m_head = item;'),
+    ('Enqueue: first link cleared', 'GmManifestLoader.cpp', '        m_head = item;\n        m_tail = item;\n', '        m_head = item;\n        m_tail = item;\n        item->m_next = 0;\n'),
+    ('Enqueue: not linked', 'GmManifestLoader.cpp', '    m_tail->m_next = item;\n', ''),
+    ('Enqueue: link kept', 'GmManifestLoader.cpp', '    item->m_next = 0;\n', ''),
+    ('Enqueue: tail not moved', 'GmManifestLoader.cpp', '    item->m_next = 0;\n    m_tail = item;\n', '    item->m_next = 0;\n'),
+    ('Update: no first clock', 'GmManifestLoader.cpp', 'const unsigned int start = AtPlatformMilliseconds();\n    if (budgetMilliseconds == 0) {\n        return 0;\n    }\n', 'if (budgetMilliseconds == 0) {\n        return 0;\n    }\n    const unsigned int start = AtPlatformMilliseconds();\n'),
+    ('Update: zero budget runs', 'GmManifestLoader.cpp', '    if (budgetMilliseconds == 0) {\n        return 0;\n    }\n', ''),
+    ('Update: zero budget result', 'GmManifestLoader.cpp', '    if (budgetMilliseconds == 0) {\n        return 0;\n    }\n', '    if (budgetMilliseconds == 0) {\n        return 1;\n    }\n'),
+    ('Update: null tokenizer state', 'GmManifestLoader.cpp', '                m_file.Close();\n                m_state = kFailed;\n', '                m_file.Close();\n                m_state = kDone;\n'),
+    ('Update: null tokenizer not closed', 'GmManifestLoader.cpp', '                m_file.Close();\n                m_state = kFailed;\n', '                m_state = kFailed;\n'),
+    ('Update: no Parse', 'GmManifestLoader.cpp', '            Parse(tokenizer);\n', ''),
+    ('Update: no tokens', 'GmManifestLoader.cpp', '            ReadTokens(tokenizer);\n', ''),
+    ('Update: not closed', 'GmManifestLoader.cpp', '            m_file.Close();\n            AfterParse();\n', '            AfterParse();\n'),
+    ('Update: closed after', 'GmManifestLoader.cpp', '            m_file.Close();\n            AfterParse();\n', '            AfterParse();\n            m_file.Close();\n'),
+    ('Update: no AfterParse', 'GmManifestLoader.cpp', '            AfterParse();\n            m_state', '            m_state'),
+    ('Update: after running state', 'GmManifestLoader.cpp', '            m_state = kRunning;\n', '            m_state = kDone;\n'),
+    ('Update: AfterParse sees next state', 'GmManifestLoader.cpp', '            AfterParse();\n            m_state = kRunning;\n', '            m_state = kRunning;\n            AfterParse();\n'),
+    ('Update: done flag', 'GmManifestLoader.cpp', '            m_done = m_head == 0;\n', '            m_done = 0;\n'),
+    ('Update: done flag kept', 'GmManifestLoader.cpp', '            m_done = m_head == 0;\n            if (m_done != 0) {', '            if (m_head == 0) {\n                m_done = 1;\n            }\n            if (m_done != 0) {'),
+    ('Update: done state', 'GmManifestLoader.cpp', '                m_state = kDone;\n            }\n            break;', '                m_state = kFailed;\n            }\n            break;'),
+    ('Update: done result', 'GmManifestLoader.cpp', '        case kDone:\n        case kFailed:\n            return 1;', '        case kDone:\n        case kFailed:\n            return 0;'),
+    ('Update: failed runs out the clock', 'GmManifestLoader.cpp', '        case kDone:\n        case kFailed:\n            return 1;', '        case kDone:\n            return 1;\n        case kFailed:\n            break;'),
+    ('Update: done runs out the clock', 'GmManifestLoader.cpp', '        case kDone:\n        case kFailed:\n            return 1;', '        case kFailed:\n            return 1;\n        case kDone:\n            break;'),
+    ('Update: unknown state ends', 'GmManifestLoader.cpp', '        default:\n            break;\n', '        default:\n            return 1;\n'),
+    ('Update: budget edge', 'GmManifestLoader.cpp', 'AtPlatformMilliseconds() - start < budgetMilliseconds', 'AtPlatformMilliseconds() - start <= budgetMilliseconds'),
+    ('Update: absolute clock', 'GmManifestLoader.cpp', 'AtPlatformMilliseconds() - start < budgetMilliseconds', 'AtPlatformMilliseconds() < start + budgetMilliseconds'),
+    ('Update: one step only', 'GmManifestLoader.cpp', 'while (AtPlatformMilliseconds() - start < budgetMilliseconds);', 'while (0);'),
+    ('Update: signed clock', 'GmManifestLoader.cpp', 'AtPlatformMilliseconds() - start < budgetMilliseconds', '(int)(AtPlatformMilliseconds() - start) < (int)budgetMilliseconds - 1'),
+    ('Update: out of time result', 'GmManifestLoader.cpp', '    } while (AtPlatformMilliseconds() - start < budgetMilliseconds);\n    return 0;\n', '    } while (AtPlatformMilliseconds() - start < budgetMilliseconds);\n    return 1;\n'),
+    ('Destructor: no reset', 'GmManifestLoader.cpp', 'GmManifestLoader::~GmManifestLoader() {\n    Reset();\n}\n', 'GmManifestLoader::~GmManifestLoader() {\n}\n'),
+    ('Constructor: no reset', 'GmManifestLoader.cpp', 'GmManifestLoader::GmManifestLoader() {\n    Reset();\n}\n', 'GmManifestLoader::GmManifestLoader() {\n}\n'),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -950,6 +1010,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "ldr": {"target": "oracle_ldr", "subsystem": "gm/loader", "mutants": LDR_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "aud": {"target": "oracle_aud", "subsystem": "gm/audiodata", "mutants": AUD_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
@@ -995,7 +1056,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud"):
+    elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -1123,7 +1184,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1136,7 +1197,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep
