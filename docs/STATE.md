@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 4 (JAM file objects and header lifecycle). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 5 (archive file system; first end-to-end read). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -9,32 +9,32 @@ Last updated: 2026-11-05, dev cycle 4 (JAM file objects and header lifecycle). P
 | M0 Identity | **passed** | docs/provenance.md: input hashes, both containers parsed, identical XBE `f5f48a6f…`, retail key, 17/17 section digests, XDK 5849 |
 | M1 Trustworthy tools | **partial** | inventory (tools/funcs.py), relocation-aware and vftable checker with negative controls, differential oracle qualified with source mutants, Ghidra cross-check done (docs/verification.md); **original toolchain blocked** |
 | M2 Reference reconstruction | blocked | needs an original-era MSVC (docs/toolchain.md) |
-| M3 Verified subsystem | **partial** | `gm/containers` recovered with type documentation, host tests and behaviour evidence against the original code; no original-compiler match, so "matching evidence" stays open |
+| M3 Verified subsystem | **partial** | `gm/containers` and the archive layer recovered with type documentation, host tests and behaviour evidence against the original code; no original-compiler match, so "matching evidence" stays open |
 | M4–M7 | untested | — |
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 110 functions and 17 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 148 functions and 19 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
-* `at/jam` (63 functions), **partial**: info header, name table, directory lookups, header `vInit`, `Shutdown` and destructors for FSTA,
-  FSTR and JAM2, the base file class and both archive file classes, `OpenFile`, `CloseFile`. Given an open archive file and a
-  filled-in info header, this source loads a directory, opens files inside the archive and reads them. **Not recovered:**
-  `AtIoJamFileSystem`, which opens the archive and creates the header class, and directory listing (`AtIoDirectoryListing`, the two
-  `List` slots, which stop with a diagnostic in `src/at/AtIoJamPending.cpp`; that file is never recorded and never counts).
-  Host stand-ins for the heap and error helpers are in `platform/fatal.cpp`; those helpers are not recovered either.
+* `at/jam` (101 functions), **partial**: info header, name table, directory lookups, header and file classes, `AtIoPath`, the base
+  `AtIoFileSystem`, the file system stack of `AtIoContext`, and `AtIoJamFileSystem`. **Recovered source reads every file of every archive on the
+  disc** on a 64-bit host, over a host file layer in `platform/`, which is port code. **Not recovered:** directory listing (`AtIoDirectoryListing`,
+  the `List` and `FreeList` slots), the JAM1 class (no archive on this disc uses it), the rest of `AtIoContext`, the Xbox device file system, and
+  the heap and error helpers. Unrecovered slots stop with a diagnostic in `src/at/AtIoJamPending.cpp`, which is never recorded and never counts;
+  their vftable slots are checked by position only. `platform/fatal.cpp` stands in for the helpers.
 
 | Measure | Result |
 | --- | --- |
-| Relocation-aware match, host compiler only | see docs/PROGRESS.md (for `at/jam`, 8 small functions) |
+| Relocation-aware match, host compiler only | see docs/PROGRESS.md (for `at/jam`, 13 small functions) |
 | Vftables matching by symbol | see docs/PROGRESS.md |
 | Match with original compiler | 0 (blocked) |
 | Behaviour vs. original code | see "Differential oracle" in docs/PROGRESS.md |
 
 State of each function: **Semantic-tested** (differential oracle plus host tests); those with a MATCH line in docs/PROGRESS.md
 are also a relocation-aware match under MSVC 19.44, which does **not** show which compiler shipped the game. The freeing path of
-deleting destructors is not run by the oracle. The game itself cannot run from this source yet.
+deleting destructors is not run by the oracle. The game itself cannot run from this source: this is the layer that loads its files, and nothing yet reads what they contain.
 
 The JAM directory layout is also recovered as a format (docs/formats.md, tools/jam.py), validated against all 56 archives.
 
@@ -82,10 +82,11 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. Recover `AtIoJamFileSystem`: `vInit` 0x0007D770, the rest of its class, then the code at 0x00076640-0x00076BF0 that builds
-   `JamFiles\XBox\%s%s.JAM` paths. It reaches out to a device layer (0x00019300 and the object at 0x002C62F0), so the first step is to
-   read how far that goes. After that, one end-to-end host test: open a real archive through recovered source and read a file.
-2. `AtIoDirectoryListing` and the two `List` slots.
-3. Finish the sorted container at 0x000761B0-0x00076600.
+The file layer now reaches real data, so what matters most is what the data means and what uses it.
+
+1. Follow the code around 0x00076640-0x00076BF0 (the owner of the JAM path strings; `AtApDataManagementApplication` is a candidate, unverified) to
+   how archives get mounted, and from there choose one archived file type that small, understood code consumes.
+2. Library separation, now that there is enough code to tell engine from library: the denominators are still unclassified.
+3. `AtIoDirectoryListing` and the `List` slots, and the sorted container at 0x000761B0-0x00076600, when something needs them.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

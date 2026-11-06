@@ -21,6 +21,11 @@ Applied from the first recovered unit:
   candidates for a port-time diagnostic.
 * ARM64 compile tests should start as soon as there is more than containers code (alignment, intrinsics).
 
-Native build today: `CMakeLists.txt` builds `knd_gm` (`src/gm/`) and the semantic test for x64 with the VS 2022
+File access: recovered code reaches files only through `AtIoFileSystem` and `AtIoFile`. `platform/host_file_system.cpp` implements them over
+stdio, so that is the seam for Linux and Android (Android's storage access will need its own implementation). It uses only standard C++ so far,
+but has only been built and run on Windows x64. Files over 2 GB are out of its scope, as `long` offsets on Windows are 32 bits; no game file is
+that large. `platform/fatal.cpp` stands in for the unrecovered heap and error helpers.
+
+Native build today: `CMakeLists.txt` builds `knd_gm` and `knd_at` (`src/`) and the semantic tests for x64 with the VS 2022
 generator. Ninja is not installed; Linux/Android builds are untested. The 32-bit oracle target is Windows-only analysis
 tooling and is excluded from x64 builds.

@@ -128,7 +128,7 @@ name. See docs/STATE.md for the evidence-based partial map.
 | 0x00080C50 | 30 | `??_GAtIoFastJamHeader@@UAEPAXI@Z` | at/jam | SIZE |
 | 0x00080D90 | 12 | `?CloseFile@AtIoJamDirectoryHeader@@UAEHPAVAtIoFile@@@Z` | at/jam | MATCH |
 | 0x000827E0 | 38 | `??0AtIoFastAlignedJamFile@@QAE@XZ` | at/jam | SIZE |
-| 0x00082810 | 24 | `?Clear@AtIoJamFile@@UAEXXZ` | at/jam | SIZE |
+| 0x00082810 | 24 | `?Clear@AtIoJamFile@@UAEHXZ` | at/jam | SIZE |
 | 0x00082830 | 46 | `?Attach@AtIoJamFile@@QAEXPAVAtIoJamDirectoryHeader@@@Z` | at/jam | SIZE |
 | 0x00082860 | 54 | `?Close@AtIoJamFile@@UAEHXZ` | at/jam | SIZE |
 | 0x000828A0 | 202 | `?Open@AtIoFastAlignedJamFile@@UAEHPBD0H@Z` | at/jam | SIZE |
@@ -143,9 +143,47 @@ name. See docs/STATE.md for the evidence-based partial map.
 | 0x00083090 | 121 | `??1AtIoFastJamFile@@UAE@XZ` | at/jam | SIZE |
 | 0x00083140 | 18 | `?Write@AtIoJamFile@@UAEHPBXIPAI@Z` | at/jam | MATCH |
 | 0x00083160 | 6 | `?Flush@AtIoJamFile@@UAEHXZ` | at/jam | MATCH |
+| 0x00018340 | 69 | `??0AtIoPath@@QAE@XZ` | at/jam | SIZE |
+| 0x00018390 | 115 | `?SetRoot@AtIoPath@@QAEXPBD@Z` | at/jam | SIZE |
+| 0x00018410 | 142 | `?Resolve@AtIoPath@@QAEXPBD@Z` | at/jam | MISMATCH |
+| 0x000184A0 | 160 | `?GetCurrentPath@AtIoPath@@QAEHPADI@Z` | at/jam | SIZE |
+| 0x00018540 | 203 | `?Join@AtIoPath@@QAEHPADIPBD@Z` | at/jam | SIZE |
+| 0x00018610 | 25 | `?Current@AtIoPath@@QAEPBDXZ` | at/jam | MISMATCH |
+| 0x00018630 | 124 | `?Push@AtIoPath@@QAEXPBD@Z` | at/jam | SIZE |
+| 0x000186B0 | 105 | `?PushFromFile@AtIoPath@@QAEXPBD@Z` | at/jam | SIZE |
+| 0x00018720 | 59 | `?Pop@AtIoPath@@QAEXPBD@Z` | at/jam | SIZE |
+| 0x00018760 | 67 | `??1AtIoPath@@QAE@XZ` | at/jam | SIZE |
+| 0x000187B0 | 87 | `?Init@AtIoPath@@QAEXXZ` | at/jam | SIZE |
+| 0x00019290 | 48 | `?Push@AtIoContext@@QAEXPAVAtIoFileSystem@@@Z` | at/jam | SIZE |
+| 0x000192C0 | 22 | `?Pop@AtIoContext@@QAEXXZ` | at/jam | MISMATCH |
+| 0x000192E0 | 18 | `?Top@AtIoContext@@QAEPAVAtIoFileSystem@@XZ` | at/jam | MISMATCH |
+| 0x00019300 | 102 | `?FindFile@AtIoContext@@QAEHPBDPAPAVAtIoFileSystem@@@Z` | at/jam | SIZE |
+| 0x0001F450 | 14 | `??1AtIoFileSystem@@UAE@XZ` | at/jam | SIZE |
+| 0x0001F460 | 8 | `?InitPath@AtIoFileSystem@@QAEXXZ` | at/jam | SIZE |
+| 0x0001F470 | 18 | `?OpenWithCallback@AtIoFileSystem@@UAEHPBDHPAXPAPAVAtIoFile@@@Z` | at/jam | MATCH |
+| 0x0001F490 | 8 | `?Unknown14@AtIoFileSystem@@UAEHPAX@Z` | at/jam | MATCH |
+| 0x0001F4A0 | 34 | `?GetFileInfo@AtIoFileSystem@@UAEHPBDPAUAtIoFileStat@@@Z` | at/jam | SIZE |
+| 0x0001F4D0 | 59 | `??0AtIoFileSystem@@QAE@XZ` | at/jam | SIZE |
+| 0x0001F510 | 51 | `?ResetFileSystem@AtIoFileSystem@@QAEXXZ` | at/jam | SIZE |
+| 0x0007D100 | 10 | `?SetHeaderHeap@AtIoJamFileSystem@@SAXPAX@Z` | at/jam | MATCH |
+| 0x0007D110 | 44 | `?Close@AtIoJamFileSystem@@UAEHPAVAtIoFile@@@Z` | at/jam | MISMATCH |
+| 0x0007D160 | 8 | `?Unknown11@AtIoJamFileSystem@@UAEHPAX@Z` | at/jam | MATCH |
+| 0x0007D1E0 | 143 | `??0AtIoJamFileSystem@@QAE@XZ` | at/jam | SIZE |
+| 0x0007D270 | 183 | `?Shutdown@AtIoJamFileSystem@@QAEXXZ` | at/jam | SIZE |
+| 0x0007D330 | 263 | `?Open@AtIoJamFileSystem@@UAEHPBDHPAPAVAtIoFile@@@Z` | at/jam | SIZE |
+| 0x0007D440 | 38 | `?IsDirectoryMissing@AtIoJamFileSystem@@UAEHPBD@Z` | at/jam | SIZE |
+| 0x0007D470 | 38 | `?IsFileMissing@AtIoJamFileSystem@@UAEHPBD@Z` | at/jam | SIZE |
+| 0x0007D4A0 | 43 | `?GetEntryType@AtIoJamFileSystem@@UAEHPBDPAH@Z` | at/jam | SIZE |
+| 0x0007D5A0 | 296 | `?GetFileInfo@AtIoJamFileSystem@@UAEHPBDPAUAtIoFileStat@@@Z` | at/jam | SIZE |
+| 0x0007D710 | 95 | `??1AtIoJamFileSystem@@UAE@XZ` | at/jam | SIZE |
+| 0x0007D770 | 805 | `?vInit@AtIoJamFileSystem@@QAEXIPBDH@Z` | at/jam | SIZE |
+| 0x0007DAB0 | 30 | `??_GAtIoJamFileSystem@@UAEPAXI@Z` | at/jam | SIZE |
+| 0x0007DAD0 | 10 | `?SetHeap@AtIoJamFileSystem@@SAXPAX@Z` | at/jam | MATCH |
+| 0x0007DB10 | 173 | `?Create@AtIoJamFileSystem@@SAPAV1@PBDIH@Z` | at/jam | SIZE |
+| 0x000817D0 | 8 | `?SetRoot@AtIoFileSystem@@UAEXPBD@Z` | at/jam | SIZE |
 
-Relocation-aware matches with the host compiler: 22 functions, 364 unique bytes.
-Share of `.text` raw bytes: 0.0178% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 27 functions, 418 unique bytes.
+Share of `.text` raw bytes: 0.0204% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -170,12 +208,14 @@ Exact linked match (whole XBE): not attempted.
 | 0x00279A84 | 11 | `??_7AtIoFastAlignedJamHeader@@6B@` | MATCH |
 | 0x002793D8 | 11 | `??_7AtIoFastRawJamHeader@@6B@` | MATCH |
 | 0x00279B88 | 10 | `??_7AtIoFastJamHeader@@6B@` | MATCH |
+| 0x00272644 | 15 | `??_7AtIoFileSystem@@6B@` | MATCH |
+| 0x00279404 | 15 | `??_7AtIoJamFileSystem@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
 Suite `gm`: runs with no observed difference 20 / 20 (NO DIFFERENCE OBSERVED: seed 1, 5000 random operations, 20273883 comparisons, 0 differences). Recorded function entries reached in every run: 47 / 47. Source mutants detected: 23 / 23. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 191600298 comparisons, 0 differences). Recorded function entries reached in every run: 63 / 63. Source mutants detected: 86 / 86. Positive control exit: 0. Harness mutation exit: 1.
+Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 196466943 comparisons, 0 differences). Recorded function entries reached in every run: 101 / 101. Source mutants detected: 136 / 136. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

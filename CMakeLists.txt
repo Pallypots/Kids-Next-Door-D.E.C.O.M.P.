@@ -19,6 +19,8 @@ set(KND_AT_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/at" CACHE PATH "Directory of the
 add_library(knd_at STATIC
     ${KND_AT_SRC}/AtIoFastAlignedJamHeader.cpp
     ${KND_AT_SRC}/AtIoFastJamHeader.cpp
+    ${KND_AT_SRC}/AtIoFileSystem.cpp
+    ${KND_AT_SRC}/AtIoJamFileSystem.cpp
     ${KND_AT_SRC}/AtIoJamFile.cpp
     ${KND_AT_SRC}/AtIoJamNameTable.cpp
     ${KND_AT_SRC}/AtIoJamPending.cpp
@@ -32,6 +34,10 @@ add_test(NAME gm_linkedlist COMMAND test_gm_linkedlist)
 add_executable(test_at_jam tests/native/test_at_jam.cpp platform/fatal.cpp)
 target_link_libraries(test_at_jam PRIVATE knd_at)
 add_test(NAME at_jam COMMAND test_at_jam)
+add_executable(test_at_e2e tests/native/test_at_e2e.cpp platform/fatal.cpp platform/host_file_system.cpp)
+target_include_directories(test_at_e2e PRIVATE platform)
+target_link_libraries(test_at_e2e PRIVATE knd_at)
+add_test(NAME at_e2e COMMAND test_at_e2e)
 
 # Local-only differential oracle: 32-bit Windows, runs original code from the owner's XBE beside recovered source.
 # Never part of a release. Build with: cmake -S . -B build/oracle -A Win32

@@ -5,13 +5,14 @@
 //   ORIGINAL  AtIoJamInfoHeader, AtIoFastAlignedJamHeader, AtIoFastJamHeader, AtIoJamFileSystem: the game's own names,
 //             from error strings and from name strings stored after the vftables.
 //   OBSERVED  offsets, slot order and control flow: instructions cited below.
-//   INFERRED  AtIoJamNameTable, AtIoJamHeader, AtIoJamDirectoryHeader, AtIoFastRawJamHeader, AtIoFile, AtIoFileRequest,
+//   INFERRED  AtIoJam1Header, AtIoJamNameTable, AtIoJamHeader, AtIoJamDirectoryHeader, AtIoFastRawJamHeader, AtIoFile, AtIoFileRequest,
 //             AtIoJamFile, AtIoFastAlignedJamFile, AtIoFastJamFile, and every method/member name.
 //
 // Field reads go through ReadU16/ReadU32, byte by byte, as the original does; they work on any host byte order.
 // Paths are copied into fixed buffers with no length check. This is original behaviour and is preserved here: a port must
 // harden it as a separate, tested change (docs/portability.md).
 #pragma once
+#include "at/AtIoFileSystem.h"
 
 void AtFatal(const char* message, int a, int b, int c);  // 0x00011070: not recovered; platform/ supplies a diagnostic.
 void AtRaise(int code, int a, int b, int c);             // 0x00011170: -2 heap not set, -4 out of memory. Not recovered.
@@ -19,6 +20,7 @@ void AtPushHeap(void* heap);                             // 0x00011240: operator
 void AtPopHeap();                                        // 0x00011260
 
 class AtIoJamDirectoryHeader;
+class AtIoJamFileSystem;
 
 // Asynchronous read in progress. Only the slot used here is known.
 class AtIoFileRequest {
@@ -38,7 +40,7 @@ public:
     virtual ~AtIoFile() = 0;                                                       // slot 0; 0x00025BB0
     virtual int Close() = 0;                                                       // slot 1
     virtual int Open(const char* path, const char* displayName, int flags) = 0;    // slot 2
-    virtual void Clear() = 0;                                                      // slot 3
+    virtual int Clear() = 0;                                                       // slot 3, always 0 for an archive file
     virtual int Seek(unsigned int offset) = 0;                                     // slot 4, 0 on success
     virtual int Read(void* out, unsigned int size, unsigned int* done, AtIoFileRequest** request) = 0;  // slot 5
     virtual int Write(const void* in, unsigned int size, unsigned int* done) = 0;  // slot 6
@@ -62,7 +64,7 @@ class AtIoJamFile : public AtIoFile {
 public:
     AtIoJamFile();
     virtual int Close();                                                           // 0x00082860
-    virtual void Clear();                                                          // 0x00082810
+    virtual int Clear();                                                           // 0x00082810
     virtual int Read(void* out, unsigned int size, unsigned int* done, AtIoFileRequest** request);  // 0x00082FB0
     virtual int Write(const void* in, unsigned int size, unsigned int* done);      // 0x00083140, always kUnsupported
     virtual int Flush();                                                           // 0x00083160, always kUnsupported
@@ -111,21 +113,6 @@ public:
     char m_label[16];                       // +0x14
 
     static const char* s_tokens[4];         // 0x002B35FC
-};
-
-// Only the fields recovered code reads. The class is larger; see 0x0007D770.
-class AtIoJamFileSystem {
-public:
-    AtIoFile* File() const { return m_overrideFile ? m_overrideFile : m_file; }
-
-    char m_unknown000[0x6AC];
-    unsigned int m_maxOpen;    // +0x6AC
-    char m_unknown6B0[0x6BC - 0x6B0];
-    AtIoJamInfoHeader m_info;  // +0x6BC
-    void* m_header;            // +0x6E0
-    AtIoFile* m_file;          // +0x6E4
-    char m_unknown6E8[0x808 - 0x6E8];
-    AtIoFile* m_overrideFile;  // +0x808
 };
 
 // Sorted name and extension tables inside the loaded header.
@@ -243,6 +230,70 @@ public:
     static void* s_heap;                     // 0x00301B60
 };
 
+// JAM1. No archive on this disc uses it, and it is NOT recovered: src/at/AtIoJamPending.cpp stops with a diagnostic. The name is
+// inferred. vftable 0x00279C3C, constructor 0x00081020.
+class AtIoJam1Header : public AtIoJamHeader {
+public:
+    AtIoJam1Header();
+    virtual ~AtIoJam1Header();
+    virtual void vInit(AtIoJamFileSystem* fs);
+    virtual AtIoJamFile* OpenFile();
+    virtual int CloseFile(AtIoFile* file);
+    virtual void Unknown4();
+    virtual void Unknown5();
+    virtual int IsDirectoryMissing(const char* path);
+    virtual int IsFileMissing(const char* path);
+    virtual int GetEntryType(const char* path, int* type);
+    virtual void List(void* a, void* b, void* c);
+    int GetFileInfo(const char* path, unsigned int* offset, unsigned int* size);  // 0x00081000
+
+    char m_unknown04[0x3C - 4];
+};
+
+// A mounted archive. vftable 0x00279404. Allocated at 0x0007DB50 (0x818 bytes).
+class AtIoJamFileSystem : public AtIoFileSystem {
+public:
+    AtIoJamFileSystem();                                                 // 0x0007D1E0
+    virtual ~AtIoJamFileSystem();                                        // 0x0007D710
+    virtual int Open(const char* path, int flags, AtIoFile** out);       // slot 2, 0x0007D330
+    virtual int Close(AtIoFile* file);                                   // slot 3, 0x0007D110
+    virtual int IsDirectoryMissing(const char* path);                    // slot 4, 0x0007D440
+    virtual int IsFileMissing(const char* path);                         // slot 5, 0x0007D470
+    virtual int GetEntryType(const char* path, int* type);               // slot 6, 0x0007D4A0
+    virtual int Unknown7(void* a);                                       // slot 7, 0x000B15B0 (folded)
+    virtual int GetFileInfo(const char* path, AtIoFileStat* stat);       // slot 8, 0x0007D5A0
+    virtual void* List(const char* pattern);                             // slot 9, 0x0007D4D0 (not recovered)
+    virtual void FreeList(void* list);                                   // slot 10, 0x00103640 (not recovered)
+    virtual int Unknown11(void* a);                                      // slot 11, 0x0007D160
+    virtual int Unknown12();                                             // slot 12, 0x000AB720 (folded)
+    virtual void SetRoot(const char* root);                              // slot 13, 0x000CBF30 empty (folded)
+
+    void vInit(unsigned int maxOpen, const char* path, int flags);       // 0x0007D770
+    void Shutdown();                                                     // 0x0007D270
+    static AtIoJamFileSystem* Create(const char* path, unsigned int maxOpen, int flags);  // 0x0007DB10
+    static void SetHeaderHeap(void* heap);                               // 0x0007D100
+    static void SetHeap(void* heap);                                     // 0x0007DAD0
+
+    AtIoFile* File() const { return m_overrideFile ? m_overrideFile : m_file; }
+
+    AtIoJamInfoHeader m_info;      // +0x6BC
+    AtIoJamHeader* m_header;       // +0x6E0
+    AtIoFile* m_file;              // +0x6E4 the archive, opened through m_device
+    AtIoFileSystem* m_device;      // +0x6E8 the file system that holds the archive
+    char m_archiveName[0x10C];     // +0x6EC
+    unsigned int m_archiveTime;    // +0x7F8 meaning inferred
+    unsigned int m_archiveSize;    // +0x7FC
+    void* m_unknown800;            // +0x800 heap block, freed by Shutdown
+    unsigned int m_unknown804;     // +0x804
+    AtIoFile* m_overrideFile;      // +0x808 used instead of m_file when set
+    unsigned int m_unknown80C;     // +0x80C
+    unsigned int m_unknown810;     // +0x810
+    unsigned int m_unknown814;     // +0x814
+
+    static void* s_headerHeap;     // 0x00301B50
+    static void* s_heap;           // 0x00301B54
+};
+
 // Original 32-bit layout. See the note in gm/GmLinkedList.h.
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
 #pragma push_macro("offsetof")
@@ -253,6 +304,10 @@ static_assert(offsetof(AtIoJamFile, m_owner) == 0x9C, "AtIoJamFile::m_owner");
 static_assert(sizeof(AtIoFastAlignedJamFile) == 0xA8, "array stride at 0x0007F920");
 static_assert(sizeof(AtIoFastJamFile) == 0xA8, "array stride at 0x00080620");
 static_assert(offsetof(AtIoJamFileSystem, m_maxOpen) == 0x6AC, "AtIoJamFileSystem::m_maxOpen");
+static_assert(offsetof(AtIoJamFileSystem, m_archiveName) == 0x6EC, "AtIoJamFileSystem::m_archiveName");
+static_assert(offsetof(AtIoJamFileSystem, m_archiveTime) == 0x7F8, "AtIoJamFileSystem::m_archiveTime");
+static_assert(sizeof(AtIoJamFileSystem) == 0x818, "allocation size at 0x0007DB4B");
+static_assert(sizeof(AtIoJam1Header) == 0x3C, "allocation size at 0x0007D91E");
 static_assert(offsetof(AtIoJamFileSystem, m_info) == 0x6BC, "AtIoJamFileSystem::m_info");
 static_assert(offsetof(AtIoJamFileSystem, m_header) == 0x6E0, "AtIoJamFileSystem::m_header");
 static_assert(offsetof(AtIoJamFileSystem, m_file) == 0x6E4, "AtIoJamFileSystem::m_file");

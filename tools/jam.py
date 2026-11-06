@@ -4,6 +4,8 @@
   python -I tools/jam.py check <image>            parse every .JAM on a disc image and validate each one
   python -I tools/jam.py ls <image> <jam name>    list the files in one archive (matched on the end of its path)
   python -I tools/jam.py cases <image> <out dir>  write oracle inputs (git-ignored directory only: real game data)
+  python -I tools/jam.py e2e <image> <out dir> [--all]  extract archives and a manifest of CRC-32s (git-ignored directory only);
+                                                  by default small archives and the first files of each; --all means everything
 
 All integers are little-endian. Every read is bounds-checked; malformed input raises JamError. File values are never
 converted to host pointers. JAM1 uses another header class (0x00081020) and is rejected explicitly until a file using
@@ -331,7 +333,34 @@ def write_cases(image, out_dir, whole_file_limit=1 << 22):
             fstr_done += 1
 
 
+def write_e2e(image, out_dir, limit=1 << 25, per_archive=400):
+    """Extract small archives and slice their files with Python alone, so the manifest owes nothing to the recovered code."""
+    import zlib
+    os.makedirs(out_dir, exist_ok=True)
+    img, entries = _jams_on_image(image)
+    with open(os.path.join(out_dir, "manifest.txt"), "w", encoding="latin-1", newline="\n") as m:
+        for e in entries:
+            if e.size > limit:
+                continue
+            jam = _load(img, e)
+            name = e.path.rsplit("/", 1)[-1]
+            data = img._read(img.sector_offset(e.sector), e.size)
+            with open(os.path.join(out_dir, name), "wb") as f:
+                f.write(data)
+            m.write("A\t%s\n" % name)
+            record = JAM2_RECORD if jam.token == b"JAM2" else 0
+            for path, off, size in jam.files[:per_archive]:
+                body = data[off + record:off + record + size]
+                m.write("F\t%s\t%d\t%d\n" % (path, size, zlib.crc32(body) & 0xFFFFFFFF))
+
+
 def main(argv):
+    if len(argv) >= 3 and argv[0] == "e2e":
+        if len(argv) == 4 and argv[3] == "--all":
+            write_e2e(argv[1], argv[2], limit=1 << 40, per_archive=1 << 30)
+        else:
+            write_e2e(argv[1], argv[2])
+        return 0
     if len(argv) == 3 and argv[0] == "cases":
         write_cases(argv[1], argv[2])
         return 0

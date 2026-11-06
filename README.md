@@ -15,7 +15,10 @@ python -I tools/xbe.py info orig/xiso/default.xbe
 python -I tools/funcs.py orig/xiso/default.xbe analysis-local/inv
 python -I tools/jam.py check "<your disc>.iso"
 python -I tools/verify.py
+python -I tools/jam.py cases "<your disc>.iso" analysis-local/oracle-jam
 python -I tools/oracle_run.py
+python -I tools/jam.py e2e "<your disc>.iso" analysis-local/e2e --all
+build/native/Release/test_at_e2e analysis-local/e2e analysis-local/e2e/manifest.txt
 python -I -m unittest discover -s tests -v
 ```
 

@@ -133,7 +133,7 @@ JAM_MUTANTS += [
     ("Shutdown JAM2: fields kept", J, "    m_table.Clear();\n    m_fs = 0;", "    m_table.Clear();"),
     ("Dtor JAM2: no shutdown", J, "AtIoFastJamHeader::~AtIoFastJamHeader() {\n    Shutdown();\n", "AtIoFastJamHeader::~AtIoFastJamHeader() {\n"),
     ("File base: flags not reset", F, "    m_sizeCopy = 0;\n    m_flags = 0;\n    return 0;", "    m_sizeCopy = 0;\n    return 0;"),
-    ("File Clear: path kept", F, "void AtIoJamFile::Clear() {\n    m_flags = 0;\n    for (int i = 0; i < 0x20; i++) {\n        ((unsigned int*)m_path)[i] = 0;\n    }\n", "void AtIoJamFile::Clear() {\n    m_flags = 0;\n"),
+    ("File Clear: path kept", F, "int AtIoJamFile::Clear() {\n    m_flags = 0;\n    for (int i = 0; i < 0x20; i++) {\n        ((unsigned int*)m_path)[i] = 0;\n    }\n", "int AtIoJamFile::Clear() {\n    m_flags = 0;\n"),
     ("File Attach: no close first", F, "    if (m_owner) {\n        Close();\n    }\n", ""),
     ("File Close: owner kept", F, "    m_owner = 0;\n    m_base = 0;\n    m_secondSize = 0;\n    return ResetFile();", "    m_base = 0;\n    m_secondSize = 0;\n    return ResetFile();"),
     ("File Read: done not cleared", F, "    if (done) {\n        *done = 0;\n    }\n", ""),
@@ -162,6 +162,61 @@ JAM_MUTANTS += [
     ("OpenFile: first slot not preferred", F, "for (unsigned int i = 0; i < m_fs->m_maxOpen; i++) {\n        if (m_files[i].m_owner == 0) {", "for (unsigned int i = m_fs->m_maxOpen; i-- > 0;) {\n        if (m_files[i].m_owner == 0) {"),
     ("OpenFile: owned slot taken", F, "if (m_files[i].m_owner == 0) {", "if (true) {"),
     ("CloseFile: does nothing", F, "    return file->Close();\n", "    return 0;\n"),
+]
+
+P = "AtIoFileSystem.cpp"
+H = "AtIoJamFileSystem.cpp"
+JAM_MUTANTS += [
+    ("Path SetRoot: no trailing separator", P, "m_root[strlen(m_root) - 1] != '\\\\') {", "m_root[strlen(m_root) - 1] == '\\\\') {"),
+    ("Path SetRoot: not terminated at the limit", P, "    m_root[0x7F] = 0;\n", ""),
+    ("Path Resolve: root skipped", P, "    strcpy(m_full, m_root);\n    if (m_top != -1) {\n        strcat(m_full, m_stack[m_top]);\n    }\n    strcat(m_full, relative);", "    m_full[0] = 0;\n    if (m_top != -1) {\n        strcat(m_full, m_stack[m_top]);\n    }\n    strcat(m_full, relative);"),
+    ("Path Resolve: current skipped", P, "        strcat(m_full, m_stack[m_top]);\n    }\n    strcat(m_full, relative);", "    }\n    strcat(m_full, relative);"),
+    ("Path current: boundary off by one", P, "    if (length >= size) {\n        return 0;\n    }\n    strcpy(out, m_root);", "    if (length > size) {\n        return 0;\n    }\n    strcpy(out, m_root);"),
+    ("Path Join: out not emptied", P, "    *out = 0;\n    unsigned int length = relative", "    unsigned int length = relative"),
+    ("Path Join: null relative counted", P, "unsigned int length = relative ? strlen(relative) : 0;", "unsigned int length = relative ? strlen(relative) + 1 : 0;"),
+    ("Path Join: boundary off by one", P, "if (strlen(current) + length >= size) {", "if (strlen(current) + length > size) {"),
+    ("Path Push: depth limit wrong", P, "    if (m_top >= 7) {", "    if (m_top >= 6) {"),
+    ("Path Push: no trailing separator", P, "if (length != 0 && directory[length - 1] != '\\\\') {", "if (false) {"),
+    ("Path PushFromFile: slashes kept", P, "                *to = '\\\\';\n", ""),
+    ("Path PushFromFile: no directory is ignored", P, "        Push(\"\");\n", ""),
+    ("Path Pop: last ignored", P, "    if (last) {\n        strcpy(m_stack[m_top], last);\n    }\n", ""),
+    ("Path Init: not cleared when used", P, "    if (m_initialised) {\n        ClearPath(this);\n    }\n", ""),
+    ("Base: kind not reset", P, "    m_path.Clear();\n    m_kind = 0;\n", "    m_path.Clear();\n"),
+    ("Base: path not reset", P, "    m_path.Clear();\n    m_kind = 0;\n", "    m_kind = 0;\n"),
+    ("Base: default stat leaves the size", P, "    stat->m_size = 0;\n    stat->m_name[0] = 0;", "    stat->m_name[0] = 0;"),
+    ("Context: full stack accepted", P, "    if (m_stackCount < m_stackSize) {", "    if (true) {"),
+    ("Context: Pop leaves the slot", P, "        m_stack[m_stackCount - 1] = 0;\n", ""),
+    ("Context: FindFile from the bottom", P, "for (int i = (int)m_stackCount - 1; i >= 0; i--) {", "for (int i = 0; i < (int)m_stackCount; i++) {"),
+    ("Context: FindFile keeps the old out", P, "    if (fs) {\n        *fs = 0;\n    }\n", ""),
+    ("Context: empty stack means found", P, "    if (m_stackCount == 0) {\n        return 1;\n    }\n    for", "    if (m_stackCount == 0) {\n        return 0;\n    }\n    for"),
+    ("JamFs Open: no archive not checked", H, "    if (m_info.m_token == 0) {\n        return AtIoFile::kIoError;\n    }\n    if (AtIoContext::s_openHook)", "    if (AtIoContext::s_openHook)"),
+    ("JamFs Open: hook skipped", H, "        AtIoContext::s_openHook();\n", ""),
+    ("JamFs Open: display name is the full path", H, "file->Open(m_path.m_full, relative, flags);", "file->Open(m_path.m_full, m_path.m_full, flags);"),
+    ("JamFs Open: failed file kept", H, "        m_header->CloseFile(file);\n        *out = 0;", "        *out = 0;"),
+    ("JamFs Open: count not raised", H, "    m_openFiles++;\n", ""),
+    ("JamFs Open: peak not kept", H, "        m_peakOpenFiles = m_openFiles;\n", ""),
+    ("JamFs Close: count not lowered", H, "    m_openFiles--;\n", ""),
+    ("JamFs Close: file kept", H, "    m_header->CloseFile(file);\n    return result;", "    return result;"),
+    ("JamFs IsFileMissing: relative path used", H, "    return m_header->IsFileMissing(m_path.m_full);", "    return m_header->IsFileMissing(path);"),
+    ("JamFs Stat: record header not added", H, "    stat->m_offset += recordHeader;\n", ""),
+    ("JamFs Stat: time not copied", H, "    stat->m_time = m_archiveTime;\n", ""),
+    ("JamFs Stat: name not copied", H, "    strncpy(stat->m_name, m_archiveName, 0x10C);\n    return 0;", "    return 0;"),
+    ("JamFs Shutdown: archive not closed", H, "    if (m_file) {\n        m_device->Close(m_file);\n    }\n", ""),
+    ("JamFs Shutdown: header kept", H, "    if (m_header) {\n        delete m_header;\n    }\n", ""),
+    ("JamFs Shutdown: info kept", H, "    m_info.Clear();\n    m_header = 0;", "    m_header = 0;"),
+    ("JamFs Shutdown: base not reset", H, "    ResetFileSystem();\n", ""),
+    ("JamFs vInit: no shutdown on re-init", H, "    if (m_info.m_token != 0) {\n        Shutdown();\n    }\n", ""),
+    ("JamFs vInit: zero nMaxOpen unreported", H, "    if (maxOpen == 0) {\n        AtFatal(\"AtIoJamFileSystem::vInit:  nMaxOpen has to be greater than zero!\\n\", 0, 0, 0);\n    }\n", ""),
+    ("JamFs vInit: path not initialised", H, "    InitPath();\n", ""),
+    ("JamFs vInit: kind wrong", H, "    m_kind = 5;\n", "    m_kind = 4;\n"),
+    ("JamFs vInit: size and time swapped", H, "    m_archiveSize = stat.m_size;\n    m_archiveTime = stat.m_time;", "    m_archiveSize = stat.m_time;\n    m_archiveTime = stat.m_size;"),
+    ("JamFs vInit: flags not passed on", H, "m_device->Open(path, flags, &m_file)", "m_device->Open(path, 0, &m_file)"),
+    ("JamFs vInit: pending status ignored", H, "        status = request->Wait();\n", "        request->Wait();\n        status = 0;\n"),
+    ("JamFs vInit: request not released", H, "        m_file->Release(request);\n", ""),
+    ("JamFs vInit: message spelled correctly", H, "AtIoJamFileSytem::vInit", "AtIoJamFileSystem::vInit"),
+    ("JamFs vInit: JAM2 builds the FSTA class", H, "m_header = new AtIoFastJamHeader;", "m_header = new AtIoFastAlignedJamHeader;"),
+    ("JamFs vInit: device field not copied", H, "    m_unknown6B8 = m_device->m_unknown6B8;\n", ""),
+    ("JamFs Create: max and flags swapped", H, "fs->vInit(maxOpen, path, flags);", "fs->vInit((unsigned int)flags, path, (int)maxOpen);"),
 ]
 
 SUITES = {
@@ -217,15 +272,48 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
     return cmd
 
 
+def quick_cases():
+    """A few cases, so most mutants are decided in a second. A mutant that survives them gets the full set before it counts as
+    surviving, so this changes the run time and never the verdict."""
+    quick = os.path.join(ROOT, "build", "oracle-jam-quick")
+    shutil.rmtree(quick, ignore_errors=True)
+    os.makedirs(quick)
+    for leaf in os.listdir(CASES):
+        if leaf.split(".")[0] in ("synth_fsta", "synth_fstr", "synth_jam2", "fstr_Credits", "fstr_Aamalgam", "Persist", "FeCred", "CoDialog", "MainMenu"):
+            shutil.copy(os.path.join(CASES, leaf), quick)
+    return quick
+
+
 def run_mutant(suite):
-    try:
-        return run(command(suite, MUTANT_BUILD), timeout=90).returncode
-    except subprocess.TimeoutExpired:
-        return "timeout"
+    def attempt(cmd, seconds):
+        try:
+            return run(cmd, timeout=seconds).returncode
+        except subprocess.TimeoutExpired:
+            return "timeout"
+    if suite == "jam":
+        cmd = [exe(MUTANT_BUILD, "oracle_jam"), XBE, quick_cases()]
+        code = attempt(cmd, 60)
+        if code != 0:
+            return code
+    return attempt(command(suite, MUTANT_BUILD), 180)
+
+
+def check_mutants(cfg):
+    """Every mutant's text must occur exactly once, so a long run cannot stop halfway over a stale one."""
+    src = os.path.join(ROOT, "src", cfg["src"])
+    bad = []
+    for name, file, old, _ in cfg["mutants"]:
+        with open(os.path.join(src, file), encoding="utf-8") as f:
+            count = f.read().count(old)
+        if count != 1:
+            bad.append("%s: text occurs %d times" % (name, count))
+    if bad:
+        raise SystemExit("stale mutants:\n  " + "\n  ".join(bad))
 
 
 def run_suite(suite, a, funcs):
     cfg = SUITES[suite]
+    check_mutants(cfg)
     target = cfg["target"]
     funcs = [f for f in funcs if f["subsystem"].startswith(cfg["subsystem"])]
     ok, log = configure_and_build(BUILD, target)
@@ -270,7 +358,9 @@ def run_suite(suite, a, funcs):
         code = run_mutant(suite)
         print("  %-46s %s" % ("(unmodified copy: positive control)", "passes" if code == 0 else "FAILS: %s" % code))
         report["mutant_positive_control_exit"] = code
-        good &= code == 0
+        if code != 0:
+            # Every mutant would then look detected, whatever it does. No count from such a run means anything.
+            raise SystemExit("positive control failed (exit %s): mutant results would be meaningless" % code)
         for mutant in cfg["mutants"]:
             write_variant(src, mutant)
             ok, log = configure_and_build(MUTANT_BUILD, target, var)

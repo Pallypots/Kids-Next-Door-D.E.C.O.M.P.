@@ -111,12 +111,31 @@ the original, the heap and error helpers (0x000111F0, 0x00011210, 0x00011240, 0x
 to logging stubs; this is test scaffolding, in memory only. Each side has its own test-double archive file. Their call logs
 (helper calls, seeks, reads, waits, releases, in order) must be identical, and fatal messages must match as text.
 
-Result on 2026-11-05: 174,373 paths, about 192 million comparisons, no difference; 63/63 entries reached; positive control
-passes; `--mutate` fails; 86/86 source mutants detected (80 as a reported difference, 6 by a crash).
+The file system layer runs in the same suite: `AtIoPath` over 20,000 random operations, the `AtIoContext` stack including search order
+across file systems holding the same file, the base file system's defaults, and `AtIoJamFileSystem` from `Create` through `vInit`, every
+slot, a non-empty root, exhaustion, `Shutdown`, restart and destruction, over a test-double device.
 
-Not covered by this suite: directory listing and `AtIoJamFileSystem` (not recovered yet); the case where the helpers' failure
-paths really stop the game, because the stubs return; allocation failure; JAM2 archives over 4 MB (the limit is only about file size
-in the cases directory); `Prev`-style null cases where both sides crash.
+Result on 2026-11-05: 174,373 paths, about 196 million comparisons, no difference; 101/101 entries reached; each of the 62 cases also
+passes alone, so results do not depend on case order; positive control passes; `--mutate` fails; 136/136 source mutants detected (130 as
+a reported difference, 6 by a crash).
+
+A run first tries each mutant on a small case set and gives a survivor the full set, which changes run time and not the verdict.
+`tools/oracle_run.py` refuses stale mutants before starting, and **aborts if the positive control fails**: see below.
+
+Not covered by this suite: directory listing and the JAM1 class (not recovered); a missing archive, a device `Open` failure and an invalid
+token, where the original dereferences null after reporting, so both sides crash if the error helper returns; allocation failure; paths
+long enough to overflow the fixed buffers, in both implementations; the real Xbox device layer, which is not recovered; JAM2 archives over
+4 MB (the limit is only about file size in the cases directory).
+
+## End to end: tests/native/test_at_e2e.cpp
+
+Opens real archives through the recovered layers (`AtIoContext`, `AtIoJamFileSystem`, the header and file classes) over host files, and
+reads files out of them in pieces. Expected sizes and CRC-32s come from `python -I tools/jam.py e2e <image> <dir> --all`, which slices each
+archive with Python alone. Result on 2026-11-05, x64: **all 56 archives, all 26,508 files, 919,875,457 bytes, no failure**. With no arguments it
+uses a synthetic archive and needs no game data. `platform/host_file_system.cpp` beneath it is port code, not recovered code.
+
+This shows the recovered path works on a 64-bit host. It does not show the host file layer behaves like the Xbox's, and it says nothing about
+what the files contain.
 
 The reader's mutant runs were not clean the first time. 30/40 on the lookups: eight were real blind spots, because real data never
 shows them (labels are short, no real file lacks an extension, no table has an empty name, record sizes are always equal, small JAM2
@@ -125,6 +144,14 @@ sharper checks close them. Two were equivalent mutants: `order >= 0` in the scan
 GetFullName's first two words (`strncpy` pads them), and were replaced. 81/85 on the file objects and lifecycles: `Shutdown`'s field
 clearing is overwritten by its only caller, a `Clear` before every `Close` hid what `Close` does to the flags, and a destructor's
 stores are visible only by inspecting the memory afterwards. Each now has a direct test.
+
+File system round, 132/136 at first: the message check kept only the last message, so a later failure hid an earlier wrong one; no two test
+devices held the same file, so search order was invisible; root was always empty, so full and relative paths were identical; and no root
+reached SetRoot's limit. Each now has a test.
+
+**A hollow result, caught by the positive control.** One run reported 136/136 with the control failing. A test I had just added left entries
+in the call log, and the small case set's first archive tripped over them, so every mutant failed that one comparison whatever it did. The
+count meant nothing. The tool used to record that and carry on; it now aborts, and all 62 cases are run singly as a check on ordering.
 
 Harness bugs the lifecycle run found in itself: the recovered side's global `operator new` logged the harness's own allocations, and
 storing a fatal message in a `std::string` allocated during logging. Both showed as extra entries in the call log, and the log

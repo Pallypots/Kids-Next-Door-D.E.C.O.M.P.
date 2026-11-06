@@ -29,7 +29,8 @@ Source of the layout: `AtIoJamFileSystem::vInit` (0x0007D770), `AtIoJamInfoHeade
 strings. Parser: `tools/jam.py`; synthetic tests: `tests/test_jam.py`.
 
 Validation (`python -I tools/jam.py check <image>`, 2026-11-05): all 56 archives parse, 26,508 files, no file extent
-outside its archive, no overlap, no duplicate path, no unexplained JAM2 gap. That is strong evidence for the directory
+outside its archive, no overlap, no duplicate path, no unexplained JAM2 gap. Every one of those files also reads back through the recovered
+source with the CRC-32 Python computed (docs/verification.md). That is strong evidence for the directory
 layout, not proof that every field's meaning below is right. Fields not named are not understood.
 
 The token selects the header class: `JAM1` 0x00081020 (not seen on this disc, not implemented), `JAM2` 0x00080390

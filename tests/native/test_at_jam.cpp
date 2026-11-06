@@ -197,7 +197,7 @@ public:
     MemoryRequest request;
     int Close() override { return 0; }
     int Open(const char*, const char*, int) override { return 0; }
-    void Clear() override {}
+    int Clear() override { return 0; }
     int Seek(unsigned offset) override { m_position = offset; return seek_fails || offset >= data.size() ? 1 : 0; }
     int Read(void* out, unsigned size, unsigned* done, AtIoFileRequest** req) override {
         if (read_result != 0 && read_result != kPending) return read_result;
@@ -215,7 +215,6 @@ public:
 
 static AtIoJamFileSystem* make_fs(MemoryFile* file, const std::vector<unsigned char>& v, unsigned max_open) {
     AtIoJamFileSystem* fs = new AtIoJamFileSystem;
-    std::memset(static_cast<void*>(fs), 0, sizeof *fs);
     fs->m_info.Init((const char*)v.data());
     fs->m_maxOpen = max_open;
     fs->m_file = file;
@@ -308,7 +307,7 @@ static void test_jam2() {
     file.data[0x1000] = 0xAA;      // the first size field: the game reads the second
     file.data[0x1004] = 0x34;
     file.data[0x1005] = 0x12;
-    static AtIoJamFileSystem fs;
+    AtIoJamFileSystem& fs = *new AtIoJamFileSystem;  // Never destroyed: it does not own this file.
     fs.m_file = &file;
     fs.m_overrideFile = nullptr;
     h.m_fs = &fs;

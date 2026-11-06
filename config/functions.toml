@@ -768,7 +768,7 @@ evidence = "stores vftable 0x00279F1C; array constructor at 0x0007F947"
 [[function]]
 va = 0x00082810
 size = 24
-symbol = "?Clear@AtIoJamFile@@UAEXXZ"
+symbol = "?Clear@AtIoJamFile@@UAEHXZ"
 source = "src/at/AtIoJamFile.cpp"
 subsystem = "at/jam"
 evidence = "vftable 0x00279F1C slot 3"
@@ -885,6 +885,310 @@ source = "src/at/AtIoJamFile.cpp"
 subsystem = "at/jam"
 evidence = "vftable 0x00279F1C slot 7"
 
+[[function]]
+va = 0x00018340
+size = 69
+symbol = "??0AtIoPath@@QAE@XZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "called by 0x0001F4DC"
+
+[[function]]
+va = 0x00018390
+size = 115
+symbol = "?SetRoot@AtIoPath@@QAEXPBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "tail of 0x000817D0"
+
+[[function]]
+va = 0x00018410
+size = 142
+symbol = "?Resolve@AtIoPath@@QAEXPBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "called at the head of every file system method"
+
+[[function]]
+va = 0x000184A0
+size = 160
+symbol = "?GetCurrentPath@AtIoPath@@QAEHPADI@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "same walk as 0x00018410, bounded"
+
+[[function]]
+va = 0x00018540
+size = 203
+symbol = "?Join@AtIoPath@@QAEHPADIPBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "error text: relative path name too long"
+
+[[function]]
+va = 0x00018610
+size = 25
+symbol = "?Current@AtIoPath@@QAEPBDXZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "returns the stack top"
+
+[[function]]
+va = 0x00018630
+size = 124
+symbol = "?Push@AtIoPath@@QAEXPBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "13 callers; adds a trailing backslash"
+
+[[function]]
+va = 0x000186B0
+size = 105
+symbol = "?PushFromFile@AtIoPath@@QAEXPBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "calls 0x00018630 with the directory part"
+
+[[function]]
+va = 0x00018720
+size = 59
+symbol = "?Pop@AtIoPath@@QAEXPBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "decrements the top"
+
+[[function]]
+va = 0x00018760
+size = 67
+symbol = "??1AtIoPath@@QAE@XZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "tail of 0x0001F450"
+
+[[function]]
+va = 0x000187B0
+size = 87
+symbol = "?Init@AtIoPath@@QAEXXZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "tail of 0x0001F460"
+
+[[function]]
+va = 0x00019290
+size = 48
+symbol = "?Push@AtIoContext@@QAEXPAVAtIoFileSystem@@@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "error string names AtIoContext::vPushFileSysetm"
+
+[[function]]
+va = 0x000192C0
+size = 22
+symbol = "?Pop@AtIoContext@@QAEXXZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "caller 0x00076773 style pair with Push"
+
+[[function]]
+va = 0x000192E0
+size = 18
+symbol = "?Top@AtIoContext@@QAEPAVAtIoFileSystem@@XZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "caller 0x00076A92"
+
+[[function]]
+va = 0x00019300
+size = 102
+symbol = "?FindFile@AtIoContext@@QAEHPBDPAPAVAtIoFileSystem@@@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "16 callers; calls slot 5 from the top down"
+
+[[function]]
+va = 0x0001F450
+size = 14
+symbol = "??1AtIoFileSystem@@UAE@XZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x00272644"
+
+[[function]]
+va = 0x0001F460
+size = 8
+symbol = "?InitPath@AtIoFileSystem@@QAEXXZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "called by 0x0007D7BF"
+
+[[function]]
+va = 0x0001F470
+size = 18
+symbol = "?OpenWithCallback@AtIoFileSystem@@UAEHPBDHPAXPAPAVAtIoFile@@@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00272644 slot 1"
+
+[[function]]
+va = 0x0001F490
+size = 8
+symbol = "?Unknown14@AtIoFileSystem@@UAEHPAX@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00272644 slot 14"
+
+[[function]]
+va = 0x0001F4A0
+size = 34
+symbol = "?GetFileInfo@AtIoFileSystem@@UAEHPBDPAUAtIoFileStat@@@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00272644 slot 8"
+
+[[function]]
+va = 0x0001F4D0
+size = 59
+symbol = "??0AtIoFileSystem@@QAE@XZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x00272644"
+
+[[function]]
+va = 0x0001F510
+size = 51
+symbol = "?ResetFileSystem@AtIoFileSystem@@QAEXXZ"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "tail of 0x0007D270"
+
+[[function]]
+va = 0x0007D100
+size = 10
+symbol = "?SetHeaderHeap@AtIoJamFileSystem@@SAXPAX@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "writes 0x00301B50"
+
+[[function]]
+va = 0x0007D110
+size = 44
+symbol = "?Close@AtIoJamFileSystem@@UAEHPAVAtIoFile@@@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 3"
+
+[[function]]
+va = 0x0007D160
+size = 8
+symbol = "?Unknown11@AtIoJamFileSystem@@UAEHPAX@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 11"
+
+[[function]]
+va = 0x0007D1E0
+size = 143
+symbol = "??0AtIoJamFileSystem@@QAE@XZ"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x00279404; called by 0x0007DB6A"
+
+[[function]]
+va = 0x0007D270
+size = 183
+symbol = "?Shutdown@AtIoJamFileSystem@@QAEXXZ"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "called by 0x0007D73B, 0x0007D79B"
+
+[[function]]
+va = 0x0007D330
+size = 263
+symbol = "?Open@AtIoJamFileSystem@@UAEHPBDHPAPAVAtIoFile@@@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 2"
+
+[[function]]
+va = 0x0007D440
+size = 38
+symbol = "?IsDirectoryMissing@AtIoJamFileSystem@@UAEHPBD@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 4"
+
+[[function]]
+va = 0x0007D470
+size = 38
+symbol = "?IsFileMissing@AtIoJamFileSystem@@UAEHPBD@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 5"
+
+[[function]]
+va = 0x0007D4A0
+size = 43
+symbol = "?GetEntryType@AtIoJamFileSystem@@UAEHPBDPAH@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 6"
+
+[[function]]
+va = 0x0007D5A0
+size = 296
+symbol = "?GetFileInfo@AtIoJamFileSystem@@UAEHPBDPAUAtIoFileStat@@@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 8"
+
+[[function]]
+va = 0x0007D710
+size = 95
+symbol = "??1AtIoJamFileSystem@@UAE@XZ"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "stores vftable 0x00279404"
+
+[[function]]
+va = 0x0007D770
+size = 805
+symbol = "?vInit@AtIoJamFileSystem@@QAEXIPBDH@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "error strings name it; called by 0x0007DBA4"
+
+[[function]]
+va = 0x0007DAB0
+size = 30
+symbol = "??_GAtIoJamFileSystem@@UAEPAXI@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00279404 slot 0 (compiler-generated)"
+
+[[function]]
+va = 0x0007DAD0
+size = 10
+symbol = "?SetHeap@AtIoJamFileSystem@@SAXPAX@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "writes 0x00301B54"
+
+[[function]]
+va = 0x0007DB10
+size = 173
+symbol = "?Create@AtIoJamFileSystem@@SAPAV1@PBDIH@Z"
+source = "src/at/AtIoJamFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "callers 0x00076761, 0x000767FC, 0x00076BCC"
+
+[[function]]
+va = 0x000817D0
+size = 8
+symbol = "?SetRoot@AtIoFileSystem@@UAEXPBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/jam"
+evidence = "vftable 0x00272644 slot 13"
+
 # Vftables: slot count measured up to the next vftable or padding. Every slot is checked by symbol.
 
 [[vtable]]
@@ -989,6 +1293,18 @@ slots = 10
 symbol = "??_7AtIoFastJamHeader@@6B@"
 source = "src/at/AtIoFastJamHeader.cpp"
 
+[[vtable]]
+va = 0x00272644
+slots = 15
+symbol = "??_7AtIoFileSystem@@6B@"
+source = "src/at/AtIoFileSystem.cpp"
+
+[[vtable]]
+va = 0x00279404
+slots = 15
+symbol = "??_7AtIoJamFileSystem@@6B@"
+source = "src/at/AtIoJamFileSystem.cpp"
+
 # Symbols referenced by relocations but not recorded above. Name -> original VA. A relocation whose symbol is missing
 # here makes the checker fail (UNRESOLVED); entries must cite their evidence.
 [symbols]
@@ -1018,3 +1334,16 @@ source = "src/at/AtIoFastJamHeader.cpp"
 "?GetEntryType@AtIoFastJamHeader@@UAEHPBDPAH@Z" = 0x0007F1F0  # same address as the FSTA method: folded
 "??_GAtIoFastAlignedJamFile@@UAEPAXI@Z" = 0x0007F140  # vftable slot 0: the original is the vector form, this checks the slot only
 "??_GAtIoFastJamFile@@UAEPAXI@Z" = 0x0007FFE0  # as above
+"?s_instance@AtIoContext@@2PAV1@A" = 0x002C62F0  # read at 0x0007D7E4
+"?s_openHook@AtIoContext@@2P6AXXZA" = 0x002C62F4  # called through at 0x0007D352
+"?s_headerHeap@AtIoJamFileSystem@@2PAXA" = 0x00301B50  # read at 0x0007D8FD
+"?s_heap@AtIoJamFileSystem@@2PAXA" = 0x00301B54  # read at 0x0007DB26
+"?Unknown7@AtIoJamFileSystem@@UAEHPAX@Z" = 0x000B15B0  # vftable slot: returns 0, folded
+"?Unknown12@AtIoJamFileSystem@@UAEHXZ" = 0x000AB720  # vftable slot: returns 0, folded
+"?SetRoot@AtIoJamFileSystem@@UAEXPBD@Z" = 0x000CBF30  # vftable slot: empty, folded
+"?List@AtIoJamFileSystem@@UAEPAXPBD@Z" = 0x0007D4D0  # slot position only: this method is NOT recovered
+"?FreeList@AtIoJamFileSystem@@UAEXPAX@Z" = 0x00103640  # slot position only: this method is NOT recovered
+"??0AtIoJam1Header@@QAE@XZ" = 0x00081020  # the JAM1 class is NOT recovered
+"?GetFileInfo@AtIoJam1Header@@QAEHPBDPAI1@Z" = 0x00081000  # the JAM1 class is NOT recovered
+"?Clear@AtIoPath@@QAEXXZ" = 0x00018760  # same code as the destructor: folded
+"?Clear@AtIoJamInfoHeader@@QAEXXZ" = 0x0007FE60  # also the info header's member destructor at 0x0007D74B

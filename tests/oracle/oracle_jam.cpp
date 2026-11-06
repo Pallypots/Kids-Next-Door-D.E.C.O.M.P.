@@ -83,8 +83,8 @@ static void compare_logs(const char* what) {
 }
 
 // Fatal messages are compared as text: a recovered message must say what the original says.
-static char g_message[2][256];  // Fixed storage: storing a message must not allocate while logging.
-static void record_message(const char* m, int side) { if (g_recording) strncpy_s(g_message[side], m, _TRUNCATE); }
+static char g_message[2][4096];  // Every message and opened path since the last check, in order. Fixed storage: no allocation.
+static void record_message(const char* m, int side) { if (g_recording) strncat_s(g_message[side], m, _TRUNCATE); }
 
 // ---- helpers the original calls, redirected at run time in the mapped copy; and the recovered side's definitions
 static void* __cdecl o_new(unsigned n) { if (g_recording) g_log[0].add('N', n); return std::calloc(1, n); }
@@ -136,7 +136,7 @@ public:
     FakeRequest request;
     int Close() override { return 0; }
     int Open(const char*, const char*, int) override { return 0; }
-    void Clear() override {}
+    int Clear() override { return 0; }
     int Seek(unsigned offset) override {
         g_log[g_side].add('S', offset);
         m_position = offset;
@@ -370,14 +370,15 @@ static void run_jam2(const std::string& name, const std::vector<unsigned char>& 
     check_directory(o, *r, 0x000800A0, "");
 
     static FakeFile primary[2], overriding[2];
-    static AtIoJamFileSystem fsides[2];
+    static AtIoJamFileSystem* fside_ptrs[2] = {new AtIoJamFileSystem, new AtIoJamFileSystem};  // Never destroyed.
+    #define fsides(k) (*fside_ptrs[k])
     for (int k = 0; k < 2; k++) {
         primary[k].data = overriding[k].data = &data;
-        fsides[k].m_file = &primary[k];
-        fsides[k].m_overrideFile = nullptr;
+        fsides(k).m_file = &primary[k];
+        fsides(k).m_overrideFile = nullptr;
     }
-    o.fs = &fsides[0];
-    r->m_fs = &fsides[1];
+    o.fs = &fsides(0);
+    r->m_fs = &fsides(1);
     int round = 0;
     for (const auto& q : queries) {
         g_context = name + ": " + q[1];
@@ -408,7 +409,7 @@ static void run_jam2(const std::string& name, const std::vector<unsigned char>& 
             const bool use_override = round % 7 == 3;
             unsigned ooff = 9, osize = 9, roff = 9, rsize = 9;
             for (int k = 0; k < 2; k++) {
-                fsides[k].m_overrideFile = use_override ? &overriding[k] : nullptr;
+                fsides(k).m_overrideFile = use_override ? &overriding[k] : nullptr;
                 primary[k].mode = overriding[k].mode = mode;
             }
             g_side = 0;
@@ -474,7 +475,8 @@ static void run_lifecycle(const std::string& name, const std::vector<unsigned ch
                           void* heap, int init_mode, bool null_heap) {
     g_context = name + " lifecycle";
     static FakeFile device[2], other[2];
-    static AtIoJamFileSystem fs[2];
+    static AtIoJamFileSystem* fs_ptr = new AtIoJamFileSystem[2];  // Never destroyed: it does not own these files.
+    AtIoJamFileSystem* fs = fs_ptr;
     for (int k = 0; k < 2; k++) {
         device[k].data = other[k].data = &data;
         device[k].mode = other[k].mode = init_mode;
@@ -730,6 +732,493 @@ static void run_file_destructor(uint32_t ctor, uint32_t dtor) {
     }
 }
 
+// ---- the file system layer. On x86 the recovered classes share the original's layout and calling convention, so an original
+// object can be read through recovered types and driven through its own vftable with ordinary virtual calls.
+static AtIoPath* orig_path(void* mem) {
+    at<Fn0>(0x00018340)(mem, nullptr);
+    return (AtIoPath*)mem;
+}
+
+static void same_path(const char* what, const AtIoPath& o, const AtIoPath& r) {
+    eq(what, std::memcmp(&o, &r, sizeof(AtIoPath)), 0);
+}
+
+static void run_path() {
+    g_context = "AtIoPath";
+    static unsigned char omem[sizeof(AtIoPath)];
+    std::memset(omem, 0x5A, sizeof omem);
+    AtIoPath* o = orig_path(omem);
+    static AtIoPath r;
+    same_path("ctor", *o, r);
+    typedef void(__fastcall* FnS)(void*, void*, const char*);
+    typedef int(__fastcall* FnJoin)(void*, void*, char*, unsigned, const char*);
+    typedef int(__fastcall* FnCur)(void*, void*, char*, unsigned);
+    static char too_long[0x100];
+    std::memset(too_long, 'L', sizeof too_long - 1);  // For SetRoot only, which bounds its copy: the others do not check.
+    static const char* const names[] = {"", "ART", "ART\\", "A\\B", "a/b/c.txt", "DIR\\FILE.AFA", "x", "LONGERNAMEHERE\\", "/", "\\"};
+    const int kNames = sizeof names / sizeof names[0];
+    uint32_t rng = 12345;
+    auto rnd = [&](uint32_t n) { rng = rng * 1103515245u + 12345u; return ((rng >> 16) & 0x7FFF) % n; };
+    for (int step = 0; step < 20000; step++) {
+        const char* name = names[rnd(kNames)];
+        char a[0x200], b[0x200];
+        std::memset(a, 0x33, sizeof a);
+        std::memset(b, 0x33, sizeof b);
+        const unsigned size = rnd(4) == 0 ? rnd(12) : 0x100;
+        switch (rnd(11)) {
+            case 0: at<FnS>(0x00018390)(o, nullptr, name); r.SetRoot(name); break;
+            case 1: case 2: at<FnS>(0x00018630)(o, nullptr, name); r.Push(name); break;
+            case 3: at<FnS>(0x000186B0)(o, nullptr, name); r.PushFromFile(name); break;
+            case 4:
+                if (o->m_top >= 0) {
+                    const char* in = rnd(2) ? name : nullptr;
+                    at<FnS>(0x00018720)(o, nullptr, in);
+                    r.Pop(in);
+                }
+                break;
+            case 5: at<FnS>(0x00018410)(o, nullptr, name); r.Resolve(name); break;
+            case 6:
+                eq("Join", at<FnJoin>(0x00018540)(o, nullptr, a, size, name), r.Join(b, size, name));
+                eq("Join out", std::memcmp(a, b, sizeof a), 0);
+                break;
+            case 7:
+                eq("GetCurrentPath", at<FnCur>(0x000184A0)(o, nullptr, a, size), r.GetCurrentPath(b, size));
+                eq("GetCurrentPath out", std::memcmp(a, b, sizeof a), 0);
+                break;
+            case 8:
+                eq("Current null", ((FnOpenFile)(uintptr_t)0x00018610)(o, nullptr) == nullptr, r.Current() == nullptr);
+                break;
+            case 9:
+                if (rnd(50) == 0) { at<Fn0>(0x000187B0)(o, nullptr); r.Init(); }
+                break;
+            case 10:
+                if (rnd(100) == 0) { at<Fn0>(0x00018760)(o, nullptr); r.Clear(); }
+                if (rnd(100) == 0) { o->m_top = r.m_top = -1; }  // A state only a real Pop past the bottom reaches.
+                break;
+        }
+    }
+    same_path("after sequence", *o, r);
+    at<FnS>(0x00018390)(o, nullptr, too_long);
+    r.SetRoot(too_long);
+    same_path("SetRoot at its limit", *o, r);
+}
+
+class FakeDevice : public AtIoFileSystem {
+public:
+    int side = 0;
+    FakeFile* file = nullptr;
+    const char* archive = "";
+    int open_status = 0;
+    int stat_status = 0;
+    unsigned stat_time = 0x1234;
+    int Open(const char* path, int flags, AtIoFile** out) override {
+        g_log[side].add('O', (uint32_t)flags);
+        record_message(path, side);
+        file->m_position = 0;  // A real device opens at the start.
+        *out = open_status ? nullptr : file;
+        return open_status;
+    }
+    int Close(AtIoFile*) override { g_log[side].add('C'); return 0; }
+    int IsDirectoryMissing(const char*) override { return 1; }
+    int IsFileMissing(const char* path) override { g_log[side].add('M'); return std::strcmp(path, archive) != 0; }
+    int GetEntryType(const char*, int*) override { return 1; }
+    int Unknown7(void*) override { return 0; }
+    int GetFileInfo(const char* path, AtIoFileStat* stat) override {
+        g_log[side].add('I');
+        strncpy_s(stat->m_name, path, _TRUNCATE);
+        stat->m_time = stat_time;
+        stat->m_offset = 0;
+        stat->m_size = 0xABCDE;
+        return stat_status;
+    }
+    void* List(const char*) override { return nullptr; }
+    void FreeList(void*) override {}
+    int Unknown11(void*) override { return 0; }
+    int Unknown12() override { return 0; }
+};
+
+static void same_fs(const char* what, const AtIoJamFileSystem& o, const AtIoJamFileSystem& r) {
+    same_path(what, o.m_path, r.m_path);
+    eq(what, o.m_kind, r.m_kind);
+    eq(what, o.m_openFiles, r.m_openFiles);
+    eq(what, o.m_maxOpen, r.m_maxOpen);
+    eq(what, o.m_peakOpenFiles, r.m_peakOpenFiles);
+    eq(what, o.m_unknown6B4, r.m_unknown6B4);
+    eq(what, o.m_unknown6B8, r.m_unknown6B8);
+    eq(what, o.m_info.m_token, r.m_info.m_token);
+    eq(what, o.m_info.m_headerSize, r.m_info.m_headerSize);
+    eq(what, o.m_header == nullptr, r.m_header == nullptr);
+    eq(what, o.m_file == nullptr, r.m_file == nullptr);
+    eq(what, o.m_device == nullptr, r.m_device == nullptr);
+    eq(what, std::memcmp(o.m_archiveName, r.m_archiveName, sizeof o.m_archiveName), 0);
+    eq(what, o.m_archiveTime, r.m_archiveTime);
+    eq(what, o.m_archiveSize, r.m_archiveSize);
+    eq(what, o.m_overrideFile == nullptr, r.m_overrideFile == nullptr);
+    eq(what, o.m_unknown810, r.m_unknown810);
+}
+
+static int g_hook_calls;
+static void __cdecl open_hook() { g_hook_calls++; }
+
+static void run_file_system(const std::string& name, const std::vector<unsigned char>& data,
+                            const std::vector<std::vector<std::string>>& queries) {
+    g_context = name + " file system";
+    static FakeFile file[2];
+    static FakeDevice device[2];
+    static AtIoContext context[2];
+    static AtIoFileSystem* stack[2][4];
+    static int heap_token;
+    const char* archive = "Jamfiles\\Test.JAM";
+    for (int k = 0; k < 2; k++) {
+        file[k].data = &data;
+        file[k].m_position = 0;
+        file[k].mode = 0;
+        device[k].side = k;
+        device[k].file = &file[k];
+        device[k].archive = archive;
+        device[k].m_unknown6B8 = 0x6B8;
+        context[k].m_stack = stack[k];
+        context[k].m_stackSize = 4;
+        context[k].m_stackCount = 0;
+        stack[k][0] = &device[k];
+        context[k].m_stackCount = 1;
+    }
+    *(AtIoContext**)(uintptr_t)0x002C62F0 = &context[0];
+    AtIoContext::s_instance = &context[1];
+    ((void(__cdecl*)(void*))(uintptr_t)0x0007DAD0)(&heap_token);
+    ((void(__cdecl*)(void*))(uintptr_t)0x0007D100)(&heap_token);
+    ((void(__cdecl*)(void*))(uintptr_t)0x0007F110)(&heap_token);
+    ((void(__cdecl*)(void*))(uintptr_t)0x0007FFD0)(&heap_token);
+    AtIoJamFileSystem::SetHeap(&heap_token);
+    AtIoJamFileSystem::SetHeaderHeap(&heap_token);
+    AtIoFastAlignedJamHeader::SetHeap(&heap_token);
+    AtIoFastJamHeader::SetHeap(&heap_token);
+
+    g_recording = true;
+    g_log[0].n = g_log[1].n = 0;
+    typedef AtIoJamFileSystem*(__stdcall* FnCreate)(const char*, unsigned, int);
+    typedef void(__fastcall* FnFsInit)(void*, void*, unsigned, const char*, int);
+    g_side = 0;
+    AtIoJamFileSystem* o = ((FnCreate)(uintptr_t)0x0007DB10)(archive, 3, 2);
+    g_side = 1;
+    AtIoJamFileSystem* r = AtIoJamFileSystem::Create(archive, 3, 2);
+    g_side = 0;
+    compare_logs("Create calls");
+    eq("Create open path", std::strcmp(g_message[0], g_message[1]), 0);
+    g_message[0][0] = g_message[1][0] = 0;
+    same_fs("Create state", *o, *r);
+    eq("device", o->m_device == &device[0], r->m_device == &device[1]);
+
+    // Every behaviour of the archive file through vInit again, which shuts down first.
+    for (int mode = 0; mode < 3; mode++) {
+        for (int k = 0; k < 2; k++) file[k].mode = mode;
+        g_side = 0;
+        at<FnFsInit>(0x0007D770)(o, nullptr, 3, archive, mode);
+        g_side = 1;
+        r->vInit(3, archive, mode);
+        g_side = 0;
+        for (int k = 0; k < 2; k++) file[k].mode = 0;
+        compare_logs("vInit calls");
+        eq("vInit message", std::strcmp(g_message[0], g_message[1]), 0);
+        g_message[0][0] = g_message[1][0] = 0;
+        same_fs("vInit state", *o, *r);
+    }
+    // A zero nMaxOpen reports, then carries on.
+    for (int k = 0; k < 2; k++) device[k].stat_time = 0x77;
+    g_side = 0;
+    at<FnFsInit>(0x0007D770)(o, nullptr, 0, archive, 0);
+    g_side = 1;
+    r->vInit(0, archive, 0);
+    g_side = 0;
+    compare_logs("vInit(0) calls");
+    eq("vInit(0) message", std::strcmp(g_message[0], g_message[1]), 0);
+    g_message[0][0] = g_message[1][0] = 0;
+    g_side = 0;
+    at<FnFsInit>(0x0007D770)(o, nullptr, 3, archive, 0);
+    g_side = 1;
+    r->vInit(3, archive, 0);
+    g_side = 0;
+    compare_logs("vInit(3) calls");
+    same_fs("vInit(3) state", *o, *r);
+
+    *(void(__cdecl**)())(uintptr_t)0x002C62F4 = open_hook;
+    AtIoContext::s_openHook = open_hook;
+    unsigned step = 0;
+    AtIoFile* held_o[2] = {};
+    AtIoFile* held_r[2] = {};
+    for (const auto& q : queries) {
+        if (q[0] != "?" && (step++ % 23) != 0 && queries.size() > 80) continue;
+        step++;
+        g_context = name + " fs: " + q[1];
+        const char* path = q[1].c_str();
+        eq("IsFileMissing", o->IsFileMissing(path), r->IsFileMissing(path));
+        same_path("path after IsFileMissing", o->m_path, r->m_path);
+        if (*path) eq("IsDirectoryMissing", o->IsDirectoryMissing(path), r->IsDirectoryMissing(path));
+        int ot = 0x44, rt = 0x44;
+        eq("GetEntryType", o->GetEntryType(path, &ot), r->GetEntryType(path, &rt));
+        eq("GetEntryType.type", ot, rt);
+        static AtIoFileStat os, rs;
+        std::memset(&os, 0x5A, sizeof os);
+        std::memset(&rs, 0x5A, sizeof rs);
+        g_side = 0;
+        const int oi = o->GetFileInfo(path, &os);
+        g_side = 1;
+        const int ri = r->GetFileInfo(path, &rs);
+        g_side = 0;
+        eq("GetFileInfo", oi, ri);
+        eq("GetFileInfo stat", std::memcmp(&os, &rs, sizeof os), 0);
+        compare_logs("GetFileInfo calls");
+        AtIoFile* of = reinterpret_cast<AtIoFile*>(&os);
+        AtIoFile* rf = reinterpret_cast<AtIoFile*>(&os);
+        const int before = g_hook_calls;
+        g_side = 0;
+        const int oo = o->Open(path, 0, &of);
+        const int mid = g_hook_calls;
+        g_side = 1;
+        const int ro = r->Open(path, 0, &rf);
+        g_side = 0;
+        eq("Open", oo, ro);
+        eq("Open out", of == nullptr, rf == nullptr);
+        eq("Open hook", mid - before, g_hook_calls - mid);
+        same_fs("Open state", *o, *r);
+        compare_logs("Open calls");
+        if (oo == 0 && ro == 0) {
+            eq("Open path", std::memcmp(of->m_path, rf->m_path, sizeof of->m_path), 0);
+            eq("Open size", of->m_size, rf->m_size);
+            g_side = 0;
+            const int oc = o->Close(of);
+            g_side = 1;
+            const int rc = r->Close(rf);
+            g_side = 0;
+            eq("Close", oc, rc);
+            same_fs("Close state", *o, *r);
+            compare_logs("Close calls");
+        }
+        if (step % 41 == 0) {  // The current directory and root take part in every path.
+            o->m_path.Push("ART");
+            r->m_path.Push("ART");
+            eq("relative IsFileMissing", o->IsFileMissing(path), r->IsFileMissing(path));
+            same_path("relative path", o->m_path, r->m_path);
+            o->m_path.Pop(nullptr);
+            r->m_path.Pop(nullptr);
+            o->SetRoot("ignored");
+            r->SetRoot("ignored");
+            same_path("SetRoot is empty", o->m_path, r->m_path);
+        }
+    }
+    *(void(__cdecl**)())(uintptr_t)0x002C62F4 = nullptr;
+    AtIoContext::s_openHook = nullptr;
+    (void)held_o; (void)held_r;
+
+    // A non-empty root: the full path has it and the relative path does not, and the file's display name is the relative one.
+    for (const auto& q : queries) {
+        const size_t split = q[1].find('\\');
+        if (q[0] != "F" || split == std::string::npos) continue;
+        const std::string root = q[1].substr(0, split);
+        const std::string rest = q[1].substr(split + 1);
+        g_context = name + " fs under a root: " + q[1];
+        o->m_path.SetRoot(root.c_str());
+        r->m_path.SetRoot(root.c_str());
+        AtIoFile* of = nullptr;
+        AtIoFile* rf = nullptr;
+        g_side = 0;
+        const int oo = o->Open(rest.c_str(), 0, &of);
+        g_side = 1;
+        const int ro = r->Open(rest.c_str(), 0, &rf);
+        g_side = 0;
+        eq("Open under a root", oo, ro);
+        if (oo == 0 && ro == 0) {
+            eq("display name", std::memcmp(of->m_path, rf->m_path, sizeof of->m_path), 0);
+            eq("display name is relative", std::strcmp(of->m_path, rest.c_str()), 0);
+            g_side = 0;
+            o->Close(of);
+            g_side = 1;
+            r->Close(rf);
+            g_side = 0;
+        }
+        compare_logs("under a root");
+        o->m_path.SetRoot("");
+        r->m_path.SetRoot("");
+        break;
+    }
+
+    // Slots with fixed answers, a path too long for the relative buffer's limit is out of scope: both overflow their stack.
+    g_context = name + " fs slots";
+    int dummy = 0;
+    eq("Unknown7", o->Unknown7(&dummy), r->Unknown7(&dummy));
+    eq("Unknown11", o->Unknown11(&dummy), r->Unknown11(&dummy));
+    eq("Unknown12", o->Unknown12(), r->Unknown12());
+    eq("Unknown14", o->Unknown14(&dummy), r->Unknown14(&dummy));
+    AtIoFile* oout = reinterpret_cast<AtIoFile*>(&dummy);
+    AtIoFile* rout = reinterpret_cast<AtIoFile*>(&dummy);
+    eq("OpenWithCallback", o->OpenWithCallback("x", 0, nullptr, &oout), r->OpenWithCallback("x", 0, nullptr, &rout));
+    eq("OpenWithCallback out", oout == nullptr, rout == nullptr);
+    // Files until none are left, then a failure.
+    AtIoFile* first_o = nullptr;
+    AtIoFile* first_r = nullptr;
+    for (const auto& q : queries) {
+        if (q[0] != "F") continue;
+        for (int i = 0; i < 5; i++) {
+            AtIoFile* of = nullptr;
+            AtIoFile* rf = nullptr;
+            g_side = 0;
+            const int oa = o->Open(q[1].c_str(), 0, &of);
+            g_side = 1;
+            const int ra = r->Open(q[1].c_str(), 0, &rf);
+            g_side = 0;
+            eq("Open(all)", oa, ra);
+            same_fs("Open(all) state", *o, *r);
+            if (i == 0) { first_o = of; first_r = rf; }
+        }
+        break;
+    }
+    compare_logs("Open(all) calls");
+    if (first_o && first_r) {
+        g_side = 0;
+        const int oc = o->Close(first_o);
+        g_side = 1;
+        const int rc = r->Close(first_r);
+        g_side = 0;
+        eq("Close(one)", oc, rc);
+        same_fs("Close(one) state", *o, *r);
+    }
+
+    // Shutdown directly, an Open with no archive, a second start, and destruction with files still open.
+    g_side = 0;
+    at<Fn0>(0x0007D270)(o, nullptr);
+    g_side = 1;
+    r->Shutdown();
+    g_side = 0;
+    compare_logs("Shutdown calls");
+    same_fs("Shutdown state", *o, *r);
+    AtIoFile* none_o = nullptr;
+    AtIoFile* none_r = nullptr;
+    eq("Open(no archive)", o->Open("x", 0, &none_o), r->Open("x", 0, &none_r));
+    g_side = 0;
+    at<FnFsInit>(0x0007D770)(o, nullptr, 3, archive, 0);
+    g_side = 1;
+    r->vInit(3, archive, 0);
+    g_side = 0;
+    compare_logs("restart calls");
+    same_fs("restart state", *o, *r);
+    g_side = 0;
+    delete o;  // Slot 0 of the original's own vftable.
+    g_side = 1;
+    delete r;
+    g_side = 0;
+    compare_logs("destruction calls");
+    g_recording = false;
+    g_message[0][0] = g_message[1][0] = 0;
+}
+
+// Context stack: the only part of AtIoContext recovered so far.
+static void run_context() {
+    g_context = "AtIoContext";
+    static AtIoContext o, r;
+    static AtIoFileSystem* so[3];
+    static AtIoFileSystem* sr[3];
+    static FakeDevice a, b, a2;
+    a.archive = "A";
+    b.archive = "B";
+    a2.archive = "A";  // Holds the same file as `a`: which one is found depends on the search order.
+    o.m_stack = so; r.m_stack = sr;
+    o.m_stackSize = r.m_stackSize = 3;
+    o.m_stackCount = r.m_stackCount = 0;
+    typedef void(__fastcall* FnPush)(void*, void*, void*);
+    typedef void*(__fastcall* FnTop)(void*, void*);
+    typedef int(__fastcall* FnFind)(void*, void*, const char*, AtIoFileSystem**);
+    const auto same = [&]() {
+        eq("count", o.m_stackCount, r.m_stackCount);
+        eq("stack", std::memcmp(so, sr, sizeof so), 0);
+        eq("Top", (uintptr_t)((FnTop)(uintptr_t)0x000192E0)(&o, nullptr), (uintptr_t)r.Top());
+    };
+    const auto find = [&](const char* path) {
+        AtIoFileSystem* fo = reinterpret_cast<AtIoFileSystem*>(&o);
+        AtIoFileSystem* fr = reinterpret_cast<AtIoFileSystem*>(&o);
+        eq("FindFile", ((FnFind)(uintptr_t)0x00019300)(&o, nullptr, path, &fo), r.FindFile(path, &fr));
+        eq("FindFile.out", (uintptr_t)fo, (uintptr_t)fr);
+        eq("FindFile(null)", ((FnFind)(uintptr_t)0x00019300)(&o, nullptr, path, nullptr), r.FindFile(path, nullptr));
+    };
+    find("A");
+    same();
+    ((Fn0)(uintptr_t)0x000192C0)(&o, nullptr); r.Pop();  // Pop on empty
+    same();
+    ((FnPush)(uintptr_t)0x00019290)(&o, nullptr, &a); r.Push(&a);
+    same();
+    find("A"); find("B");
+    ((FnPush)(uintptr_t)0x00019290)(&o, nullptr, &b); r.Push(&b);
+    find("A"); find("B"); find("C");  // Searched from the top down.
+    ((FnPush)(uintptr_t)0x00019290)(&o, nullptr, &a); r.Push(&a);
+    same();
+    g_recording = true;
+    ((FnPush)(uintptr_t)0x00019290)(&o, nullptr, &b); r.Push(&b);  // Full: reports.
+    g_recording = false;
+    g_log[0].n = g_log[1].n = 0;
+    eq("full message", std::strcmp(g_message[0], g_message[1]), 0);
+    g_message[0][0] = g_message[1][0] = 0;
+    same();
+    for (int i = 0; i < 4; i++) { ((Fn0)(uintptr_t)0x000192C0)(&o, nullptr); r.Pop(); same(); }
+    ((FnPush)(uintptr_t)0x00019290)(&o, nullptr, &a); r.Push(&a);
+    ((FnPush)(uintptr_t)0x00019290)(&o, nullptr, &a2); r.Push(&a2);
+    find("A");
+    ((FnPush)(uintptr_t)0x00019290)(&o, nullptr, &b); r.Push(&b);
+    find("A"); find("B");
+    AtIoFileSystem* top = nullptr;
+    r.FindFile("A", &top);
+    eq("top of the stack wins", (uintptr_t)top, (uintptr_t)&a2);
+    g_log[0].n = g_log[1].n = 0;  // These devices log on one side only: nothing to compare, and nothing may leak into a later check.
+}
+
+// Base file system: constructor, default slots, destructor, on inspected memory.
+static void run_file_system_base() {
+    g_context = "AtIoFileSystem";
+    static unsigned char mem[sizeof(AtIoFileSystem)];
+    std::memset(mem, 0x5A, sizeof mem);
+    at<Fn0>(0x0001F4D0)(mem, nullptr);
+    static FakeDevice r;
+    AtIoFileSystem* o = reinterpret_cast<AtIoFileSystem*>(mem);
+    eq("vptr", *(uintptr_t*)mem, 0x00272644);
+    eq("kind", o->m_kind, r.m_kind);
+    eq("maxOpen", o->m_maxOpen, r.m_maxOpen);
+    same_path("ctor path", o->m_path, r.m_path);
+    AtIoFile* a = reinterpret_cast<AtIoFile*>(mem);
+    AtIoFile* b = reinterpret_cast<AtIoFile*>(mem);
+    eq("OpenWithCallback", o->OpenWithCallback("x", 0, nullptr, &a), r.AtIoFileSystem::OpenWithCallback("x", 0, nullptr, &b));
+    eq("OpenWithCallback.out", a == nullptr, b == nullptr);
+    static AtIoFileStat os, rs;
+    std::memset(&os, 0x5A, sizeof os);
+    std::memset(&rs, 0x5A, sizeof rs);
+    eq("GetFileInfo", o->GetFileInfo("x", &os), r.AtIoFileSystem::GetFileInfo("x", &rs));
+    eq("GetFileInfo stat", std::memcmp(&os, &rs, sizeof os), 0);
+    o->SetRoot("ROOT");
+    r.SetRoot("ROOT");
+    same_path("SetRoot", o->m_path, r.m_path);
+    eq("Unknown14", o->Unknown14(nullptr), r.Unknown14(nullptr));
+    at<Fn0>(0x0001F460)(mem, nullptr);
+    r.InitPath();
+    same_path("InitPath", o->m_path, r.m_path);
+    at<Fn0>(0x0001F460)(mem, nullptr);
+    r.InitPath();
+    same_path("InitPath twice", o->m_path, r.m_path);
+    o->m_kind = r.m_kind = 3;
+    o->m_openFiles = r.m_openFiles = 4;
+    o->m_maxOpen = r.m_maxOpen = 5;
+    o->m_peakOpenFiles = r.m_peakOpenFiles = 6;
+    o->m_unknown6B4 = r.m_unknown6B4 = 7;
+    o->m_unknown6B8 = r.m_unknown6B8 = 8;
+    at<Fn0>(0x0001F510)(mem, nullptr);
+    r.ResetFileSystem();
+    same_path("Reset path", o->m_path, r.m_path);
+    eq("Reset kind", o->m_kind, r.m_kind);
+    eq("Reset open", o->m_openFiles, r.m_openFiles);
+    eq("Reset max", o->m_maxOpen, r.m_maxOpen);
+    eq("Reset peak", o->m_peakOpenFiles, r.m_peakOpenFiles);
+    eq("Reset 6B4", o->m_unknown6B4, r.m_unknown6B4);
+    eq("Reset 6B8", o->m_unknown6B8, r.m_unknown6B8);
+    at<Fn0>(0x0001F450)(mem, nullptr);
+    eq("~vptr", *(uintptr_t*)mem, 0x00272644);
+}
+
 static bool read_file(const std::string& path, std::vector<unsigned char>& out) {
     FILE* f = std::fopen(path.c_str(), "rb");
     if (!f) return false;
@@ -742,7 +1231,18 @@ static bool read_file(const std::string& path, std::vector<unsigned char>& out) 
     return ok;
 }
 
+// A crash in either implementation is a result, so say where it happened.
+static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
+    if (e->ExceptionRecord->ExceptionCode == EXCEPTION_ACCESS_VIOLATION) {
+        std::printf("CRASH in %s: side %d, at 0x%08X, %s 0x%08X\n", g_context.c_str(), g_side, (unsigned)(uintptr_t)e->ExceptionRecord->ExceptionAddress,
+                    e->ExceptionRecord->ExceptionInformation[0] ? "writing" : "reading", (unsigned)e->ExceptionRecord->ExceptionInformation[1]);
+        std::fflush(stdout);
+    }
+    return EXCEPTION_CONTINUE_SEARCH;
+}
+
 int main(int argc, char** argv) {
+    AddVectoredExceptionHandler(0, on_crash);
     const char* entries = nullptr;
     std::vector<const char*> pos;
     for (int i = 1; i < argc; i++) {
@@ -755,6 +1255,9 @@ int main(int argc, char** argv) {
     redirect_helpers();
     if (entries && !arm_entries(entries)) return 2;
     run_file_base();
+    run_path();
+    run_context();
+    run_file_system_base();
     run_file_destructor<AtIoFastAlignedJamFile>(0x000827E0, 0x00082A20);
     run_file_destructor<AtIoFastJamFile>(0x00082DA0, 0x00083090);
     int heap_token = 0;
@@ -784,6 +1287,7 @@ int main(int argc, char** argv) {
         const bool raw = std::memcmp(data.data(), "FSTR", 4) == 0;
         if (jam2) run_jam2(base, data, queries);
         else run_fsta(base, data, queries, raw);
+        run_file_system(base, data, queries);
         // Lifecycles: the first with each archive-file behaviour, plus a heap that was never set.
         for (int mode = 0; mode <= 4; mode++) {
             for (int null_heap = 0; null_heap < (mode == 0 ? 2 : 1); null_heap++) {

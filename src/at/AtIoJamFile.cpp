@@ -32,11 +32,12 @@ AtIoJamFile::AtIoJamFile() {
     m_secondSize = 0;
 }
 
-void AtIoJamFile::Clear() {
+int AtIoJamFile::Clear() {
     m_flags = 0;
     for (int i = 0; i < 0x20; i++) {
         ((unsigned int*)m_path)[i] = 0;
     }
+    return 0;
 }
 
 void AtIoJamFile::Attach(AtIoJamDirectoryHeader* owner) {
