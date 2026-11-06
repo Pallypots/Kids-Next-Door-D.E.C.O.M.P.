@@ -66,6 +66,25 @@ def parse(text):
     return out
 
 
+RUMBLE_EFFECT = re.compile(r'RumbleEffect\s+"([^"]*)"[^{]*\{\s*KeyFrames\s*\[\s*(\d+)\s*\]', re.I)
+RUMBLE_FRAME = re.compile(r'KeyFrame\s+([\d.]+)\s*\{\s*Left\s+([\d.]+)\s+Right\s+([\d.]+)\s*\}', re.I)
+
+
+def parse_rumble(text):
+    """E, name, frame count; then F, time, left, right for each frame. From the text alone."""
+    text = re.sub(r"//[^\n]*", "", text)
+    out = []
+    marks = list(RUMBLE_EFFECT.finditer(text))
+    for i, m in enumerate(marks):
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(text)
+        frames = RUMBLE_FRAME.findall(text, m.end(), end)
+        if len(frames) != int(m.group(2)):
+            raise ValueError("effect %s: %d frames, %s declared" % (m.group(1), len(frames), m.group(2)))
+        out.append(("E", m.group(1), m.group(2)))
+        out.extend(("F",) + f for f in frames)
+    return out
+
+
 def main(argv):
     if len(argv) != 2:
         print(__doc__)
@@ -80,6 +99,10 @@ def main(argv):
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "levels.tsv"), "w", encoding="latin-1", newline="\n") as f:
         for row in levels:
+            f.write("\t".join(str(v) for v in row) + "\n")
+    path, off, size = [f for f in archive.files if f[0].upper().endswith("RUMBLE.RMB")][0]
+    with open(os.path.join(out_dir, "rumble.tsv"), "w", encoding="latin-1", newline="\n") as f:
+        for row in parse_rumble(img._read(base + off, size).decode("latin-1")):
             f.write("\t".join(str(v) for v in row) + "\n")
     os.makedirs(os.path.join(out_dir, "JamFiles", "XBox"), exist_ok=True)
     target = os.path.join(out_dir, "JamFiles", "XBox", "AppInit.JAM")

@@ -132,3 +132,9 @@ to a field near the loading code (0x00093798), so it is presumably what a loadin
 
 This disc's file has 47 entries: 16 movies, 15 normal, 13 non-selectable, 3 hidden, 17 with descriptions. The list itself is game data and is not in this repository:
 `python -I tools/levels.py <image> analysis-local/levels`, then `test_gm_levels analysis-local/levels analysis-local/levels/levels.tsv --print` writes it from recovered code.
+
+## RUMBLE.RMB (reader: GmRumbleEffects, 0x000746A0)
+
+    RumbleEffects [ n ] { RumbleEffect "NAME" { KeyFrames [ k ] { KeyFrame time { Left a Right b } ... } } ... }
+
+Numbers must be reals: `Left 1` is an error. A missing keyword makes the reader return early, leaving the rest to be misread. Effects are found by name through a `GmNameMap`.

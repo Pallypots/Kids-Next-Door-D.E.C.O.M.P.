@@ -47,9 +47,22 @@ def main():
         out += ["", "By kind across all sections: %s. Only `source` belongs in a function-count denominator; the rest are "
                 "compiler-generated or belong to a parent function, and stay listed because a whole-image reconstruction "
                 "must account for their bytes." % ", ".join("%s %d" % kv for kv in sorted(totals.items()))]
-        out += ["", "Ownership (game vs. CRT/XDK/middleware) inside `.text` is NOT yet classified; the named library",
-                "sections (D3D, DSOUND, XACTENG, WMADEC, XPP, PSFD*, DOLBY, D3DX, XGRPH) are SDK/middleware by section",
-                "name. See docs/STATE.md for the evidence-based partial map.", ""]
+        own = load("analysis-local/inv/ownership.json")
+        out += ["", "### Who owns the code (tools/ownership.py)", ""]
+        if own:
+            out += ["| Owner | Functions | Unique bytes | Direct evidence | Signature hint only | Inferred from neighbours | No evidence |",
+                    "| --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
+            for cls, r in own["summary"].items():
+                out.append("| %s | %d | %d | %d | %d | %d | %d |" % (cls, r["functions"], r["unique_bytes"], r["direct"], r["hint"], r["inferred"], r["none"]))
+            game = own["summary"].get("game")
+            rep_now = load("build/verify-report.json")
+            if game and rep_now:
+                recorded = {r["va"] for r in rep_now["results"]}
+                game_vas = {k for k, v in own["functions"].items() if v[0] == "game"}
+                out += ["", "**Estimate**, because most of the game row is inferred: %d of about %d game functions are recorded in config/functions.toml. "
+                        "This counts source written, whatever its verification state, not a playable fraction." % (len(recorded & game_vas), game["functions"]), ""]
+        else:
+            out += ["unknown (run tools/ownership.py)", ""]
     else:
         out += ["unknown (run tools/funcs.py)", ""]
     out += ["## Verification results (tools/verify.py)", ""]

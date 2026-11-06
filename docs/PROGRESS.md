@@ -25,9 +25,17 @@ Checker `tools/xcheck.py` SHA-256 `ad997f47ccc83a7f43870c14d1fe81e4b309889f82990
 
 By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 14370. Only `source` belongs in a function-count denominator; the rest are compiler-generated or belong to a parent function, and stay listed because a whole-image reconstruction must account for their bytes.
 
-Ownership (game vs. CRT/XDK/middleware) inside `.text` is NOT yet classified; the named library
-sections (D3D, DSOUND, XACTENG, WMADEC, XPP, PSFD*, DOLBY, D3DX, XGRPH) are SDK/middleware by section
-name. See docs/STATE.md for the evidence-based partial map.
+### Who owns the code (tools/ownership.py)
+
+| Owner | Functions | Unique bytes | Direct evidence | Signature hint only | Inferred from neighbours | No evidence |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| game | 10560 | 1553503 | 808 | 0 | 9752 | 0 |
+| crt | 279 | 35723 | 9 | 0 | 270 | 0 |
+| xdk | 1300 | 208507 | 1189 | 24 | 87 | 0 |
+| cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
+| unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
+
+**Estimate**, because most of the game row is inferred: 315 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -314,9 +322,45 @@ name. See docs/STATE.md for the evidence-based partial map.
 | 0x0007D140 | 11 | `?AtIoNotifyMounted@@YAXPAVAtIoJamFileSystem@@@Z` | at/mount | SIZE |
 | 0x0007D150 | 11 | `?AtIoNotifyUnmounted@@YAXPAVAtIoJamFileSystem@@@Z` | at/mount | SIZE |
 | 0x000EB9D0 | 23 | `?AtIoDeleteObject@@YAXPAVAtIoFileSystem@@@Z` | at/mount | SIZE |
+| 0x00013FC0 | 111 | `?AtNamesEqual@@YAHPBD0@Z` | gm/names | SIZE |
+| 0x00017E80 | 73 | `?Detach@GmNameMapGroup@@QAEXPAVGmNameMap@@@Z` | gm/names | SIZE |
+| 0x00024C00 | 30 | `?GetName@GmNameMap@@QAEXIPAD@Z` | gm/names | SIZE |
+| 0x00024C20 | 61 | `?HashOf@GmNameMap@@QAEIPBD@Z` | gm/names | SIZE |
+| 0x00024C60 | 23 | `??0GmNameMap@@QAE@XZ` | gm/names | SIZE |
+| 0x00024C80 | 286 | `?Grow@GmNameMap@@QAEXXZ` | gm/names | SIZE |
+| 0x00024DA0 | 248 | `?Init@GmNameMap@@QAEXI@Z` | gm/names | SIZE |
+| 0x00024EA0 | 50 | `?Clear@GmNameMap@@UAEXXZ` | gm/names | SIZE |
+| 0x00024EE0 | 212 | `?Insert@GmNameMap@@QAEXPBDPAX@Z` | gm/names | SIZE |
+| 0x00024FC0 | 242 | `?Insert@GmNameMap@@QAEXPBDPAXPAI@Z` | gm/names | SIZE |
+| 0x000250C0 | 136 | `?Remove@GmNameMap@@QAEXPBD@Z` | gm/names | SIZE |
+| 0x00025150 | 127 | `?Find@GmNameMap@@QAEPAXPBD@Z` | gm/names | SIZE |
+| 0x000251D0 | 137 | `?Find@GmNameMap@@QAEPAXPBDPAI@Z` | gm/names | SIZE |
+| 0x00025260 | 56 | `??1GmNameMap@@UAE@XZ` | gm/names | SIZE |
+| 0x000252A0 | 76 | `??_GGmNameMap@@UAEPAXI@Z` | gm/names | SIZE |
+| 0x000741B0 | 8 | `?Find@GmRumbleEffects@@QAEPAVGmRumbleEffect@@PBD@Z` | gm/rumble | MATCH |
+| 0x000741C0 | 94 | `?ReadFrame@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@PAUGmRumbleFrame@@@Z` | gm/rumble | MISMATCH |
+| 0x00074220 | 177 | `?ReadEffect@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@PAVGmRumbleEffect@@@Z` | gm/rumble | SIZE |
+| 0x000742E0 | 55 | `?Free@GmRumbleEffectArray@@QAEXXZ` | gm/rumble | SIZE |
+| 0x00074320 | 285 | `?Resize@GmRumbleFrameArray@@QAEXI@Z` | gm/rumble | SIZE |
+| 0x00074440 | 25 | `??0GmRumbleEffects@@QAE@XZ` | gm/rumble | SIZE |
+| 0x00074460 | 68 | `?Assign@GmRumbleFrameArray@@QAEXPBUGmRumbleFrame@@I@Z` | gm/rumble | SIZE |
+| 0x000744B0 | 130 | `??4GmRumbleEffect@@QAEAAV0@ABV0@@Z` | gm/rumble | SIZE |
+| 0x00074540 | 348 | `?Resize@GmRumbleEffectArray@@QAEXI@Z` | gm/rumble | SIZE |
+| 0x000746A0 | 107 | `?ReadEffects@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@@Z` | gm/rumble | SIZE |
+| 0x00074710 | 177 | `??1GmRumbleEffects@@QAE@XZ` | gm/rumble | SIZE |
+| 0x000747D0 | 48 | `?Parse@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@@Z` | gm/rumble | SIZE |
+| 0x00074800 | 148 | `?LoadFile@GmRumbleEffects@@QAEXPBD@Z` | gm/rumble | SIZE |
+| 0x000748A0 | 55 | `?Load@GmRumbleEffects@@QAEXPBD@Z` | gm/rumble | SIZE |
+| 0x000748E0 | 13 | `??0GmRumbleEffect@@QAE@XZ` | gm/rumble | SIZE |
+| 0x000748F0 | 16 | `?Frame@GmRumbleEffect@@QAEPAUGmRumbleFrame@@I@Z` | gm/rumble | MISMATCH |
+| 0x00074900 | 36 | `?SetFrame@GmRumbleEffect@@QAEXIABUGmRumbleFrame@@@Z` | gm/rumble | MISMATCH |
+| 0x00074940 | 107 | `??1GmRumbleEffect@@QAE@XZ` | gm/rumble | SIZE |
+| 0x000749B0 | 62 | `?Init@GmRumbleEffect@@QAEXPBDI@Z` | gm/rumble | SIZE |
+| 0x000EB540 | 4 | `?Name@GmRumbleEffect@@QAEPBDXZ` | gm/rumble | MATCH |
+| 0x001015C0 | 13 | `??0GmRumbleFrame@@QAE@XZ` | gm/rumble | MISMATCH |
 
-Relocation-aware matches with the host compiler: 59 functions, 923 unique bytes.
-Share of `.text` raw bytes: 0.0451% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 61 functions, 935 unique bytes.
+Share of `.text` raw bytes: 0.0457% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -350,6 +394,7 @@ Exact linked match (whole XBE): not attempted.
 | 0x00292F9C | 1 | `??_7GmLevelName@@6B@` | MATCH |
 | 0x0028DAB4 | 3 | `??_7GmLevelManager@@6B@` | MATCH |
 | 0x00278548 | 5 | `??_7AtIoMountManager@@6B@` | MATCH |
+| 0x00272E60 | 2 | `??_7GmNameMap@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
@@ -362,6 +407,8 @@ Suite `tok`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 586
 Suite `lvl`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: Levels.txt with 47 entries, 17 described; 1910 comparisons, 0 differences). Recorded function entries reached in every run: 11 / 11. Source mutants detected: 60 / 60. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `mnt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 946 comparisons, 0 differences). Recorded function entries reached in every run: 23 / 23. Source mutants detected: 64 / 64. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `rmb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: seed 1, RUMBLE.RMB with 15 effects; 3524364 comparisons, 0 differences). Recorded function entries reached in every run: 36 / 36. Source mutants detected: 92 / 92. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

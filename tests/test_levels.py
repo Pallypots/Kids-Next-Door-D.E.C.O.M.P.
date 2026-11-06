@@ -31,5 +31,16 @@ class ParseTests(unittest.TestCase):
             levels.parse('Levels [1] { Level "A" DesignerCinema }')
 
 
+class RumbleParseTests(unittest.TestCase):
+    TEXT = 'RumbleEffects[ 2 ]\n{\n RumbleEffect "A" // c\n {\n KeyFrames[ 1 ]\n {\n KeyFrame 0.5 { Left 0.25 Right 0.75 }\n }\n }\n RumbleEffect "B"\n {\n KeyFrames[ 0 ]\n {\n }\n }\n}\n'
+
+    def test_effects(self):
+        self.assertEqual(levels.parse_rumble(self.TEXT), [("E", "A", "1"), ("F", "0.5", "0.25", "0.75"), ("E", "B", "0")])
+
+    def test_count_must_agree(self):
+        with self.assertRaises(ValueError):
+            levels.parse_rumble(self.TEXT.replace("KeyFrames[ 1 ]", "KeyFrames[ 2 ]"))
+
+
 if __name__ == "__main__":
     unittest.main()

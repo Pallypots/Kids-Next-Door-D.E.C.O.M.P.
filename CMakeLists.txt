@@ -12,6 +12,9 @@ add_library(knd_gm STATIC
     ${KND_GM_SRC}/GmLevelManager.cpp
     ${KND_GM_SRC}/GmLevelPending.cpp
     ${KND_GM_SRC}/GmLinkedList.cpp
+    ${KND_GM_SRC}/GmNameMap.cpp
+    ${KND_GM_SRC}/GmNamePending.cpp
+    ${KND_GM_SRC}/GmRumble.cpp
     ${KND_GM_SRC}/GmSocket.cpp
 )
 target_include_directories(knd_gm PUBLIC include)
@@ -68,6 +71,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     add_executable(oracle_mnt tests/oracle/reserve.asm tests/oracle/oracle_mnt.cpp)
     target_link_libraries(oracle_mnt PRIVATE knd_at)
     target_link_options(oracle_mnt PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    add_executable(oracle_rmb tests/oracle/reserve.asm tests/oracle/oracle_rmb.cpp)
+    target_link_libraries(oracle_rmb PRIVATE knd_gm knd_at)
+    target_link_options(oracle_rmb PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_tok tests/oracle/reserve.asm tests/oracle/oracle_tok.cpp)
     target_link_libraries(oracle_tok PRIVATE knd_at)
     target_link_options(oracle_tok PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

@@ -7,6 +7,7 @@
 // nothing to the recovered code. --print writes the inventory to stdout; it is game data, so keep it out of the repository.
 #include <cstdio>
 #include <cstdlib>
+#include <cmath>
 #include <cstring>
 #include <fstream>
 #include <new>
@@ -17,6 +18,7 @@
 #include "at/AtIoJam.h"
 #include "at/AtIoMountManager.h"
 #include "gm/GmLevelManager.h"
+#include "gm/GmNameMap.h"
 #include "host_file_system.h"
 
 static int g_fail;
@@ -175,6 +177,44 @@ static void run_real(const std::string& dir, const std::string& expected, bool p
     }
     CHECK(i == m.m_levelCount);
     std::printf("%d entries read from AppInit.JAM through recovered code, compared with Python's parse\n", m.m_levelCount);
+    // Rumble effects, the same way. Python's floats are correctly rounded and the game's parser is not, so these compare within a tolerance; tests/oracle/oracle_rmb.cpp compares bits.
+    {
+        GmNameMap::s_heap = &g_heap;
+        GmRumbleEffectArray::s_heap = &g_heap;
+        GmRumbleFrameArray::s_heap = &g_heap;
+        GmRumbleEffects effects;
+        effects.Load("Design\\Control\\rumble");
+        CHECK(effects.m_loaded == 1);
+        std::ifstream rumble(expected.substr(0, expected.size() - 10) + "rumble.tsv");
+        std::string row;
+        unsigned effect = 0, frame = 0, frames = 0;
+        GmRumbleEffect* current = nullptr;
+        while (std::getline(rumble, row)) {
+            std::vector<std::string> f;
+            std::stringstream ss(row);
+            std::string part;
+            while (std::getline(ss, part, '\t')) f.push_back(part);
+            if (f[0] == "E") {
+                current = effects.Find(f[1].c_str());
+                CHECK(current != nullptr);
+                if (!current) break;
+                CHECK(current == &effects.m_effects.m_items[effect]);
+                CHECK(std::to_string(current->m_frames.m_count) == f[2]);
+                effect++;
+                frame = 0;
+            } else if (current) {
+                const GmRumbleFrame* k = current->Frame(frame);
+                CHECK(std::abs(k->m_time - std::atof(f[1].c_str())) < 1e-5);
+                CHECK(std::abs(k->m_left - std::atof(f[2].c_str())) < 1e-5);
+                CHECK(std::abs(k->m_right - std::atof(f[3].c_str())) < 1e-5);
+                frame++;
+                frames++;
+            }
+        }
+        CHECK(effect == effects.m_effects.m_count);
+        CHECK(effect != 0);
+        std::printf("%u rumble effects and %u key frames, compared with Python's parse\n", effect, frames);
+    }
     if (print) {
         static const char* const kinds[] = {"normal", "hidden", "non-selectable", "movie"};
         for (int k = 0; k < m.m_levelCount; k++) {

@@ -193,6 +193,18 @@ and 5 are empty in the real classes, so the harness patches logging stubs into b
 
 Not covered: the real factory and device classes, which are not recovered; `AtIoSpaceManager`'s other methods at 0x0007CF00-0x0007D0E9.
 
+## Name map and rumble reader: tests/oracle/oracle_rmb.cpp
+
+The name map under 40 seeds of 1,500 random operations each, with the whole table compared after every one, plus sizes at and past the end of the prime table, group membership and no heap. The rumble reader on the real file and on 34 written inputs. Frames are compared as bits.
+
+Result on 2026-11-06: `RUMBLE.RMB` with 15 effects, no difference; 36/36 entries; positive control passes; `--mutate` fails; 92/92 source mutants detected (85 as a difference, 7 by a crash or hang).
+
+First run 88/95. Four survivors were real gaps, now closed; three changed nothing observable and were dropped, with the reason beside them in tools/oracle_run.py.
+
+Not compared: map slots when an effect's name failed to parse. The name is then empty with stack bytes after it, and the hash reads past the terminator, so the slot depends on those bytes in the original too.
+
+`test_gm_levels` also reads the 15 effects and 38 key frames from the real archive on x64, against a separate Python parse, with floats within a tolerance because Python's are correctly rounded and the game's are not.
+
 ## End to end: tests/native/test_at_e2e.cpp
 
 Opens real archives through the recovered layers (`AtIoContext`, `AtIoJamFileSystem`, the header and file classes) over host files, and

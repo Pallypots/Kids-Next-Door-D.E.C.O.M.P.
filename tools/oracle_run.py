@@ -533,11 +533,111 @@ MNT_MUTANTS = [
 ]
 
 
+RMB_MUTANTS = [
+    ('Size: last entry', 'GmNameMap.cpp', '10939, 50159, 100237}', '10939, 50159, 100000}'),
+    ('Size: comparison', 'GmNameMap.cpp', 'if (count < kSizes[i]) {', 'if (count <= kSizes[i]) {'),
+    ('Size: past the table', 'GmNameMap.cpp', '    return count;\n}\n\nGmNameMap::Entry* NewEntries', '    return kSizes[0];\n}\n\nGmNameMap::Entry* NewEntries'),
+    ('New: heap check', 'GmNameMap.cpp', '    if (GmNameMap::s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n', ''),
+    ('New: heap not pushed', 'GmNameMap.cpp', '    AtPushHeap(GmNameMap::s_heap);\n', ''),
+    ('New: names not cleared', 'GmNameMap.cpp', '            entries[i].m_name[0] = 0;\n', ''),
+    ('New: values not cleared', 'GmNameMap.cpp', '            entries[i].m_value = 0;\n', ''),
+    ('Duplicate: message', 'GmNameMap.cpp', ': Duplicate name encountered', ': Duplicate name'),
+    ('Equal: length', 'GmNameMap.cpp', 'for (int i = 0; i < 7; i++) {\n        if (a[i] != b[i])', 'for (int i = 0; i < 6; i++) {\n        if (a[i] != b[i])'),
+    ('Equal: terminator', 'GmNameMap.cpp', '        if (a[i] == 0) {\n            return 1;\n        }\n', ''),
+    ('Equal: last byte', 'GmNameMap.cpp', 'return a[7] == b[7];', 'return 1;'),
+    ('Detach: link', 'GmNameMap.cpp', '            *link = m->m_next;\n', ''),
+    ('Detach: group kept', 'GmNameMap.cpp', '            m->m_group = 0;\n', ''),
+    ('Detach: parent not told', 'GmNameMap.cpp', '            if (m_first == 0 && m_parent != 0) {\n                m_parent->RemoveFromParent(this);\n            }\n', ''),
+    ('Detach: parent told early', 'GmNameMap.cpp', 'if (m_first == 0 && m_parent != 0) {', 'if (m_parent != 0) {'),
+    ('Detach: walk', 'GmNameMap.cpp', '        link = &m->m_next;\n', '        return;\n'),
+    ('Clear: no detach', 'GmNameMap.cpp', '    if (m_group != 0) {\n        m_group->Detach(this);\n    }\n', ''),
+    ('Clear: entries kept', 'GmNameMap.cpp', '        operator delete(m_entries);\n', ''),
+    ('Clear: size kept', 'GmNameMap.cpp', '    m_entries = 0;\n    m_size = 0;\n    m_next = 0;\n    m_group = 0;\n}\n\nvoid GmNameMap::GetName', '    m_entries = 0;\n    m_next = 0;\n    m_group = 0;\n}\n\nvoid GmNameMap::GetName'),
+    ('Clear: next kept', 'GmNameMap.cpp', '    m_size = 0;\n    m_next = 0;\n    m_group = 0;\n}\n\nvoid GmNameMap::GetName', '    m_size = 0;\n    m_group = 0;\n}\n\nvoid GmNameMap::GetName'),
+    ('Hash: start', 'GmNameMap.cpp', 'unsigned int shift = 7;', 'unsigned int shift = 6;'),
+    ('Hash: step', 'GmNameMap.cpp', 'shift = (shift + 7) & 0x1F;', 'shift = (shift + 6) & 0x1F;'),
+    # Not used: 'Hash: wrap'. x86 masks a shift count to five bits anyway, so the mask changes nothing here. It stays in the source for hosts where it does.
+    ('Hash: length', 'GmNameMap.cpp', 'for (int i = 1; i < 8 && name[i] != 0; i++) {', 'for (int i = 1; i < 7 && name[i] != 0; i++) {'),
+    ('Hash: unsigned bytes', 'GmNameMap.cpp', '(unsigned int)(int)(signed char)name[i] << shift', '(unsigned int)(unsigned char)name[i] << shift'),
+    ('Hash: first byte unsigned', 'GmNameMap.cpp', '(unsigned int)(int)(signed char)name[0]', '(unsigned int)(unsigned char)name[0]'),
+    ('Grow: same size', 'GmNameMap.cpp', 'm_size = SizeFor(oldSize + 1);', 'm_size = SizeFor(oldSize + 2);'),
+    ('Grow: old kept', 'GmNameMap.cpp', '    operator delete(old);\n', ''),
+    ('Grow: entries lost', 'GmNameMap.cpp', '            Insert(old[i].m_name, old[i].m_value);\n', ''),
+    ('Init: no clear', 'GmNameMap.cpp', '    if (m_entries != 0) {\n        Clear();\n    }\n', ''),
+    ('Insert: value', 'GmNameMap.cpp', '                AtCopyName8(m_entries[i].m_name, name);\n                m_entries[i].m_value = value;', '                AtCopyName8(m_entries[i].m_name, name);\n                m_entries[i].m_value = name == 0 ? value : (void*)name;'),
+    ('Insert: duplicate silent', 'GmNameMap.cpp', '            if (AtNamesEqual(m_entries[i].m_name, name)) {\n                ReportDuplicate(name);\n            }\n            i++;\n            if (i >= m_size) {\n                i = 0;\n            }\n        } while (i != home);\n        Grow();\n    }\n}\n\nvoid GmNameMap::Insert(const char* name, void* value, unsigned int* index)', '            i++;\n            if (i >= m_size) {\n                i = 0;\n            }\n        } while (i != home);\n        Grow();\n    }\n}\n\nvoid GmNameMap::Insert(const char* name, void* value, unsigned int* index)'),
+    ('Insert index: not written', 'GmNameMap.cpp', '                    *index = i;\n', ''),
+    ('Insert index: null not checked', 'GmNameMap.cpp', '                if (index != 0) {\n                    *index = i;\n                }\n', '                *index = i;\n'),
+    ('Insert index: duplicate silent', 'GmNameMap.cpp', '            if (AtNamesEqual(m_entries[i].m_name, name)) {\n                ReportDuplicate(name);\n            }\n            i++;\n            if (i >= m_size) {\n                i = 0;\n            }\n        } while (i != home);\n        Grow();\n    }\n}\n\nvoid GmNameMap::Remove', '            i++;\n            if (i >= m_size) {\n                i = 0;\n            }\n        } while (i != home);\n        Grow();\n    }\n}\n\nvoid GmNameMap::Remove'),
+    ('Remove: value kept', 'GmNameMap.cpp', '    p->m_value = 0;\n    p++;\n', '    p++;\n'),
+    ('Remove: cluster not rehashed', 'GmNameMap.cpp', '    while (p->m_value != 0) {\n        void* value = p->m_value;\n        p->m_value = 0;\n        Insert(p->m_name, value);\n        p++;\n        if (p >= end) {\n            p = m_entries;\n        }\n    }\n', ''),
+    ('Remove: free slot ends the search first', 'GmNameMap.cpp', '    while (!AtNamesEqual(p->m_name, name)) {\n        if (p->m_value == 0) {', '    while (p->m_value == 0 || !AtNamesEqual(p->m_name, name)) {\n        if (p->m_value == 0) {'),
+    ('Find: index not written', 'GmNameMap.cpp', '        *index = i;\n    }\n    return', '    }\n    return'),
+    ('Find: free slot not checked', 'GmNameMap.cpp', 'void* GmNameMap::Find(const char* name) {\n    const unsigned int home = HashOf(name);\n    unsigned int i = home;\n    while (!AtNamesEqual(m_entries[i].m_name, name)) {\n        if (m_entries[i].m_value == 0) {\n            return 0;\n        }\n', 'void* GmNameMap::Find(const char* name) {\n    const unsigned int home = HashOf(name);\n    unsigned int i = home;\n    while (!AtNamesEqual(m_entries[i].m_name, name)) {\n'),
+    ('Find: wrap', 'GmNameMap.cpp', 'void* GmNameMap::Find(const char* name) {\n    const unsigned int home = HashOf(name);\n    unsigned int i = home;\n    while (!AtNamesEqual(m_entries[i].m_name, name)) {\n        if (m_entries[i].m_value == 0) {\n            return 0;\n        }\n        i++;\n        if (i >= m_size) {\n            i = 0;\n        }\n        if (i == home) {\n            return 0;\n        }\n', 'void* GmNameMap::Find(const char* name) {\n    const unsigned int home = HashOf(name);\n    unsigned int i = home;\n    while (!AtNamesEqual(m_entries[i].m_name, name)) {\n        if (m_entries[i].m_value == 0) {\n            return 0;\n        }\n        i++;\n        if (i >= m_size) {\n            return 0;\n        }\n        if (i == home) {\n            return 0;\n        }\n'),
+    ('Keyword: left', 'GmRumble.cpp', '{kLeft, "Left"}', '{kLeft, "Leftt"}'),
+    ('Frame: left', 'GmRumble.cpp', '    m_left = 0;\n', ''),
+    ('Frames Resize: zero keeps items', 'GmRumble.cpp', '            operator delete(m_items);\n            m_items = 0;\n        }\n        m_count = 0;', '            m_items = 0;\n        }\n        m_count = 0;'),
+    ('Frames Resize: same size', 'GmRumble.cpp', '    if (count == m_count) {\n        return;\n    }\n    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    void* memory', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    void* memory'),
+    ('Frames Resize: heap check', 'GmRumble.cpp', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    void* memory', '    AtPushHeap(s_heap);\n    void* memory'),
+    ('Frames Resize: not cleared', 'GmRumble.cpp', '            items[i] = GmRumbleFrame();\n', ''),
+    ('Frames Resize: frames lost', 'GmRumble.cpp', '            items[i] = m_items[i];\n        }\n        operator delete(m_items);', '        }\n        operator delete(m_items);'),
+    ('Frames Resize: old kept', 'GmRumble.cpp', '            items[i] = m_items[i];\n        }\n        operator delete(m_items);', '            items[i] = m_items[i];\n        }'),
+    ('Frames Assign: not sized', 'GmRumble.cpp', '    Resize(count);\n    for', '    for'),
+    ('Effect dtor: frames kept', 'GmRumble.cpp', '    if (m_frames.m_items != 0) {\n        operator delete(m_frames.m_items);\n        m_frames.m_items = 0;\n    }\n', '    m_frames.m_items = 0;\n'),
+    ('Effect dtor: ready', 'GmRumble.cpp', '    m_frames.m_count = 0;\n    m_ready = 0;\n}\n\nGmRumbleEffect& ', '    m_frames.m_count = 0;\n}\n\nGmRumbleEffect& '),
+    ('Effect assign: ready', 'GmRumble.cpp', '    m_ready = other.m_ready;\n', ''),
+    ('Effect assign: name', 'GmRumble.cpp', '        m_name[i] = other.m_name[i];\n', ''),
+    ('Effect assign: frames', 'GmRumble.cpp', '            m_frames.Assign(other.m_frames.m_items, other.m_frames.m_count);\n', ''),
+    ('Effect assign: frames kept', 'GmRumble.cpp', '            operator delete(m_frames.m_items);\n            m_frames.m_count = 0;\n            m_frames.m_items = 0;\n', ''),
+    # Not used: 'Effect assign: to itself'. copying a frame array onto itself changes nothing.
+    ('Effect Init: frames kept', 'GmRumble.cpp', '    if (m_ready != 0) {\n        m_frames.Resize(0);\n        m_ready = 0;\n    }\n', ''),
+    ('Effect Init: name', 'GmRumble.cpp', '    AtCopyName8(m_name, name);\n', ''),
+    ('Effect Init: ready', 'GmRumble.cpp', '    m_frames.Resize(frames);\n    m_ready = 1;', '    m_frames.Resize(frames);'),
+    ('Effect Frame', 'GmRumble.cpp', 'return &m_frames.m_items[index];', 'return &m_frames.m_items[index + 1];'),
+    ('Effect Name', 'GmRumble.cpp', 'return m_name;', 'return (const char*)this;'),
+    ('Effects Free: items', 'GmRumble.cpp', '    delete[] m_items;\n    m_items = 0;\n    m_count = 0;\n}\n\nvoid GmRumbleEffectArray::Resize', '    m_items = 0;\n    m_count = 0;\n}\n\nvoid GmRumbleEffectArray::Resize'),
+    ('Effects Free: count', 'GmRumble.cpp', '    delete[] m_items;\n    m_items = 0;\n    m_count = 0;\n}\n\nvoid GmRumbleEffectArray::Resize', '    delete[] m_items;\n    m_items = 0;\n}\n\nvoid GmRumbleEffectArray::Resize'),
+    ('Effects Resize: zero', 'GmRumble.cpp', '    if (count == 0) {\n        delete[] m_items;\n        m_items = 0;\n        m_count = 0;\n        return;\n    }\n    if (count == m_count) {\n        return;\n    }\n    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    GmRumbleEffect*', '    if (count == 0) {\n        m_items = 0;\n        m_count = 0;\n        return;\n    }\n    if (count == m_count) {\n        return;\n    }\n    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    GmRumbleEffect*'),
+    ('Effects Resize: same size', 'GmRumble.cpp', '    if (count == m_count) {\n        return;\n    }\n    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    GmRumbleEffect*', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    GmRumbleEffect*'),
+    ('Effects Resize: heap check', 'GmRumble.cpp', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    GmRumbleEffect*', '    AtPushHeap(s_heap);\n    GmRumbleEffect*'),
+    ('Effects Resize: effects lost', 'GmRumble.cpp', '            items[i] = m_items[i];\n        }\n        delete[] m_items;', '        }\n        delete[] m_items;'),
+    ('Effects Resize: old kept', 'GmRumble.cpp', '            items[i] = m_items[i];\n        }\n        delete[] m_items;', '            items[i] = m_items[i];\n        }'),
+    # Not used: 'Effects dtor: map kept'. the member's own destructor clears it just after, so only the order of two frees changes.
+    ('Effects dtor: effects kept', 'GmRumble.cpp', '    m_byName.Clear();\n    delete[] m_effects.m_items;', '    m_byName.Clear();'),
+    ('ReadFrame: keyword', 'GmRumble.cpp', 'if (t->Next() != kKeyFrame) {', 'if (t->Next() != kKeyFrames) {'),
+    ('ReadFrame: time', 'GmRumble.cpp', 'frame->m_time = t->ExpectReal();', 't->ExpectReal();'),
+    ('ReadFrame: curly', 'GmRumble.cpp', '    frame->m_time = t->ExpectReal();\n    t->ExpectLeftCurly();', '    frame->m_time = t->ExpectReal();\n    t->Next();'),
+    ('ReadFrame: left keyword', 'GmRumble.cpp', 'if (t->Next() != kLeft) {\n        return;\n    }', 't->Next();'),
+    ('ReadFrame: left', 'GmRumble.cpp', 'frame->m_left = t->ExpectReal();', 'frame->m_right = t->ExpectReal();'),
+    ('ReadFrame: right keyword', 'GmRumble.cpp', 'if (t->Next() != kRight) {\n        return;\n    }', 't->Next();'),
+    ('ReadFrame: right', 'GmRumble.cpp', 'frame->m_right = t->ExpectReal();', 't->ExpectReal();'),
+    ('ReadFrame: end', 'GmRumble.cpp', '    frame->m_right = t->ExpectReal();\n    t->ExpectRightCurly();', '    frame->m_right = t->ExpectReal();\n    t->Next();'),
+    ('ReadEffect: keyword', 'GmRumble.cpp', 'if (t->Next() != kRumbleEffect) {\n        return;\n    }', 't->Next();'),
+    ('ReadEffect: curly', 'GmRumble.cpp', '    t->ExpectName(name);\n    t->ExpectLeftCurly();', '    t->ExpectName(name);\n    t->Next();'),
+    ('ReadEffect: frames keyword', 'GmRumble.cpp', 'if (t->Next() != kKeyFrames) {\n        return;\n    }', 't->Next();'),
+    ('ReadEffect: frame kept', 'GmRumble.cpp', '        effect->SetFrame(i, frame);\n', ''),
+    ('ReadEffect: inner end', 'GmRumble.cpp', '    t->ExpectRightCurly();\n    t->ExpectRightCurly();\n', '    t->ExpectRightCurly();\n'),
+    ('ReadEffects: not sized', 'GmRumble.cpp', '    m_effects.Resize(count);\n', ''),
+    ('ReadEffects: no map', 'GmRumble.cpp', '    m_byName.Init(count);\n', ''),
+    ('ReadEffects: not in map', 'GmRumble.cpp', '        m_byName.Insert(m_effects.m_items[i].Name(), &m_effects.m_items[i]);\n', ''),
+    ('ReadEffects: end', 'GmRumble.cpp', '    }\n    t->ExpectRightCurly();\n}\n\nvoid GmRumbleEffects::Parse', '    }\n}\n\nvoid GmRumbleEffects::Parse'),
+    ('Parse: anything is effects', 'GmRumble.cpp', '        if (token == kRumbleEffects) {\n            ReadEffects(t);\n        }\n', '        ReadEffects(t);\n'),
+    ('LoadFile: extension', 'GmRumble.cpp', '"RMB"', '"RMX"'),
+    ('LoadFile: flags', 'GmRumble.cpp', 'file.Open(path, "RMB", 2, 0)', 'file.Open(path, "RMB", 4, 0)'),
+    ('LoadFile: keywords', 'GmRumble.cpp', '            t->SetKeywords(kKeywords, sizeof kKeywords / sizeof kKeywords[0], 0);\n', ''),
+    ('Load: map kept', 'GmRumble.cpp', '        m_byName.Clear();\n        m_effects.Resize(0);\n', '        m_effects.Resize(0);\n'),
+    ('Load: effects kept', 'GmRumble.cpp', '        m_byName.Clear();\n        m_effects.Resize(0);\n', '        m_byName.Clear();\n'),
+    ('Load: not marked', 'GmRumble.cpp', '    LoadFile(path);\n    m_loaded = 1;', '    LoadFile(path);'),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "lvl": {"target": "oracle_lvl", "subsystem": "gm/levels", "mutants": LVL_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "mnt": {"target": "oracle_mnt", "subsystem": "at/mount", "mutants": MNT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
+    "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
 
@@ -582,7 +682,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("tok", "lvl"):
+    elif suite in ("tok", "lvl", "rmb"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -710,7 +810,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -723,7 +823,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

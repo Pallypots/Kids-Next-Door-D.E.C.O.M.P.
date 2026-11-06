@@ -2255,6 +2255,294 @@ source = "src/at/AtIoMountManager.cpp"
 subsystem = "at/mount"
 evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
 
+[[function]]
+va = 0x00013FC0
+size = 111
+symbol = "?AtNamesEqual@@YAHPBD0@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00017E80
+size = 73
+symbol = "?Detach@GmNameMapGroup@@QAEXPAVGmNameMap@@@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024C00
+size = 30
+symbol = "?GetName@GmNameMap@@QAEXIPAD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024C20
+size = 61
+symbol = "?HashOf@GmNameMap@@QAEIPBD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024C60
+size = 23
+symbol = "??0GmNameMap@@QAE@XZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024C80
+size = 286
+symbol = "?Grow@GmNameMap@@QAEXXZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024DA0
+size = 248
+symbol = "?Init@GmNameMap@@QAEXI@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024EA0
+size = 50
+symbol = "?Clear@GmNameMap@@UAEXXZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024EE0
+size = 212
+symbol = "?Insert@GmNameMap@@QAEXPBDPAX@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00024FC0
+size = 242
+symbol = "?Insert@GmNameMap@@QAEXPBDPAXPAI@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000250C0
+size = 136
+symbol = "?Remove@GmNameMap@@QAEXPBD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00025150
+size = 127
+symbol = "?Find@GmNameMap@@QAEPAXPBD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000251D0
+size = 137
+symbol = "?Find@GmNameMap@@QAEPAXPBDPAI@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00025260
+size = 56
+symbol = "??1GmNameMap@@UAE@XZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000252A0
+size = 76
+symbol = "??_GGmNameMap@@UAEPAXI@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000741B0
+size = 8
+symbol = "?Find@GmRumbleEffects@@QAEPAVGmRumbleEffect@@PBD@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000741C0
+size = 94
+symbol = "?ReadFrame@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@PAUGmRumbleFrame@@@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074220
+size = 177
+symbol = "?ReadEffect@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@PAVGmRumbleEffect@@@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000742E0
+size = 55
+symbol = "?Free@GmRumbleEffectArray@@QAEXXZ"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074320
+size = 285
+symbol = "?Resize@GmRumbleFrameArray@@QAEXI@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074440
+size = 25
+symbol = "??0GmRumbleEffects@@QAE@XZ"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074460
+size = 68
+symbol = "?Assign@GmRumbleFrameArray@@QAEXPBUGmRumbleFrame@@I@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000744B0
+size = 130
+symbol = "??4GmRumbleEffect@@QAEAAV0@ABV0@@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074540
+size = 348
+symbol = "?Resize@GmRumbleEffectArray@@QAEXI@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000746A0
+size = 107
+symbol = "?ReadEffects@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074710
+size = 177
+symbol = "??1GmRumbleEffects@@QAE@XZ"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000747D0
+size = 48
+symbol = "?Parse@GmRumbleEffects@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074800
+size = 148
+symbol = "?LoadFile@GmRumbleEffects@@QAEXPBD@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000748A0
+size = 55
+symbol = "?Load@GmRumbleEffects@@QAEXPBD@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000748E0
+size = 13
+symbol = "??0GmRumbleEffect@@QAE@XZ"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000748F0
+size = 16
+symbol = "?Frame@GmRumbleEffect@@QAEPAUGmRumbleFrame@@I@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074900
+size = 36
+symbol = "?SetFrame@GmRumbleEffect@@QAEXIABUGmRumbleFrame@@@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x00074940
+size = 107
+symbol = "??1GmRumbleEffect@@QAE@XZ"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000749B0
+size = 62
+symbol = "?Init@GmRumbleEffect@@QAEXPBDI@Z"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x000EB540
+size = 4
+symbol = "?Name@GmRumbleEffect@@QAEPBDXZ"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
+[[function]]
+va = 0x001015C0
+size = 13
+symbol = "??0GmRumbleFrame@@QAE@XZ"
+source = "src/gm/GmRumble.cpp"
+subsystem = "gm/rumble"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -2413,7 +2701,17 @@ slots = 5
 symbol = "??_7AtIoMountManager@@6B@"
 source = "src/at/AtIoMountManager.cpp"
 
+[[vtable]]
+va = 0x00272E60
+slots = 2
+symbol = "??_7GmNameMap@@6B@"
+source = "src/gm/GmNameMap.cpp"
+
 [symbols]
+"?s_heap@GmNameMap@@2PAXA" = 0x002C632C  # read at 0x00024CFA
+"?s_heap@GmRumbleEffectArray@@2PAXA" = 0x002CF164  # read at 0x000745AB
+"?s_heap@GmRumbleFrameArray@@2PAXA" = 0x002CF168  # read at 0x00074376
+"?RemoveFromParent@GmNameMapGroup@@QAEXPAV1@@Z" = 0x00018010  # tail of 0x00017EC4: NOT recovered
 "?s_instance@AtIoMountManager@@2PAV1@A" = 0x002E26E0  # written at 0x00076873
 "?s_heap@AtIoMountManager@@2PAXA" = 0x002E26E4  # written at 0x000768E3
 "?s_heap@AtIoSpaceManager@@2PAXA" = 0x00301B48  # written at 0x0007CEE4

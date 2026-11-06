@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 8 (start-up order, mount manager). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 9 (name map, rumble reader, code ownership). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-05, dev cycle 8 (start-up order, mount manager). Per-funct
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 281 functions and 26 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 317 functions and 27 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -28,6 +28,7 @@ All source is in `src/`, types in `include/`. 281 functions and 26 vftables are 
 * `at/text` (99 functions): the stream and file wrapper, and the tokenizer most text formats go through, both reading and writing. It works on 64-bit, with the same results as the
   original on every text file on the disc.
 * `at/mount` (23 functions): what mounts archives, and the small manager it creates. A port supplies the factory of file systems. Start-up order: docs/startup.md.
+* `gm/names` (15 functions): the name-to-object hash table used across the engine, and a group's detach. `gm/rumble` (21 functions): the reader of `RUMBLE.RMB`. What plays the effects is not recovered.
 * `gm/levels` (11 functions), **partial**: the reader of `Levels.txt`, the first recovered code to give game data a meaning. **Recovered source now goes from the archive on disc to the game's level table**, on x64. Not recovered: the rest of its class, which
   owns level content (constructor 0x0013E150, destructor 0x0013E930, 0x0013E530), and everything that uses the table. `ReleaseLevelData` stops with a diagnostic, so unloading cannot yet work in a port.
 
@@ -75,6 +76,7 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
   shape: open with extension `RMB`, pass the table at 0x002B2940, read blocks.
 * `Levels.txt` lists 47 entries in order: 16 movies, 15 normal, 13 non-selectable, 3 hidden. Read by recovered code and checked against a separate Python parse (docs/formats.md). That is a checked starting inventory for M5; it does not show that each entry works.
 * The tokenizer also writes. What the game writes as text is not established.
+* 80 functions open text files through the tokenizer, each passing its own extension, many under 200 bytes (see the worklog for cycle 9). They are the natural list of format readers.
 * The original's numeric parser is not correctly rounded, so its results must be reproduced, not improved (docs/formats.md).
 
 ## Open questions / hypotheses
@@ -90,12 +92,12 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 * DOLBY and PSFD00 sections: no x86 reached; contents unknown (possibly non-x86 code or data).
 * Inventory: 14,370 `source` candidates are still candidates. Open disagreements with Ghidra are listed in
   docs/verification.md; 52 bodies contain another function's start.
-* Ownership of `.text` is not classified. The plugin's name hints could help here, but only as labelled hints.
+* Ownership: tools/ownership.py sorts the code with labelled evidence (docs/PROGRESS.md). Most of the game row is inferred from neighbours, so its size is an estimate.
 
 ## Next concrete task
 
-1. More small text readers from start-up: `RUMBLE.RMB` (0x000746A0-0x000748C8), `LIBRARY.ADD`, audio and UI manifests.
-2. Library separation: the denominators are still unclassified.
-3. Follow docs/startup.md into what start-up does after mounting, as far as it stays dependency-light.
+1. The game text reader (`.AIS`, 0x0001F6B0-0x0001FB70): a table of strings by name, on top of the name map. It turns on the tokenizer's escapes.
+2. Other small readers, then what start-up needs (docs/startup.md).
+3. The resource tree at 0x00017E40-0x00018300, whose group the name map leaves.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.
