@@ -305,3 +305,9 @@ New starts appear from the tail-call rule. Compare only like with like.
   deliberately wrong offset that fails the build).
 * Host semantic tests, against recovered code with no stand-ins: `cmake -S . -B build/native -A x64`,
   `cmake --build build/native --config Debug`, `ctest --test-dir build/native -C Debug`.
+
+## Audio data readers: tests/oracle/oracle_aud.cpp
+
+`python -I tools/oracle_run.py --suite aud` compares 0x00136DA0, 0x00136E70 and 0x001370E0 with the recovered source over the disc's two files and 44 written inputs, each read twice, once with every third memory request refused. Result: no difference, 3/3 entries, 53/53 mutants.
+
+Limits: no real file exercises the block path, because the disc's `MEMBLOCK.GOB` has no `XBOX` section, so that path rests on written inputs only. The capacity of 100 blocks is inferred from field offsets; neither side checks it, and no test goes past it. The audio manager and its memory object are doubles.

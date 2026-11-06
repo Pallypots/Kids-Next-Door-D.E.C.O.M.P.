@@ -831,6 +831,63 @@ SET_MUTANTS = [
 ]
 
 
+AUD_MUTANTS = [
+    ('Preset ctor: name', 'GmAudioData.cpp', '    m_name[0] = 0;\n', ''),
+    ('Preset ctor: rest', 'GmAudioData.cpp', '        m_unknown20[i] = 0;\n', ''),
+    ('Presets: extension', 'GmAudioData.cpp', 'file.Open(path, "GOV", 2, 0)', 'file.Open(path, "GOX", 2, 0)'),
+    ('Presets: flags', 'GmAudioData.cpp', 'file.Open(path, "GOV", 2, 0)', 'file.Open(path, "GOV", 4, 0)'),
+    ('Presets: open failure', 'GmAudioData.cpp', 'if (file.Open(path, "GOV", 2, 0) != 0) {\n        return;\n    }', 'file.Open(path, "GOV", 2, 0);'),
+    ('Presets: keywords', 'GmAudioData.cpp', '{kUi, "UI"}', '{kUi, "UX"}'),
+    ('Presets: first keyword', 'GmAudioData.cpp', '    t->ExpectToken(kVolumePresets);\n', '    t->Next();\n'),
+    ('Presets: heap check', 'GmAudioData.cpp', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n', ''),
+    ('Presets: heap not pushed', 'GmAudioData.cpp', '    AtPushHeap(s_heap);\n', ''),
+    ('Presets: preset keyword', 'GmAudioData.cpp', '        t->ExpectToken(kPreset);\n', '        t->Next();\n'),
+    ('Presets: name', 'GmAudioData.cpp', '        AtCopyName8(preset->m_name, name);\n', ''),
+    ('Presets: defaults', 'GmAudioData.cpp', 'preset->m_ambience = preset->m_sfx = preset->m_voice = preset->m_music = 1.0f;', 'preset->m_ambience = preset->m_sfx = preset->m_voice = preset->m_music = 0.5f;'),
+    ('Presets: default ui', 'GmAudioData.cpp', 'preset->m_ui = preset->m_cinema = 1.0f;', 'preset->m_ui = preset->m_cinema = 0.5f;'),
+    ('Presets: rest default', 'GmAudioData.cpp', '            preset->m_unknown20[k] = 1.0f;\n', ''),
+    ('Presets: curly', 'GmAudioData.cpp', '        t->ExpectLeftCurly();\n        for (int token = t->Next(); token != AtIoTokenizer::kRightCurly; token = t->Next()) {\n            switch (token) {\n            case kAmbience', '        t->Next();\n        for (int token = t->Next(); token != AtIoTokenizer::kRightCurly; token = t->Next()) {\n            switch (token) {\n            case kAmbience'),
+    ('Presets: ambience', 'GmAudioData.cpp', 'case kAmbience: preset->m_ambience = t->ExpectReal(); break;', 'case kAmbience: preset->m_ambience = t->ExpectReal() + 1; break;'),
+    ('Presets: sfx', 'GmAudioData.cpp', 'case kSfx: preset->m_sfx = t->ExpectReal(); break;', 'case kSfx: preset->m_sfx = t->ExpectReal() + 1; break;'),
+    ('Presets: voice', 'GmAudioData.cpp', 'case kVoice: preset->m_voice = t->ExpectReal(); break;', 'case kVoice: preset->m_voice = t->ExpectReal() + 1; break;'),
+    ('Presets: music', 'GmAudioData.cpp', 'case kMusic: preset->m_music = t->ExpectReal(); break;', 'case kMusic: preset->m_music = t->ExpectReal() + 1; break;'),
+    ('Presets: ui', 'GmAudioData.cpp', 'case kUi: preset->m_ui = t->ExpectReal(); break;', 'case kUi: preset->m_ui = t->ExpectReal() + 1; break;'),
+    ('Presets: cinema', 'GmAudioData.cpp', 'case kCinema: preset->m_cinema = t->ExpectReal(); break;', 'case kCinema: preset->m_cinema = t->ExpectReal() + 1; break;'),
+    ('Presets: end', 'GmAudioData.cpp', '    t->ExpectRightCurly();\n    file.Close();\n}\n\nvoid GmAudioData::LoadMemoryBlocks', '    file.Close();\n}\n\nvoid GmAudioData::LoadMemoryBlocks'),
+    ('Blocks: extension', 'GmAudioData.cpp', 'file.Open(path, "GOB", 2, 0)', 'file.Open(path, "GOX", 2, 0)'),
+    ('Blocks: open failure', 'GmAudioData.cpp', 'if (file.Open(path, "GOB", 2, 0) != 0) {\n        return;\n    }', 'file.Open(path, "GOB", 2, 0);'),
+    ('Blocks: keyword', 'GmAudioData.cpp', '{kSize, "Size"}', '{kSize, "Sise"}'),
+    ('Blocks: sections ignored', 'GmAudioData.cpp', 'if (t->Next() == kPlatformSpecific) {', 'if (0) {'),
+    ('Blocks: section name', 'GmAudioData.cpp', '"XBOX"', '"XBOY"'),
+    ('Blocks: section limit', 'GmAudioData.cpp', 't->ExpectString(8u)', 't->ExpectString(9u)'),
+    ('Blocks: case', 'GmAudioData.cpp', '        const int x = toupper((unsigned char)*a);\n        if (x != toupper((unsigned char)*b)) {', '        const int x = (unsigned char)*a;\n        if (x != (unsigned char)*b) {'),
+    ('Blocks: prefix', 'GmAudioData.cpp', '        if (x == 0) {\n            return 1;\n        }\n', '        if (x == 0 || b[1] == 0) {\n            return 1;\n        }\n'),
+    ('Blocks: no section reads anyway', 'GmAudioData.cpp', '        if (!found) {\n            file.Close();\n            return;\n        }\n', ''),
+    ('Blocks: token not handed back', 'GmAudioData.cpp', '        t->m_pushedBack = 1;\n', ''),
+    ('Blocks: database keyword', 'GmAudioData.cpp', '    t->ExpectToken(kBlockDatabase);\n', '    t->Next();\n'),
+    ('Blocks: database name', 'GmAudioData.cpp', '    t->ExpectName(database);\n', ''),
+    ('Blocks: block keyword', 'GmAudioData.cpp', '        t->ExpectToken(kBlock);\n', '        t->Next();\n'),
+    ('Blocks: where default', 'GmAudioData.cpp', 'int where = 2;', 'int where = 0;'),
+    ('Blocks: id default', 'GmAudioData.cpp', 'int id = 0;', 'int id = 1;'),
+    ('Blocks: size default', 'GmAudioData.cpp', 'int size = 0;', 'int size = 1;'),
+    ('Blocks: instances default', 'GmAudioData.cpp', 'unsigned int instances = 1;', 'unsigned int instances = 2;'),
+    ('Blocks: curly', 'GmAudioData.cpp', '        t->ExpectLeftCurly();\n        for (int token = t->Next(); token != AtIoTokenizer::kRightCurly; token = t->Next()) {\n            switch (token) {\n            case kPrimaryRam', '        t->Next();\n        for (int token = t->Next(); token != AtIoTokenizer::kRightCurly; token = t->Next()) {\n            switch (token) {\n            case kPrimaryRam'),
+    ('Blocks: primary', 'GmAudioData.cpp', 'case kPrimaryRam: where = 0; break;', 'case kPrimaryRam: where = 1; break;'),
+    ('Blocks: secondary', 'GmAudioData.cpp', 'case kSecondaryRam: where = 1; break;', 'case kSecondaryRam: where = 0; break;'),
+    ('Blocks: sound', 'GmAudioData.cpp', 'case kSoundRam: where = 2; break;', 'case kSoundRam: where = 0; break;'),
+    ('Blocks: instances', 'GmAudioData.cpp', 'case kInstanceCount: instances = (unsigned int)t->ExpectInt(); break;', 'case kInstanceCount: t->ExpectInt(); break;'),
+    ('Blocks: id', 'GmAudioData.cpp', 'case kBlockId: id = t->ExpectInt(); break;', 'case kBlockId: t->ExpectInt(); break;'),
+    ('Blocks: size', 'GmAudioData.cpp', 'case kSize: size = t->ExpectInt(); break;', 'case kSize: t->ExpectInt(); break;'),
+    ('Blocks: allocate order', 'GmAudioData.cpp', 'Allocate(where, size, id, 0)', 'Allocate(where, id, size, 0)'),
+    ('Blocks: null kept', 'GmAudioData.cpp', 'if (memory != 0) {', 'if (1) {'),
+    ('Blocks: record where', 'GmAudioData.cpp', '                m_blocks[m_blockCount].m_where = where;\n', ''),
+    ('Blocks: record id', 'GmAudioData.cpp', '                m_blocks[m_blockCount].m_id = id;\n', ''),
+    ('Blocks: record size', 'GmAudioData.cpp', '                m_blocks[m_blockCount].m_size = size;\n', ''),
+    ('Blocks: record memory', 'GmAudioData.cpp', '                m_blocks[m_blockCount].m_memory = memory;\n', ''),
+    ('Blocks: count', 'GmAudioData.cpp', '                m_blockCount++;\n', ''),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -839,6 +896,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "aud": {"target": "oracle_aud", "subsystem": "gm/audiodata", "mutants": AUD_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
 
@@ -883,7 +941,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("tok", "lvl", "rmb", "txt", "set"):
+    elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -1011,7 +1069,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1024,7 +1082,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

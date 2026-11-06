@@ -3063,6 +3063,30 @@ source = "src/gm/GmAppSettings.cpp"
 subsystem = "gm/settings"
 evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
 
+[[function]]
+va = 0x00136DA0
+size = 56
+symbol = "??0GmVolumePreset@@QAE@XZ"
+source = "src/gm/GmAudioData.cpp"
+subsystem = "gm/audiodata"
+evidence = "tests/oracle/oracle_aud.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136E70
+size = 592
+symbol = "?LoadMemoryBlocks@GmAudioData@@QAEXPBD@Z"
+source = "src/gm/GmAudioData.cpp"
+subsystem = "gm/audiodata"
+evidence = "tests/oracle/oracle_aud.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x001370E0
+size = 703
+symbol = "?LoadVolumePresets@GmAudioData@@QAEXPBD@Z"
+source = "src/gm/GmAudioData.cpp"
+subsystem = "gm/audiodata"
+evidence = "tests/oracle/oracle_aud.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -3258,6 +3282,8 @@ symbol = "??_7AtTextTable@@6B@"
 source = "src/at/AtText.cpp"
 
 [symbols]
+"?s_instance@GmAudioMemory@@2PAV1@A" = 0x003B355C  # see include/gm/GmAudioData.h
+"?s_heap@GmAudioData@@2PAXA" = 0x003B3548  # see include/gm/GmAudioData.h
 "?g_debugChannels@@3GA" = 0x002B93A4  # see include/gm/GmAppSettings.h
 "?g_usePlatformBinary@@3HA" = 0x002B9348  # see include/gm/GmAppSettings.h
 "?g_backgroundMusic@@3HA" = 0x002B9110  # see include/gm/GmAppSettings.h
