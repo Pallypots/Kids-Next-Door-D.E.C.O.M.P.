@@ -1003,6 +1003,70 @@ LDR_MUTANTS = [
 ]
 
 
+FMT_MUTANTS = [
+    ('Names: inverted', 'AtPixelFormat.cpp', 'if (!EqualIgnoringCase(tokenizer->m_string, entry->m_name)) {', 'if (EqualIgnoringCase(tokenizer->m_string, entry->m_name)) {'),
+    ('Names: LUMD', 'AtPixelFormat.cpp', '{"LUMD", AtPixelFormat::kLumd},   ', ''),
+    ('Names: LUM flag', 'AtPixelFormat.cpp', '{"LUM", AtPixelFormat::kLum},     ', '{"LUM", AtPixelFormat::kIndex},     '),
+    ('Names: TILED', 'AtPixelFormat.cpp', '{"TILED", AtPixelFormat::kTiled}, ', '{"TILED", AtPixelFormat::kSwizz}, '),
+    ('Run: gap', 'AtPixelFormat.cpp', '    while ((mask & 1) != 0) {\n        mask >>= 1;\n        count++;\n    }\n', '    while (mask != 0) {\n        count += mask & 1;\n        mask >>= 1;\n    }\n'),
+    ('Run: leading', 'AtPixelFormat.cpp', '    while ((mask & 1) == 0) {\n        mask >>= 1;\n    }\n    unsigned int count = 0;\n', '    unsigned int count = 0;\n'),
+    ('Run: empty', 'AtPixelFormat.cpp', 'inline unsigned int RunLength(unsigned int mask) {\n    if (mask == 0) {\n        return 0;\n    }\n', 'inline unsigned int RunLength(unsigned int mask) {\n    if (mask == 0) {\n        return 32;\n    }\n'),
+    ('Lowest: empty', 'AtPixelFormat.cpp', '        return 32;\n', '        return 0;\n'),
+    # Dropped, equivalent: Shift: right unbounded: a count past 31 here only ever meets a value that is 0 at either shift.
+    # Dropped, equivalent: Shift: left unbounded: likewise, or its result is cut to a byte.
+    ('Ctor: flags', 'AtPixelFormat.cpp', 'AtPixelFormat::AtPixelFormat() {\n    m_flags = 0;\n', 'AtPixelFormat::AtPixelFormat() {\n'),
+    ('Ctor: mask3', 'AtPixelFormat.cpp', '    m_mask3 = 0;\n}\n\nvoid AtPixelFormat::Clear', '}\n\nvoid AtPixelFormat::Clear'),
+    ('Clear: bits', 'AtPixelFormat.cpp', 'void AtPixelFormat::Clear() {\n    m_flags = 0;\n    m_bits = 0;\n', 'void AtPixelFormat::Clear() {\n    m_flags = 0;\n'),
+    ('Clear: mask1', 'AtPixelFormat.cpp', '    m_mask0 = 0;\n    m_mask1 = 0;\n    m_mask2 = 0;\n    m_mask3 = 0;\n}\n\nvoid AtPixelFormat::Copy', '    m_mask0 = 0;\n    m_mask2 = 0;\n    m_mask3 = 0;\n}\n\nvoid AtPixelFormat::Copy'),
+    ('Copy: mask3', 'AtPixelFormat.cpp', '    m_mask3 = other.m_mask3;\n', ''),
+    ('Copy: flags', 'AtPixelFormat.cpp', '    m_flags = other.m_flags;\n', ''),
+    ('Set: order', 'AtPixelFormat.cpp', 'void AtPixelFormat::Set(unsigned short flags, unsigned short bits, unsigned int mask0, unsigned int mask1, unsigned int mask2, unsigned int mask3) {\n    m_flags = flags;\n    m_bits = bits;\n', 'void AtPixelFormat::Set(unsigned short flags, unsigned short bits, unsigned int mask0, unsigned int mask1, unsigned int mask2, unsigned int mask3) {\n    m_flags = bits;\n    m_bits = flags;\n'),
+    ('Rgba: swizz', 'AtPixelFormat.cpp', '        m_flags = kRgba | kSwizz;\n', '        m_flags = kRgba;\n'),
+    ('Rgba: test', 'AtPixelFormat.cpp', '    m_flags = kRgba;\n    if (swizzled != 0) {', '    m_flags = kRgba;\n    if (swizzled == 1) {'),
+    ('Rgba: mask2', 'AtPixelFormat.cpp', '    m_mask1 = mask1;\n    m_mask2 = mask2;\n    m_mask3 = mask3;\n    m_flags = kRgba;', '    m_mask1 = mask1;\n    m_mask2 = mask3;\n    m_mask3 = mask3;\n    m_flags = kRgba;'),
+    ('Index: flag', 'AtPixelFormat.cpp', '    m_flags = kIndex;\n', '    m_flags = kLum;\n'),
+    ('Index: mask1', 'AtPixelFormat.cpp', '    m_mask0 = mask0;\n    m_mask1 = 0;\n    m_mask2 = 0;\n    m_mask3 = mask3;\n    m_flags = kIndex;', '    m_mask0 = mask0;\n    m_mask2 = 0;\n    m_mask3 = mask3;\n    m_flags = kIndex;'),
+    ('Lum: flag', 'AtPixelFormat.cpp', '    m_flags = kLum;\n', '    m_flags = kIndex;\n'),
+    ('Lum: swizz', 'AtPixelFormat.cpp', '        m_flags = kLum | kSwizz;\n', '        m_flags = kLum;\n'),
+    ('Lum: mask3', 'AtPixelFormat.cpp', '    m_mask3 = mask3;\n    m_flags = kLum;', '    m_mask3 = 0;\n    m_flags = kLum;'),
+    ('Depth: mask1', 'AtPixelFormat.cpp', '    m_mask1 = mask1;\n    m_mask2 = 0;\n    m_mask3 = 0;\n    m_flags = kDepth;', '    m_mask1 = 0;\n    m_mask2 = 0;\n    m_mask3 = 0;\n    m_flags = kDepth;'),
+    ('Depth: swizz', 'AtPixelFormat.cpp', '        m_flags = kDepth | kSwizz;\n', '        m_flags = kDepth;\n'),
+    ('Dxt1: bits', 'AtPixelFormat.cpp', '    m_flags = kDxt1;\n    m_bits = 4;\n', '    m_flags = kDxt1;\n    m_bits = 8;\n'),
+    ('Dxt2: bits', 'AtPixelFormat.cpp', '    m_flags = kDxt2;\n    m_bits = 8;\n', '    m_flags = kDxt2;\n    m_bits = 4;\n'),
+    ('Dxt3: flag', 'AtPixelFormat.cpp', '    m_flags = kDxt3;\n', '    m_flags = kDxt2;\n'),
+    ('Dxt4: swizz', 'AtPixelFormat.cpp', '        m_flags = kDxt4 | kSwizz;\n', '        m_flags = kDxt4;\n'),
+    ('Dxt5: flag', 'AtPixelFormat.cpp', '    m_flags = kDxt5;\n', '    m_flags = kDxt4;\n'),
+    ('Bits1: mask', 'AtPixelFormat.cpp', 'Bits1() const { return RunLength(m_mask1); }', 'Bits1() const { return RunLength(m_mask0); }'),
+    ('Bits2: mask', 'AtPixelFormat.cpp', 'Bits2() const { return RunLength(m_mask2); }', 'Bits2() const { return RunLength(m_mask3); }'),
+    ('Shift0: mask', 'AtPixelFormat.cpp', 'Shift0() const { return LowestBit(m_mask0); }', 'Shift0() const { return LowestBit(m_mask1); }'),
+    ('Shift3: mask', 'AtPixelFormat.cpp', 'Shift3() const { return LowestBit(m_mask3); }', 'Shift3() const { return LowestBit(m_mask2); }'),
+    ('Pack: truncates', 'AtPixelFormat.cpp', 'ShiftRight(bytes[0], 8 - RunLength(m_mask0));', 'ShiftRight(bytes[0], 7 - RunLength(m_mask0));'),
+    ('Pack: byte', 'AtPixelFormat.cpp', 'ShiftRight(bytes[3], 8 - RunLength(m_mask3));', 'ShiftRight(bytes[2], 8 - RunLength(m_mask3));'),
+    ('Pack: position', 'AtPixelFormat.cpp', '| ShiftLeft(v2, LowestBit(m_mask2))', '| ShiftLeft(v2, LowestBit(m_mask1))'),
+    ('Pack: last', 'AtPixelFormat.cpp', ' | ShiftLeft(v3, LowestBit(m_mask3));', ';'),
+    # Dropped, equivalent: Unpack: and: bits above a channel are shifted out of the byte in any case.
+    ('Unpack: width', 'AtPixelFormat.cpp', '(unsigned char)ShiftLeft(v2, 8 - RunLength(m_mask2));', '(unsigned char)ShiftLeft(v2, 8 - RunLength(m_mask1));'),
+    ('Unpack: last', 'AtPixelFormat.cpp', '    bytes[3] = (unsigned char)ShiftLeft(v3, 8 - RunLength(m_mask3));\n', ''),
+    ('Equals: flags', 'AtPixelFormat.cpp', 'if (m_flags == other.m_flags && m_bits == other.m_bits && m_mask0 == other.m_mask0', 'if (m_bits == other.m_bits && m_mask0 == other.m_mask0'),
+    ('Equals: mask3', 'AtPixelFormat.cpp', ' && m_mask3 == other.m_mask3) {', ') {'),
+    ('Layout: bits', 'AtPixelFormat.cpp', 'if (m_flags == other.m_flags && m_bits == other.m_bits && Bits0() == other.Bits0()', 'if (m_flags == other.m_flags && Bits0() == other.Bits0()'),
+    ('Layout: last', 'AtPixelFormat.cpp', ' && Bits3() == other.Bits3()) {', ') {'),
+    ('AtLeast: flags', 'AtPixelFormat.cpp', 'if (m_flags != other.m_flags || m_bits < other.m_bits) {', 'if (m_bits < other.m_bits) {'),
+    ('AtLeast: bits', 'AtPixelFormat.cpp', 'if (m_flags != other.m_flags || m_bits < other.m_bits) {', 'if (m_flags != other.m_flags) {'),
+    # Dropped, no longer there: AtLeast: empty. The original's test of an empty mask is inlining showing through, since nothing is less than a width of 0.
+    ('AtLeast: first', 'AtPixelFormat.cpp', '    if (Bits0() < other.Bits0()) {\n        return 0;\n    }\n', ''),
+    ('AtLeast: others', 'AtPixelFormat.cpp', 'if (Bits1() < other.Bits1() || Bits2() < other.Bits2() || Bits3() < other.Bits3()) {', 'if (Bits1() < other.Bits1() || Bits2() < other.Bits2()) {'),
+    ('Read: number', 'AtPixelFormat.cpp', '        m_flags = (unsigned short)tokenizer->m_int;\n', '        m_flags |= (unsigned short)tokenizer->m_int;\n'),
+    ('Read: names clear', 'AtPixelFormat.cpp', '                    m_flags |= entry->m_flag;\n', '                    m_flags = entry->m_flag;\n'),
+    ('Read: one name', 'AtPixelFormat.cpp', '        while (token == AtIoTokenizer::kString) {', '        if (token == AtIoTokenizer::kString) {'),
+    ('Read: put back', 'AtPixelFormat.cpp', '        tokenizer->m_pushedBack = 1;\n', ''),
+    ('Read: put back on number', 'AtPixelFormat.cpp', '        m_flags = (unsigned short)tokenizer->m_int;\n', '        m_flags = (unsigned short)tokenizer->m_int;\n        tokenizer->m_pushedBack = 1;\n'),
+    ('Read: bits', 'AtPixelFormat.cpp', '    m_bits = (unsigned short)tokenizer->ExpectInt();\n', '    tokenizer->ExpectInt();\n'),
+    ('Read: mask order', 'AtPixelFormat.cpp', '    m_mask0 = tokenizer->ExpectInt();\n    m_mask1 = tokenizer->ExpectInt();\n', '    m_mask1 = tokenizer->ExpectInt();\n    m_mask0 = tokenizer->ExpectInt();\n'),
+    ('Read: last mask', 'AtPixelFormat.cpp', '    m_mask3 = tokenizer->ExpectInt();\n', ''),
+]
+
+
 VEC_MUTANTS = [
     ('Lerp: x', 'AtVector3.cpp', 'x = (float)(((double)to.x - from.x) * t + from.x);', 'x = (float)(((double)to.x - from.x) * t + to.x);'),
     ('Lerp: y swapped', 'AtVector3.cpp', 'y = (float)(((double)to.y - from.y) * t + from.y);', 'y = (float)(((double)from.y - to.y) * t + from.y);'),
@@ -1292,6 +1356,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "fmt": {"target": "oracle_fmt", "subsystem": "at/pixelformat", "mutants": FMT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "vec": {"target": "oracle_vec", "subsystem": "at/vector", "mutants": VEC_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "mem": {"target": "oracle_mem", "subsystem": "at/memory", "mutants": MEM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "hep": {"target": "oracle_hep", "subsystem": "at/heap", "mutants": HEP_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -1341,7 +1406,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("hep", "mem", "vec"):
+    elif suite in ("hep", "mem", "vec", "fmt"):
         cmd = [exe(build_dir, target), XBE]
     elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
@@ -1477,7 +1542,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1490,7 +1555,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

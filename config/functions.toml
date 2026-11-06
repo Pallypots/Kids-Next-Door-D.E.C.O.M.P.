@@ -3615,6 +3615,222 @@ source = "src/at/AtVector3.cpp"
 subsystem = "at/vector"
 evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
 
+[[function]]
+va = 0x000423F0
+size = 45
+symbol = "?Copy@AtPixelFormat@@QAEXABV1@@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042420
+size = 48
+symbol = "?Set@AtPixelFormat@@QAEXGGIIII@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042450
+size = 58
+symbol = "?SetRgba@AtPixelFormat@@QAEXGIIIIH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042490
+size = 50
+symbol = "?SetIndex@AtPixelFormat@@QAEXGIIH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x000424D0
+size = 50
+symbol = "?SetLum@AtPixelFormat@@QAEXGIIH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042510
+size = 52
+symbol = "?SetDepth@AtPixelFormat@@QAEXGIIH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042550
+size = 41
+symbol = "?SetDxt1@AtPixelFormat@@QAEXH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042580
+size = 41
+symbol = "?SetDxt2@AtPixelFormat@@QAEXH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x000425B0
+size = 41
+symbol = "?SetDxt3@AtPixelFormat@@QAEXH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x000425E0
+size = 41
+symbol = "?SetDxt4@AtPixelFormat@@QAEXH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042610
+size = 41
+symbol = "?SetDxt5@AtPixelFormat@@QAEXH@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042640
+size = 41
+symbol = "?Bits2@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042670
+size = 41
+symbol = "?Bits3@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x000426A0
+size = 41
+symbol = "?Bits0@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x000426D0
+size = 41
+symbol = "?Bits1@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042700
+size = 29
+symbol = "?Shift0@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042720
+size = 29
+symbol = "?Shift1@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042740
+size = 29
+symbol = "?Shift2@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042760
+size = 29
+symbol = "?Shift3@AtPixelFormat@@QBEIXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042780
+size = 405
+symbol = "?Pack@AtPixelFormat@@QBEIPBE@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042920
+size = 411
+symbol = "?Unpack@AtPixelFormat@@QBEXIPAE@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042AC0
+size = 67
+symbol = "?Equals@AtPixelFormat@@QBEHABV1@@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042B10
+size = 188
+symbol = "?SameLayout@AtPixelFormat@@QBEHABV1@@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042BD0
+size = 184
+symbol = "?AtLeast@AtPixelFormat@@QBEHABV1@@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042C90
+size = 24
+symbol = "??0AtPixelFormat@@QAE@XZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042CB0
+size = 168
+symbol = "?Read@AtPixelFormat@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
+[[function]]
+va = 0x00042D60
+size = 22
+symbol = "?Clear@AtPixelFormat@@QAEXXZ"
+source = "src/at/AtPixelFormat.cpp"
+subsystem = "at/pixelformat"
+evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5

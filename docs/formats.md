@@ -158,3 +158,7 @@ The closing brace is never read. The end of the file before the opening brace is
 ## App.ini (reader: GmAppSettings, 0x00098A50)
 
 On the disc at the root, as `{ DataFolder "DataXbox" }`, and read before anything else. The reader knows 46 keywords, for development: `Level` (a starting level, default `ALMOND`), `Resolution`, screen presets including `XB720pScreen` and `XB1080iScreen`, `SkipLegal`, `SkipIntro`, `SkipMainMenu`, `EnableDebugMenu`, `EnableAllUnlockables`, audio switches, and `add_dio`/`no_dio` for debug output channels. Whether a retail build acts on all of them elsewhere is not established.
+
+## Pixel format in text
+
+`AtPixelFormat::Read` (0x00042CB0) reads: bits per pixel as an integer; flags, as an integer or as one or more strings; four masks as integers. **The named form sets the flags inverted:** a flag is ORed in when its name is not the token's, compared without case, so `RGBA` gives every flag but `RGBA`. The numeric form is unaffected. Whether any file uses the named form is not yet checked.

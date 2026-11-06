@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 429 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 456 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -492,6 +492,33 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00043250 | 117 | `?SetProjected@AtVector3@@QAEXABV1@0@Z` | at/vector | SIZE |
 | 0x000432D0 | 146 | `?Reject@AtVector3@@QAEXABV1@@Z` | at/vector | SIZE |
 | 0x00043370 | 162 | `?SetRejected@AtVector3@@QAEXABV1@0@Z` | at/vector | SIZE |
+| 0x000423F0 | 45 | `?Copy@AtPixelFormat@@QAEXABV1@@Z` | at/pixelformat | MISMATCH |
+| 0x00042420 | 48 | `?Set@AtPixelFormat@@QAEXGGIIII@Z` | at/pixelformat | MISMATCH |
+| 0x00042450 | 58 | `?SetRgba@AtPixelFormat@@QAEXGIIIIH@Z` | at/pixelformat | SIZE |
+| 0x00042490 | 50 | `?SetIndex@AtPixelFormat@@QAEXGIIH@Z` | at/pixelformat | SIZE |
+| 0x000424D0 | 50 | `?SetLum@AtPixelFormat@@QAEXGIIH@Z` | at/pixelformat | SIZE |
+| 0x00042510 | 52 | `?SetDepth@AtPixelFormat@@QAEXGIIH@Z` | at/pixelformat | SIZE |
+| 0x00042550 | 41 | `?SetDxt1@AtPixelFormat@@QAEXH@Z` | at/pixelformat | SIZE |
+| 0x00042580 | 41 | `?SetDxt2@AtPixelFormat@@QAEXH@Z` | at/pixelformat | SIZE |
+| 0x000425B0 | 41 | `?SetDxt3@AtPixelFormat@@QAEXH@Z` | at/pixelformat | SIZE |
+| 0x000425E0 | 41 | `?SetDxt4@AtPixelFormat@@QAEXH@Z` | at/pixelformat | SIZE |
+| 0x00042610 | 41 | `?SetDxt5@AtPixelFormat@@QAEXH@Z` | at/pixelformat | SIZE |
+| 0x00042640 | 41 | `?Bits2@AtPixelFormat@@QBEIXZ` | at/pixelformat | SIZE |
+| 0x00042670 | 41 | `?Bits3@AtPixelFormat@@QBEIXZ` | at/pixelformat | SIZE |
+| 0x000426A0 | 41 | `?Bits0@AtPixelFormat@@QBEIXZ` | at/pixelformat | SIZE |
+| 0x000426D0 | 41 | `?Bits1@AtPixelFormat@@QBEIXZ` | at/pixelformat | SIZE |
+| 0x00042700 | 29 | `?Shift0@AtPixelFormat@@QBEIXZ` | at/pixelformat | MISMATCH |
+| 0x00042720 | 29 | `?Shift1@AtPixelFormat@@QBEIXZ` | at/pixelformat | MISMATCH |
+| 0x00042740 | 29 | `?Shift2@AtPixelFormat@@QBEIXZ` | at/pixelformat | MISMATCH |
+| 0x00042760 | 29 | `?Shift3@AtPixelFormat@@QBEIXZ` | at/pixelformat | MISMATCH |
+| 0x00042780 | 405 | `?Pack@AtPixelFormat@@QBEIPBE@Z` | at/pixelformat | SIZE |
+| 0x00042920 | 411 | `?Unpack@AtPixelFormat@@QBEXIPAE@Z` | at/pixelformat | SIZE |
+| 0x00042AC0 | 67 | `?Equals@AtPixelFormat@@QBEHABV1@@Z` | at/pixelformat | SIZE |
+| 0x00042B10 | 188 | `?SameLayout@AtPixelFormat@@QBEHABV1@@Z` | at/pixelformat | MISMATCH |
+| 0x00042BD0 | 184 | `?AtLeast@AtPixelFormat@@QBEHABV1@@Z` | at/pixelformat | SIZE |
+| 0x00042C90 | 24 | `??0AtPixelFormat@@QAE@XZ` | at/pixelformat | SIZE |
+| 0x00042CB0 | 168 | `?Read@AtPixelFormat@@QAEXPAVAtIoTokenizer@@@Z` | at/pixelformat | SIZE |
+| 0x00042D60 | 22 | `?Clear@AtPixelFormat@@QAEXXZ` | at/pixelformat | SIZE |
 
 Relocation-aware matches with the host compiler: 69 functions, 1119 unique bytes.
 Share of `.text` raw bytes: 0.0547% (denominator includes unclassified library code).
@@ -565,6 +592,8 @@ Suite `hep`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 40 
 Suite `mem`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 9715 comparisons, 0 differences). Recorded function entries reached in every run: 19 / 19. Source mutants detected: 61 / 61. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `vec`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 44000024 comparisons, 0 differences). Recorded function entries reached in every run: 14 / 14. Source mutants detected: 41 / 41. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `fmt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 4590236 comparisons, 0 differences). Recorded function entries reached in every run: 27 / 27. Source mutants detected: 56 / 56. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

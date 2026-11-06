@@ -355,3 +355,9 @@ Four suites and the memory suite run code that crashes on purpose, on both sides
 Limits: NaNs that differ only in sign count as alike, and 10,522 such are counted and printed: that sign depends on operand order and x87 rules, so it is not claimed. Signalling NaNs are not generated. The functions return a float in st(0), compared after storing, so a caller that goes on computing with the unrounded value is not modelled until such callers are recovered. On x64 the rotations are not held to the original: see portability.
 
 Printed, not failing: the same comparison at 24 bits gives 1.47 million differences in all, and at 64 bits some thousands, mostly `reject`. So precision does matter to this code, and the finding that the main thread is at 53 bits is what makes this source correct. A thread at another setting would not match.
+
+## Pixel format: tests/oracle/oracle_fmt.cpp
+
+`python -I tools/oracle_run.py --suite fmt` compares 27 functions, setters on dirty storage, over 300,000 rounds of known and random masks, and each `Read` path through a scripted tokenizer on which the original's own 0x00015880 runs. Result: no difference over 4,590,236 comparisons, 27/27 entries, 56/56 mutants. `tests/native/test_at_pixel_format.cpp` holds x64 to a hash of the original's results: it matches, 0xA24FA9E5908E6053.
+
+Limits: `_stricmp` is compared on ASCII names; a locale's effect on it is not modelled. The C library's multibyte check at 0x00126F41 goes straight to the plain comparison when the code page word at 0x003B33D4 is 0, as it is in this harness; whether anything sets that word in the game is not read.
