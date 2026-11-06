@@ -15,6 +15,7 @@
 
 #include "gm/GmLevelManager.h"
 #include "gm/GmNameMap.h"
+#include "gm/GmRumble.h"
 #include "oracle_image.h"
 
 static bool g_mutate;
@@ -39,12 +40,6 @@ static MemFs* g_fs;
 static AtIoContext g_ctx;
 static AtIoFileSystem* g_ctx_stack[4];
 static int g_heap_token;
-
-static const char kPendingRemove[] = "GmNameMapGroup::RemoveFromParent (0x00018010) is not recovered";
-static void __fastcall o_remove_from_parent(void*, void*, void*) {
-    g_log[0].add('F', 0);
-    record_message(kPendingRemove, 0);
-}
 
 typedef void(__fastcall* Fn0)(void*, void*);
 typedef void(__fastcall* FnU)(void*, void*, unsigned);
@@ -201,6 +196,313 @@ static void run_map_ops(int seed, int ops) {
     g_message[0][0] = g_message[1][0] = 0;
 }
 
+typedef void(__fastcall* FnAddSpace)(void*, void*, const char*, void*);
+typedef void*(__fastcall* FnFindSpace)(void*, void*, const char*, const char*);
+typedef void(__fastcall* FnNameOf)(void*, void*, const void*, char*);
+typedef void(__fastcall* FnNameOfSpace)(void*, void*, const char*, const void*, char*);
+typedef void(__fastcall* FnP)(void*, void*, void*);
+
+// The namespace tree. Each side has its own database, maps and groups.
+static void run_namespaces() {
+    g_context = "group";
+    at<void(__cdecl*)(void*)>(0x00018000)(&g_heap_token);
+    eq("heap", *(intptr_t*)(uintptr_t)0x002C6274, (intptr_t)&g_heap_token);
+    GmNameSpaceDb::SetHeap(&g_heap_token);
+    eq("heap", (intptr_t)GmNameSpaceDb::s_heap, (intptr_t)&g_heap_token);
+
+    unsigned char oraw[sizeof(GmNameMapGroup)];
+    std::memset(oraw, 0xCD, sizeof oraw);
+    at<Fn0>(0x00017F30)(oraw, nullptr);
+    GmNameMapGroup* og = (GmNameMapGroup*)oraw;
+    GmNameMapGroup rg;
+    eq("constructed", og->m_first == nullptr && og->m_nextFree == nullptr && og->m_database == nullptr && og->m_used == 0 && og->m_name[0] == 0, 1);
+    at<FnS>(0x00017E60)(og, nullptr, "GROUPNAM");
+    rg.SetName("GROUPNAM");
+    eq("name", std::memcmp(og->m_name, rg.m_name, 8), 0);
+    eq("used", og->m_used, rg.m_used);
+    og->m_nextFree = rg.m_nextFree = &rg;
+    og->m_database = rg.m_database = (GmNameSpaceDb*)(uintptr_t)4;
+    at<Fn0>(0x00017F50)(og, nullptr);
+    rg.Reset();
+    eq("reset", og->m_nextFree == nullptr && og->m_database == nullptr && og->m_used == 0 && og->m_name[0] == 0, rg.m_nextFree == nullptr && rg.m_database == nullptr && rg.m_used == 0 && rg.m_name[0] == 0);
+
+    // Three maps in one group, by each side's code: order, lookups through them, moving to the front. The reset above took the name away.
+    at<FnS>(0x00017E60)(og, nullptr, "GROUPNAM");
+    rg.SetName("GROUPNAM");
+    og->m_nextFree = rg.m_nextFree = nullptr;
+    GmNameMap om[3], rm[3];
+    static const char* const names[3] = {"FIRST", "SECOND", "THIRD"};
+    for (int i = 0; i < 3; i++) {
+        om[i].Init(5);
+        rm[i].Init(5);
+        om[i].Insert(names[i], (void*)(uintptr_t)(i + 1));
+        rm[i].Insert(names[i], (void*)(uintptr_t)(i + 1));
+        om[i].Insert("SHARED", (void*)(uintptr_t)(i + 11));
+        rm[i].Insert("SHARED", (void*)(uintptr_t)(i + 11));
+        { On on(0); at<FnP>(0x00017F70)(og, nullptr, &om[i]); }
+        { On on(1); rg.Add(&rm[i]); }
+        eq("group set", om[i].m_group == og, rm[i].m_group == &rg);
+        compare_logs("Add");
+    }
+    eq("head", og->m_first == &om[2], rg.m_first == &rm[2]);
+    const auto lookups = [&]() {
+        for (const char* n : {"FIRST", "SECOND", "THIRD", "SHARED", "ABSENT"}) {
+            char q[16] = {0};
+            strncpy_s(q, n, _TRUNCATE);
+            eq("Find", (intptr_t)at<FnFind>(0x00017ED0)(og, nullptr, q), (intptr_t)rg.Find(q));
+        }
+        for (uintptr_t v : {(uintptr_t)1, (uintptr_t)2, (uintptr_t)3, (uintptr_t)13, (uintptr_t)99}) {
+            char a[9] = "zzzzzzzz", b[9] = "zzzzzzzz";
+            at<FnNameOf>(0x00017F00)(og, nullptr, (const void*)v, a);
+            rg.GetNameOf((const void*)v, b);
+            eqs("GetNameOf", a, b);
+            at<FnNameOf>(0x00024BB0)(&om[1], nullptr, (const void*)v, a);
+            rm[1].GetNameOf((const void*)v, b);
+            eqs("map GetNameOf", a, b);
+        }
+    };
+    lookups();
+    { On on(0); at<FnP>(0x00017FA0)(og, nullptr, &om[0]); }
+    { On on(1); rg.MoveToFront(&rm[0]); }
+    eq("moved", og->m_first == &om[0] && om[0].m_next == &om[2], rg.m_first == &rm[0] && rm[0].m_next == &rm[2]);
+    eq("moved", rg.m_first == &rm[0] && rm[0].m_next == &rm[2], 1);
+    compare_logs("MoveToFront");
+    lookups();
+    { On on(0); at<FnP>(0x00017FA0)(og, nullptr, &om[0]); }
+    { On on(1); rg.MoveToFront(&rm[0]); }
+    compare_logs("MoveToFront, already first");
+    // Belonging to a group of another name: it stays.
+    GmNameMapGroup oother, rother;
+    oother.SetName("OTHER");
+    rother.SetName("OTHER");
+    { On on(0); at<FnP>(0x00017F70)(&oother, nullptr, &om[1]); }
+    { On on(1); rother.Add(&rm[1]); }
+    compare_logs("Add from another group");
+    eq("left the old group", om[1].m_group == &oother, rm[1].m_group == &rother);
+    {
+        const auto listed = [](GmNameMapGroup* g, GmNameMap* m) { for (GmNameMap* i = g->m_first; i; i = i->m_next) if (i == m) return 1; return 0; };
+        eq("not in the old list", listed(og, &om[1]), listed(&rg, &rm[1]));
+        eq("not in the old list", listed(&rg, &rm[1]), 0);
+    }
+    { On on(0); at<FnP>(0x00017FA0)(og, nullptr, &om[1]); }
+    { On on(1); rg.MoveToFront(&rm[1]); }
+    eq("not moved", om[1].m_group == &oother, rm[1].m_group == &rother);
+    eq("head", og->m_first == &om[0], rg.m_first == &rm[0]);
+    compare_logs("MoveToFront, another name");
+    // A group of the same name elsewhere: moved, leaving that one.
+    GmNameMapGroup osame, rsame;
+    osame.SetName("GROUPNAM");
+    rsame.SetName("GROUPNAM");
+    { On on(0); at<FnP>(0x00017F70)(&osame, nullptr, &om[1]); }
+    { On on(1); rsame.Add(&rm[1]); }
+    { On on(0); at<FnP>(0x00017FA0)(og, nullptr, &om[1]); }
+    { On on(1); rg.MoveToFront(&rm[1]); }
+    eq("taken over", om[1].m_group == og, rm[1].m_group == &rg);
+    eq("taken over", rm[1].m_group == &rg, 1);
+    eq("gone from the other", osame.m_first == nullptr, rsame.m_first == nullptr);
+    eq("gone from the other", rsame.m_first == nullptr, 1);
+    eq("head", og->m_first == &om[1], rg.m_first == &rm[1]);
+    compare_logs("MoveToFront, same name");
+    // No group at all.
+    GmNameMap olone, rlone;
+    { On on(0); at<FnP>(0x00017FA0)(og, nullptr, &olone); }
+    { On on(1); rg.MoveToFront(&rlone); }
+    eq("not added", olone.m_group == nullptr, rlone.m_group == nullptr);
+    for (int i = 0; i < 3; i++) {
+        om[i].Clear();
+        rm[i].Clear();
+    }
+    compare_logs("clearing");
+
+    g_context = "database";
+    unsigned char odb[sizeof(GmNameSpaceDb)];
+    std::memset(odb, 0xCD, sizeof odb);
+    at<Fn0>(0x00018040)(odb, nullptr);
+    GmNameSpaceDb* o = (GmNameSpaceDb*)odb;
+    GmNameSpaceDb* r = new GmNameSpaceDb;
+    eq("vftable", *(intptr_t*)o, 0x0027211C);
+    eq("constructed", (intptr_t)o->m_pool + o->m_poolSize + (intptr_t)o->m_free + (intptr_t)o->m_last, 0);
+    const auto same_db = [&](const char* what) {
+        eq(what, o->m_poolSize, r->m_poolSize);
+        eq(what, o->m_size, r->m_size);
+        eq(what, o->m_free ? o->m_free - o->m_pool : -1, r->m_free ? r->m_free - r->m_pool : -1);
+        eq(what, o->m_last ? o->m_last - o->m_pool : -1, r->m_last ? r->m_last - r->m_pool : -1);
+        for (unsigned i = 0; i < o->m_poolSize && i < r->m_poolSize; i++) {
+            const GmNameMapGroup& a = o->m_pool[i];
+            const GmNameMapGroup& b = r->m_pool[i];
+            eq("pool used", a.m_used, b.m_used);
+            eq("pool next", a.m_nextFree ? a.m_nextFree - o->m_pool : -1, b.m_nextFree ? b.m_nextFree - r->m_pool : -1);
+            eq("pool database", a.m_database == o, b.m_database == r);
+            eq("pool first", a.m_first != nullptr, b.m_first != nullptr);
+            char x[9], y[9];
+            name8(x, a.m_name);
+            name8(y, b.m_name);
+            eqs("pool name", x, y);
+        }
+        for (unsigned i = 0; i < o->m_size && i < r->m_size; i++) eq("slot", o->m_entries[i].m_value ? (GmNameMapGroup*)o->m_entries[i].m_value - o->m_pool : -1, r->m_entries[i].m_value ? (GmNameMapGroup*)r->m_entries[i].m_value - r->m_pool : -1);
+    };
+    typedef void(__fastcall* FnIU)(void*, void*, unsigned);
+    { On on(0); at<FnIU>(0x00018060)(o, nullptr, 4); }
+    { On on(1); r->Init(4); }
+    same_db("Init");
+    compare_logs("Init");
+    // Init again clears first, through the vftable.
+    { On on(0); at<FnIU>(0x00018060)(o, nullptr, 3); }
+    { On on(1); r->Init(3); }
+    same_db("Init again");
+    compare_logs("Init again");
+    const auto add = [&](const char* space, GmNameMap* a, GmNameMap* b) {
+        { On on(0); at<FnAddSpace>(0x00018190)(o, nullptr, space, a); }
+        { On on(1); r->Add(space, b); }
+        same_db("Add");
+        compare_logs("Add");
+    };
+    GmNameMap oa[4], ra[4];
+    for (int i = 0; i < 4; i++) {
+        oa[i].Init(3);
+        ra[i].Init(3);
+        oa[i].Insert("KEY", (void*)(uintptr_t)(i + 1));
+        ra[i].Insert("KEY", (void*)(uintptr_t)(i + 1));
+    }
+    add("ONE", &oa[0], &ra[0]);
+    add("TWO", &oa[1], &ra[1]);
+    add("ONE", &oa[2], &ra[2]);  // A second map in a namespace it knows.
+    // One of two leaves: the namespace stays.
+    {
+        { On on(0); at<FnP>(0x000181F0)(nullptr, nullptr, &oa[2]); }
+        { On on(1); GmNameSpaceDb::Remove(&ra[2]); }
+        same_db("one of two leaves");
+        compare_logs("one of two leaves");
+        eq("namespace stays", o->GmNameMap::Find("ONE") != nullptr, r->GmNameMap::Find("ONE") != nullptr);
+        eq("namespace stays", r->GmNameMap::Find("ONE") != nullptr, 1);
+        add("ONE", &oa[2], &ra[2]);
+    }
+    const auto find = [&](const char* space, const char* name) {
+        eq("db Find", (intptr_t)at<FnFindSpace>(0x00018210)(o, nullptr, space, name), (intptr_t)r->Find(space, name));
+        same_db("db Find");
+    };
+    find("ONE", "KEY");
+    find("TWO", "KEY");
+    find("TWO", "KEY");  // The cached one.
+    find("TWO", "NOPE");
+    find("ABSENT", "KEY");
+    const auto name_of = [&](const char* space, uintptr_t v) {
+        char a[9] = "zzzzzzzz", b[9] = "zzzzzzzz";
+        at<FnNameOfSpace>(0x00018260)(o, nullptr, space, (const void*)v, a);
+        r->GetNameOf(space, (const void*)v, b);
+        eqs("db GetNameOf", a, b);
+        same_db("db GetNameOf");
+    };
+    name_of("ONE", 3);
+    name_of("ONE", 3);
+    name_of("TWO", 2);
+    name_of("ONE", 99);
+    name_of("ABSENT", 1);
+    // Leaving: a namespace that empties goes back to the pool, and its slot is free for another.
+    typedef void(__cdecl* FnRemoveStatic)(void*);
+    { On on(0); at<FnP>(0x000181F0)(nullptr, nullptr, &oa[1]); }
+    { On on(1); GmNameSpaceDb::Remove(&ra[1]); }
+    same_db("Remove");
+    compare_logs("Remove");
+    { On on(0); at<FnP>(0x000181F0)(nullptr, nullptr, &oa[1]); }
+    { On on(1); GmNameSpaceDb::Remove(&ra[1]); }
+    compare_logs("Remove of what has no group");
+    eq("cached group still names the released slot", o->m_last - o->m_pool, r->m_last - r->m_pool);
+    add("TWOB", &oa[1], &ra[1]);
+    // Direct, for the entry.
+    add("THREE", &oa[3], &ra[3]);
+    // The last free one is used; one more overflows, which the original crashes on after reporting, so that is not run. The report itself:
+    eq("pool empty", o->m_free == nullptr, r->m_free == nullptr);
+    // Release directly.
+    GmNameMapGroup* og2 = (GmNameMapGroup*)o->GmNameMap::Find("THREE");
+    GmNameMapGroup* rg2 = (GmNameMapGroup*)r->GmNameMap::Find("THREE");
+    oa[3].m_group = nullptr;
+    ra[3].m_group = nullptr;
+    og2->m_first = nullptr;
+    rg2->m_first = nullptr;
+    { On on(0); at<FnP>(0x00018010)(o, nullptr, og2); }
+    { On on(1); r->Release(rg2); }
+    same_db("Release");
+    compare_logs("Release");
+    // The cache answers without looking in the map: take the name out, and the last namespace still answers.
+    find("ONE", "KEY");
+    o->GmNameMap::Remove("ONE");
+    r->GmNameMap::Remove("ONE");
+    find("ONE", "KEY");
+    // Moving the only map of a namespace to its front is nothing: it must not empty the namespace on the way.
+    {
+        void* ofresh = std::calloc(1, sizeof(GmNameSpaceDb));
+        at<Fn0>(0x00018040)(ofresh, nullptr);
+        GmNameSpaceDb* of = (GmNameSpaceDb*)ofresh;
+        GmNameSpaceDb rf;
+        { On on(0); at<FnIU>(0x00018060)(of, nullptr, 2); }
+        { On on(1); rf.Init(2); }
+        GmNameMap olone2, rlone2;
+        { On on(0); at<FnAddSpace>(0x00018190)(of, nullptr, "ONLY", &olone2); }
+        { On on(1); rf.Add("ONLY", &rlone2); }
+        compare_logs("Add the only one");
+        { On on(0); at<FnP>(0x00017FA0)(olone2.m_group, nullptr, &olone2); }
+        { On on(1); rlone2.m_group->MoveToFront(&rlone2); }
+        compare_logs("Move the only one");
+        eq("still there", of->GmNameMap::Find("ONLY") != nullptr, rf.GmNameMap::Find("ONLY") != nullptr);
+        olone2.m_group = nullptr;
+        rlone2.m_group = nullptr;
+        { On on(0); of->Clear(); }
+        { On on(1); rf.Clear(); }
+        std::free(ofresh);
+        g_log[0].n = g_log[1].n = 0;
+    }
+    // Clear, then the destructors.
+    for (int i = 0; i < 4; i++) {
+        oa[i].m_group = nullptr;
+        ra[i].m_group = nullptr;
+    }
+    { On on(0); o->Clear(); }
+    { On on(1); r->Clear(); }
+    same_db("Clear");
+    compare_logs("Clear");
+    eq("cleared", (intptr_t)o->m_pool + o->m_poolSize, (intptr_t)r->m_pool + r->m_poolSize);
+    { On on(0); at<FnIU>(0x00018060)(o, nullptr, 2); }
+    { On on(1); r->Init(2); }
+    { On on(0); at<Fn0>(0x000182B0)(o, nullptr); }
+    { On on(1); r->~GmNameSpaceDb(); }
+    compare_logs("destructor");
+    eq("base vftable", *(intptr_t*)o, 0x00272E60);
+    new (r) GmNameSpaceDb;
+    at<Fn0>(0x00018040)(odb, nullptr);
+    { On on(0); at<FnIU>(0x00018060)(o, nullptr, 2); }
+    { On on(1); r->Init(2); }
+    compare_logs("Init");
+    void* heap_db = std::malloc(sizeof(GmNameSpaceDb));
+    std::memcpy(heap_db, odb, sizeof(GmNameSpaceDb));
+    { On on(0); at<FnDel>(0x00018320)(heap_db, nullptr, 1); }
+    { On on(1); delete r; }
+    compare_logs("deleting destructor");
+    void* kept = std::calloc(1, sizeof(GmNameSpaceDb));
+    at<Fn0>(0x00018040)(kept, nullptr);
+    at<FnDel>(0x00018320)(kept, nullptr, 0);
+    std::free(kept);
+    // No heap for the pool.
+    g_context = "database, no heap";
+    *(void**)(uintptr_t)0x002C6274 = nullptr;
+    GmNameSpaceDb::s_heap = nullptr;
+    {
+        void* op = std::calloc(1, sizeof(GmNameSpaceDb));
+        at<Fn0>(0x00018040)(op, nullptr);
+        GmNameSpaceDb rd;
+        { On on(0); at<FnIU>(0x00018060)(op, nullptr, 2); }
+        { On on(1); rd.Init(2); }
+        compare_logs("Init with no heap");
+        { On on(0); ((GmNameSpaceDb*)op)->Clear(); }
+        { On on(1); rd.Clear(); }
+        std::free(op);
+    }
+    *(void**)(uintptr_t)0x002C6274 = &g_heap_token;
+    GmNameSpaceDb::s_heap = &g_heap_token;
+    g_log[0].n = g_log[1].n = 0;
+    g_message[0][0] = g_message[1][0] = 0;
+}
+
 static void run_map_edges() {
     g_context = "names equal";
     static const char* const pairs[][2] = {{"", ""}, {"A", "A"}, {"A", "B"}, {"AB", "A"}, {"ABCDEFG", "ABCDEFG"}, {"ABCDEFGH", "ABCDEFGH"}, {"ABCDEFGH", "ABCDEFGX"}, {"ABCDEFGX", "ABCDEFGH"},
@@ -279,7 +581,7 @@ static void run_map_edges() {
         GmNameMap* o = new_original_map();
         GmNameMap r;
         GmNameMap o2, r2, o3, r3;
-        GmNameMapGroup og = {}, rg = {}, parent = {};
+        GmNameMapGroup og, rg;
         // A list of three: leave from the middle, the head, and last, with and without a parent.
         o->m_group = &og;
         r.m_group = &rg;
@@ -293,8 +595,6 @@ static void run_map_edges() {
         rg.m_first = &r2;
         r2.m_next = &r;
         r.m_next = &r3;
-        og.m_parent = &parent;
-        rg.m_parent = &parent;
         { On on(0); o->Clear(); }
         { On on(1); r.Clear(); }
         same_map("Clear in a group", o, &r);
@@ -314,18 +614,7 @@ static void run_map_edges() {
         { On on(0); at<FnDetach>(0x00017E80)(&og, nullptr, &o3); }
         { On on(1); rg.Detach(&r3); }
         eq("empty", og.m_first == nullptr, rg.m_first == nullptr);
-        compare_logs("Detach of the last, with a parent");
-        // Without a parent, the last one leaves quietly.
-        og.m_parent = rg.m_parent = nullptr;
-        o2.m_group = &og;
-        r2.m_group = &rg;
-        o2.m_next = nullptr;
-        r2.m_next = nullptr;
-        og.m_first = &o2;
-        rg.m_first = &r2;
-        { On on(0); at<FnDetach>(0x00017E80)(&og, nullptr, &o2); }
-        { On on(1); rg.Detach(&r2); }
-        compare_logs("Detach of the last, without a parent");
+        compare_logs("Detach of the last, no database");
         o2.m_entries = nullptr;
         r2.m_entries = nullptr;
         o3.m_entries = nullptr;
@@ -659,7 +948,6 @@ int main(int argc, char** argv) {
     redirect(0x00011260, (const void*)o_pop);
     redirect(0x00011070, (const void*)o_fatal);
     redirect(0x00011170, (const void*)o_raise);
-    redirect(0x00018010, (const void*)o_remove_from_parent);
     at<void(__cdecl*)()>(0x00125BC7)();  // The C library's floating-point formatters, as in oracle_tok.cpp.
     if (entries && !arm_entries(entries)) return 2;
 
@@ -670,7 +958,8 @@ int main(int argc, char** argv) {
     g_ctx_stack[0] = g_fs;
     *(AtIoContext**)(uintptr_t)0x002C6278 = &g_ctx;
     AtIoFileRef::s_context = &g_ctx;
-    for (uint32_t va : {0x002C60B0u, 0x002C63CCu, 0x002C632Cu, 0x002CF164u, 0x002CF168u}) *(void**)(uintptr_t)va = &g_heap_token;
+    for (uint32_t va : {0x002C60B0u, 0x002C63CCu, 0x002C632Cu, 0x002CF164u, 0x002CF168u, 0x002C6274u}) *(void**)(uintptr_t)va = &g_heap_token;
+    GmNameSpaceDb::s_heap = &g_heap_token;
     AtIoTokenFile::s_heap = &g_heap_token;
     AtIoStream::s_heap = &g_heap_token;
     GmNameMap::s_heap = &g_heap_token;
@@ -680,6 +969,7 @@ int main(int argc, char** argv) {
 
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.
     run_map_edges();
+    run_namespaces();
     for (int s = 0; s < 40; s++) run_map_ops(seed * 1000 + s, 1500);
     run_rumble_parts();
     run_rumble_synthetic();

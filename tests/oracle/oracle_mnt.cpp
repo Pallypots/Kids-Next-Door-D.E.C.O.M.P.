@@ -106,7 +106,6 @@ static void setup_side(int k, const std::vector<unsigned char>& archive) {
     s->params.m_owner = &s->owner;
     s->params.m_heap = &g_heap_token;
     s->params.m_context = &s->context;
-    std::memset(static_cast<void*>(&s->context), 0, sizeof s->context);
     *(AtIoContextDevice**)&s->context = &s->contextDevice;
     s->context.m_stack = s->stack;
     s->context.m_stackSize = 8;

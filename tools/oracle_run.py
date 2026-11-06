@@ -547,8 +547,7 @@ RMB_MUTANTS = [
     ('Equal: last byte', 'GmNameMap.cpp', 'return a[7] == b[7];', 'return 1;'),
     ('Detach: link', 'GmNameMap.cpp', '            *link = m->m_next;\n', ''),
     ('Detach: group kept', 'GmNameMap.cpp', '            m->m_group = 0;\n', ''),
-    ('Detach: parent not told', 'GmNameMap.cpp', '            if (m_first == 0 && m_parent != 0) {\n                m_parent->RemoveFromParent(this);\n            }\n', ''),
-    ('Detach: parent told early', 'GmNameMap.cpp', 'if (m_first == 0 && m_parent != 0) {', 'if (m_parent != 0) {'),
+    ('Detach: parent not told', 'GmNameMap.cpp', '            if (m_first == 0 && m_database != 0) {\n                m_database->Release(this);\n            }\n', ''),
     ('Detach: walk', 'GmNameMap.cpp', '        link = &m->m_next;\n', '        return;\n'),
     ('Clear: no detach', 'GmNameMap.cpp', '    if (m_group != 0) {\n        m_group->Detach(this);\n    }\n', ''),
     ('Clear: entries kept', 'GmNameMap.cpp', '        operator delete(m_entries);\n', ''),
@@ -632,12 +631,122 @@ RMB_MUTANTS = [
 ]
 
 
+TXT_MUTANTS = [
+    ('Unicode CharAt', 'AtText.cpp', 'unsigned int AtTextUnicode::CharAt(unsigned int index) {\n    return m_data[m_start + index];', 'unsigned int AtTextUnicode::CharAt(unsigned int index) {\n    return m_data[index];'),
+    ('Unicode SetChar', 'AtText.cpp', 'void AtTextUnicode::SetChar(unsigned int index, unsigned int c) {\n    m_data[m_start + index]', 'void AtTextUnicode::SetChar(unsigned int index, unsigned int c) {\n    m_data[index]'),
+    ('Unicode RemoveRange: end', 'AtText.cpp', 'void AtTextUnicode::RemoveRange(unsigned int first, unsigned int last) {\n    unsigned short* to = m_data + m_start + first;\n    const unsigned short* from = m_data + m_start + last + 1;\n    for (unsigned int n = m_end - m_start - last; n != 0; n--) {\n        *to++ = *from++;\n    }\n    m_end += first - last - 1;', 'void AtTextUnicode::RemoveRange(unsigned int first, unsigned int last) {\n    unsigned short* to = m_data + m_start + first;\n    const unsigned short* from = m_data + m_start + last + 1;\n    for (unsigned int n = m_end - m_start - last; n != 0; n--) {\n        *to++ = *from++;\n    }\n    m_end += first - last;'),
+    ('Unicode RemoveAt: end', 'AtText.cpp', 'void AtTextUnicode::RemoveAt(unsigned int index) {\n    unsigned short* to = m_data + m_start + index;\n    const unsigned short* from = to + 1;\n    for (unsigned int n = m_end - m_start - index + 1; n != 0; n--) {\n        *to++ = *from++;\n    }\n    m_end--;', 'void AtTextUnicode::RemoveAt(unsigned int index) {\n    unsigned short* to = m_data + m_start + index;\n    const unsigned short* from = to + 1;\n    for (unsigned int n = m_end - m_start - index + 1; n != 0; n--) {\n        *to++ = *from++;\n    }'),
+    ('Unicode Insert: end', 'AtText.cpp', '    *at = (unsigned short)c;\n    m_end++;', '    *at = (unsigned short)c;'),
+    ('Unicode Init: terminator', 'AtText.cpp', 'void AtTextUnicode::Init(unsigned short* data, unsigned int capacity) {\n    m_capacity = capacity;\n    m_data = data;\n    data[capacity - 1] = 0;\n', 'void AtTextUnicode::Init(unsigned short* data, unsigned int capacity) {\n    m_capacity = capacity;\n    m_data = data;\n'),
+    ('Ascii CharAt', 'AtText.cpp', 'unsigned int AtTextAscii::CharAt(unsigned int index) {\n    return (unsigned char)m_data[m_start + index];', 'unsigned int AtTextAscii::CharAt(unsigned int index) {\n    return (unsigned char)m_data[index];'),
+    ('Ascii SetChar', 'AtText.cpp', 'void AtTextAscii::SetChar(unsigned int index, unsigned int c) {\n    m_data[m_start + index]', 'void AtTextAscii::SetChar(unsigned int index, unsigned int c) {\n    m_data[index]'),
+    ('Ascii RemoveRange: end', 'AtText.cpp', 'void AtTextAscii::RemoveRange(unsigned int first, unsigned int last) {\n    char* to = m_data + m_start + first;\n    const char* from = m_data + m_start + last + 1;\n    for (unsigned int n = m_end - m_start - last; n != 0; n--) {\n        *to++ = *from++;\n    }\n    m_end += first - last - 1;', 'void AtTextAscii::RemoveRange(unsigned int first, unsigned int last) {\n    char* to = m_data + m_start + first;\n    const char* from = m_data + m_start + last + 1;\n    for (unsigned int n = m_end - m_start - last; n != 0; n--) {\n        *to++ = *from++;\n    }\n    m_end += first - last;'),
+    ('Ascii RemoveAt: end', 'AtText.cpp', 'void AtTextAscii::RemoveAt(unsigned int index) {\n    char* to = m_data + m_start + index;\n    const char* from = to + 1;\n    for (unsigned int n = m_end - m_start - index + 1; n != 0; n--) {\n        *to++ = *from++;\n    }\n    m_end--;', 'void AtTextAscii::RemoveAt(unsigned int index) {\n    char* to = m_data + m_start + index;\n    const char* from = to + 1;\n    for (unsigned int n = m_end - m_start - index + 1; n != 0; n--) {\n        *to++ = *from++;\n    }'),
+    ('Ascii Insert: end', 'AtText.cpp', '    *at = (char)c;\n    m_end++;', '    *at = (char)c;'),
+    ('Ascii Init: terminator', 'AtText.cpp', 'void AtTextAscii::Init(char* data, unsigned int capacity) {\n    m_capacity = capacity;\n    m_data = data;\n    data[capacity - 1] = 0;\n', 'void AtTextAscii::Init(char* data, unsigned int capacity) {\n    m_capacity = capacity;\n    m_data = data;\n'),
+    ('Unicode Recount: start', 'AtText.cpp', 'void AtTextUnicode::Recount() {\n    m_start = 0;\n', 'void AtTextUnicode::Recount() {\n'),
+    ('Ascii Recount: start', 'AtText.cpp', 'void AtTextAscii::Recount() {\n    m_start = 0;\n', 'void AtTextAscii::Recount() {\n'),
+    ('Unicode Rewind: end', 'AtText.cpp', 'void AtTextUnicode::Rewind() {\n    m_start = 0;\n    m_end = ComputeEnd();', 'void AtTextUnicode::Rewind() {\n    m_start = 0;'),
+    ('Unicode Rewind: start', 'AtText.cpp', 'void AtTextUnicode::Rewind() {\n    m_start = 0;\n', 'void AtTextUnicode::Rewind() {\n'),
+    ('Release: fields', 'AtText.cpp', 'void AtTextUnicode::Release() {\n    m_data = 0;\n    ClearFields();', 'void AtTextUnicode::Release() {\n    ClearFields();'),
+    ('Unicode CopyNarrow: bound', 'AtText.cpp', 'void AtTextUnicode::CopyNarrow(char* out, unsigned int size) {\n    const unsigned short* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size <= n) {', 'void AtTextUnicode::CopyNarrow(char* out, unsigned int size) {\n    const unsigned short* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size < n) {'),
+    ('Unicode CopyWide: bound', 'AtText.cpp', 'void AtTextUnicode::CopyWide(unsigned short* out, unsigned int size) {\n    const unsigned short* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size <= n) {', 'void AtTextUnicode::CopyWide(unsigned short* out, unsigned int size) {\n    const unsigned short* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size < n) {'),
+    ('Ascii CopyNarrow: bound', 'AtText.cpp', 'void AtTextAscii::CopyNarrow(char* out, unsigned int size) {\n    const char* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size <= n) {', 'void AtTextAscii::CopyNarrow(char* out, unsigned int size) {\n    const char* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size < n) {'),
+    ('Ascii CopyWide: bound', 'AtText.cpp', 'void AtTextAscii::CopyWide(unsigned short* out, unsigned int size) {\n    const char* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size <= n) {', 'void AtTextAscii::CopyWide(unsigned short* out, unsigned int size) {\n    const char* from = m_data + m_start;\n    unsigned int n = m_end - m_start;\n    if (size < n) {'),
+    ('Ascii CopyWide: sign', 'AtText.cpp', 'out[n] = (unsigned char)from[n];', 'out[n] = (unsigned short)(short)from[n];'),
+    ('Unicode ToInt', 'AtText.cpp', 'return AtWideToInt(m_data);', 'return 0;'),
+    ('Ascii ToInt', 'AtText.cpp', 'return AtNarrowToInt(m_data);', 'return 0;'),
+    ('Ascii ToFloat', 'AtText.cpp', 'return AtNarrowToFloat(m_data);', 'return 0;'),
+    ('ComputeEnd: index', 'AtText.cpp', 'return m_start + i;', 'return i;'),
+    ('ComputeEnd: none', 'AtText.cpp', 'return m_capacity - 1;', 'return m_capacity;'),
+    ('ClearFields: capacity', 'AtText.cpp', 'void AtText::ClearFields() {\n    m_capacity = 0;\n', 'void AtText::ClearFields() {\n'),
+    ('Status: 20', 'AtText.cpp', 'case 20: return "feature is unimplemented";', 'case 19: return "feature is unimplemented";'),
+    ('Report: separator', 'AtText.cpp', 'strcat(message, ": ");', 'strcat(message, " ");'),
+    ('Report: dot', 'AtText.cpp', 'strcat(message, ".");', 'strcat(message, "");'),
+    ('Report: fatal argument', 'AtText.cpp', 'AtFatal(message, 0, 0, 0);', 'AtFatal(message, 1, 0, 0);'),
+    ('Table ctor: loaded', 'AtText.cpp', '    m_ascii = 0;\n    m_loaded = 0;\n    m_charCount = 0;\n    m_charsUsed = 0;\n    m_stringCount = 0;\n    m_stringsUsed = 0;\n    m_strings = 0;\n    m_chars = 0;\n}\n\nAtTextTable::~AtTextTable', '    m_ascii = 0;\n    m_charCount = 0;\n    m_charsUsed = 0;\n    m_stringCount = 0;\n    m_stringsUsed = 0;\n    m_strings = 0;\n    m_chars = 0;\n}\n\nAtTextTable::~AtTextTable'),
+    ('Clear: map kept', 'AtText.cpp', 'void AtTextTable::Clear() {\n    GmNameMap::Clear();\n', 'void AtTextTable::Clear() {\n'),
+    ('Clear: ignores loaded', 'AtText.cpp', 'void AtTextTable::Clear() {\n    GmNameMap::Clear();\n    if (m_loaded != 0) {', 'void AtTextTable::Clear() {\n    GmNameMap::Clear();\n    if (1) {'),
+    ('Clear: strings kept', 'AtText.cpp', '            operator delete(m_strings);\n', ''),
+    ('Clear: chars kept', 'AtText.cpp', '            operator delete(m_chars);\n', ''),
+    ('Clear: used kept', 'AtText.cpp', '        m_charsUsed = 0;\n        m_stringCount = 0;', '        m_stringCount = 0;'),
+    ('Clear: strings used kept', 'AtText.cpp', '        m_stringCount = 0;\n        m_stringsUsed = 0;\n        m_strings = 0;\n        m_chars = 0;\n    }\n}', '        m_stringCount = 0;\n        m_strings = 0;\n        m_chars = 0;\n    }\n}'),
+    ('StringAt: unit', 'AtText.cpp', '(AtText*)((AtTextUnicode*)m_strings + index)', '(AtText*)((AtTextUnicode*)m_strings + index + 1)'),
+    ('Ascii allocate: map', 'AtText.cpp', 'void AtTextTable::AllocateAscii(unsigned int strings, unsigned int chars) {\n    GmNameMap::Init(strings);\n', 'void AtTextTable::AllocateAscii(unsigned int strings, unsigned int chars) {\n'),
+    ('Ascii allocate: flag', 'AtText.cpp', '    m_ascii = 1;\n    m_loaded = 1;\n', '    m_loaded = 1;\n'),
+    ('Ascii allocate: loaded', 'AtText.cpp', '    m_ascii = 1;\n    m_loaded = 1;\n', '    m_ascii = 1;\n'),
+    ('Unicode allocate: size', 'AtText.cpp', 'operator new(m_charCount * 2)', 'operator new(m_charCount)'),
+    ('Unicode allocate: flag', 'AtText.cpp', '    m_ascii = 0;\n    m_loaded = 1;\n', '    m_loaded = 1;\n'),
+    ('Parse: clears first', 'AtText.cpp', '    if (m_loaded != 0) {\n        Clear();\n    }\n    t->SetKeywords', '    t->SetKeywords'),
+    ('Parse: keyword', 'AtText.cpp', '{kUnicodeChar, "UnicodeChar"}', '{kUnicodeChar, "UnicodeCh"}'),
+    ('Parse: escapes on', 'AtText.cpp', '    t->m_escapes = 1;\n', ''),
+    ('Parse: escapes off', 'AtText.cpp', '    t->m_escapes = 0;\n', ''),
+    ('Parse: namespace ignored', 'AtText.cpp', '        spaceName = space;\n', ''),
+    ('Parse: strings counted again', 'AtText.cpp', '                if (strings == 0) {\n                    t->ExpectLeftBracket();', '                {\n                    t->ExpectLeftBracket();'),
+    ('Parse: ascii char flag', 'AtText.cpp', '                chars = (unsigned int)t->ExpectInt();\n                t->ExpectRightBracket();\n                m_ascii = 1;\n', '                chars = (unsigned int)t->ExpectInt();\n                t->ExpectRightBracket();\n'),
+    ('Parse: unicode char flag', 'AtText.cpp', '                chars = (unsigned int)t->ExpectInt();\n                t->ExpectRightBracket();\n                m_ascii = 0;\n', '                chars = (unsigned int)t->ExpectInt();\n                t->ExpectRightBracket();\n'),
+    ('Parse: no chars check', 'AtText.cpp', 'if (strings != 0 && chars == 0) {', 'if (0) {'),
+    ('Parse: ascii length', 'AtText.cpp', 'strncpy(to, text, length);', 'strncpy(to, text, length ? length - 1 : 0);'),
+    ('Parse: ascii capacity', 'AtText.cpp', 'item->Init(to, length + 1);', 'item->Init(to, length + 2);'),
+    ('Parse: ascii not in map', 'AtText.cpp', '            GmNameMap::Insert(name, item);\n            m_charsUsed += length + 1;', '            m_charsUsed += length + 1;'),
+    ('Parse: ascii used', 'AtText.cpp', 'm_charsUsed += length + 1;', 'm_charsUsed += length;'),
+    ('Parse: wide end test', 'AtText.cpp', '(unsigned short)value != 0; value', 'value != 0; value'),
+    ('Parse: wide item', 'AtText.cpp', '(unsigned short*)m_chars + (m_charsUsed - length), length + 1);', '(unsigned short*)m_chars + (m_charsUsed - length), length + 2);'),
+    ('Parse: wide terminator', 'AtText.cpp', '            GmNameMap::Insert(name, item);\n            m_charsUsed++;\n            m_stringsUsed++;', '            GmNameMap::Insert(name, item);\n            m_stringsUsed++;'),
+    ('Parse: not registered', 'AtText.cpp', '    context->AddMap(this, spaceName);\n', ''),
+    ('Load: extension', 'AtText.cpp', 'file.Open(path, "AIS", 2, 0);', 'file.Open(path, "AIX", 2, 0);'),
+    ('Load: report', 'AtText.cpp', 'AtReportFileError(status, path, "AIS");', 'AtReportFileError(0, path, "AIS");'),
+    # Not used: 'Load: file kept'. the destructor closes it just after, the same way.
+]
+
+RMB_MUTANTS += [
+    ('Group: name', 'GmNameMap.cpp', '    AtCopyName8(m_name, name);\n    m_used = 1;', '    m_used = 1;'),
+    ('Group: used', 'GmNameMap.cpp', '    AtCopyName8(m_name, name);\n    m_used = 1;', '    AtCopyName8(m_name, name);'),
+    ('Group Find: only the first', 'GmNameMap.cpp', '        void* value = m->Find(name);\n        if (value != 0) {\n            return value;\n        }\n', '        return m->Find(name);\n'),
+    ('Group GetNameOf: only the first', 'GmNameMap.cpp', '        m->GetNameOf(value, out);\n        if (out[0] != 0) {\n            return;\n        }\n', '        m->GetNameOf(value, out);\n        return;\n'),
+    ('Group Add: other group kept', 'GmNameMap.cpp', 'void GmNameMapGroup::Add(GmNameMap* map) {\n    if (map->m_group != 0) {\n        map->m_group->Detach(map);\n    }\n', 'void GmNameMapGroup::Add(GmNameMap* map) {\n'),
+    ('Group Add: next', 'GmNameMap.cpp', 'void GmNameMapGroup::Add(GmNameMap* map) {\n    if (map->m_group != 0) {\n        map->m_group->Detach(map);\n    }\n    map->m_next = m_first;\n', 'void GmNameMapGroup::Add(GmNameMap* map) {\n    if (map->m_group != 0) {\n        map->m_group->Detach(map);\n    }\n'),
+    ('Group Add: group', 'GmNameMap.cpp', '    m_first = map;\n    map->m_group = this;\n}\n\nvoid GmNameMapGroup::MoveToFront', '    m_first = map;\n}\n\nvoid GmNameMapGroup::MoveToFront'),
+    ('Move: name ignored', 'GmNameMap.cpp', 'if (AtNamesEqual(name, m_name) && m_first != map) {', 'if (m_first != map) {'),
+    # Not used: 'Move: first not checked'. taking the first map out and putting it back changes nothing unless it is the only one, and that case is tested by Db Find below only through the database: see oracle_rmb.cpp.
+    # Not used: 'Move: detach'. the next lines detach it from the group it says it is in, which is this one whenever the list and the field agree.
+    ('Move: from elsewhere', 'GmNameMap.cpp', '        Detach(map);\n        if (map->m_group != 0) {\n            map->m_group->Detach(map);\n        }\n', '        Detach(map);\n'),
+    ('Detach: database not told', 'GmNameMap.cpp', '            if (m_first == 0 && m_database != 0) {\n                m_database->Release(this);\n            }\n', ''),
+    ('Detach: told while not empty', 'GmNameMap.cpp', 'if (m_first == 0 && m_database != 0) {', 'if (m_database != 0) {'),
+    ('Map GetNameOf: absent', 'GmNameMap.cpp', '    out[0] = 0;\n}\n\nvoid GmNameMap::GetName(', '}\n\nvoid GmNameMap::GetName('),
+    ('Db Clear: pool kept', 'GmNameMap.cpp', '        delete[] m_pool;\n', ''),
+    ('Db Clear: free kept', 'GmNameMap.cpp', '    m_poolSize = 0;\n    m_free = 0;\n    m_last = 0;\n    GmNameMap::Clear();', '    m_poolSize = 0;\n    m_last = 0;\n    GmNameMap::Clear();'),
+    ('Db Clear: map kept', 'GmNameMap.cpp', '    m_last = 0;\n    GmNameMap::Clear();', '    m_last = 0;'),
+    # Not used: 'Db Init: no clear first'. the map's Init right after clears through the vftable when the map is set, and the two are always set together.
+    ('Db Init: map size', 'GmNameMap.cpp', '    GmNameMap::Init(count);\n    m_poolSize = count;', '    GmNameMap::Init(count + 1);\n    m_poolSize = count;'),
+    ('Db Init: heap check', 'GmNameMap.cpp', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    m_pool', '    AtPushHeap(s_heap);\n    m_pool'),
+    ('Db Init: heap not pushed', 'GmNameMap.cpp', '    AtPushHeap(s_heap);\n    m_pool', '    m_pool'),
+    ('Db Init: free list head', 'GmNameMap.cpp', '    m_free = m_pool;\n', ''),
+    ('Db Init: links', 'GmNameMap.cpp', '        g->m_nextFree = g + 1;\n', ''),
+    ('Db Release: not removed', 'GmNameMap.cpp', '    GmNameMap::Remove(group->m_name);\n', ''),
+    ('Db Release: not reset', 'GmNameMap.cpp', '    group->Reset();\n', ''),
+    ('Db Release: not returned', 'GmNameMap.cpp', '    group->m_nextFree = m_free;\n    m_free = group;\n', ''),
+    ('Db Add: free not advanced', 'GmNameMap.cpp', '        m_free = group->m_nextFree;\n', ''),
+    ('Db Add: not in the map', 'GmNameMap.cpp', '        GmNameMap::Insert(space, group);\n', ''),
+    ('Db Add: name', 'GmNameMap.cpp', '        group->SetName(space);\n', ''),
+    ('Db Add: database', 'GmNameMap.cpp', '        group->m_database = this;\n', ''),
+    ('Db Add: last', 'GmNameMap.cpp', '    m_last = group;\n    group->Add(map);', '    group->Add(map);'),
+    ('Db Add: not added', 'GmNameMap.cpp', '    m_last = group;\n    group->Add(map);', '    m_last = group;'),
+    ('Db Remove: no check', 'GmNameMap.cpp', 'void GmNameSpaceDb::Remove(GmNameMap* map) {\n    if (map->m_group != 0) {', 'void GmNameSpaceDb::Remove(GmNameMap* map) {\n    {'),
+    ('Db Find: no cache', 'GmNameMap.cpp', 'void* GmNameSpaceDb::Find(const char* space, const char* name) {\n    if (m_last == 0 || !AtNamesEqual(m_last->m_name, space)) {', 'void* GmNameSpaceDb::Find(const char* space, const char* name) {\n    if (1) {'),
+    ('Db Find: cache not stored', 'GmNameMap.cpp', '            return 0;\n        }\n        m_last = group;\n    }\n    return m_last->Find(name);', '            return 0;\n        }\n        return group->Find(name);\n    }\n    return m_last->Find(name);'),
+    ('Db GetNameOf: absent', 'GmNameMap.cpp', '            out[0] = 0;\n            return;\n', '            return;\n'),
+    ('Db GetNameOf: cache not stored', 'GmNameMap.cpp', '            return;\n        }\n        m_last = group;\n    }\n    m_last->GetNameOf(value, out);', '            return;\n        }\n        group->GetNameOf(value, out);\n        return;\n    }\n    m_last->GetNameOf(value, out);'),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "lvl": {"target": "oracle_lvl", "subsystem": "gm/levels", "mutants": LVL_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "mnt": {"target": "oracle_mnt", "subsystem": "at/mount", "mutants": MNT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
 
@@ -682,7 +791,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("tok", "lvl", "rmb"):
+    elif suite in ("tok", "lvl", "rmb", "txt"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -810,7 +919,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -823,7 +932,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

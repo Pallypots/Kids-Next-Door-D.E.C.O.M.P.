@@ -6,6 +6,7 @@
 //
 // A file system is one source of files: a device, or a mounted archive. AtIoContext keeps a stack of them and asks each in turn.
 #pragma once
+#include "gm/GmNameMap.h"
 
 class AtIoFile;
 
@@ -85,7 +86,14 @@ public:
     // Searches from the top. 0 and writes *fs when one has the file; 1 otherwise, with *fs null if fs was given.
     int FindFile(const char* path, AtIoFileSystem** fs);             // 0x00019300
 
-    char m_unknown00[0x58];
+    AtIoContext();                                                   // Not 0x000191C0, whose member at +0x08 is not recovered.
+    void AddMap(GmNameMap* map, const char* space);                  // 0x00019190 null means the default group
+
+    void* m_device;              // +0x00 see AtIoContextDevice
+    void* m_unknown04;           // +0x04
+    char m_unknown08[0x14];      // +0x08 not recovered
+    GmNameMapGroup m_defaultGroup;  // +0x1C
+    GmNameSpaceDb m_spaces;      // +0x34
     unsigned int m_stackCount;   // +0x58
     unsigned int m_stackSize;    // +0x5C
     AtIoFileSystem** m_stack;    // +0x60
@@ -105,6 +113,8 @@ static_assert(sizeof(AtIoPath) == 0x6A0, "AtIoPath");
 static_assert(offsetof(AtIoFileSystem, m_kind) == 0x6A4, "AtIoFileSystem::m_kind");
 static_assert(offsetof(AtIoFileSystem, m_unknown6B8) == 0x6B8, "AtIoFileSystem::m_unknown6B8");
 static_assert(sizeof(AtIoFileSystem) == 0x6BC, "AtIoFileSystem");
+static_assert(offsetof(AtIoContext, m_defaultGroup) == 0x1C, "AtIoContext::m_defaultGroup");
+static_assert(offsetof(AtIoContext, m_spaces) == 0x34, "AtIoContext::m_spaces");
 static_assert(offsetof(AtIoContext, m_stack) == 0x60, "AtIoContext::m_stack");
 #pragma pop_macro("offsetof")
 #endif

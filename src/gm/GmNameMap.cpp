@@ -62,14 +62,74 @@ int AtNamesEqual(const char* a, const char* b) {
     return a[7] == b[7];
 }
 
+GmNameMapGroup::GmNameMapGroup() {
+    Reset();
+}
+
+void GmNameMapGroup::Reset() {
+    m_name[0] = 0;
+    m_first = 0;
+    m_nextFree = 0;
+    m_database = 0;
+    m_used = 0;
+}
+
+void GmNameMapGroup::SetName(const char* name) {
+    AtCopyName8(m_name, name);
+    m_used = 1;
+}
+
+void* GmNameMapGroup::Find(const char* name) {
+    for (GmNameMap* m = m_first; m != 0; m = m->m_next) {
+        void* value = m->Find(name);
+        if (value != 0) {
+            return value;
+        }
+    }
+    return 0;
+}
+
+void GmNameMapGroup::GetNameOf(const void* value, char* out) {
+    for (GmNameMap* m = m_first; m != 0; m = m->m_next) {
+        m->GetNameOf(value, out);
+        if (out[0] != 0) {
+            return;
+        }
+    }
+    out[0] = 0;
+}
+
+void GmNameMapGroup::Add(GmNameMap* map) {
+    if (map->m_group != 0) {
+        map->m_group->Detach(map);
+    }
+    map->m_next = m_first;
+    m_first = map;
+    map->m_group = this;
+}
+
+void GmNameMapGroup::MoveToFront(GmNameMap* map) {
+    char name[8];
+    AtCopyName8(name, (const char*)map->m_group);
+    if (AtNamesEqual(name, m_name) && m_first != map) {
+        Detach(map);
+        if (map->m_group != 0) {
+            map->m_group->Detach(map);
+        }
+        map->m_next = m_first;
+        m_first = map;
+        map->m_group = this;
+    }
+}
+
 void GmNameMapGroup::Detach(GmNameMap* map) {
     GmNameMap** link = &m_first;
     for (GmNameMap* m = m_first; m != 0; m = *link) {
         if (m == map) {
             *link = m->m_next;
             m->m_group = 0;
-            if (m_first == 0 && m_parent != 0) {
-                m_parent->RemoveFromParent(this);
+            if (m_first == 0 && m_database != 0) {
+                m_database->Release(this);
             }
             return;
         }
@@ -99,6 +159,16 @@ void GmNameMap::Clear() {
     m_size = 0;
     m_next = 0;
     m_group = 0;
+}
+
+void GmNameMap::GetNameOf(const void* value, char* out) {
+    for (unsigned int i = 0; i < m_size; i++) {
+        if (m_entries[i].m_value == value) {
+            AtCopyName8(out, m_entries[i].m_name);
+            return;
+        }
+    }
+    out[0] = 0;
 }
 
 void GmNameMap::GetName(unsigned int index, char* out) {
@@ -251,4 +321,109 @@ void* GmNameMap::Find(const char* name, unsigned int* index) {
         *index = i;
     }
     return m_entries[i].m_value;
+}
+
+void* GmNameSpaceDb::s_heap;
+
+void GmNameSpaceDb::SetHeap(void* heap) {
+    s_heap = heap;
+}
+
+GmNameSpaceDb::GmNameSpaceDb() {
+    m_pool = 0;
+    m_poolSize = 0;
+    m_free = 0;
+    m_last = 0;
+}
+
+GmNameSpaceDb::~GmNameSpaceDb() {
+    GmNameSpaceDb::Clear();
+}
+
+void GmNameSpaceDb::Clear() {
+    if (m_pool != 0) {
+        delete[] m_pool;
+    }
+    m_pool = 0;
+    m_poolSize = 0;
+    m_free = 0;
+    m_last = 0;
+    GmNameMap::Clear();
+}
+
+void GmNameSpaceDb::Init(unsigned int count) {
+    if (m_pool != 0) {
+        Clear();
+    }
+    GmNameMap::Init(count);
+    m_poolSize = count;
+    if (s_heap == 0) {
+        AtRaise(-2, 0, 0, 0);
+    }
+    AtPushHeap(s_heap);
+    m_pool = new GmNameMapGroup[count];
+    AtPopHeap();
+    if (m_pool == 0) {
+        AtRaise(-4, 0, 0, 0);
+    }
+    m_free = m_pool;
+    GmNameMapGroup* last = m_pool + m_poolSize - 1;
+    GmNameMapGroup* g = m_pool;
+    while (g < last) {
+        g->m_nextFree = g + 1;
+        g = g + 1;
+    }
+    g->m_nextFree = 0;
+}
+
+void GmNameSpaceDb::Release(GmNameMapGroup* group) {
+    GmNameMap::Remove(group->m_name);
+    group->Reset();
+    group->m_nextFree = m_free;
+    m_free = group;
+}
+
+void GmNameSpaceDb::Add(const char* space, GmNameMap* map) {
+    GmNameMapGroup* group = (GmNameMapGroup*)GmNameMap::Find(space);
+    if (group == 0) {
+        if (m_free == 0) {
+            AtFatal("Atlas Base: Name space database overflow.", 0, 0, 0);
+        }
+        group = m_free;
+        m_free = group->m_nextFree;
+        GmNameMap::Insert(space, group);
+        group->SetName(space);
+        group->m_database = this;
+    }
+    m_last = group;
+    group->Add(map);
+}
+
+void GmNameSpaceDb::Remove(GmNameMap* map) {
+    if (map->m_group != 0) {
+        map->m_group->Detach(map);
+    }
+}
+
+void* GmNameSpaceDb::Find(const char* space, const char* name) {
+    if (m_last == 0 || !AtNamesEqual(m_last->m_name, space)) {
+        GmNameMapGroup* group = (GmNameMapGroup*)GmNameMap::Find(space);
+        if (group == 0) {
+            return 0;
+        }
+        m_last = group;
+    }
+    return m_last->Find(name);
+}
+
+void GmNameSpaceDb::GetNameOf(const char* space, const void* value, char* out) {
+    if (m_last == 0 || !AtNamesEqual(m_last->m_name, space)) {
+        GmNameMapGroup* group = (GmNameMapGroup*)GmNameMap::Find(space);
+        if (group == 0) {
+            out[0] = 0;
+            return;
+        }
+        m_last = group;
+    }
+    m_last->GetNameOf(value, out);
 }

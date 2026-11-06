@@ -33,6 +33,8 @@ public:
 // Open file. vftable 0x00273004: ten pure slots. Used both for the archive on disc and for files inside it.
 class AtIoFile {
 public:
+    // Names older than the table of meanings at 0x000140D0, AtIoStatusText, which is what they really say: 2 is "error opening the specified file", 3 "general error",
+    // 8 "file pointer is out of bounds", 9 "access violation".
     enum Status { kOk = 0, kNotFound = 2, kIoError = 3, kPending = 7, kEndOfFile = 8, kUnsupported = 9 };
     enum Flags { kFlagsIgnored = 0x21, kFlagsWrite = 0x0C, kOpen = 0x10000, kReachedEnd = 0x20000 };
 

@@ -41,7 +41,6 @@ static void setup(const std::string& root) {
     AtIoJamFileSystem::SetHeap(&heap_token);
     AtIoJamFileSystem::SetHeaderHeap(&heap_token);
     g_context = new AtIoContext;
-    std::memset(static_cast<void*>(g_context), 0, sizeof *g_context);
     g_context->m_stack = g_stack;
     g_context->m_stackSize = 4;
     AtIoContext::s_instance = g_context;

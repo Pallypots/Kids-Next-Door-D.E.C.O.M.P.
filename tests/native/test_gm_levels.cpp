@@ -18,7 +18,7 @@
 #include "at/AtIoJam.h"
 #include "at/AtIoMountManager.h"
 #include "gm/GmLevelManager.h"
-#include "gm/GmNameMap.h"
+#include "gm/GmRumble.h"
 #include "host_file_system.h"
 
 static int g_fail;
@@ -30,7 +30,6 @@ static char g_heap;
 
 static void setup_context() {
     g_context = new AtIoContext;
-    std::memset(static_cast<void*>(g_context), 0, sizeof *g_context);
     g_context->m_stack = g_stack;
     g_context->m_stackSize = 4;
     AtIoContext::s_instance = g_context;

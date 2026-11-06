@@ -149,7 +149,7 @@ public:
     float m_real;              // +0x014
     char m_string[0x100];      // +0x018
     unsigned int m_stringLength;  // +0x118
-    int m_escapes;             // +0x11C backslash escapes in strings; nothing recovered sets it
+    int m_escapes;             // +0x11C backslash escapes in strings; the game text reader turns them on while it reads
     const char* m_fileName;    // +0x120
     char m_extension[4];       // +0x124 ".RMB", with no terminator when full
 };

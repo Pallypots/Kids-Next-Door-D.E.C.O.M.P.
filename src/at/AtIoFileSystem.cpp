@@ -190,6 +190,22 @@ void AtIoFileSystem::ResetFileSystem() {
     m_unknown6B8 = 0;
 }
 
+AtIoContext::AtIoContext() {
+    m_device = 0;
+    m_unknown04 = 0;
+    m_stackCount = 0;
+    m_stackSize = 0;
+    m_stack = 0;
+}
+
+void AtIoContext::AddMap(GmNameMap* map, const char* space) {
+    if (space == 0) {
+        m_defaultGroup.Add(map);
+    } else {
+        m_spaces.Add(space, map);
+    }
+}
+
 void AtIoContext::Push(AtIoFileSystem* fs) {
     if (m_stackCount < m_stackSize) {
         m_stack[m_stackCount] = fs;

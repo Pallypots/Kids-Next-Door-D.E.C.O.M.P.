@@ -11,7 +11,7 @@
 // The executable is linked at 0x00010000, and tests/oracle/reserve.asm reserves the XBE's whole address range ahead of
 // all compiled code, so that range belongs to this image from process creation, before any stack or heap exists.
 // map_image refuses to run if the reservation does not cover what is needed.
-static const uint32_t kNeedLow = 0x00011000, kNeedHigh = 0x003B4000, kReserved = 0x003EF000;
+static const uint32_t kNeedLow = 0x00011000, kNeedHigh = 0x003B4000, kReserved = 0x004EF000;
 extern "C" unsigned char g_low[kReserved];
 
 static bool map_image(const char* path) {

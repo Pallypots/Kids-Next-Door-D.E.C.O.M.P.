@@ -2543,6 +2543,470 @@ source = "src/gm/GmRumble.cpp"
 subsystem = "gm/rumble"
 evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration in include/gm/GmNameMap.h"
 
+[[function]]
+va = 0x000140D0
+size = 152
+symbol = "?AtIoStatusText@@YAPBDH@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00017E60
+size = 28
+symbol = "?SetName@GmNameMapGroup@@QAEXPBD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00017ED0
+size = 42
+symbol = "?Find@GmNameMapGroup@@QAEPAXPBD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00017F00
+size = 48
+symbol = "?GetNameOf@GmNameMapGroup@@QAEXPBXPAD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00017F30
+size = 19
+symbol = "??0GmNameMapGroup@@QAE@XZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00017F50
+size = 17
+symbol = "?Reset@GmNameMapGroup@@QAEXXZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00017F70
+size = 38
+symbol = "?Add@GmNameMapGroup@@QAEXPAVGmNameMap@@@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00017FA0
+size = 89
+symbol = "?MoveToFront@GmNameMapGroup@@QAEXPAVGmNameMap@@@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018000
+size = 10
+symbol = "?SetHeap@GmNameSpaceDb@@SAXPAX@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018010
+size = 35
+symbol = "?Release@GmNameSpaceDb@@QAEXPAVGmNameMapGroup@@@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018040
+size = 32
+symbol = "??0GmNameSpaceDb@@QAE@XZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018060
+size = 244
+symbol = "?Init@GmNameSpaceDb@@QAEXI@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018160
+size = 43
+symbol = "?Clear@GmNameSpaceDb@@UAEXXZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018190
+size = 94
+symbol = "?Add@GmNameSpaceDb@@QAEXPBDPAVGmNameMap@@@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000181F0
+size = 23
+symbol = "?Remove@GmNameSpaceDb@@SAXPAVGmNameMap@@@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018210
+size = 67
+symbol = "?Find@GmNameSpaceDb@@QAEPAXPBD0@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018260
+size = 79
+symbol = "?GetNameOf@GmNameSpaceDb@@QAEXPBDPBXPAD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000182B0
+size = 109
+symbol = "??1GmNameSpaceDb@@UAE@XZ"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00018320
+size = 30
+symbol = "??_GGmNameSpaceDb@@UAEPAXI@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00019190
+size = 44
+symbol = "?AddMap@AtIoContext@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtIoFileSystem.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001F560
+size = 280
+symbol = "?AllocateUnicode@AtTextTable@@QAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001F680
+size = 35
+symbol = "?StringAt@AtTextTable@@QAEPAVAtText@@I@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001F6B0
+size = 44
+symbol = "??0AtTextTable@@QAE@XZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001F6E0
+size = 296
+symbol = "?AllocateAscii@AtTextTable@@QAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001F810
+size = 592
+symbol = "?Parse@AtTextTable@@QAEXPAVAtIoContext@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001FA70
+size = 154
+symbol = "?Load@AtTextTable@@QAEXPAVAtIoContext@@PBDH@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001FB10
+size = 86
+symbol = "?Clear@AtTextTable@@UAEXXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001FB70
+size = 79
+symbol = "??1AtTextTable@@UAE@XZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00024BB0
+size = 69
+symbol = "?GetNameOf@GmNameMap@@QAEXPBXPAD@Z"
+source = "src/gm/GmNameMap.cpp"
+subsystem = "gm/names"
+evidence = "tests/oracle/oracle_rmb.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DD30
+size = 19
+symbol = "?CharAt@AtTextUnicode@@UAEII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DD50
+size = 24
+symbol = "?SetChar@AtTextUnicode@@UAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DD70
+size = 20
+symbol = "?Rewind@AtTextUnicode@@QAEXXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DD90
+size = 32
+symbol = "??0AtTextUnicode@@QAE@XZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DDB0
+size = 13
+symbol = "?ToInt@AtTextUnicode@@UAEHXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DDE0
+size = 41
+symbol = "?Init@AtTextUnicode@@QAEXPAGI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DE10
+size = 73
+symbol = "?RemoveRange@AtTextUnicode@@UAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DE60
+size = 60
+symbol = "?RemoveAt@AtTextUnicode@@UAEXI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DEA0
+size = 74
+symbol = "?Insert@AtTextUnicode@@UAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DEF0
+size = 35
+symbol = "?Recount@AtTextUnicode@@UAEXXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DF20
+size = 52
+symbol = "?CopyNarrow@AtTextUnicode@@UAEXPADI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DF60
+size = 70
+symbol = "?CopyWide@AtTextUnicode@@UAEXPAGI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DFB0
+size = 12
+symbol = "?Release@AtTextUnicode@@QAEXXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DFC0
+size = 19
+symbol = "?CharAt@AtTextAscii@@UAEII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002DFE0
+size = 22
+symbol = "?SetChar@AtTextAscii@@UAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E000
+size = 32
+symbol = "??0AtTextAscii@@QAE@XZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E020
+size = 13
+symbol = "?ToInt@AtTextAscii@@UAEHXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E030
+size = 13
+symbol = "?ToFloat@AtTextAscii@@UAEMXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E040
+size = 40
+symbol = "?Init@AtTextAscii@@QAEXPADI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E070
+size = 68
+symbol = "?RemoveRange@AtTextAscii@@UAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E0C0
+size = 56
+symbol = "?RemoveAt@AtTextAscii@@UAEXI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E100
+size = 63
+symbol = "?Insert@AtTextAscii@@UAEXII@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E150
+size = 30
+symbol = "?Recount@AtTextAscii@@UAEXXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E170
+size = 60
+symbol = "?CopyNarrow@AtTextAscii@@UAEXPADI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E1B0
+size = 63
+symbol = "?CopyWide@AtTextAscii@@UAEXPAGI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E510
+size = 82
+symbol = "??_GAtTextTable@@UAEPAXI@Z"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00031BA0
+size = 12
+symbol = "?ClearFields@AtText@@QAEXXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000398B0
+size = 55
+symbol = "?ComputeEnd@AtText@@QAEIXZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000398F0
+size = 20
+symbol = "??0AtText@@QAE@XZ"
+source = "src/at/AtText.cpp"
+subsystem = "at/gametext"
+evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -2707,11 +3171,43 @@ slots = 2
 symbol = "??_7GmNameMap@@6B@"
 source = "src/gm/GmNameMap.cpp"
 
+[[vtable]]
+va = 0x0027211C
+slots = 2
+symbol = "??_7GmNameSpaceDb@@6B@"
+source = "src/gm/GmNameMap.cpp"
+
+[[vtable]]
+va = 0x0027514C
+slots = 10
+symbol = "??_7AtText@@6B@"
+source = "src/at/AtText.cpp"
+
+[[vtable]]
+va = 0x002748C0
+slots = 10
+symbol = "??_7AtTextUnicode@@6B@"
+source = "src/at/AtText.cpp"
+
+[[vtable]]
+va = 0x002748F0
+slots = 10
+symbol = "??_7AtTextAscii@@6B@"
+source = "src/at/AtText.cpp"
+
+[[vtable]]
+va = 0x002726B4
+slots = 2
+symbol = "??_7AtTextTable@@6B@"
+source = "src/at/AtText.cpp"
+
 [symbols]
+"?s_heap@AtTextTable@@2PAXA" = 0x002C62F8  # read at 0x0001F70F
+"?s_heap@GmNameSpaceDb@@2PAXA" = 0x002C6274  # written at 0x00018004
+"?ToFloat@AtTextUnicode@@UAEMXZ" = 0x0002DDC0  # vftable slot: swscanf cannot run in the harness, so this is NOT recorded as tested
 "?s_heap@GmNameMap@@2PAXA" = 0x002C632C  # read at 0x00024CFA
 "?s_heap@GmRumbleEffectArray@@2PAXA" = 0x002CF164  # read at 0x000745AB
 "?s_heap@GmRumbleFrameArray@@2PAXA" = 0x002CF168  # read at 0x00074376
-"?RemoveFromParent@GmNameMapGroup@@QAEXPAV1@@Z" = 0x00018010  # tail of 0x00017EC4: NOT recovered
 "?s_instance@AtIoMountManager@@2PAV1@A" = 0x002E26E0  # written at 0x00076873
 "?s_heap@AtIoMountManager@@2PAXA" = 0x002E26E4  # written at 0x000768E3
 "?s_heap@AtIoSpaceManager@@2PAXA" = 0x00301B48  # written at 0x0007CEE4

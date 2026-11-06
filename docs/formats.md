@@ -101,7 +101,7 @@ The lexical rules, from 0x00022DF0, are:
 | Input | Token |
 | --- | --- |
 | blanks, tabs, CR, LF between tokens; `//` to end of line | skipped |
-| `"..."` | string, at most 255 bytes; may span lines. Backslash escapes (`\n \t \" \\`, capitals too) only if the tokenizer's flag at +0x11C is set, and nothing recovered sets it, so a path like `"Design\Registry\Actor"` keeps its backslashes |
+| `"..."` | string, at most 255 bytes; may span lines. Backslash escapes (`\n \t \" \\`, capitals too) only if the tokenizer's flag at +0x11C is set. The game text reader sets it while it reads; other readers leave it off, so a path like `"Design\Registry\Actor"` keeps its backslashes |
 | decimal, `0x` hex, either with a leading `-` | int, wrapping at 32 bits |
 | digits with `.`, or a leading `.`; never an exponent | real |
 | letter, then letters, digits, `_` | keyword, case-insensitive, looked up in a table the caller supplies; not in the table gives the error token 1 |
@@ -138,3 +138,19 @@ This disc's file has 47 entries: 16 movies, 15 normal, 13 non-selectable, 3 hidd
     RumbleEffects [ n ] { RumbleEffect "NAME" { KeyFrames [ k ] { KeyFrame time { Left a Right b } ... } } ... }
 
 Numbers must be reals: `Left 1` is an error. A missing keyword makes the reader return early, leaving the rest to be misread. Effects are found by name through a `GmNameMap`.
+
+## Game text: .AIS (reader: AtTextTable, 0x0001F810)
+
+    NameSpace "NAME"                        optional
+    UnicodeChar [ total ] UnicodeString [ count ]        or ASCIIChar and ASCIIString, in either order
+    { "NAME" 0x44 0x75 ... 0x00   ... }     wide: numbers up to a zero
+    { "NAME" "text"               ... }     narrow: a string, with escapes on
+
+The table holds one block of characters and one of string objects, and is a `GmNameMap` by name. It then registers itself under its namespace, or in the default group with none (`docs/startup.md`, `AtIoContext::AddMap`). A count of strings with no count of characters is reported.
+The closing brace is never read. The end of the file before the opening brace is a loop with no end; so is a wide string that runs out of file with a non-zero value left in the tokenizer.
+
+72 distinct files on this disc, 2,685 strings, all read the same by the original and the recovered code.
+
+## Namespaces
+
+`AtIoContext` holds a default `GmNameMapGroup` and a `GmNameSpaceDb`. A namespace is a list of maps, newest first, so a later file's names shadow an earlier one's. An emptied namespace returns to a fixed pool; running out reports `Atlas Base: Name space database overflow.`

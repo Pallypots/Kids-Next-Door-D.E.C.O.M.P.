@@ -5,6 +5,6 @@
 .model flat
 PUBLIC _g_low
 reserved SEGMENT PARA PUBLIC FLAT ALIAS(".text") EXECUTE READ 'CODE'
-_g_low DB 3EF000h DUP(0)
+_g_low DB 4EF000h DUP(0)
 reserved ENDS
 END

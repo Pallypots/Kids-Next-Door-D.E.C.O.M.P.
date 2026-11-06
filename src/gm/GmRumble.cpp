@@ -1,6 +1,6 @@
 // GmRumbleEffects and what it holds: the reader of RUMBLE.RMB. Original address clusters 0x000741B0-0x000748D6, 0x000748E0-0x000749ED, 0x001015C0, 0x000EB540.
 // Verification status per function: config/functions.toml, docs/PROGRESS.md.
-#include "gm/GmNameMap.h"
+#include "gm/GmRumble.h"
 #include "gm/GmLevelManager.h"
 
 void* GmRumbleFrameArray::s_heap;

@@ -29,13 +29,13 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 
 | Owner | Functions | Unique bytes | Direct evidence | Signature hint only | Inferred from neighbours | No evidence |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| game | 10560 | 1553503 | 808 | 0 | 9752 | 0 |
+| game | 10560 | 1553503 | 866 | 0 | 9694 | 0 |
 | crt | 279 | 35723 | 9 | 0 | 270 | 0 |
 | xdk | 1300 | 208507 | 1189 | 24 | 87 | 0 |
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 315 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 373 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -358,9 +358,67 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x000749B0 | 62 | `?Init@GmRumbleEffect@@QAEXPBDI@Z` | gm/rumble | SIZE |
 | 0x000EB540 | 4 | `?Name@GmRumbleEffect@@QAEPBDXZ` | gm/rumble | MATCH |
 | 0x001015C0 | 13 | `??0GmRumbleFrame@@QAE@XZ` | gm/rumble | MISMATCH |
+| 0x000140D0 | 152 | `?AtIoStatusText@@YAPBDH@Z` | at/gametext | SIZE |
+| 0x00017E60 | 28 | `?SetName@GmNameMapGroup@@QAEXPBD@Z` | gm/names | SIZE |
+| 0x00017ED0 | 42 | `?Find@GmNameMapGroup@@QAEPAXPBD@Z` | gm/names | SIZE |
+| 0x00017F00 | 48 | `?GetNameOf@GmNameMapGroup@@QAEXPBXPAD@Z` | gm/names | SIZE |
+| 0x00017F30 | 19 | `??0GmNameMapGroup@@QAE@XZ` | gm/names | SIZE |
+| 0x00017F50 | 17 | `?Reset@GmNameMapGroup@@QAEXXZ` | gm/names | SIZE |
+| 0x00017F70 | 38 | `?Add@GmNameMapGroup@@QAEXPAVGmNameMap@@@Z` | gm/names | MATCH |
+| 0x00017FA0 | 89 | `?MoveToFront@GmNameMapGroup@@QAEXPAVGmNameMap@@@Z` | gm/names | SIZE |
+| 0x00018000 | 10 | `?SetHeap@GmNameSpaceDb@@SAXPAX@Z` | gm/names | MATCH |
+| 0x00018010 | 35 | `?Release@GmNameSpaceDb@@QAEXPAVGmNameMapGroup@@@Z` | gm/names | SIZE |
+| 0x00018040 | 32 | `??0GmNameSpaceDb@@QAE@XZ` | gm/names | SIZE |
+| 0x00018060 | 244 | `?Init@GmNameSpaceDb@@QAEXI@Z` | gm/names | SIZE |
+| 0x00018160 | 43 | `?Clear@GmNameSpaceDb@@UAEXXZ` | gm/names | SIZE |
+| 0x00018190 | 94 | `?Add@GmNameSpaceDb@@QAEXPBDPAVGmNameMap@@@Z` | gm/names | SIZE |
+| 0x000181F0 | 23 | `?Remove@GmNameSpaceDb@@SAXPAVGmNameMap@@@Z` | gm/names | SIZE |
+| 0x00018210 | 67 | `?Find@GmNameSpaceDb@@QAEPAXPBD0@Z` | gm/names | SIZE |
+| 0x00018260 | 79 | `?GetNameOf@GmNameSpaceDb@@QAEXPBDPBXPAD@Z` | gm/names | SIZE |
+| 0x000182B0 | 109 | `??1GmNameSpaceDb@@UAE@XZ` | gm/names | SIZE |
+| 0x00018320 | 30 | `??_GGmNameSpaceDb@@UAEPAXI@Z` | gm/names | SIZE |
+| 0x00019190 | 44 | `?AddMap@AtIoContext@@QAEXPAVGmNameMap@@PBD@Z` | at/gametext | SIZE |
+| 0x0001F560 | 280 | `?AllocateUnicode@AtTextTable@@QAEXII@Z` | at/gametext | SIZE |
+| 0x0001F680 | 35 | `?StringAt@AtTextTable@@QAEPAVAtText@@I@Z` | at/gametext | SIZE |
+| 0x0001F6B0 | 44 | `??0AtTextTable@@QAE@XZ` | at/gametext | SIZE |
+| 0x0001F6E0 | 296 | `?AllocateAscii@AtTextTable@@QAEXII@Z` | at/gametext | SIZE |
+| 0x0001F810 | 592 | `?Parse@AtTextTable@@QAEXPAVAtIoContext@@PAVAtIoTokenizer@@@Z` | at/gametext | SIZE |
+| 0x0001FA70 | 154 | `?Load@AtTextTable@@QAEXPAVAtIoContext@@PBDH@Z` | at/gametext | SIZE |
+| 0x0001FB10 | 86 | `?Clear@AtTextTable@@UAEXXZ` | at/gametext | SIZE |
+| 0x0001FB70 | 79 | `??1AtTextTable@@UAE@XZ` | at/gametext | SIZE |
+| 0x00024BB0 | 69 | `?GetNameOf@GmNameMap@@QAEXPBXPAD@Z` | gm/names | SIZE |
+| 0x0002DD30 | 19 | `?CharAt@AtTextUnicode@@UAEII@Z` | at/gametext | SIZE |
+| 0x0002DD50 | 24 | `?SetChar@AtTextUnicode@@UAEXII@Z` | at/gametext | SIZE |
+| 0x0002DD70 | 20 | `?Rewind@AtTextUnicode@@QAEXXZ` | at/gametext | SIZE |
+| 0x0002DD90 | 32 | `??0AtTextUnicode@@QAE@XZ` | at/gametext | SIZE |
+| 0x0002DDB0 | 13 | `?ToInt@AtTextUnicode@@UAEHXZ` | at/gametext | SIZE |
+| 0x0002DDE0 | 41 | `?Init@AtTextUnicode@@QAEXPAGI@Z` | at/gametext | SIZE |
+| 0x0002DE10 | 73 | `?RemoveRange@AtTextUnicode@@UAEXII@Z` | at/gametext | SIZE |
+| 0x0002DE60 | 60 | `?RemoveAt@AtTextUnicode@@UAEXI@Z` | at/gametext | SIZE |
+| 0x0002DEA0 | 74 | `?Insert@AtTextUnicode@@UAEXII@Z` | at/gametext | SIZE |
+| 0x0002DEF0 | 35 | `?Recount@AtTextUnicode@@UAEXXZ` | at/gametext | MISMATCH |
+| 0x0002DF20 | 52 | `?CopyNarrow@AtTextUnicode@@UAEXPADI@Z` | at/gametext | SIZE |
+| 0x0002DF60 | 70 | `?CopyWide@AtTextUnicode@@UAEXPAGI@Z` | at/gametext | SIZE |
+| 0x0002DFB0 | 12 | `?Release@AtTextUnicode@@QAEXXZ` | at/gametext | SIZE |
+| 0x0002DFC0 | 19 | `?CharAt@AtTextAscii@@UAEII@Z` | at/gametext | SIZE |
+| 0x0002DFE0 | 22 | `?SetChar@AtTextAscii@@UAEXII@Z` | at/gametext | SIZE |
+| 0x0002E000 | 32 | `??0AtTextAscii@@QAE@XZ` | at/gametext | SIZE |
+| 0x0002E020 | 13 | `?ToInt@AtTextAscii@@UAEHXZ` | at/gametext | SIZE |
+| 0x0002E030 | 13 | `?ToFloat@AtTextAscii@@UAEMXZ` | at/gametext | SIZE |
+| 0x0002E040 | 40 | `?Init@AtTextAscii@@QAEXPADI@Z` | at/gametext | SIZE |
+| 0x0002E070 | 68 | `?RemoveRange@AtTextAscii@@UAEXII@Z` | at/gametext | SIZE |
+| 0x0002E0C0 | 56 | `?RemoveAt@AtTextAscii@@UAEXI@Z` | at/gametext | SIZE |
+| 0x0002E100 | 63 | `?Insert@AtTextAscii@@UAEXII@Z` | at/gametext | SIZE |
+| 0x0002E150 | 30 | `?Recount@AtTextAscii@@UAEXXZ` | at/gametext | MISMATCH |
+| 0x0002E170 | 60 | `?CopyNarrow@AtTextAscii@@UAEXPADI@Z` | at/gametext | SIZE |
+| 0x0002E1B0 | 63 | `?CopyWide@AtTextAscii@@UAEXPAGI@Z` | at/gametext | SIZE |
+| 0x0002E510 | 82 | `??_GAtTextTable@@UAEPAXI@Z` | at/gametext | SIZE |
+| 0x00031BA0 | 12 | `?ClearFields@AtText@@QAEXXZ` | at/gametext | SIZE |
+| 0x000398B0 | 55 | `?ComputeEnd@AtText@@QAEIXZ` | at/gametext | SIZE |
+| 0x000398F0 | 20 | `??0AtText@@QAE@XZ` | at/gametext | SIZE |
 
-Relocation-aware matches with the host compiler: 61 functions, 935 unique bytes.
-Share of `.text` raw bytes: 0.0457% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 63 functions, 983 unique bytes.
+Share of `.text` raw bytes: 0.0481% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -395,6 +453,11 @@ Exact linked match (whole XBE): not attempted.
 | 0x0028DAB4 | 3 | `??_7GmLevelManager@@6B@` | MATCH |
 | 0x00278548 | 5 | `??_7AtIoMountManager@@6B@` | MATCH |
 | 0x00272E60 | 2 | `??_7GmNameMap@@6B@` | MATCH |
+| 0x0027211C | 2 | `??_7GmNameSpaceDb@@6B@` | MATCH |
+| 0x0027514C | 10 | `??_7AtText@@6B@` | MATCH |
+| 0x002748C0 | 10 | `??_7AtTextUnicode@@6B@` | MATCH |
+| 0x002748F0 | 10 | `??_7AtTextAscii@@6B@` | MATCH |
+| 0x002726B4 | 2 | `??_7AtTextTable@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
@@ -408,7 +471,9 @@ Suite `lvl`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: Lev
 
 Suite `mnt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 946 comparisons, 0 differences). Recorded function entries reached in every run: 23 / 23. Source mutants detected: 64 / 64. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `rmb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: seed 1, RUMBLE.RMB with 15 effects; 3524364 comparisons, 0 differences). Recorded function entries reached in every run: 36 / 36. Source mutants detected: 92 / 92. Positive control exit: 0. Harness mutation exit: 1.
+Suite `rmb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: seed 1, RUMBLE.RMB with 15 effects; 3525053 comparisons, 0 differences). Recorded function entries reached in every run: 55 / 55. Source mutants detected: 125 / 125. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `txt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 72 .AIS files, 2685 strings, 27924 comparisons, 0 differences). Recorded function entries reached in every run: 39 / 39. Source mutants detected: 64 / 64. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

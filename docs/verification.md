@@ -197,13 +197,24 @@ Not covered: the real factory and device classes, which are not recovered; `AtIo
 
 The name map under 40 seeds of 1,500 random operations each, with the whole table compared after every one, plus sizes at and past the end of the prime table, group membership and no heap. The rumble reader on the real file and on 34 written inputs. Frames are compared as bits.
 
-Result on 2026-11-06: `RUMBLE.RMB` with 15 effects, no difference; 36/36 entries; positive control passes; `--mutate` fails; 92/92 source mutants detected (85 as a difference, 7 by a crash or hang).
+Result on 2026-11-06: `RUMBLE.RMB` with 15 effects, no difference; 36/36 entries; positive control passes; `--mutate` fails; 125/125 source mutants detected (103 as a difference, 22 by a crash or hang).
 
-First run 88/95. Four survivors were real gaps, now closed; three changed nothing observable and were dropped, with the reason beside them in tools/oracle_run.py.
+First run 88/95, then 121/129 with the namespaces added. Most survivors were real gaps, now closed; those that changed nothing observable were dropped, with the reason beside them in tools/oracle_run.py. One of the tests had been comparing no-ops: a group's name had been reset before its moves, on both sides, so nothing moved. It now asserts that they do.
 
 Not compared: map slots when an effect's name failed to parse. The name is then empty with stack bytes after it, and the hash reads past the terminator, so the slot depends on those bytes in the original too.
 
 `test_gm_levels` also reads the 15 effects and 38 key frames from the real archive on x64, against a separate Python parse, with floats within a tolerance because Python's are correctly rounded and the game's are not.
+
+## Text strings and game text: tests/oracle/oracle_txt.cpp
+
+Every string method through the vftables, on 21 texts, for both kinds, with windows that start later, plus 31 written tables and all 72 distinct `.AIS` files on the disc, each string looked up on both sides and compared. Result on 2026-11-06: 2,685 strings, no difference; 39/39 entries;
+positive control passes; `--mutate` fails; 64/64 source mutants (54 as a difference, 10 by a crash). First run 54/66.
+
+**Not run: the wide `ToFloat` at 0x0002DDC0.** It is `swscanf`, and the original's needs C library locks only start-up creates. It is not recorded, and is compared instead with the original's narrow `atof` on the same text. A wide string that parses to nothing returns an uninitialised local in the original, and zero here.
+
+Library differences found: `atoi` wraps on overflow in the original and may saturate in a modern library, so the conversion is written out; the status text table has a gap at 19, which my first version missed. `Insert` turned out to take (character, index), not the reverse: the original crashed when the harness called it the other way, and I had read the stack offsets wrongly.
+
+The harness now reserves up to 0x004EF000, because the C library touches uninitialised data past the old limit.
 
 ## End to end: tests/native/test_at_e2e.cpp
 

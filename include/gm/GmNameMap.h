@@ -1,22 +1,11 @@
-// A hash table from eight-byte names to objects, used across the engine, and the rumble effects that sit on top of it. All names are inferred.
+// A hash table from eight-byte names to objects, used across the engine, and the tree of namespaces that holds such tables. All names are inferred, except that the
+// executable's own message calls the tree a "name space database".
 #pragma once
-#include "at/AtIoTokenizer.h"
 
 int AtNamesEqual(const char* a, const char* b);   // 0x00013FC0 1 when equal, comparing at most eight bytes
 
 class GmNameMap;
-
-// A list of maps that belongs to something larger, not recovered. Only what a map needs in order to leave it.
-class GmNameMapGroup {
-public:
-    void Detach(GmNameMap* map);       // 0x00017E80
-    void RemoveFromParent(GmNameMapGroup* parent);   // 0x00018010 NOT recovered: stops with a diagnostic in GmNamePending.cpp
-
-    char m_unknown00[8];
-    GmNameMap* m_first;                // +0x08
-    char m_unknown0C[8];
-    GmNameMapGroup* m_parent;          // +0x14
-};
+class GmNameSpaceDb;
 
 // vftable 0x00272E60. Open addressing with linear probing. A slot is free when its value is null. Sizes come from a table of primes.
 class GmNameMap {
@@ -37,78 +26,58 @@ public:
     void* Find(const char* name);                 // 0x00025150
     void* Find(const char* name, unsigned int* index);  // 0x000251D0
     void GetName(unsigned int index, char* out);  // 0x00024C00
+    void GetNameOf(const void* value, char* out);  // 0x00024BB0 linear; an empty name when absent
     unsigned int HashOf(const char* name);        // 0x00024C20
     void Grow();                                  // 0x00024C80
 
     Entry* m_entries;          // +0x04
     unsigned int m_size;       // +0x08
     GmNameMap* m_next;         // +0x0C in its group
-    GmNameMapGroup* m_group;   // +0x10
+    class GmNameMapGroup* m_group;  // +0x10
 
     static void* s_heap;       // 0x002C632C
 };
 
-// One key of a rumble effect. Times in seconds and intensities from 0 to 1 by the comment in RUMBLE.RMB.
-struct GmRumbleFrame {
-    GmRumbleFrame();           // 0x001015C0
-    float m_time;
-    float m_left;
-    float m_right;
+// A namespace: 0x18 bytes, the maps registered under one name, searched newest first.
+class GmNameMapGroup {
+public:
+    GmNameMapGroup();                  // 0x00017F30
+    void Reset();                      // 0x00017F50
+    void SetName(const char* name);    // 0x00017E60
+    void* Find(const char* name);      // 0x00017ED0 the first map that has it
+    void GetNameOf(const void* value, char* out);  // 0x00017F00
+    void Add(GmNameMap* map);          // 0x00017F70 leaves any group it was in
+    void MoveToFront(GmNameMap* map);  // 0x00017FA0 when the map belongs to a group of this name
+    void Detach(GmNameMap* map);       // 0x00017E80 an emptied namespace goes back to its database
+
+    char m_name[8];            // +0x00
+    GmNameMap* m_first;        // +0x08
+    int m_used;                // +0x0C
+    GmNameMapGroup* m_nextFree;  // +0x10
+    GmNameSpaceDb* m_database;   // +0x14
 };
 
-class GmRumbleFrameArray {
+// vftable 0x0027211C. A map of namespaces by name, from a fixed pool.
+class GmNameSpaceDb : public GmNameMap {
 public:
-    void Resize(unsigned int count);    // 0x00074320
-    void Assign(const GmRumbleFrame* frames, unsigned int count);  // 0x00074460
+    GmNameSpaceDb();                   // 0x00018040
+    ~GmNameSpaceDb() override;         // slot 0; 0x00018320 deleting, 0x000182B0 complete
+    void Clear() override;             // slot 1, 0x00018160
 
-    GmRumbleFrame* m_items;
-    unsigned int m_count;
+    void Init(unsigned int count);     // 0x00018060
+    void Release(GmNameMapGroup* group);  // 0x00018010 back to the pool
+    void Add(const char* space, GmNameMap* map);  // 0x00018190 reports running out of the pool, then crashes on it in the original
+    static void Remove(GmNameMap* map);  // 0x000181F0
+    void* Find(const char* space, const char* name);  // 0x00018210 caches the last namespace
+    void GetNameOf(const char* space, const void* value, char* out);  // 0x00018260
 
-    static void* s_heap;       // 0x002CF168
-};
+    GmNameMapGroup* m_pool;    // +0x14
+    unsigned int m_poolSize;   // +0x18
+    GmNameMapGroup* m_free;    // +0x1C
+    GmNameMapGroup* m_last;    // +0x20
 
-class GmRumbleEffect {
-public:
-    GmRumbleEffect();          // 0x000748E0
-    ~GmRumbleEffect();         // 0x00074940
-    GmRumbleEffect& operator=(const GmRumbleEffect& other);   // 0x000744B0
-    void Init(const char* name, unsigned int frames);         // 0x000749B0
-    GmRumbleFrame* Frame(unsigned int index);                 // 0x000748F0
-    void SetFrame(unsigned int index, const GmRumbleFrame& frame);  // 0x00074900
-    const char* Name();        // 0x000EB540 folded with other classes' accessors
-
-    int m_ready;               // +0x00
-    char m_name[8];            // +0x04
-    GmRumbleFrameArray m_frames;   // +0x0C
-};
-
-class GmRumbleEffectArray {
-public:
-    void Resize(unsigned int count);    // 0x00074540
-    void Free();                        // 0x000742E0
-
-    GmRumbleEffect* m_items;
-    unsigned int m_count;
-
-    static void* s_heap;       // 0x002CF164
-};
-
-// Every effect in RUMBLE.RMB, by name. Who plays them, and how, is not recovered.
-class GmRumbleEffects {
-public:
-    GmRumbleEffects();                  // 0x00074440
-    ~GmRumbleEffects();                 // 0x00074710
-    void Load(const char* path);        // 0x000748A0 replaces what was loaded
-    void LoadFile(const char* path);    // 0x00074800 extension RMB; a file that will not open is not an error
-    void Parse(AtIoTokenizer* t);       // 0x000747D0
-    void ReadEffects(AtIoTokenizer* t);  // 0x000746A0
-    void ReadEffect(AtIoTokenizer* t, GmRumbleEffect* effect);  // 0x00074220
-    void ReadFrame(AtIoTokenizer* t, GmRumbleFrame* frame);     // 0x000741C0
-    GmRumbleEffect* Find(const char* name);  // 0x000741B0
-
-    int m_loaded;              // +0x00
-    GmNameMap m_byName;        // +0x04
-    GmRumbleEffectArray m_effects;  // +0x18
+    static void SetHeap(void* heap);   // 0x00018000
+    static void* s_heap;       // 0x002C6274
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
@@ -117,10 +86,8 @@ public:
 #define offsetof(t, m) __builtin_offsetof(t, m)
 static_assert(sizeof(GmNameMap) == 0x14, "GmNameMap");
 static_assert(sizeof(GmNameMap::Entry) == 12, "GmNameMap::Entry");
-static_assert(offsetof(GmNameMapGroup, m_parent) == 0x14, "GmNameMapGroup::m_parent");
-static_assert(sizeof(GmRumbleFrame) == 12, "GmRumbleFrame");
-static_assert(sizeof(GmRumbleEffect) == 0x14, "GmRumbleEffect");
-static_assert(offsetof(GmRumbleEffects, m_effects) == 0x18, "GmRumbleEffects::m_effects");
-static_assert(sizeof(GmRumbleEffects) == 0x20, "GmRumbleEffects");
+static_assert(offsetof(GmNameMapGroup, m_database) == 0x14, "GmNameMapGroup::m_database");
+static_assert(sizeof(GmNameMapGroup) == 0x18, "GmNameMapGroup");
+static_assert(sizeof(GmNameSpaceDb) == 0x24, "GmNameSpaceDb");
 #pragma pop_macro("offsetof")
 #endif
