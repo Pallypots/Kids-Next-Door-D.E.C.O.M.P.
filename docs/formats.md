@@ -162,3 +162,35 @@ On the disc at the root, as `{ DataFolder "DataXbox" }`, and read before anythin
 ## Pixel format in text
 
 `AtPixelFormat::Read` (0x00042CB0) reads: bits per pixel as an integer; flags, as an integer or as one or more strings; four masks as integers. **The named form sets the flags inverted:** a flag is ORed in when its name is not the token's, compared without case, so `RGBA` gives every flag but `RGBA`. The numeric form is unaffected. Whether any file uses the named form is not yet checked.
+
+## Text formats by extension
+
+Every loader that opens a text file, from the callers of `AtIoTokenFile::Open`, with the number of files on the disc. What a format is for is known only where a reader is recovered or its text was read; other descriptions are absent, not guessed.
+
+| Ext | Files | Loader | Reader state or content |
+| --- | --- | --- | --- |
+| ASN | 2001 | 0x0003CD60 | |
+| AGM | 1944 | 0x00038FB0 | Materials: `AtMaterial` recovered; the database not |
+| AGT | 1722 | 0x0001C7B0 | Lists of textures (`Surface2D`, `Texture2D`) |
+| AKC | 1489 | 0x00026DB0 | |
+| ASD | 1380 | 0x0002F7F0 | |
+| ASL | 1127 | 0x0003FAC0 | |
+| AGD | 1215 | 0x0001ADC0 | Lists of databases (`MaterialDatabase`, `FontDatabase`, `ImageDatabase`, `MatAssignmentDatabase`) |
+| AGS | 786 | 0x0002B2E0 | |
+| ASE | 737 | 0x0003F760 | |
+| ASB | 632 | 0x00040F90 | |
+| ADR | 311 | 0x00068880 | |
+| AOB, AOS | 271 each | 0x00025A90, 0x00025640 | |
+| AOD | 261 | 0x00018AC0 | |
+| AGN | 229 | 0x00027D50 | |
+| GON | 171 | 0x00139090 | |
+| AIS | 106 | 0x0001FA70 | Game text: recovered |
+| MNG | 104 | 0x00141EA0 | Load lists: base recovered |
+
+Rarer, each with its own loader: AGI 0x00029DC0, AEE 0x000C9A00, AGL 0x0002AC10, ASM 0x0003F390, ASG 0x0003ADC0, GOO 0x0013AA80, AFD 0x00011770, AFE 0x0002CD40, AFL 0x000114A0, AFA 0x000134A0, AFH 0x00012CF0, AFP 0x00012370, AFT 0x000139A0, AFX 0x00020310, GOM 0x0013D2A0, ASC 0x0003FE00, AGA 0x00028340, AGF 0x0002A290, AUD 0x000BC010, ADD 0x0009BD50, AOE 0x00025450, GOD 0x0013AD70, ANA 0x000735F0, ANM 0x00073AD0, AUA 0x000B6140, AUS 0x000BEF80.
+
+Files with no text loader above, by count: DDS 3913, XKA 1489, SDL 1269, SSM 1127, XGG 1092, ANL 1033, VFX 548, WBA 271, TGA 211. Their readers are not yet found.
+
+## Materials (.AGM)
+
+`Material "name" { ... }`, inside a `Material[n] { }` list, often after shader definitions and under `NameSpace "x"`. The keywords are in `AtMaterial::s_keywords`. Colours are four integers, or three for `ConstantColor`, with `ConstantAlpha` the fourth. `SimpleTextureShader n` takes one texture from the store at index n. `Shader "name" firstStage stageCount firstTexture textureCount` names a shader, and `ShaderWithNameSpace` a space too. Blending by `Add` or by `BlendInverseAlpha` also turns fog off. Unless `BlendSeparateAlpha` is given, alpha blends as colour does.

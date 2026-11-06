@@ -3919,6 +3919,118 @@ source = "src/at/AtVector3.cpp"
 subsystem = "at/quaternion"
 evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtVector3.h"
 
+[[function]]
+va = 0x00041270
+size = 52
+symbol = "?Read@AtColor@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x000412B0
+size = 14
+symbol = "?SetWhite@AtColor@@QAEXXZ"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038E40
+size = 104
+symbol = "??0AtMaterialDesc@@QAE@XZ"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038EB0
+size = 78
+symbol = "??0AtMaterial@@QAE@XZ"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038F00
+size = 102
+symbol = "??_GAtMaterial@@UAEPAXI@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038C50
+size = 72
+symbol = "?Reset@AtMaterial@@UAEXXZ"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038370
+size = 26
+symbol = "?SetAlphaCompare@AtMaterial@@UAEXEE@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038390
+size = 5
+symbol = "?ClearAlphaCompare@AtMaterial@@UAEXXZ"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x000381A0
+size = 123
+symbol = "?ReadBlendMode@AtMaterial@@QAEHPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038250
+size = 105
+symbol = "?ReadStencilAction@AtMaterial@@QAEHPAVAtIoTokenizer@@@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x000382E0
+size = 105
+symbol = "?ReadCompare@AtMaterial@@QAEHPAVAtIoTokenizer@@@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038590
+size = 1191
+symbol = "?Read@AtMaterial@@QAEXPAUAtMaterialOwner@@PAUAtMaterialStore@@PAVAtIoTokenizer@@PBD@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038AD0
+size = 373
+symbol = "?Copy@AtMaterial@@QAEXPAUAtMaterialOwner@@PAUAtMaterialStore@@ABV1@@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038D60
+size = 224
+symbol = "?Describe@AtMaterial@@QBEXPAUAtMaterialDesc@@@Z"
+source = "src/at/AtMaterial.cpp"
+subsystem = "at/material"
+evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -4214,3 +4326,9 @@ va = 0x00284840
 slots = 4
 symbol = "??_7AtRegionMemorySystem@@6B@"
 source = "src/at/AtMemorySystem.cpp"
+
+[[vtable]]
+va = 0x00274E20
+slots = 5
+symbol = "??_7AtMaterial@@6B@"
+source = "src/at/AtMaterial.cpp"

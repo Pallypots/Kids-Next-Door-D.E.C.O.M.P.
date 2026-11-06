@@ -1003,6 +1003,98 @@ LDR_MUTANTS = [
 ]
 
 
+MAT_MUTANTS = [
+    ('Flag: color modulate', 'AtMaterial.cpp', 'case kColorModulateWord:\n            m_flags |= kColorModulate;\n', 'case kColorModulateWord:\n'),
+    ('Flag: alpha modulate', 'AtMaterial.cpp', 'case kAlphaModulateWord:\n            m_flags |= kAlphaModulate;\n', 'case kAlphaModulateWord:\n'),
+    ('Flag: clamp', 'AtMaterial.cpp', 'case kClampWord:\n            m_flags |= kClamp;\n', 'case kClampWord:\n'),
+    ('Flag: gouraud', 'AtMaterial.cpp', 'case kGouraudShadeWord:\n            m_flags |= kGouraudShade;\n', 'case kGouraudShadeWord:\n'),
+    ('Flag: anti aliased', 'AtMaterial.cpp', 'case kAntiAliasedTransparencyWord:\n            m_flags |= kAntiAliasedTransparency;\n', 'case kAntiAliasedTransparencyWord:\n'),
+    ('Flag: emissive', 'AtMaterial.cpp', 'case kEmissiveWord:\n            m_flags |= kEmissive;\n', 'case kEmissiveWord:\n'),
+    ('Flag: lighting', 'AtMaterial.cpp', 'case kDisableLightingWord:\n            m_flags |= kDisableLighting;\n', 'case kDisableLightingWord:\n'),
+    ('Flag: over bright', 'AtMaterial.cpp', 'case kOverBrightWord:\n            m_flags |= kOverBright;\n', 'case kOverBrightWord:\n'),
+    ('Flag: fog', 'AtMaterial.cpp', 'case kDisableFoggingWord:\n            m_flags |= kDisableFogging;\n', 'case kDisableFoggingWord:\n'),
+    ('Flag: color writes', 'AtMaterial.cpp', 'case kDisableColorWritesWord:\n            m_flags |= kDisableColorWrites;\n', 'case kDisableColorWritesWord:\n'),
+    ('Flag: depth buffer', 'AtMaterial.cpp', 'case kDisableDepthBufferWord:\n            m_flags |= kDisableDepthBuffer;\n', 'case kDisableDepthBufferWord:\n'),
+    ('Flag: depth writes', 'AtMaterial.cpp', 'case kDisableDepthWritesWord:\n            m_flags |= kDisableDepthWrites;\n', 'case kDisableDepthWritesWord:\n'),
+    ('Word: decal', 'AtMaterial.cpp', 'case kColorDecal:\n            m_flags &= ~(unsigned int)kColorModulate;\n', 'case kColorDecal:\n'),
+    ('Word: alpha decal', 'AtMaterial.cpp', 'case kAlphaDecal:\n            m_flags &= ~(unsigned int)kAlphaModulate;\n', 'case kAlphaDecal:\n'),
+    ('Word: wrap', 'AtMaterial.cpp', 'case kWrap:\n            m_flags &= ~(unsigned int)kClamp;\n', 'case kWrap:\n'),
+    ('Word: flat', 'AtMaterial.cpp', 'case kFlatShade:\n            m_flags &= ~(unsigned int)kGouraudShade;\n', 'case kFlatShade:\n'),
+    ('Word: vertex alpha', 'AtMaterial.cpp', 'case kVertexAlpha:\n            m_flags &= ~(unsigned int)kConstantAlpha;\n', 'case kVertexAlpha:\n'),
+    ('Word: ids shifted', 'AtMaterial.cpp', 'kDisableDepthWritesWord, kDisableColorWritesWord, kDepthCompareWord,', 'kDisableColorWritesWord, kDisableDepthWritesWord, kDepthCompareWord,'),
+    ('Word: unknown', 'AtMaterial.cpp', '        default:\n            tokenizer->Error(kBadKeyword);\n            break;\n        }\n    }\n    if (owner', '        default:\n            break;\n        }\n    }\n    if (owner'),
+    ('Single: other', 'AtMaterial.cpp', 'm_flags = (m_flags & ~(unsigned int)kDoubleSided) | kSingleSided;', 'm_flags |= kSingleSided;'),
+    ('Double: other', 'AtMaterial.cpp', 'm_flags = (m_flags & ~(unsigned int)kSingleSided) | kDoubleSided;', 'm_flags |= kDoubleSided;'),
+    ('Ambient: field', 'AtMaterial.cpp', '            m_ambient.Read(tokenizer);\n', '            m_diffuse.Read(tokenizer);\n'),
+    ('Specular: field', 'AtMaterial.cpp', '            m_specular.Read(tokenizer);\n', '            m_diffuse.Read(tokenizer);\n'),
+    ('Constant: flag', 'AtMaterial.cpp', '            m_flags |= kConstantColor;\n', ''),
+    ('Constant: blue', 'AtMaterial.cpp', '            m_constant.b = (unsigned char)tokenizer->ExpectInt();\n', ''),
+    ('ConstantAlpha: flag', 'AtMaterial.cpp', '            m_flags |= kConstantAlpha;\n', ''),
+    ('AlphaCompare: never', 'AtMaterial.cpp', 'if (m_alphaCompare != 0 && m_alphaCompare != 7) {', 'if (m_alphaCompare != 0) {'),
+    ('AlphaCompare: always', 'AtMaterial.cpp', 'if (m_alphaCompare != 0 && m_alphaCompare != 7) {', 'if (m_alphaCompare != 7) {'),
+    ('AlphaCompare: flag', 'AtMaterial.cpp', '            m_flags |= kAlphaCompare;\n            break;\n', '            break;\n'),
+    ('DepthCompare: flag', 'AtMaterial.cpp', '            m_flags |= kDepthCompare;\n', ''),
+    ('Blend: alpha field', 'AtMaterial.cpp', 'm_blendAlpha = (unsigned char)ReadBlendMode(tokenizer, next);', 'm_blend = (unsigned char)ReadBlendMode(tokenizer, next);'),
+    ('Blend: flag', 'AtMaterial.cpp', '            m_flags |= kBlend;\n', ''),
+    ('Blend: separate flag', 'AtMaterial.cpp', '            m_flags |= kBlendSeparateAlpha;\n', ''),
+    ('Simple: shader', 'AtMaterial.cpp', '            m_shader = 0;\n            const unsigned int first', '            const unsigned int first'),
+    ('Simple: bound', 'AtMaterial.cpp', 'if (first + 1 > store->m_textureCapacity) {', 'if (first > store->m_textureCapacity) {'),
+    ('Simple: count', 'AtMaterial.cpp', '            m_textureCount = 1;\n', ''),
+    ('Simple: index', 'AtMaterial.cpp', 'm_textures = store->m_textures + first;\n            break;', 'm_textures = store->m_textures;\n            break;'),
+    ('Shader: name space', 'AtMaterial.cpp', '                look = nameSpace;\n', ''),
+    ('Shader: caller name space', 'AtMaterial.cpp', '            const char* look = ns;\n', '            const char* look = nullptr;\n'),
+    ('Shader: missing', 'AtMaterial.cpp', '            if (m_shader == 0) {\n                tokenizer->Error(kNoSuchShader);\n            }\n', ''),
+    ('Shader: stage bound', 'AtMaterial.cpp', 'if (m_stageCount + firstStage > store->m_stageCapacity) {', 'if (m_stageCount + firstStage >= store->m_stageCapacity) {'),
+    ('Shader: no stages', 'AtMaterial.cpp', '            if (m_stageCount != 0) {\n', '            {\n'),
+    ('Shader: texture bound', 'AtMaterial.cpp', 'if (m_textureCount + firstTexture > store->m_textureCapacity) {', 'if (m_textureCount + firstTexture >= store->m_textureCapacity) {'),
+    ('Shader: no textures', 'AtMaterial.cpp', '            if (m_textureCount != 0) {\n', '            {\n'),
+    ('Ranged: real', 'AtMaterial.cpp', '            m_range = tokenizer->ExpectReal();\n', '            tokenizer->ExpectReal();\n'),
+    ('Ranged: flag', 'AtMaterial.cpp', '            m_flags |= kRangedAntiAliasedTransparency;\n', ''),
+    ('Stencil: order', 'AtMaterial.cpp', '            m_stencilFail = (unsigned char)ReadStencilAction(tokenizer);\n            m_stencilDepthFail = (unsigned char)ReadStencilAction(tokenizer);\n', '            m_stencilDepthFail = (unsigned char)ReadStencilAction(tokenizer);\n            m_stencilFail = (unsigned char)ReadStencilAction(tokenizer);\n'),
+    ('Stencil: flag', 'AtMaterial.cpp', '            m_flags |= kStencilOperation;\n', ''),
+    ('Power: flag', 'AtMaterial.cpp', '            m_flags |= kPower;\n', ''),
+    ('Sort: field', 'AtMaterial.cpp', '            m_sortBias = tokenizer->ExpectReal();\n', '            tokenizer->ExpectReal();\n'),
+    ('Projection: field', 'AtMaterial.cpp', '            m_projectionMask = tokenizer->ExpectInt();\n', '            tokenizer->ExpectInt();\n'),
+    ('After: no textures', 'AtMaterial.cpp', 'if (owner->m_noTextures < 0) {', 'if (owner->m_noTextures <= 0) {'),
+    ('After: shader kept', 'AtMaterial.cpp', '    if (owner->m_noTextures < 0) {\n        m_shader = 0;\n', '    if (owner->m_noTextures < 0) {\n'),
+    # Dropped, equivalent: After: fog already: it only ORs in a flag that is already set.
+    ('After: fog without blend', 'AtMaterial.cpp', 'if (!(m_flags & kDisableFogging) && (m_flags & kBlend) && (m_blend == 1 || m_blend == 9)) {', 'if (!(m_flags & kDisableFogging) && (m_blend == 1 || m_blend == 9)) {'),
+    ('After: fog mode 1', 'AtMaterial.cpp', '(m_blend == 1 || m_blend == 9)', '(m_blend == 9)'),
+    ('After: fog mode 9', 'AtMaterial.cpp', '(m_blend == 1 || m_blend == 9)', '(m_blend == 1)'),
+    ('After: blend alpha', 'AtMaterial.cpp', '    if (!(m_flags & kBlendSeparateAlpha)) {\n        m_blendAlpha = m_blend;\n    }\n', ''),
+    ('After: no hook', 'AtMaterial.cpp', '    OnLoaded(owner);\n    m_flags |= kLoaded;\n}\n\nvoid AtMaterial::Copy', '    m_flags |= kLoaded;\n}\n\nvoid AtMaterial::Copy'),
+    ('After: not loaded', 'AtMaterial.cpp', '    OnLoaded(owner);\n    m_flags |= kLoaded;\n}\n\nvoid AtMaterial::Copy', '    OnLoaded(owner);\n}\n\nvoid AtMaterial::Copy'),
+    ('Read: no reset', 'AtMaterial.cpp', 'void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokenizer* tokenizer, const char* ns) {\n    if (m_flags & kLoaded) {\n        Reset();\n    }\n', 'void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokenizer* tokenizer, const char* ns) {\n'),
+    ('Read: store', 'AtMaterial.cpp', '    m_store = store;\n    tokenizer->ExpectLeftCurly();\n', '    tokenizer->ExpectLeftCurly();\n'),
+    ('Read: curly', 'AtMaterial.cpp', '    tokenizer->ExpectLeftCurly();\n', ''),
+    ('Copy: no reset', 'AtMaterial.cpp', 'const AtMaterial& from) {\n    if (m_flags & kLoaded) {\n        Reset();\n    }\n', 'const AtMaterial& from) {\n'),
+    ('Copy: flags', 'AtMaterial.cpp', '    m_flags = from.m_flags;\n', ''),
+    ('Copy: unknown28', 'AtMaterial.cpp', '    m_unknown28 = from.m_unknown28;\n', ''),
+    ('Copy: power too', 'AtMaterial.cpp', '    m_range = from.m_range;\n', '    m_range = from.m_range;\n    m_power = from.m_power;\n'),
+    ('Copy: bias too', 'AtMaterial.cpp', '    m_range = from.m_range;\n', '    m_range = from.m_range;\n    m_sortBias = from.m_sortBias;\n'),
+    ('Copy: stage use', 'AtMaterial.cpp', '        store->m_stageUsed = first + m_stageCount;\n', ''),
+    ('Copy: stage data', 'AtMaterial.cpp', '        memcpy(m_stages, from.m_stages, m_stageCount * sizeof(void*));\n', ''),
+    ('Copy: stage test', 'AtMaterial.cpp', '    if (from.m_stages != 0) {\n', '    if (from.m_stageCount != 0) {\n'),
+    ('Copy: texture use', 'AtMaterial.cpp', '        store->m_textureUsed = first + m_textureCount;\n', ''),
+    ('Copy: texture data', 'AtMaterial.cpp', '        memcpy(m_textures, from.m_textures, m_textureCount * sizeof(void*));\n', ''),
+    ('Copy: texture test', 'AtMaterial.cpp', '    if (from.m_textures != 0) {\n', '    if (from.m_textureCount != 0) {\n'),
+    ('Describe: loaded', 'AtMaterial.cpp', 'out->m_flags = m_flags & ~(unsigned int)kLoaded;', 'out->m_flags = m_flags;'),
+    ('Describe: store', 'AtMaterial.cpp', '    out->m_store = m_store;\n', ''),
+    ('Describe: compare', 'AtMaterial.cpp', '    out->m_depthCompare = m_depthCompare;\n', ''),
+    ('Reset: depth', 'AtMaterial.cpp', '    m_projectionMask = -1;\n    m_sortBias = 0.0f;\n    m_power = 0.0f;\n    m_store = 0;\n}\n\nvoid AtMaterial::SetAlphaCompare', '    m_sortBias = 0.0f;\n    m_power = 0.0f;\n    m_store = 0;\n}\n\nvoid AtMaterial::SetAlphaCompare'),
+    ('SetAlpha: flag', 'AtMaterial.cpp', '    m_flags |= kAlphaCompare;\n    m_alphaCompare = compare;\n', '    m_alphaCompare = compare;\n'),
+    ('Modes: base', 'AtMaterial.cpp', 'return token - kFirstBlendMode + 1;', 'return token - kFirstBlendMode;'),
+    ('Modes: top', 'AtMaterial.cpp', 'token <= kLastBlendMode', 'token < kLastBlendMode'),
+    ('Compare: equal', 'AtMaterial.cpp', 'case kEqual: return 5;', 'case kEqual: return 6;'),
+    ('Compare: less', 'AtMaterial.cpp', 'case kLess: return 1;', 'case kLess: return 2;'),
+    ('Stencil word: invert', 'AtMaterial.cpp', 'case kInvert: return 7;', 'case kInvert: return 6;'),
+    ('Color: white', 'AtMaterial.cpp', '    a = 255;\n', '    a = 0;\n'),
+    ('Color: read order', 'AtMaterial.cpp', '    r = (unsigned char)tokenizer->ExpectInt();\n    g = (unsigned char)tokenizer->ExpectInt();\n', '    g = (unsigned char)tokenizer->ExpectInt();\n    r = (unsigned char)tokenizer->ExpectInt();\n'),
+    ('Desc: white', 'AtMaterial.cpp', '    m_specular.SetWhite();\n', ''),
+    ('Desc: mask', 'AtMaterial.cpp', '    m_projectionMask = -1;\n    m_range = 3.4028234663852886e38f;  // 0x7F7FFFFF\n', '    m_range = 3.4028234663852886e38f;  // 0x7F7FFFFF\n'),
+]
+
+
 QUA_MUTANTS = [
     ('Product: x sign', 'AtQuaternion.cpp', 'x = (float)(D(a.x) * b.w + D(b.z) * a.y + D(b.x) * a.w - D(b.y) * a.z);', 'x = (float)(D(a.x) * b.w + D(b.z) * a.y + D(b.x) * a.w + D(b.y) * a.z);'),
     ('Product: y term', 'AtQuaternion.cpp', 'y = (float)(D(b.y) * a.w + D(b.x) * a.z + D(a.y) * b.w - D(a.x) * b.z);', 'y = (float)(D(b.y) * a.w + D(b.x) * a.z + D(a.y) * b.y - D(a.x) * b.z);'),
@@ -1420,6 +1512,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "mat": {"target": "oracle_mat", "subsystem": "at/material", "mutants": MAT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "qua": {"target": "oracle_qua", "subsystem": "at/quaternion", "mutants": QUA_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "fmt": {"target": "oracle_fmt", "subsystem": "at/pixelformat", "mutants": FMT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "vec": {"target": "oracle_vec", "subsystem": "at/vector", "mutants": VEC_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -1473,7 +1566,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, CASES]
     elif suite in ("hep", "mem", "vec", "fmt", "qua"):
         cmd = [exe(build_dir, target), XBE]
-    elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr"):
+    elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr", "mat"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -1607,7 +1700,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1616,13 +1709,21 @@ def main(argv):
         funcs = tomllib.load(f)["function"]
     report = {"xbe_sha256": hashlib.sha256(open(XBE, "rb").read()).hexdigest(), "suites": {}}
     path = os.path.join(ROOT, "build", "oracle-report.json")
-    if a.suite != "all" and os.path.exists(path):
+    earlier = {}
+    if os.path.exists(path):
         with open(path) as f:
-            report["suites"] = json.load(f).get("suites", {})
+            earlier = json.load(f).get("suites", {})
+    if a.suite != "all":
+        report["suites"] = dict(earlier)
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
+        if a.no_mutants and earlier.get(suite, {}).get("mutants"):
+            # What mutants showed stays on record, marked as older than this run.
+            rep["mutants"] = earlier[suite]["mutants"]
+            rep["mutant_positive_control_exit"] = earlier[suite].get("mutant_positive_control_exit")
+            rep["mutants_from_earlier_run"] = True
         report["suites"][suite] = rep
         good &= ok
     with open(path, "w") as f:
