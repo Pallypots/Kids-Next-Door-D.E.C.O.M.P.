@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-06, dev cycle 17 (pixel format). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-06, dev cycle 18 (quaternion). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-06, dev cycle 17 (pixel format). Per-function results live
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 478 functions and 35 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 489 functions and 35 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -32,6 +32,7 @@ All source is in `src/`, types in `include/`. 478 functions and 35 vftables are 
 * `at/heap` (22 functions): the allocator, a manager carving up to 16 heaps out of one region, first-fit heaps with coalescing free lists, wider-aligned allocations, groups of heaps standing in for each other, and the report. The arena of the original and the recovered source stay identical byte by byte through long random runs.
 * `at/memory` (19 functions, 2 vftables): the stack of heaps, the original's global new and delete, the error routine, and the object that takes a region from the platform, starts the manager and makes the default heap. A port can now start the allocator, as the host test does. **Recovered code does not use it yet**: `new` still reaches the host's allocator, by decision, since the host's library shares the process (`include/at/AtMemory.h`). Which concrete object the game starts, and with what sizes, is not recovered: its class at 0x00141840 holds this as a member. `AtFatal` stays a stand-in, since the original reaches into graphics and sound.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
+* `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
 * `gm/loader` (10 functions), **partial**: the base of the time-sliced `.MNG` loader start-up waits on. The concrete class from 0x0015CD10, its parser at 0x0015D000 and its seven kinds of item are not recovered. The clock is a platform seam; the manager it sets the override of is `AtHeapManager`.
 * `gm/settings` (8 functions): `app.ini`, the first file the game reads, what it sets, and the command line read after it. One original bug is held in a variable, not reproduced: see `s_levelUppercaseCount`.

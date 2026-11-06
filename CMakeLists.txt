@@ -30,6 +30,7 @@ add_library(knd_at STATIC
     ${KND_AT_SRC}/AtMathHost.cpp
     ${KND_AT_SRC}/AtVector3.cpp
     ${KND_AT_SRC}/AtPixelFormat.cpp
+    ${KND_AT_SRC}/AtQuaternion.cpp
     ${KND_AT_SRC}/AtIoFastAlignedJamHeader.cpp
     ${KND_AT_SRC}/AtIoFastJamHeader.cpp
     ${KND_AT_SRC}/AtIoFileSystem.cpp
@@ -68,6 +69,10 @@ add_executable(test_at_pixel_format tests/native/test_at_pixel_format.cpp platfo
 target_include_directories(test_at_pixel_format PRIVATE tests/oracle)
 target_link_libraries(test_at_pixel_format PRIVATE knd_at knd_gm)
 add_test(NAME at_pixel_format COMMAND test_at_pixel_format)
+add_executable(test_at_quaternion tests/native/test_at_quaternion.cpp platform/fatal.cpp)
+target_include_directories(test_at_quaternion PRIVATE tests/oracle)
+target_link_libraries(test_at_quaternion PRIVATE knd_at knd_gm)
+add_test(NAME at_quaternion COMMAND test_at_quaternion)
 add_executable(test_at_vector tests/native/test_at_vector.cpp platform/fatal.cpp)
 target_include_directories(test_at_vector PRIVATE tests/oracle)
 target_link_libraries(test_at_vector PRIVATE knd_at knd_gm)
@@ -106,6 +111,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     add_executable(oracle_set tests/oracle/reserve.asm tests/oracle/oracle_set.cpp)
     target_link_libraries(oracle_set PRIVATE knd_gm knd_at)
     target_link_options(oracle_set PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    add_executable(oracle_qua tests/oracle/reserve.asm tests/oracle/oracle_qua.cpp platform/fatal.cpp)
+    target_link_libraries(oracle_qua PRIVATE knd_at knd_gm)
+    target_link_options(oracle_qua PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_fmt tests/oracle/reserve.asm tests/oracle/oracle_fmt.cpp)
     target_link_libraries(oracle_fmt PRIVATE knd_at knd_gm)
     target_link_options(oracle_fmt PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

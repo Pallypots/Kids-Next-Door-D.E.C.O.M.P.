@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 456 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 467 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -519,6 +519,17 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00042C90 | 24 | `??0AtPixelFormat@@QAE@XZ` | at/pixelformat | SIZE |
 | 0x00042CB0 | 168 | `?Read@AtPixelFormat@@QAEXPAVAtIoTokenizer@@@Z` | at/pixelformat | SIZE |
 | 0x00042D60 | 22 | `?Clear@AtPixelFormat@@QAEXXZ` | at/pixelformat | SIZE |
+| 0x00033570 | 134 | `?SetProduct@AtQuaternion@@QAEXABV1@0@Z` | at/quaternion | MISMATCH |
+| 0x00033600 | 178 | `?SetLerp@AtQuaternion@@QAEXABV1@0M@Z` | at/quaternion | SIZE |
+| 0x000336F0 | 375 | `?SetFromRows@AtQuaternion@@QAEXABVAtVector3@@00@Z` | at/quaternion | SIZE |
+| 0x00033870 | 75 | `?SetReflection@AtQuaternion@@QAEXABV1@0@Z` | at/quaternion | SIZE |
+| 0x000338C0 | 129 | `?Multiply@AtQuaternion@@QAEXABV1@@Z` | at/quaternion | SIZE |
+| 0x00033950 | 115 | `?Normalize@AtQuaternion@@QAEXXZ` | at/quaternion | SIZE |
+| 0x000339D0 | 300 | `?SetSlerp@AtQuaternion@@QAEXABV1@0M@Z` | at/quaternion | SIZE |
+| 0x00033B00 | 129 | `?Rotate@AtQuaternion@@QBEXPAVAtVector3@@@Z` | at/quaternion | SIZE |
+| 0x00033B90 | 48 | `?SetAxisAngle@AtQuaternion@@QAEXABVAtVector3@@M@Z` | at/quaternion | SIZE |
+| 0x00033C00 | 57 | `?SetCross@AtVector3@@QAEXABV1@0@Z` | at/quaternion | MISMATCH |
+| 0x00033C40 | 35 | `?SetDifference@AtVector3@@QAEXABV1@0@Z` | at/quaternion | MISMATCH |
 
 Relocation-aware matches with the host compiler: 69 functions, 1119 unique bytes.
 Share of `.text` raw bytes: 0.0547% (denominator includes unclassified library code).
@@ -594,6 +605,8 @@ Suite `mem`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 971
 Suite `vec`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 44000024 comparisons, 0 differences). Recorded function entries reached in every run: 14 / 14. Source mutants detected: 41 / 41. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `fmt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 4590236 comparisons, 0 differences). Recorded function entries reached in every run: 27 / 27. Source mutants detected: 56 / 56. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `qua`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 11250000 comparisons, 0 differences). Recorded function entries reached in every run: 11 / 11. Source mutants detected: 60 / 60. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

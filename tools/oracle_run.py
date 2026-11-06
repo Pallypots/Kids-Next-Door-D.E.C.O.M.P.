@@ -1003,6 +1003,70 @@ LDR_MUTANTS = [
 ]
 
 
+QUA_MUTANTS = [
+    ('Product: x sign', 'AtQuaternion.cpp', 'x = (float)(D(a.x) * b.w + D(b.z) * a.y + D(b.x) * a.w - D(b.y) * a.z);', 'x = (float)(D(a.x) * b.w + D(b.z) * a.y + D(b.x) * a.w + D(b.y) * a.z);'),
+    ('Product: y term', 'AtQuaternion.cpp', 'y = (float)(D(b.y) * a.w + D(b.x) * a.z + D(a.y) * b.w - D(a.x) * b.z);', 'y = (float)(D(b.y) * a.w + D(b.x) * a.z + D(a.y) * b.y - D(a.x) * b.z);'),
+    ('Product: z term', 'AtQuaternion.cpp', 'z = (float)(D(a.x) * b.y + D(b.z) * a.w + D(a.z) * b.w - D(b.x) * a.y);', 'z = (float)(D(a.x) * b.y + D(b.z) * a.w + D(a.z) * b.w - D(b.y) * a.x);'),
+    ('Product: w dropped', 'AtQuaternion.cpp', 'w = (float)(D(a.w) * b.w - (D(a.x) * b.x + D(b.z) * a.z + D(b.y) * a.y));', 'w = (float)(D(a.w) * b.w - (D(a.x) * b.x + D(b.z) * a.z));'),
+    ('Product: single', 'AtQuaternion.cpp', 'x = (float)(D(a.x) * b.w + D(b.z) * a.y + D(b.x) * a.w - D(b.y) * a.z);', 'x = a.x * b.w + b.z * a.y + b.x * a.w - b.y * a.z;'),
+    ('Lerp: dot term', 'AtQuaternion.cpp', 'const double dot = D(to.w) * from.w + D(to.z) * from.z + D(from.y) * to.y + D(from.x) * to.x;\n    if (dot > 0.0) {', 'const double dot = D(to.w) * from.w + D(to.z) * from.z + D(from.y) * to.y;\n    if (dot > 0.0) {'),
+    ('Lerp: at zero', 'AtQuaternion.cpp', '    if (dot > 0.0) {\n        x = (float)((D(to.x) - from.x) * t + from.x);', '    if (dot >= 0.0) {\n        x = (float)((D(to.x) - from.x) * t + from.x);'),
+    ('Lerp: unordered', 'AtQuaternion.cpp', '    if (dot > 0.0) {\n        x = (float)((D(to.x) - from.x) * t + from.x);', '    if (!(dot <= 0.0)) {\n        x = (float)((D(to.x) - from.x) * t + from.x);'),
+    ('Lerp: w', 'AtQuaternion.cpp', 'w = (float)((D(to.w) - from.w) * t + from.w);', 'w = from.w;'),
+    ('Lerp: far x', 'AtQuaternion.cpp', 'x = (float)(from.x - (D(from.x) + to.x) * t);', 'x = (float)(from.x + (D(from.x) + to.x) * t);'),
+    ('Lerp: far w', 'AtQuaternion.cpp', 'w = (float)(from.w - (D(to.w) + from.w) * t);', 'w = (float)(from.w - (D(to.w) - from.w) * t);'),
+    ('Rows: stored sum', 'AtQuaternion.cpp', 'sqrt(D(row0.x) - storedSum12 + 1.0)', 'sqrt(D(row0.x) - sum12 + 1.0)'),
+    ('Rows: trace', 'AtQuaternion.cpp', '    if (trace > 0.0) {\n', '    if (trace >= 0.0) {\n'),
+    ('Rows: unordered', 'AtQuaternion.cpp', '    if (trace > 0.0) {\n', '    if (!(trace <= 0.0)) {\n'),
+    ('Rows: half', 'AtQuaternion.cpp', 'w = (float)(0.5f * root);\n        const double scale = 0.5f / root;\n        x = (float)((D(row2.y) - row1.z) * scale);', 'w = (float)(0.5f * root);\n        const double scale = 1.0f / root;\n        x = (float)((D(row2.y) - row1.z) * scale);'),
+    ('Rows: y sign', 'AtQuaternion.cpp', 'y = (float)((D(row0.z) - row2.x) * scale);', 'y = (float)((D(row2.x) - row0.z) * scale);'),
+    ('Rows: first test', 'AtQuaternion.cpp', '    if (row1.y > row0.x) {\n', '    if (row1.y >= row0.x) {\n'),
+    ('Rows: second test', 'AtQuaternion.cpp', '        if (row2.z > row1.y) {\n', '        if (row2.z >= row1.y) {\n'),
+    ('Rows: third test', 'AtQuaternion.cpp', '    } else if (row2.z > row0.x) {\n', '    } else if (row2.z >= row0.x) {\n'),
+    ('Rows: case 2 root', 'AtQuaternion.cpp', 'sqrt(row2.z - (D(row0.x) + row1.y) + 1.0)', 'sqrt(row2.z - (D(row0.x) - row1.y) + 1.0)'),
+    ('Rows: case 2 w', 'AtQuaternion.cpp', 'w = (float)((D(row1.x) - row0.y) * scale);\n        x = (float)((D(row0.z) + row2.x) * scale);', 'w = (float)((D(row1.x) + row0.y) * scale);\n        x = (float)((D(row0.z) + row2.x) * scale);'),
+    ('Rows: case 1 root', 'AtQuaternion.cpp', 'sqrt(row1.y - (D(row0.x) + row2.z) + 1.0)', 'sqrt(row1.y - (D(row0.x) + row1.z) + 1.0)'),
+    ('Rows: case 1 z', 'AtQuaternion.cpp', 'z = (float)((D(row1.z) + row2.y) * scale);\n        x = (float)((D(row0.y) + row1.x) * scale);', 'z = (float)((D(row1.z) - row2.y) * scale);\n        x = (float)((D(row0.y) + row1.x) * scale);'),
+    ('Rows: case 0 y', 'AtQuaternion.cpp', 'y = (float)((D(row0.y) + row1.x) * scale);\n        z = (float)((D(row0.z) + row2.x) * scale);', 'y = (float)((D(row0.y) - row1.x) * scale);\n        z = (float)((D(row0.z) + row2.x) * scale);'),
+    ('Reflection: factor', 'AtQuaternion.cpp', '* 2.0);', '* 1.0);'),
+    ('Reflection: dot', 'AtQuaternion.cpp', 'D(normal.x) * value.x + D(value.z) * normal.z + D(value.y) * normal.y', 'D(normal.x) * value.x + D(value.z) * normal.z'),
+    ('Reflection: sign', 'AtQuaternion.cpp', 'x = (float)-(scale * normal.x + value.x);', 'x = (float)(scale * normal.x + value.x);'),
+    ('Reflection: w', 'AtQuaternion.cpp', '    w = value.w;\n', '    w = normal.w;\n'),
+    ('Multiply: stale', 'AtQuaternion.cpp', 'y = (float)(d * other.y + a * other.z + b * other.w - c * other.x);', 'y = (float)(d * other.y + x * other.z + b * other.w - c * other.x);'),
+    ('Multiply: x sign', 'AtQuaternion.cpp', 'x = (float)(c * other.y + d * other.x + a * other.w - b * other.z);', 'x = (float)(c * other.y + d * other.x + a * other.w + b * other.z);'),
+    ('Multiply: z term', 'AtQuaternion.cpp', 'z = (float)(d * other.z + b * other.x + c * other.w - a * other.y);', 'z = (float)(d * other.z + b * other.x + c * other.w);'),
+    ('Multiply: w term', 'AtQuaternion.cpp', 'w = (float)(d * other.w - (b * other.y + c * other.z + a * other.x));', 'w = (float)(d * other.w - (b * other.y + c * other.z));'),
+    ('Normalize: zero', 'AtQuaternion.cpp', '    if (lengthSquared == 0.0) {\n        x = 0.0f;\n        y = 0.0f;\n        z = 0.0f;\n        w = 1.0f;\n        return;\n    }\n', ''),
+    ('Normalize: w', 'AtQuaternion.cpp', '        w = 1.0f;\n', '        w = 0.0f;\n'),
+    ('Normalize: term', 'AtQuaternion.cpp', 'a * a + b * b + c * c + d * d;', 'a * a + b * b + c * c;'),
+    ('Normalize: no root', 'AtQuaternion.cpp', 'const double scale = 1.0 / sqrt(lengthSquared);', 'const double scale = 1.0 / lengthSquared;'),
+    ('Slerp: dot term', 'AtQuaternion.cpp', 'const double dot = D(to.w) * from.w + D(to.z) * from.z + D(from.x) * to.x + D(to.y) * from.y;', 'const double dot = D(to.w) * from.w + D(to.z) * from.z + D(from.x) * to.x;'),
+    ('Slerp: no flip', 'AtQuaternion.cpp', '    if (dot < 0.0) {\n', '    if (dot < -2.0) {\n'),
+    ('Slerp: cosine', 'AtQuaternion.cpp', '        cosine = -cosine;\n', ''),
+    ('Slerp: flip y', 'AtQuaternion.cpp', '        target.y = -to.y;\n', '        target.y = to.y;\n'),
+    ('Slerp: threshold', 'AtQuaternion.cpp', 'kSmallAngle = 0.01f;', 'kSmallAngle = 0.02f;'),
+    ('Slerp: rounded angle', 'AtQuaternion.cpp', '(float)(1.0 / AtSin(exactAngle));', '(float)(1.0 / AtSin(angle));'),
+    ('Slerp: exact scale', 'AtQuaternion.cpp', 'k0 = AtSin((1.0 - D(t)) * angle) * scale;', 'k0 = AtSin((1.0 - D(t)) * exactAngle) * scale;'),
+    ('Slerp: k1', 'AtQuaternion.cpp', 'k1 = AtSin(D(angle) * t) * scale;', 'k1 = AtSin(D(angle) * (1.0 - t)) * scale;'),
+    ('Slerp: near k0', 'AtQuaternion.cpp', '        k0 = 1.0 - D(t);\n', '        k0 = t;\n'),
+    ('Slerp: near k1', 'AtQuaternion.cpp', '        k1 = t;\n', '        k1 = 1.0 - D(t);\n'),
+    ('Slerp: from x', 'AtQuaternion.cpp', 'x = (float)(k0 * from.x + k1 * target.x);', 'x = (float)(k1 * from.x + k0 * target.x);'),
+    ('Slerp: w', 'AtQuaternion.cpp', 'w = (float)(k1 * target.w + k0 * from.w);', 'w = (float)(k1 * to.w + k0 * from.w);'),
+    ('Rotate: order', 'AtQuaternion.cpp', 'result.SetProduct(pure, *this);', 'result.SetProduct(*this, pure);'),
+    ('Rotate: no conjugate', 'AtQuaternion.cpp', '    pure.x = -x;\n', '    pure.x = x;\n'),
+    ('Rotate: pure w', 'AtQuaternion.cpp', '    pure.w = 0.0f;\n', '    pure.w = 1.0f;\n'),
+    ('Rotate: last', 'AtQuaternion.cpp', '    vector->z = result.z;\n', ''),
+    ('Axis: half', 'AtQuaternion.cpp', 'const double half = D(angle) * 0.5f;', 'const double half = D(angle);'),
+    ('Axis: w', 'AtQuaternion.cpp', 'w = (float)AtCos(half);', 'w = (float)AtSin(half);'),
+    ('Axis: z', 'AtQuaternion.cpp', 'z = (float)(s * axis.z);\n}', 'z = axis.z;\n}'),
+    ('Cross: x', 'AtVector3.cpp', 'x = (float)((double)b.z * a.y - (double)b.y * a.z);', 'x = (float)((double)b.y * a.z - (double)b.z * a.y);'),
+    ('Cross: y', 'AtVector3.cpp', 'y = (float)((double)b.x * a.z - (double)a.x * b.z);', 'y = (float)((double)a.x * b.z - (double)b.x * a.z);'),
+    ('Cross: z', 'AtVector3.cpp', 'z = (float)((double)a.x * b.y - (double)b.x * a.y);', 'z = (float)((double)a.x * b.y);'),
+    ('Difference: x', 'AtVector3.cpp', 'x = (float)((double)a.x - b.x);', 'x = (float)((double)b.x - a.x);'),
+    ('Difference: z', 'AtVector3.cpp', 'z = (float)((double)a.z - b.z);', 'z = a.z;'),
+]
+
+
 FMT_MUTANTS = [
     ('Names: inverted', 'AtPixelFormat.cpp', 'if (!EqualIgnoringCase(tokenizer->m_string, entry->m_name)) {', 'if (EqualIgnoringCase(tokenizer->m_string, entry->m_name)) {'),
     ('Names: LUMD', 'AtPixelFormat.cpp', '{"LUMD", AtPixelFormat::kLumd},   ', ''),
@@ -1356,6 +1420,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "qua": {"target": "oracle_qua", "subsystem": "at/quaternion", "mutants": QUA_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "fmt": {"target": "oracle_fmt", "subsystem": "at/pixelformat", "mutants": FMT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "vec": {"target": "oracle_vec", "subsystem": "at/vector", "mutants": VEC_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "mem": {"target": "oracle_mem", "subsystem": "at/memory", "mutants": MEM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -1406,7 +1471,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("hep", "mem", "vec", "fmt"):
+    elif suite in ("hep", "mem", "vec", "fmt", "qua"):
         cmd = [exe(build_dir, target), XBE]
     elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
@@ -1542,7 +1607,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1555,7 +1620,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

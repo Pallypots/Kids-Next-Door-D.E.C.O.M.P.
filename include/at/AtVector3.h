@@ -13,6 +13,8 @@ double AtSin(double angle);
 double AtCos(double angle);
 // 1 - cos(angle). Separate, since fcos gives more bits than a double holds, and near an angle of 0 those are what is left after the subtraction.
 double AtOneMinusCos(double angle);
+// The original calls the C library's, 0x00126600; its result is only used rounded to float.
+double AtAcos(double value);
 
 class AtVector3 {
 public:
@@ -33,6 +35,8 @@ public:
     // 0x000432D0. Takes away the part along a direction. With a zero direction only x is cleared.
     void Reject(const AtVector3& direction);
     void SetRejected(const AtVector3& from, const AtVector3& direction);   // 0x00043370 with a zero direction: 0, then from's y and z
+    void SetCross(const AtVector3& a, const AtVector3& b);                 // 0x00033C00 writes as it goes, so neither may be this
+    void SetDifference(const AtVector3& a, const AtVector3& b);            // 0x00033C40
 
     float x;   // +0x00
     float y;   // +0x04

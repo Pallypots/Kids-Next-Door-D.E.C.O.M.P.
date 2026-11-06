@@ -3831,6 +3831,94 @@ source = "src/at/AtPixelFormat.cpp"
 subsystem = "at/pixelformat"
 evidence = "tests/oracle/oracle_fmt.cpp; address noted beside the declaration in include/at/AtPixelFormat.h"
 
+[[function]]
+va = 0x00033570
+size = 134
+symbol = "?SetProduct@AtQuaternion@@QAEXABV1@0@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x00033600
+size = 178
+symbol = "?SetLerp@AtQuaternion@@QAEXABV1@0M@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x000336F0
+size = 375
+symbol = "?SetFromRows@AtQuaternion@@QAEXABVAtVector3@@00@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x00033870
+size = 75
+symbol = "?SetReflection@AtQuaternion@@QAEXABV1@0@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x000338C0
+size = 129
+symbol = "?Multiply@AtQuaternion@@QAEXABV1@@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x00033950
+size = 115
+symbol = "?Normalize@AtQuaternion@@QAEXXZ"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x000339D0
+size = 300
+symbol = "?SetSlerp@AtQuaternion@@QAEXABV1@0M@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x00033B00
+size = 129
+symbol = "?Rotate@AtQuaternion@@QBEXPAVAtVector3@@@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x00033B90
+size = 48
+symbol = "?SetAxisAngle@AtQuaternion@@QAEXABVAtVector3@@M@Z"
+source = "src/at/AtQuaternion.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtQuaternion.h"
+
+[[function]]
+va = 0x00033C00
+size = 57
+symbol = "?SetCross@AtVector3@@QAEXABV1@0@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00033C40
+size = 35
+symbol = "?SetDifference@AtVector3@@QAEXABV1@0@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/quaternion"
+evidence = "tests/oracle/oracle_qua.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5

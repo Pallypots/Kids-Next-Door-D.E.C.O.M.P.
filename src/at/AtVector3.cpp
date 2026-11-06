@@ -204,3 +204,15 @@ void AtVector3::SetRejected(const AtVector3& from, const AtVector3& direction) {
     y = (float)((double)from.y - alongY);
     z = (float)((double)from.z - alongZ);
 }
+
+void AtVector3::SetCross(const AtVector3& a, const AtVector3& b) {
+    x = (float)((double)b.z * a.y - (double)b.y * a.z);
+    y = (float)((double)b.x * a.z - (double)a.x * b.z);
+    z = (float)((double)a.x * b.y - (double)b.x * a.y);
+}
+
+void AtVector3::SetDifference(const AtVector3& a, const AtVector3& b) {
+    x = (float)((double)a.x - b.x);
+    y = (float)((double)a.y - b.y);
+    z = (float)((double)a.z - b.z);
+}

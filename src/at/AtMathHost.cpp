@@ -4,6 +4,8 @@
 
 #include "at/AtVector3.h"
 
+double AtAcos(double value) { return acos(value); }
+
 #if defined(_M_IX86) && defined(_MSC_VER)
 double AtSin(double angle) {
     __asm {

@@ -361,3 +361,9 @@ Printed, not failing: the same comparison at 24 bits gives 1.47 million differen
 `python -I tools/oracle_run.py --suite fmt` compares 27 functions, setters on dirty storage, over 300,000 rounds of known and random masks, and each `Read` path through a scripted tokenizer on which the original's own 0x00015880 runs. Result: no difference over 4,590,236 comparisons, 27/27 entries, 56/56 mutants. `tests/native/test_at_pixel_format.cpp` holds x64 to a hash of the original's results: it matches, 0xA24FA9E5908E6053.
 
 Limits: `_stricmp` is compared on ASCII names; a locale's effect on it is not modelled. The C library's multibyte check at 0x00126F41 goes straight to the plain comparison when the code page word at 0x003B33D4 is 0, as it is in this harness; whether anything sets that word in the game is not read.
+
+## Quaternion: tests/oracle/oracle_qua.cpp
+
+`python -I tools/oracle_run.py --suite qua` compares 9 quaternion functions and `AtVector3::SetCross` and `SetDifference`, by bits at x87 precision 53, over 200,000 rounds of unit-like and edge values and 50,000 with infinities and NaNs. Rows come both from real rotations, so each branch of `SetFromRows` runs, and from any values. Result: no difference over 11,250,000 comparisons, 11/11 entries, 60/60 mutants. `tests/native/test_at_quaternion.cpp` holds x64 to a hash of the original's results for what has no sine, cosine or arc cosine: it matches, 0xA021B09021D51782. The x64 value was printed by that test before being written into it.
+
+Limits: `AtAcos` is the host's, where the original calls its C library's at 0x00126600: their results are seen only rounded to float, and showed no difference here. On x64 `SetSlerp` and `SetAxisAngle` are checked only for what must hold. NaNs differing only in sign count as alike, as in the vector suite. Sum order is not separately tested here, for the reason given there.
