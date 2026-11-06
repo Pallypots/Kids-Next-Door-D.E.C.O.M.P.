@@ -57,13 +57,22 @@ extern int g_enableAllUnlockables;    // 0x003ADA60
 extern int g_noDialogs;               // 0x003B3908
 extern int g_showFlashHeapInfo;       // 0x003B3544
 
-// At +0x654C of App, with the command line reader at 0x00098410, not recovered, beside it.
+// At +0x654C of App.
 class GmAppSettings {
 public:
     GmAppSettings();                         // 0x000989D0
     void SetDefaultLanguage();               // 0x00098900
     static void SetChannel(const char* name, int on);  // 0x000981C0; the original has a this it never reads
     void Load();                             // 0x00098A50 quietly nothing when the device has no App.ini
+    void ReadCommandLine();                  // 0x00098410 after Load, so it overrides the file; a value missing from the end of the line is a crash for most options
+
+    static unsigned int s_argc;              // 0x002BF308 set by main
+    static char** s_argv;                    // 0x002BF300 set by main
+
+    // ORIGINAL BUG, kept visible. Before reading a level name the original uppercases its first strlen(buffer) bytes, where buffer is 128 bytes of its stack frame
+    // that nothing ever writes, so the count is whatever the stack held. It is not bounded by the name either. Source cannot reproduce stack garbage, so the count
+    // is this variable: 0 means no uppercasing, which is what a clean stack gives. What the stack holds on a real boot has not been measured.
+    static unsigned int s_levelUppercaseCount;
 
     int m_ready;               // +0x00
     char m_level[8];           // +0x04

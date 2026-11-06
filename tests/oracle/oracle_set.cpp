@@ -294,11 +294,175 @@ static void run_missing() {
     g_fs->open_status = 0;
 }
 
+// The original's 128-byte buffer, which nothing writes, lies directly under the return address. So fill it from here, just before the call, to choose what strlen sees.
+static __declspec(noinline) void original_command_line(GmAppSettings* self, unsigned int count) {
+    __asm {
+        mov ecx, count
+        lea edi, [esp - 0x84]
+        mov al, 0x41
+        rep stosb
+        mov byte ptr [edi], 0
+        mov ecx, self
+        xor edx, edx
+        mov eax, 0x00098410
+        call eax
+    }
+}
+
+static __declspec(noinline) void command_expecting_crash(GmAppSettings* s, int side, unsigned int count) {
+    g_resumed = false;
+    g_resume_seh = __readfsdword(0);
+    RtlCaptureContext(&g_resume);
+    if (!g_resumed) {
+        g_expect_crash = true;
+        g_side = side;
+        g_recording = true;
+        if (side) s->ReadCommandLine();
+        else original_command_line(s, count);
+        g_expect_crash = false;
+    }
+    g_recording = false;
+    g_side = 0;
+}
+
+// Each side has its own writable copy, and room after each word, in lower case, for an uppercasing that runs past the end.
+struct Words {
+    enum { kRoom = 200 };  // More than the longest count tried.
+    std::vector<std::vector<char>> text;
+    std::vector<char*> argv;
+    explicit Words(const std::vector<const char*>& words) {
+        for (const char* w : words) {
+            std::vector<char> t(std::strlen(w) + 1 + kRoom, 'q');
+            std::memcpy(t.data(), w, std::strlen(w) + 1);
+            text.push_back(t);
+        }
+        for (auto& t : text) argv.push_back(t.data());
+        argv.push_back(nullptr);
+    }
+};
+
+static void set_words(Words& o, Words& r, size_t count) {
+    *(unsigned int*)(uintptr_t)0x002BF308 = (unsigned int)count;
+    *(char***)(uintptr_t)0x002BF300 = o.argv.data();
+    GmAppSettings::s_argc = (unsigned int)count;
+    GmAppSettings::s_argv = r.argv.data();
+}
+
+static void run_command(const std::vector<const char*>& words, unsigned int count = 0) {
+    g_context = "command line [" + std::to_string(count) + "]";
+    for (const char* w : words) { g_context += ' '; g_context += w; }
+    reset_globals();
+    GmAppSettings* o, *r;
+    new_settings(o, r);
+    compare_logs("constructed");
+    Words wo(words), wr(words);
+    set_words(wo, wr, words.size());
+    GmAppSettings::s_levelUppercaseCount = count;
+    { On on(0); original_command_line(o, count); }
+    { On on(1); r->ReadCommandLine(); }
+    same_settings("after command line", o, r);
+    same_globals("after command line");
+    compare_logs("command line");
+    for (size_t i = 0; i < words.size(); i++) eq("word after", std::memcmp(wo.text[i].data(), wr.text[i].data(), wo.text[i].size()), 0);
+    GmAppSettings::s_levelUppercaseCount = 0;
+    std::free(o);
+    std::free(r);
+}
+
+static void run_command_crash(const std::vector<const char*>& words) {
+    g_context = "command line stops:";
+    for (const char* w : words) { g_context += ' '; g_context += w; }
+    reset_globals();
+    GmAppSettings* o, *r;
+    new_settings(o, r);
+    compare_logs("constructed");
+    Words wo(words), wr(words);
+    set_words(wo, wr, words.size());
+    const int before = g_crashes;
+    command_expecting_crash(o, 0, 0);
+    command_expecting_crash(r, 1, 0);
+    eq("both stop", g_crashes - before, 2);
+    same_settings("after stopping", o, r);
+    compare_logs("stopping");
+    std::free(o);
+    std::free(r);
+}
+
+static void run_commands() {
+    static const char* const flags[] = {
+        "fullscreen", "testalllevels", "openlist", "maximized", "verticalsyncoff", "page", "skipintro", "disableconsolememstats", "nomusic", "noambientaudio",
+        "noaudio", "displaybanks", "displaysounds", "displaymusic", "audiotest", "skipmainmenu", "mainmenu", "unknownoption", "",
+    };
+    for (const char* f : flags) {
+        run_command({"game", f});
+        // What follows must be read as an option, not eaten as a value.
+        run_command({"game", f, "fullscreen", "skipmainmenu"});
+    }
+    run_command({"game"});
+    run_command({});
+    run_command({"fullscreen"});  // The first word is the program's.
+    run_command({"game", "FULLSCREEN", "SkipMainMenu", "NoMuSiC"});
+    run_command({"game", "fullscreens"});
+    run_command({"game", "fullscree"});
+    run_command({"game", "\xE9"});
+
+    // The level: only with a capital L, and eight letters at most.
+    for (const char* name : {"LEVEL", "L", "LABCDEFG", "LABCDEFGH", "lower", "ALMOND", "Lmixed", "", "fullscreen"}) {
+        run_command({"game", "level", name});
+        run_command({"game", "LEVEL", name, "skipmainmenu"});
+    }
+    // What the original's buffer does, with the count chosen from outside: the first letters only, and on past the end of the word.
+    for (unsigned int count : {1u, 2u, 3u, 7u, 8u, 9u, 30u, 127u}) {
+        run_command({"game", "level", "lower", "skipmainmenu"}, count);
+        run_command({"game", "level", "LOWER"}, count);
+        run_command({"game", "level", "l!z{a`"}, count);
+    }
+
+    for (const char* v : {"0", "1", "50", "99", "100", "-1", "abc", "", " 7", "+7", "7x", "2147483647", "2147483648", "4294967346"}) {
+        run_command({"game", "controllerdeadzone", v});
+        run_command({"game", "controllerdeadzone", v, "fullscreen"});
+        run_command({"game", "audiomode", v});
+        run_command({"game", "audiomode", v, "fullscreen"});
+    }
+    run_command({"game", "audiomode", "2"});
+    run_command({"game", "audiomode", "3"});
+    run_command({"game", "audiomode", "1", "audiomode", "9"});
+    run_command({"game", "audiomode", "1", "audiomode", "0"});  // Zero is a value, not the default showing through.
+    run_command({"game", "controllerdeadzone", "5", "controllerdeadzone", "0"});
+    // A value that is itself an option's name is still only a value.
+    run_command({"game", "controllerdeadzone", "fullscreen"});
+    run_command({"game", "audiomode", "fullscreen"});
+    run_command({"game", "add_dio", "fullscreen"});
+    run_command({"game", "no_dio", "fullscreen"});
+    run_command({"game", "level", "fullscreen"});
+
+    static const char* const channels[] = {"framework", "ai", "audio", "io", "render", "sim", "ui", "controller", "tool", "debugoutput", "event", "innerloop", "AUDIO", "other", ""};
+    for (const char* c : channels) {
+        run_command({"game", "add_dio", c, "fullscreen"});
+        run_command({"game", "no_dio", c, "fullscreen"});
+        run_command({"game", "add_dio", c, "no_dio", c});
+        run_command({"game", "no_dio", "ai", "no_dio", c, "add_dio", c});
+    }
+    // At the end of the line these two see a null and do nothing; the rest read it.
+    run_command({"game", "add_dio"});
+    run_command({"game", "no_dio"});
+    run_command_crash({"game", "level"});
+    run_command_crash({"game", "controllerdeadzone"});
+    run_command_crash({"game", "audiomode"});
+    // Everything at once, in both orders, and twice over App.ini's values.
+    run_command({"game", "level", "LXY", "fullscreen", "testalllevels", "openlist", "maximized", "controllerdeadzone", "12", "verticalsyncoff", "add_dio", "sim", "no_dio", "ai", "page", "skipintro",
+                 "disableconsolememstats", "nomusic", "noambientaudio", "noaudio", "displaybanks", "displaysounds", "displaymusic", "audiomode", "2", "audiotest", "skipmainmenu"});
+    // A number too large for the signed conversion keeps its low bits, here as in the original.
+    run_command({"game", "controllerdeadzone", "99999999999"});
+}
+
 static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
     const DWORD c = e->ExceptionRecord->ExceptionCode;
     if (c == EXCEPTION_ACCESS_VIOLATION || c == EXCEPTION_ILLEGAL_INSTRUCTION || c == EXCEPTION_INT_DIVIDE_BY_ZERO) {
         if (g_expect_crash) {
             g_expect_crash = false;
+            g_recording = false;  // Here, not after the resume: the harness's own allocations must not reach the log.
+            g_side = 0;
             g_resumed = true;
             g_crashes = g_crashes + 1;
             __writefsdword(0, g_resume_seh);
@@ -371,6 +535,7 @@ int main(int argc, char** argv) {
     run_parts();
     run_missing();
     run_inputs();
+    run_commands();
     report_entries();
     std::printf("%s: %llu comparisons, %d differences\n", g_failures ? "DIFFERENT" : "NO DIFFERENCE OBSERVED", g_checks, g_failures);
     return g_failures ? 1 : 0;

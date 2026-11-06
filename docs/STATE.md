@@ -14,7 +14,7 @@ Last updated: 2026-11-06, dev cycle 12 (audio data files). Per-function results 
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 385 functions and 32 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 386 functions and 32 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -29,7 +29,7 @@ All source is in `src/`, types in `include/`. 385 functions and 32 vftables are 
   original on every text file on the disc.
 * `at/mount` (23 functions): what mounts archives, and the small manager it creates. A port supplies the factory of file systems. Start-up order: docs/startup.md.
 * `gm/audiodata` (3 functions), **partial**: the volume preset (`.GOV`) and memory block (`.GOB`) readers of the audio manager, which is not itself recovered. `MEMBLOCK.GOB` on this disc has only `PSX2` and `GCN` sections, so the Xbox game takes no blocks from it.
-* `gm/settings` (7 functions): `app.ini`, the first file the game reads, and what it sets. Its command line twin at 0x00098410 is not recovered.
+* `gm/settings` (8 functions): `app.ini`, the first file the game reads, what it sets, and the command line read after it. One original bug is held in a variable, not reproduced: see `s_levelUppercaseCount`.
 * `at/gametext` (39 functions): text strings of both kinds and the `.AIS` table. Every game text string on the disc reads the same as the original's.
 * `gm/names` (34 functions): the name-to-object hash table used across the engine, and the namespace tree above it. `gm/rumble` (21 functions): the reader of `RUMBLE.RMB`. What plays the effects is not recovered.
 * `gm/levels` (11 functions), **partial**: the reader of `Levels.txt`, the first recovered code to give game data a meaning. **Recovered source now goes from the archive on disc to the game's level table**, on x64. Not recovered: the rest of its class, which

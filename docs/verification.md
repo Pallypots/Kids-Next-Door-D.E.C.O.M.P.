@@ -224,6 +224,12 @@ The language and region calls, 0x001B7B84 and 0x001B7B12, read the console's set
 
 `test_gm_levels` now reads the real `app.ini` first, as the game does. That run found a bug in the port's host file layer, which treated any short read as an error: the buffered stream asks for a whole buffer, and the archive code had never asked for more than there was. A short read with data in it now succeeds.
 
+## Command line reader: tests/oracle/oracle_set.cpp
+
+The same suite covers 0x00098410: every option alone and followed by another, case, numbers at and past their limits, each debug channel, values that are themselves option names, and the three options that crash when their value is missing. Result on 2026-11-06, with the `app.ini` cases: 16,705 comparisons, no difference, 8/8 entries, 140/140 mutants.
+
+**Known deviation.** The original uppercases a level name for `strlen` of 128 stack bytes that nothing writes. Source cannot reproduce stack garbage, so the recovered function uses `GmAppSettings::s_levelUppercaseCount`, 0 by default. The harness fills the original's buffer, directly under its return address, to choose the count, and compares the result for counts from 0 to 127, including writes past the end of the name. What the stack holds on a real boot has not been measured, so the default of 0 is a choice, not a finding. With 0, only a level name already beginning with a capital `L` is accepted.
+
 ## End to end: tests/native/test_at_e2e.cpp
 
 Opens real archives through the recovered layers (`AtIoContext`, `AtIoJamFileSystem`, the header and file classes) over host files, and

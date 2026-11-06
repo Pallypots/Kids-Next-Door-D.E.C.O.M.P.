@@ -12,6 +12,9 @@ int toupper(int c);
 
 GmAppAudioOptions* GmAppAudioOptions::s_instance;
 GmHistoryLogs* GmHistoryLogs::s_instance;
+unsigned int GmAppSettings::s_argc;
+char** GmAppSettings::s_argv;
+unsigned int GmAppSettings::s_levelUppercaseCount;
 unsigned short g_debugChannels = 3;
 int g_usePlatformBinary = 1;
 int g_backgroundMusic = 1;
@@ -308,4 +311,69 @@ void GmAppSettings::Load() {
         }
     }
     file.Close();
+}
+
+void GmAppSettings::ReadCommandLine() {
+    for (unsigned int i = 1; i < s_argc; i++) {
+        char* arg = s_argv[i];
+        if (EqualIgnoringCase(arg, "level")) {
+            arg = s_argv[++i];
+            for (unsigned int k = 0; k < s_levelUppercaseCount; k++) {
+                if (arg[k] >= 'a' && arg[k] <= 'z') {
+                    arg[k] -= 0x20;
+                }
+            }
+            // Only a name beginning with a capital L counts.
+            if (strlen(arg) <= 8 && arg[0] == 'L') {
+                AtCopyName(arg, m_level);
+            }
+        } else if (EqualIgnoringCase(arg, "fullscreen")) {
+            m_fullscreen = 1;
+        } else if (EqualIgnoringCase(arg, "testalllevels")) {
+            m_testAllLevels = 1;
+        } else if (EqualIgnoringCase(arg, "openlist")) {
+            m_openList = 1;
+        } else if (EqualIgnoringCase(arg, "maximized")) {
+            // Recognised, and nothing happens.
+        } else if (EqualIgnoringCase(arg, "controllerdeadzone")) {
+            const int value = AtNarrowToInt(s_argv[++i]);
+            if (value >= 0 && value < 100) {
+                m_controllerDeadZone = (float)value;
+            }
+        } else if (EqualIgnoringCase(arg, "verticalsyncoff")) {
+            m_verticalSyncOff = 1;
+        } else if (EqualIgnoringCase(arg, "add_dio")) {
+            SetChannel(s_argv[++i], 1);
+        } else if (EqualIgnoringCase(arg, "no_dio")) {
+            SetChannel(s_argv[++i], 0);
+        } else if (EqualIgnoringCase(arg, "page")) {
+            // Recognised, and nothing happens.
+        } else if (EqualIgnoringCase(arg, "skipintro")) {
+            m_skipIntro = 1;
+        } else if (EqualIgnoringCase(arg, "disableconsolememstats")) {
+            m_memStats = 0;
+            g_consoleMemStats = 0;
+        } else if (EqualIgnoringCase(arg, "nomusic")) {
+            GmAppAudioOptions::s_instance->m_noMusic = 1;
+        } else if (EqualIgnoringCase(arg, "noambientaudio")) {
+            GmAppAudioOptions::s_instance->m_noAmbientAudio = 1;
+        } else if (EqualIgnoringCase(arg, "noaudio")) {
+            GmAppAudioOptions::s_instance->m_noAudio = 1;
+        } else if (EqualIgnoringCase(arg, "displaybanks")) {
+            GmAppAudioOptions::s_instance->m_displayBanks = 1;
+        } else if (EqualIgnoringCase(arg, "displaysounds")) {
+            GmAppAudioOptions::s_instance->m_displaySounds = 1;
+        } else if (EqualIgnoringCase(arg, "displaymusic")) {
+            GmAppAudioOptions::s_instance->m_displayMusic = 1;
+        } else if (EqualIgnoringCase(arg, "audiomode")) {
+            const int value = AtNarrowToInt(s_argv[++i]);
+            if (value >= 0 && value < 3) {
+                GmAppAudioOptions::s_instance->m_audioMode = value;
+            }
+        } else if (EqualIgnoringCase(arg, "audiotest")) {
+            GmAppAudioOptions::s_instance->m_audioTest = 1;
+        } else if (EqualIgnoringCase(arg, "skipmainmenu")) {
+            m_skipMainMenu = 1;
+        }
+    }
 }

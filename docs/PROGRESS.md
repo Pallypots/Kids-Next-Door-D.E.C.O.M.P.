@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 383 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 384 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -426,6 +426,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00136DA0 | 56 | `??0GmVolumePreset@@QAE@XZ` | gm/audiodata | MISMATCH |
 | 0x00136E70 | 592 | `?LoadMemoryBlocks@GmAudioData@@QAEXPBD@Z` | gm/audiodata | SIZE |
 | 0x001370E0 | 703 | `?LoadVolumePresets@GmAudioData@@QAEXPBD@Z` | gm/audiodata | SIZE |
+| 0x00098410 | 1258 | `?ReadCommandLine@GmAppSettings@@QAEXXZ` | gm/settings | SIZE |
 
 Relocation-aware matches with the host compiler: 64 functions, 995 unique bytes.
 Share of `.text` raw bytes: 0.0487% (denominator includes unclassified library code).
@@ -485,7 +486,7 @@ Suite `rmb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: see
 
 Suite `txt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 72 .AIS files, 2685 strings, 27924 comparisons, 0 differences). Recorded function entries reached in every run: 39 / 39. Source mutants detected: 64 / 64. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `set`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 8637 comparisons, 0 differences). Recorded function entries reached in every run: 7 / 7. Source mutants detected: 86 / 86. Positive control exit: 0. Harness mutation exit: 1.
+Suite `set`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 16705 comparisons, 0 differences). Recorded function entries reached in every run: 8 / 8. Source mutants detected: 140 / 140. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 files, 6 presets, 0 blocks (each file read twice); 638 comparisons, 0 differences). Recorded function entries reached in every run: 3 / 3. Source mutants detected: 53 / 53. Positive control exit: 0. Harness mutation exit: 1.
 
