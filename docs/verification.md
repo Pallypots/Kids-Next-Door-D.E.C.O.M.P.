@@ -127,6 +127,38 @@ token, where the original dereferences null after reporting, so both sides crash
 long enough to overflow the fixed buffers, in both implementations; the real Xbox device layer, which is not recovered; JAM2 archives over
 4 MB (the limit is only about file size in the cases directory).
 
+## Text tokenizer: tests/oracle/oracle_tok.cpp
+
+Same method as the other suites, in lockstep: after every token, both sides' return value, token type, integer, real (as bits), string, identifier, line and
+buffer positions are compared, along with calls to the file below and every message.
+
+Input: every distinct file on the disc that begins as text, plus 60 binary samples (`python -I tools/jam.py textcases`); text written to reach each state and limit;
+1,500 random strings; six read behaviours (normal, pending, one byte at a time, zero at end, failing, failing wait); every write method on its own with the fields
+it sets made dirty first; 300,000 random floats and every small exact tie through the float formatter.
+
+Result on 2026-11-05: 5,864 files, 12,749,375 bytes, 1,372,044 tokens, 22,236,514 comparisons, no difference; 99/99 entries reached; positive control passes; `--mutate`
+fails; 172/172 source mutants detected (166 as a reported difference, 6 by a crash or hang).
+
+The real rumble file was also read with the game's own keyword table from 0x002B2940: 145 keywords recognised, no difference.
+
+`python -I tools/oracle_run.py` needs `analysis-local/oracle-tok`. Its first run was 159/172. The survivors were: types checked only after a whole series of writes, so a
+later write hid an earlier one (5); inputs one byte short of each limit (5); state a normal sequence never leaves (2); and one branch of my own that did nothing, now
+removed.
+
+**x87 precision.** The Xbox's setting is not established, so each file was also tokenized by the original under 53-bit and 64-bit precision. No file's result changed.
+
+**On a 64-bit host.** `test_at_tok <cases> <digests>` tokenizes the same files in an x64 build (SSE, no x87) and compares with digests written from the original: 5,864 files,
+1,355,279 tokens, no difference. The digest covers each token's values, floats as bits.
+
+Differences from the original, each deliberate:
+
+* After a syntax error on a character below `!` or above `~`, the original indexes its token table out of bounds and takes what it finds as the token (seen: `0x74636570`,
+  which is "pect" from a nearby message). The recovered code stops. This is only reachable if the fatal error routine returns. On such a token only the first message is compared.
+* With no file name, the original appends the message to an uninitialised buffer. The recovered code starts it empty. Only the end of that message is compared.
+
+Not covered: the code that uses tokens, which is per format and not recovered; `Report`, whose result goes nowhere, so only reaching it is tested; allocation failure beyond the
+missing-heap case; `PutReal` of values too long for its 0x20-byte buffer, which overflows in both.
+
 ## End to end: tests/native/test_at_e2e.cpp
 
 Opens real archives through the recovered layers (`AtIoContext`, `AtIoJamFileSystem`, the header and file classes) over host files, and

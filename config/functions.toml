@@ -1191,6 +1191,798 @@ evidence = "vftable 0x00272644 slot 13"
 
 # Vftables: slot count measured up to the next vftable or padding. Every slot is checked by symbol.
 
+[[function]]
+va = 0x00013ED0
+size = 35
+symbol = "?AtCopyName@@YAXPBDPAD@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00013F90
+size = 36
+symbol = "?AtCopyName9@@YAXPADPBD@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015460
+size = 77
+symbol = "??0AtIoTokenFile@@QAE@XZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000154B0
+size = 77
+symbol = "?Close@AtIoTokenFile@@QAEXXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015500
+size = 86
+symbol = "??1AtIoTokenFile@@QAE@XZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015560
+size = 415
+symbol = "?Open@AtIoTokenFile@@QAEHPBD0HPAVAtIoTokenizer@@@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015700
+size = 371
+symbol = "?Open@AtIoTokenFile@@QAEHPBDHPAVAtIoTokenizer@@@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015880
+size = 27
+symbol = "?ExpectInt@AtIoTokenizer@@QAEHXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000158A0
+size = 27
+symbol = "?ExpectReal@AtIoTokenizer@@QAEMXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000158C0
+size = 27
+symbol = "?ExpectString@AtIoTokenizer@@QAEPBDXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000158E0
+size = 50
+symbol = "?ExpectString@AtIoTokenizer@@QAEPBDI@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015920
+size = 100
+symbol = "?ExpectStringCopy@AtIoTokenizer@@QAEXPAPAD@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015990
+size = 61
+symbol = "?ExpectName@AtIoTokenizer@@QAEXPAD@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000159D0
+size = 27
+symbol = "?ExpectToken@AtIoTokenizer@@QAEXH@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000159F0
+size = 24
+symbol = "?ExpectLeftBracket@AtIoTokenizer@@QAEXXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015A10
+size = 24
+symbol = "?ExpectRightBracket@AtIoTokenizer@@QAEXXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015A30
+size = 24
+symbol = "?ExpectLeftCurly@AtIoTokenizer@@QAEXXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015A50
+size = 24
+symbol = "?ExpectRightCurly@AtIoTokenizer@@QAEXXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015A70
+size = 90
+symbol = "?ExpectCount@AtIoTokenizer@@QAEHXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015AD0
+size = 41
+symbol = "?CopyName@AtIoTokenizer@@QAEXPAD@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015B00
+size = 348
+symbol = "?ErrorText@AtIoTokenizer@@QAEPBDH@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015D00
+size = 6
+symbol = "?GetIdentifier@AtIoTokenizer@@UAEPBDXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015D10
+size = 53
+symbol = "??0AtIoTokenizer@@QAE@XZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015D50
+size = 37
+symbol = "?SetStream@AtIoTokenizer@@QAEXPAVAtIoStream@@@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015D80
+size = 45
+symbol = "?Reset@AtIoTokenizer@@UAEXXZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015DB0
+size = 286
+symbol = "?Report@AtIoTokenizer@@UAEXH@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015ED0
+size = 282
+symbol = "?Error@AtIoTokenizer@@UAEXH@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00015FF0
+size = 51
+symbol = "??1AtIoTokenizer@@UAE@XZ"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00016030
+size = 75
+symbol = "??_GAtIoTokenizer@@UAEPAXI@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00018810
+size = 16
+symbol = "??0AtIoFileRef@@QAE@XZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00018820
+size = 37
+symbol = "?Close@AtIoFileRef@@QAEXXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00018850
+size = 68
+symbol = "?Read@AtIoFileRef@@QAEHPAXIPAI@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000188A0
+size = 63
+symbol = "?Write@AtIoFileRef@@QAEHPBXI@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000188E0
+size = 8
+symbol = "?Flush@AtIoFileRef@@QAEHXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000188F0
+size = 71
+symbol = "?OpenOn@AtIoFileRef@@QAEHPAVAtIoFileSystem@@PBDH@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00018940
+size = 129
+symbol = "?Open@AtIoFileRef@@QAEHPBDH@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000189D0
+size = 184
+symbol = "?OpenWithExtension@AtIoFileRef@@QAEHPBD0H@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000206F0
+size = 21
+symbol = "?AtFormatInt@@YAXHPAD@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00020710
+size = 29
+symbol = "?AtFormatReal@@YAXMPAD@Z"
+source = "src/at/AtIoTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000222A0
+size = 26
+symbol = "??0AtIoFileStream@@QAE@XZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000222C0
+size = 52
+symbol = "?Detach@AtIoFileStream@@QAEXXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022300
+size = 200
+symbol = "?Refill@AtIoFileStream@@UAEHXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000223D0
+size = 123
+symbol = "??1AtIoFileStream@@UAE@XZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022450
+size = 74
+symbol = "?Attach@AtIoFileStream@@QAEXPAVAtIoFileRef@@I@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000224A0
+size = 30
+symbol = "??_GAtIoFileStream@@UAEPAXI@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000224C0
+size = 56
+symbol = "?HashOf@AtIoTextTokenizer@@SAIPBD@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022500
+size = 38
+symbol = "??0AtIoTextTokenizer@@QAE@XZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022530
+size = 452
+symbol = "?SetKeywords@AtIoTextTokenizer@@UAEXPBUAtIoKeyword@@IPAVAtIoTokenizer@@@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022700
+size = 178
+symbol = "?LookUpIdentifier@AtIoTextTokenizer@@QAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000227C0
+size = 74
+symbol = "?PutInt@AtIoTextTokenizer@@UAEXH@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022810
+size = 83
+symbol = "?PutReal@AtIoTextTokenizer@@UAEXM@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022870
+size = 91
+symbol = "?PutString@AtIoTextTokenizer@@UAEXPBD@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000228D0
+size = 94
+symbol = "?PutComment@AtIoTextTokenizer@@UAEXPBD@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022930
+size = 125
+symbol = "?PutKeyword@AtIoTextTokenizer@@UAEXH@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000229B0
+size = 41
+symbol = "?PutRaw@AtIoTextTokenizer@@UAEXPBD@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000229E0
+size = 18
+symbol = "?PutLeftBracket@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022A00
+size = 18
+symbol = "?PutRightBracket@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022A20
+size = 18
+symbol = "?PutLeftCurly@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022A40
+size = 18
+symbol = "?PutRightCurly@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022A60
+size = 18
+symbol = "?PutComma@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022A80
+size = 18
+symbol = "?PutSemicolon@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022AA0
+size = 18
+symbol = "?PutColon@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022AC0
+size = 18
+symbol = "?PutExclamation@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022AE0
+size = 18
+symbol = "?PutPercent@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022B00
+size = 18
+symbol = "?PutCaret@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022B20
+size = 18
+symbol = "?PutAmpersand@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022B40
+size = 18
+symbol = "?PutTimes@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022B60
+size = 18
+symbol = "?PutLeftParen@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022B80
+size = 18
+symbol = "?PutRightParen@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022BA0
+size = 18
+symbol = "?PutMinus@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022BC0
+size = 18
+symbol = "?PutPlus@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022BE0
+size = 18
+symbol = "?PutDivide@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022C00
+size = 18
+symbol = "?PutEquals@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022C20
+size = 18
+symbol = "?PutLess@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022C40
+size = 18
+symbol = "?PutGreater@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022C60
+size = 18
+symbol = "?PutOr@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022C80
+size = 18
+symbol = "?PutQuestion@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022CA0
+size = 18
+symbol = "?PutAt@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022CC0
+size = 18
+symbol = "?PutTilde@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022CE0
+size = 25
+symbol = "?PutNewline@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022D00
+size = 11
+symbol = "?PutSpace@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022D10
+size = 34
+symbol = "?PutSpaces@AtIoTextTokenizer@@UAEXI@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022D40
+size = 11
+symbol = "?PutTab@AtIoTextTokenizer@@UAEXXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022D50
+size = 34
+symbol = "?PutTabs@AtIoTextTokenizer@@UAEXI@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022D80
+size = 48
+symbol = "?PutName@AtIoTextTokenizer@@UAEXPBD@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022DB0
+size = 7
+symbol = "?GetIdentifier@AtIoTextTokenizer@@UAEPBDXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022DC0
+size = 30
+symbol = "??_GAtIoTextTokenizer@@UAEPAXI@Z"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022DE0
+size = 5
+symbol = "??1AtIoTextTokenizer@@UAE@XZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00022DF0
+size = 1258
+symbol = "?Next@AtIoTextTokenizer@@UAEHXZ"
+source = "src/at/AtIoTextTokenizer.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00031590
+size = 10
+symbol = "?SetHeap@AtIoStream@@SAXPAX@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000315A0
+size = 60
+symbol = "?SkipLine@AtIoStream@@QAEHXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000315E0
+size = 71
+symbol = "?SkipWhitespace@AtIoStream@@QAEHXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00031630
+size = 67
+symbol = "?Put@AtIoStream@@QAEXD@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00031680
+size = 41
+symbol = "?Refill@AtIoStream@@UAEHXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000316B0
+size = 29
+symbol = "??0AtIoStream@@QAE@XZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000316D0
+size = 43
+symbol = "?Free@AtIoStream@@QAEXXZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00031700
+size = 49
+symbol = "??1AtIoStream@@UAE@XZ"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x00031740
+size = 160
+symbol = "?Allocate@AtIoStream@@QAEXI@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
+[[function]]
+va = 0x000317E0
+size = 69
+symbol = "??_GAtIoStream@@UAEPAXI@Z"
+source = "src/at/AtIoStream.cpp"
+subsystem = "at/text"
+evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -1307,7 +2099,37 @@ source = "src/at/AtIoJamFileSystem.cpp"
 
 # Symbols referenced by relocations but not recorded above. Name -> original VA. A relocation whose symbol is missing
 # here makes the checker fail (UNRESOLVED); entries must cite their evidence.
+[[vtable]]
+va = 0x00271D58
+slots = 43
+symbol = "??_7AtIoTokenizer@@6B@"
+source = "src/at/AtIoTokenizer.cpp"
+
+[[vtable]]
+va = 0x00272AF4
+slots = 2
+symbol = "??_7AtIoFileStream@@6B@"
+source = "src/at/AtIoStream.cpp"
+
+[[vtable]]
+va = 0x00272C78
+slots = 43
+symbol = "??_7AtIoTextTokenizer@@6B@"
+source = "src/at/AtIoTextTokenizer.cpp"
+
+[[vtable]]
+va = 0x00274A54
+slots = 2
+symbol = "??_7AtIoStream@@6B@"
+source = "src/at/AtIoStream.cpp"
+
 [symbols]
+"?s_context@AtIoFileRef@@2PAVAtIoContext@@A" = 0x002C6278  # read at 0x0001894D; cleared beside s_instance at 0x0001925E
+"?s_heap@AtIoStream@@2PAXA" = 0x002C63CC  # written at 0x00031594
+"?s_heap@AtIoTokenFile@@2PAXA" = 0x002C60B0  # read at 0x000155BC
+"??_C@_00CNPNBAHC@@" = 0x00270F0B  # the empty string, as the original returns from 0x00015D00 and copies from at 0x00013F98
+"??1AtIoFileRef@@QAE@XZ" = 0x00018820  # same code as Close: folded
+"?SetKeywords@AtIoTokenizer@@UAEXPBUAtIoKeyword@@IPAV1@@Z" = 0x001ACD70  # vftable slot: `ret 0xC`, folded
 "__purecall" = 0x00125F25  # abstract vftable slots; body raises runtime error 0x19 (R6025 pure virtual call)
 "??3@YAXPAX@Z" = 0x00011210  # operator delete: tail of every scalar deleting destructor
 "?s_cursor@GmLinkedListNode@@2HA" = 0x002E26E8  # 0x00076F91

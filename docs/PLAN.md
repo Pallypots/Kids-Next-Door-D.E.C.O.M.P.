@@ -1,7 +1,6 @@
 # Plan (no numbers here — measured progress is in docs/PROGRESS.md)
 
-1. **What loads the archives, and one archived format.** The file layer works; follow the mounting code to a file type that small, understood code
-   consumes, and recover that format from that code.
+1. **First format reader.** `Levels.txt`, then what mounts archives and what else reads text, on top of the recovered tokenizer.
 2. **Rest of the first translation unit.** Sorted container at 0x000761B0-0x00076600, then what remains around it.
 3. **Library separation.** Grow the string-reference map into evidence-backed ranges for LIBCMT, XAPI, CRI
    (ADX/Sofdec), libjpeg and D3DX inside `.text`; keep an `unknown` bucket; never rename from an unreviewed signature

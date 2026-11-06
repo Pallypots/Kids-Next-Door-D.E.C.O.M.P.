@@ -29,6 +29,7 @@ CONFIG = "RelWithDebInfo"
 XBE = os.path.join(ROOT, "orig", "xiso", "default.xbe")
 
 CASES = os.path.join(ROOT, "analysis-local", "oracle-jam")
+TOK_CASES = os.path.join(ROOT, "analysis-local", "oracle-tok")
 
 # (name, file, exact text to replace, replacement). The text must occur exactly once.
 GM_MUTANTS = [
@@ -219,9 +220,190 @@ JAM_MUTANTS += [
     ("JamFs Create: max and flags swapped", H, "fs->vInit(maxOpen, path, flags);", "fs->vInit((unsigned int)flags, path, (int)maxOpen);"),
 ]
 
+_F, _T, _X = "AtIoStream.cpp", "AtIoTokenizer.cpp", "AtIoTextTokenizer.cpp"
+_UNREAD_DEC = "                s->m_cur--;\n                if (negative) {\n                    m_int = (int)(0u - (unsigned int)m_int);\n                }\n                m_type = kInt;\n                return kInt;\n            }\n            break;\n        case kHex:"
+TOK_MUTANTS = [
+    ("Ref Close: file not closed", _F, "        m_fs->Close(m_file);\n", ""),
+    ("Ref Read: no wait", _F, "        status = request->Wait();\n        m_file->Release(request);", "        m_file->Release(request);"),
+    ("Ref Read: no release", _F, "        status = request->Wait();\n        m_file->Release(request);", "        status = request->Wait();"),
+    ("Ref Write: no wait", _F, "        status = result.request->Wait();\n", ""),
+    ("Ref Write: no release", _F, "        m_file->Release(result.request);\n", ""),
+    ("Ref Flush: status lost", _F, "return m_file->Flush();", "m_file->Flush(); return 0;"),
+    ("Ref OpenOn: previous not closed", _F, "    Close();\n    m_fs = fs;", "    m_fs = fs;"),
+    ("Ref Open: write mask", _F, "flags & AtIoFile::kFlagsIgnored", "flags & 1"),
+    ("Ref Open: write mask 2", _F, "flags & AtIoFile::kFlagsIgnored", "flags & 0x20"),
+    ("Ref Open: a miss is success", _F, "        return 1;\n    }\n    return OpenOn", "        return 0;\n    }\n    return OpenOn"),
+    ("Ref extension: first separator", _F, "strrchr(full, '\\\\')", "strchr(full, '\\\\')"),
+    ("Ref extension: dot anywhere", _F, "strrchr(leaf, '.') == 0", "strrchr(full, '.') == 0"),
+    ("Stream Refill: window", _F, "m_limit += 0x100;", "m_limit += 0x80;"),
+    ("Stream Refill: no clamp", _F, "    if (m_limit > end) {\n        m_limit = end;\n    }\n", ""),
+    ("Stream Refill: cursor kept", _F, "    m_cur = m_limit;\n", ""),
+    ("Stream SkipLine: line not counted", _F, "                m_line++;\n                return 1;", "                return 1;"),
+    ("Stream SkipWhitespace: line not counted", _F, "if (c == '\\n') {\n                m_line++;\n            } else if", "if (c == '\\n') {\n            } else if"),
+    ("Stream SkipWhitespace: CR", _F, "c != ' ' && c != '\\t' && c != '\\r'", "c != ' ' && c != '\\t'"),
+    ("Stream SkipWhitespace: tab", _F, "c != ' ' && c != '\\t' && c != '\\r'", "c != ' ' && c != '\\r'"),
+    ("Stream Put: message", _F, "Unable to write buffer to media", "Unable to write buffer"),
+    ("Stream Put: boundary", _F, "if (m_cur >= m_base + m_size) {", "if (m_cur >= m_base + m_size - 1) {"),
+    ("Stream Free: not freed", _F, "        operator delete(m_allocated);\n", ""),
+    ("Stream Allocate: line", _F, "    m_line = 1;\n", ""),
+    ("Stream Allocate: no heap check", _F, "        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);", "    }\n    AtPushHeap(s_heap);"),
+    ("Stream Allocate: heap not pushed", _F, "    AtPushHeap(s_heap);\n", ""),
+    ("File stream Refill: no seek", _F, "            file->Seek(m_filePosition);\n", ""),
+    ("File stream Refill: seek always", _F, "if (file->m_position != m_filePosition) {", "if (1) {"),
+    ("File stream Refill: position after write", _F, "        m_filePosition += (unsigned int)(m_cur - m_base);\n", ""),
+    ("File stream Refill: read error ignored", _F, "if (m_ref->Read(m_base, m_size, &done) != 0) {\n            return 0;\n        }", "m_ref->Read(m_base, m_size, &done);"),
+    ("File stream Refill: position after read", _F, "        m_filePosition = m_ref->m_file->m_position;\n", ""),
+    ("File stream Refill: write window", _F, "        done = m_size;\n", ""),
+    ("File stream Refill: empty read succeeds", _F, "return m_size == done || done != 0;", "return 1;"),
+    ("File stream Detach: nothing written", _F, "        Refill();\n    }\n    m_ref = 0;", "    }\n    m_ref = 0;"),
+    ("File stream Attach: no detach", _F, "    if (m_ref != 0) {\n        Detach();\n    }\n", ""),
+    ("File stream Attach: size", _F, "Allocate(bufferSize);", "Allocate(0x200);"),
+
+    ("CopyName: length", _T, "for (int i = 0; i < 8; i++) {\n        to[i] = from[i];\n        if", "for (int i = 0; i < 7; i++) {\n        to[i] = from[i];\n        if"),
+    ("CopyName9: terminator", _T, "    to[8] = 0;\n", ""),
+    ("FormatInt: no minus", _T, "        *out++ = '-';\n        magnitude = 0u - magnitude;\n", "        magnitude = 0u - magnitude;\n"),
+    ("FormatInt: no terminator", _T, "    *out = 0;\n}\n\n// The original calls", "}\n\n// The original calls"),
+    ("FormatReal: half to even", _T, "keep < 17 && digits[1 + keep] >= '5'", "keep < 17 && digits[1 + keep] > '5'"),
+    ("FormatReal: carry lost", _T, "        digits[i]++;\n", ""),
+    ("FormatReal: new first digit", _T, "if (keep >= 0 && digits[0] != '0') {", "if (0) {"),
+    ("FormatReal: zero", _T, 'strcpy(to, "0.000000");', 'strcpy(to, "0.0");'),
+    ("FormatReal: NaN sign", _T, "(bits >> 31) ?", "(bits >> 30) ?"),
+    ("FormatReal: infinity", _T, '"1.#INF00"', '"1.#INF"'),
+    ("FormatReal: minus lost", _T, "    if (v < 0) {\n        *to++ = '-';\n    }\n", ""),
+    ("FormatReal: rounds at the first digit", _T, "if (keep >= 0 && keep < 17 &&", "if (keep > 0 && keep < 17 &&"),
+    ("FormatReal: leading zero", _T, "    if (exponent <= 0) {\n        *to++ = '0';\n    }\n", ""),
+    ("Reset: stream", _T, "    m_stream = 0;\n    m_pushedBack = 0;", "    m_pushedBack = 0;"),
+    ("Reset: pushed back", _T, "    m_pushedBack = 0;\n    m_type = 0;", "    m_type = 0;"),
+    ("Reset: type", _T, "    m_type = 0;\n    m_int = 0;", "    m_int = 0;"),
+    ("Reset: int", _T, "    m_int = 0;\n    m_real = 0;", "    m_real = 0;"),
+    ("Reset: real", _T, "    m_real = 0;\n    m_string[0] = 0;", "    m_string[0] = 0;"),
+    ("Reset: string", _T, "    m_string[0] = 0;\n    m_stringLength = 0;", "    m_stringLength = 0;"),
+    ("Reset: length", _T, "    m_stringLength = 0;\n    m_fileName = 0;", "    m_fileName = 0;"),
+    ("Reset: file name", _T, "    m_fileName = 0;\n    m_extension[0] = 0;", "    m_extension[0] = 0;"),
+    ("Reset: extension", _T, "    m_extension[0] = 0;\n    m_escapes = 0;", "    m_escapes = 0;"),
+    ("Reset: escapes", _T, "    m_extension[0] = 0;\n    m_escapes = 0;", "    m_extension[0] = 0;"),
+    ("Base GetIdentifier", _T, 'return "";', 'return "x";'),
+    ("ExpectInt: token", _T, "int AtIoTokenizer::ExpectInt() {\n    if (Next() != kInt)", "int AtIoTokenizer::ExpectInt() {\n    if (Next() != kReal)"),
+    ("ExpectReal: token", _T, "float AtIoTokenizer::ExpectReal() {\n    if (Next() != kReal)", "float AtIoTokenizer::ExpectReal() {\n    if (Next() != kInt)"),
+    ("ExpectString: limit", _T, "if (m_stringLength > maxLength)", "if (m_stringLength >= maxLength)"),
+    ("ExpectStringCopy: size", _T, "(unsigned int)strlen(m_string) + 1;", "(unsigned int)strlen(m_string) + 2;"),
+    ("ExpectName: limit", _T, "if (m_stringLength > 8)", "if (m_stringLength > 7)"),
+    ("ExpectToken: code", _T, "Error(kExpectedKeyword);", "Error(kExpectedInt);"),
+    ("ExpectLeftBracket: token", _T, "void AtIoTokenizer::ExpectLeftBracket() {\n    if (Next() != kLeftBracket)", "void AtIoTokenizer::ExpectLeftBracket() {\n    if (Next() != kRightBracket)"),
+    ("ExpectRightBracket: token", _T, "void AtIoTokenizer::ExpectRightBracket() {\n    if (Next() != kRightBracket)", "void AtIoTokenizer::ExpectRightBracket() {\n    if (Next() != kLeftBracket)"),
+    ("ExpectLeftCurly: token", _T, "void AtIoTokenizer::ExpectLeftCurly() {\n    if (Next() != kLeftCurly)", "void AtIoTokenizer::ExpectLeftCurly() {\n    if (Next() != kRightCurly)"),
+    ("ExpectRightCurly: token", _T, "void AtIoTokenizer::ExpectRightCurly() {\n    if (Next() != kRightCurly)", "void AtIoTokenizer::ExpectRightCurly() {\n    if (Next() != kLeftCurly)"),
+    ("ExpectCount: int unchecked", _T, "    if (Next() != kInt) {\n        Error(kExpectedInt);\n    }\n    if (Next() != kRightBracket)", "    Next();\n    if (Next() != kRightBracket)"),
+    ("CopyName member: length", _T, "for (unsigned int i = 0; i < 8; i++) {\n        out[i]", "for (unsigned int i = 0; i < 7; i++) {\n        out[i]"),
+    ("ErrorText: spelling kept", _T, "expected righ parenthesis", "expected right parenthesis"),
+    ("ErrorText: tilde", _T, "expected at tilde", "expected tilde"),
+    ("ErrorText: default", _T, "unknown error", "unknown"),
+    ("Message: name limit", _T, "strncpy(message, t->m_fileName, 0x3F);\n        message[0x3F] = 0;", "strncpy(message, t->m_fileName, 0x3E);\n        message[0x3E] = 0;"),
+    ("Message: extension limit", _T, "t->m_extension, 4);", "t->m_extension, 3);"),
+    ("Message: line word", _T, '": line "', '" line "'),
+    ("Message: separator", _T, '" - "', '"-"'),
+    ("Message: line number", _T, "AtFormatInt(t->m_stream->m_line, message + strlen(message));", "AtFormatInt(0, message + strlen(message));"),
+    ("Error: fatal argument", _T, "AtFatal(message, 0, 0, 0);", "AtFatal(message, 1, 0, 0);"),
+    ("SetStream: no reset", _T, "    if (m_stream != 0) {\n        Reset();\n    }\n", ""),
+    ("TokenFile Close: tokenizer kept", _T, "        delete m_tokenizer;\n", ""),
+    ("TokenFile Close: not owned deleted", _T, "if (m_ownsTokenizer != 0 && m_tokenizer != 0) {", "if (m_tokenizer != 0) {"),
+    ("TokenFile Close: name kept", _T, "        operator delete(m_name);\n", ""),
+    ("TokenFile Close: no detach", _T, "    m_stream.Detach();\n", ""),
+    ("TokenFile Close: file kept", _T, "    m_file.Close();\n", ""),
+    ("TokenFile Open: buffer", _T, "Attach(&f->m_file, 0x400);", "Attach(&f->m_file, 0x200);"),
+    ("TokenFile Open: ownership", _T, "        f->m_ownsTokenizer = 1;\n", ""),
+    ("TokenFile Open: stale ownership", _T, "    } else {\n        f->m_ownsTokenizer = 0;\n    }\n", "    }\n"),
+    ("TokenFile Open: name size", _T, "operator new(strlen(path) + 1);", "operator new(strlen(path) + 2);"),
+    ("TokenFile Open: file name unset", _T, "    f->m_tokenizer->m_fileName = f->m_name;\n", ""),
+    ("TokenFile Open: extension dot", _T, "m_tokenizer->m_extension[0] = '.';", "m_tokenizer->m_extension[0] = '_';"),
+    ("TokenFile Open: extension length", _T, "m_tokenizer->m_extension + 1, ext, 3);", "m_tokenizer->m_extension + 1, ext, 2);"),
+    ("TokenFile Open: no extension", _T, "    if (ext == 0) {\n        m_tokenizer->m_extension[0] = 0;\n    } else {", "    if (ext != 0) {"),
+    ("TokenFile Open: no close before", _T, "    if (m_tokenizer != 0) {\n        Close();\n    }\n    const int status = m_file.OpenWithExtension", "    const int status = m_file.OpenWithExtension"),
+    ("TokenFile Open 2: no close before", _T, "    if (m_tokenizer != 0) {\n        Close();\n    }\n    const int status = m_file.Open(", "    const int status = m_file.Open("),
+
+    ("Table: percent", _X, "12, 2, 1, 1, 13,", "12, 2, 1, 1, 14,"),
+    ("Table: underscore", _X, "7, 1, 8, 14, 1, 1,", "7, 1, 8, 14, 57, 1,"),
+    ("Hash: shift", _X, "shift += 6;", "shift += 5;"),
+    ("Hash: signed base", _X, "- 0x30) <<", "- 0x31) <<"),
+    ("Insert: no wrap", _X, "        h++;\n        if (h >= AtIoTextTokenizer::kHashSize) {\n            h = 0;\n        }\n    }\n    t->m_hash[h] = keyword;", "        h++;\n        if (h >= AtIoTextTokenizer::kHashSize - 1) {\n            h = 0;\n        }\n    }\n    t->m_hash[h] = keyword;"),
+    ("SetKeywords: hash not cleared", _X, "    for (unsigned int i = 0; i < kHashSize; i++) {\n        m_hash[i] = 0;\n    }\n", ""),
+    ("SetKeywords: inherited skipped", _X, "                Insert(this, from->m_hash[i]);\n", ""),
+    ("SetKeywords: inherited count", _X, "    m_keywordCount += inherited;\n", ""),
+    ("LookUp: no table", _X, "    if (m_keywords == 0) {\n        Error(kInvalidKeyword);\n    }\n    unsigned int h", "    unsigned int h"),
+    ("LookUp: case", _X, "!= toupper((signed char)*b)", "!= (int)(signed char)*b"),
+    ("LookUp: miss", _X, "    m_type = kError;\n}", "    m_type = 0;\n}"),
+    ("LookUp: wrap", _X, "        h++;\n        if (h >= kHashSize) {", "        h++;\n        if (h >= kHashSize - 1) {"),
+    ("LookUp: prefix accepted", _X, "            if (*a == 0) {\n                m_type", "            if (*a == 0 || a[1] == 0) {\n                m_type"),
+    ("Next: pushed back kept", _X, "        m_pushedBack = 0;\n        return type;", "        return type;"),
+    ("Next: pushed back ignored", _X, "    if (m_pushedBack != 0) {", "    if (0) {"),
+    ("Next: type not cleared", _X, "    m_type = 0;\n    if (!m_stream->SkipWhitespace())", "    if (!m_stream->SkipWhitespace())"),
+    ("Next: first scale", _X, "float scale = 0.1f;", "float scale = 0.2f;"),
+    ("Next: error char silent", _X, "            case kError:\n                Error(kSyntaxError);\n                break;", "            case kError:\n                break;"),
+    ("Next: out of range silent", _X, "                Error(kSyntaxError);\n                m_type = kError;\n                return kError;", "                m_type = kError;\n                return kError;"),
+    ("Next: string length kept", _X, "                state = kInString;\n                m_stringLength = 0;", "                state = kInString;"),
+    ("Next: '.' start keeps real", _X, "                state = kFraction;\n                m_real = 0;\n                break;\n            case kInt:", "                state = kFraction;\n                break;\n            case kInt:"),
+    ("Next: first digit", _X, "                state = kDecimal;\n                m_int = (int)(c - '0');\n                break;", "                state = kDecimal;\n                m_int = (int)(c - '1');\n                break;"),
+    ("Next: zero keeps int", _X, "                state = kAfterZero;\n                m_int = 0;\n                break;\n            case kStartMinus:", "                state = kAfterZero;\n                break;\n            case kStartMinus:"),
+    ("Next: minus keeps int", _X, "                state = kAfterMinus;\n                m_int = 0;\n", "                state = kAfterMinus;\n"),
+    ("Next: minus ignored", _X, "negative = 1;", "negative = 0;"),
+    ("Next: identifier case", _X, "m_identifier[0] = (char)toupper((int)c);", "m_identifier[0] = (char)c;"),
+    ("Next: hex marker", _X, "c == 'x' || c == 'X'", "c == 'x'"),
+    ("Next: decimal base", _X, "(unsigned int)m_int * 10", "(unsigned int)m_int * 8"),
+    ("Next: integer part unsigned", _X, "m_real = (float)m_int;", "m_real = (float)(unsigned int)m_int;"),
+    ("Next: decimal end not unread", _X, _UNREAD_DEC, _UNREAD_DEC.replace("                s->m_cur--;\n", "", 1)),
+    ("Next: decimal sign", _X, _UNREAD_DEC, _UNREAD_DEC.replace("                if (negative) {\n                    m_int = (int)(0u - (unsigned int)m_int);\n                }\n", "", 1)),
+    ("Next: hex digits", _X, "((unsigned int)m_int << 4) + c - '0'", "((unsigned int)m_int << 3) + c - '0'"),
+    ("Next: hex letters", _X, "((unsigned int)m_int << 4) + upper - 0x37", "((unsigned int)m_int << 4) + upper - 0x36"),
+    ("Next: hex range", _X, "upper >= 'A' && upper <= 'F'", "upper >= 'A' && upper <= 'G'"),
+    ("Next: fraction in single precision", _X, "m_real = (float)((double)(int)(c - '0') * (double)scale + (double)m_real);", "m_real = (float)(int)(c - '0') * scale + m_real;"),
+    ("Next: scale constant", _X, "(double)scale * (double)0.1f", "(double)scale * 0.1"),
+    ("Next: second dot", _X, "                if (c == '.') {\n                    Error(kSyntaxError);\n                }\n", ""),
+    ("Next: fraction sign", _X, "                if (negative) {\n                    m_real = -m_real;\n                }\n                m_type = kReal;\n                return kReal;\n            }\n            break;", "                m_type = kReal;\n                return kReal;\n            }\n            break;"),
+    ("Next: minus digit range", _X, "if (c >= '1' && c <= '9') {\n                m_int", "if (c >= '0' && c <= '9') {\n                m_int"),
+    ("Next: lone minus type", _X, "return kMinus;", "m_type = kMinus; return kMinus;"),
+    ("Next: lone minus unread", _X, "                s->m_cur--;\n                return kMinus;", "                return kMinus;"),
+    ("Next: identifier limit", _X, "if (length >= 0x3F) {", "if (length >= 0x40) {"),
+    ("Next: identifier underscore", _X, " || upper == '_')", ")"),
+    ("Next: identifier digits", _X, "(upper >= '0' && upper <= '9') || ", ""),
+    ("Next: comment end", _X, "if (!m_stream->SkipLine() || !m_stream->SkipWhitespace()) {", "if (!m_stream->SkipLine()) {"),
+    ("Next: slash unread", _X, "                s->m_cur--;\n                return m_type;\n            }\n            break;\n        case kInString:", "                return m_type;\n            }\n            break;\n        case kInString:"),
+    ("Next: string terminator", _X, "                m_string[m_stringLength] = 0;\n                return kString;", "                return kString;"),
+    ("Next: escapes always on", _X, "c == '\\\\' && m_escapes != 0", "c == '\\\\'"),
+    ("Next: string limit", _X, "if (m_stringLength >= 0xFF) {\n                Error(kInvalidString);\n            }\n            m_string[m_stringLength] = (char)c;", "m_string[m_stringLength] = (char)c;"),
+    ("Next: escape limit", _X, "if (m_stringLength >= 0xFF) {\n                Error(kInvalidString);\n            }\n            switch (c) {", "switch (c) {"),
+    ("Next: escape n", _X, "case 'n': case 'N': m_string[m_stringLength] = '\\n';", "case 'n': case 'N': m_string[m_stringLength] = '\\r';"),
+    ("Next: escape capital T", _X, "case 't': case 'T':", "case 't':"),
+    ("Next: escape quote", _X, "case '\"': m_string[m_stringLength] = '\"'; break;\n", ""),
+    ("Next: bad escape silent", _X, "default: Error(kInvalidString); break;", "default: break;"),
+    ("Next: escape length", _X, "            m_stringLength++;\n            state = kInString;", "            state = kInString;"),
+    ("End: hex sign", _X, "    case kDecimal:\n    case kHex:\n        if (negative) {\n            m_int = (int)(0u - (unsigned int)m_int);\n        }\n", "    case kDecimal:\n    case kHex:\n"),
+    ("End: real sign", _X, "    case kFraction:\n        if (negative) {\n            m_real = -m_real;\n        }\n", "    case kFraction:\n"),
+    ("End: lone minus silent", _X, "    case kAfterMinus:\n    case kAfterSlash:\n        Error(kSyntaxError);\n", "    case kAfterMinus:\n    case kAfterSlash:\n"),
+    ("End: identifier", _X, "    case kIdentifier:\n        m_identifier[length] = 0;\n        LookUpIdentifier();\n", "    case kIdentifier:\n        LookUpIdentifier();\n"),
+    ("End: string code", _X, "    case kAfterBackslash:\n        Error(kInvalidString);", "    case kAfterBackslash:\n        Error(kSyntaxError);"),
+    ("End: zero", _X, "    case kAfterZero:\n        m_type = kInt;\n        return kInt;\n    case kDecimal:", "    case kDecimal:"),
+    ("PutInt: type", _X, "    m_type = kInt;\n    AtFormatInt(value, text);", "    AtFormatInt(value, text);"),
+    ("PutInt: value", _X, "    m_int = value;\n", ""),
+    ("PutReal: value", _X, "    m_real = value;\n", ""),
+    ("PutString: limit", _X, "strncpy(m_string, text, 0xFF);\n    m_string[0xFF] = 0;\n    m_type = kString;", "strncpy(m_string, text, 0xFE);\n    m_string[0xFE] = 0;\n    m_type = kString;"),
+    ("PutString: closing quote", _X, "    PutText(m_stream, m_string);\n    m_stream->Put('\"');\n", "    PutText(m_stream, m_string);\n"),
+    ("PutComment: prefix", _X, "    m_stream->Put(' ');\n    strncpy", "    strncpy"),
+    ("PutComment: limit", _X, "strncpy(m_string, text, 0xFF);\n    m_string[0xFF] = 0;\n    PutText", "strncpy(m_string, text, 0x10);\n    m_string[0x10] = 0;\n    PutText"),
+    ("PutKeyword: type", _X, "            m_type = id;\n", ""),
+    ("PutKeyword: unknown silent", _X, "    Error(kInvalidKeyword);\n}\n\nvoid AtIoTextTokenizer::PutRaw", "}\n\nvoid AtIoTextTokenizer::PutRaw"),
+    ("Put punctuation: type", _X, "void AtIoTextTokenizer::PutAt() { m_type = kAt;", "void AtIoTextTokenizer::PutAt() { m_type = kTilde;"),
+    ("Put punctuation: character", _X, "m_stream->Put('@');", "m_stream->Put('#');"),
+    ("PutNewline: CR", _X, "    m_stream->Put('\\r');\n", ""),
+    ("PutTabs: character", _X, "void AtIoTextTokenizer::PutTabs(unsigned int count) {\n    for (; count != 0; count--) {\n        m_stream->Put('\\t');", "void AtIoTextTokenizer::PutTabs(unsigned int count) {\n    for (; count != 0; count--) {\n        m_stream->Put(' ');"),
+    ("PutSpaces: count", _X, "void AtIoTextTokenizer::PutSpaces(unsigned int count) {\n    for (; count != 0; count--) {", "void AtIoTextTokenizer::PutSpaces(unsigned int count) {\n    for (count++; count != 0; count--) {"),
+    ("GetIdentifier", _X, "return m_identifier;", "return m_string;"),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
-    "jam": {"target": "oracle_jam", "subsystem": "at/", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
+    "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
+    "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
 
 
@@ -263,6 +445,8 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
     target = SUITES[suite]["target"]
     if suite == "gm":
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
+    elif suite == "tok":
+        cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
     if entries:
@@ -295,6 +479,11 @@ def run_mutant(suite):
         code = attempt(cmd, 60)
         if code != 0:
             return code
+    if suite == "tok":
+        code = attempt(command(suite, MUTANT_BUILD) + ["--limit", "40"], 120)
+        if code != 0:
+            return code
+        return attempt(command(suite, MUTANT_BUILD), 600)
     return attempt(command(suite, MUTANT_BUILD), 180)
 
 
@@ -384,7 +573,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -397,7 +586,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

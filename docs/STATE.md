@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 5 (archive file system; first end-to-end read). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 6 (shared text tokenizer). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-05, dev cycle 5 (archive file system; first end-to-end rea
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 148 functions and 19 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 247 functions and 23 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -25,16 +25,19 @@ All source is in `src/`, types in `include/`. 148 functions and 19 vftables are 
   the heap and error helpers. Unrecovered slots stop with a diagnostic in `src/at/AtIoJamPending.cpp`, which is never recorded and never counts;
   their vftable slots are checked by position only. `platform/fatal.cpp` stands in for the helpers.
 
+* `at/text` (99 functions): the stream and file wrapper, and the tokenizer most text formats go through, both reading and writing. It works on 64-bit, with the same results as the
+  original on every text file on the disc. **Nothing recovered yet uses its tokens**: each format's own reader is still missing, so no game data is interpreted.
+
 | Measure | Result |
 | --- | --- |
-| Relocation-aware match, host compiler only | see docs/PROGRESS.md (for `at/jam`, 13 small functions) |
+| Relocation-aware match, host compiler only | see docs/PROGRESS.md |
 | Vftables matching by symbol | see docs/PROGRESS.md |
 | Match with original compiler | 0 (blocked) |
 | Behaviour vs. original code | see "Differential oracle" in docs/PROGRESS.md |
 
 State of each function: **Semantic-tested** (differential oracle plus host tests); those with a MATCH line in docs/PROGRESS.md
 are also a relocation-aware match under MSVC 19.44, which does **not** show which compiler shipped the game. The freeing path of
-deleting destructors is not run by the oracle. The game itself cannot run from this source: this is the layer that loads its files, and nothing yet reads what they contain.
+deleting destructors is not run by the oracle. The game itself cannot run from this source: this is the layer that loads its files and splits text into tokens, and nothing yet gives those tokens meaning.
 
 The JAM directory layout is also recovered as a format (docs/formats.md, tools/jam.py), validated against all 56 archives.
 
@@ -65,6 +68,16 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
   in 0x00014250–0x0011FF80 and 0x00139F10–0x00192200 (and a few at 0x00200F20–0x00203A20); CRT strings around
   0x00127958–0x0012DE9A; CRI middleware 0x001B9A60–0x001F2000. Raw data: analysis-local/inv/string_tags.json.
 
+* Mounting: the code at 0x0008E77C asks the object in 0x002E26E0 to mount a name (string at 0x0027AF84) through 0x000766E0, which builds `JamFiles\\XBox\\%s%s.JAM`, checks the file
+  exists, creates the archive file system (0x0007DB10, then `vInit` by 0x0007D140) and pushes it on the context. So a missing archive is silently skipped. That class has
+  vftable 0x00278548 and its methods are not recovered.
+* Text formats share one tokenizer (docs/formats.md). `AtIoTokenFile` opens the file; a format's reader passes a keyword table and pulls tokens. 0x00074800 (rumble) is the
+  shape: open with extension `RMB`, pass the table at 0x002B2940, read blocks.
+* `Levels.txt` lists all 47 entries, in order: 16 `FMVCinema`, 15 `NormalLevel`, 13 `NonSelectableLevel`, 3 `HiddenLevel`, with display names and load-item counts. That is an
+  evidence-backed starting inventory for M5. Its reader is opened at 0x0013EB84, through slot 1 of the object from 0x0013E150. Not yet recovered.
+* The tokenizer also writes. What the game writes as text is not established.
+* The original's numeric parser is not correctly rounded, so its results must be reproduced, not improved (docs/formats.md).
+
 ## Open questions / hypotheses
 
 * Original compiler = VC++ 7.1 with XDK 5849 (hypothesis; docs/toolchain.md).
@@ -82,11 +95,12 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-The file layer now reaches real data, so what matters most is what the data means and what uses it.
+The tokenizer now works, so a format reader can be recovered end to end, and it can run on real data.
 
-1. Follow the code around 0x00076640-0x00076BF0 (the owner of the JAM path strings; `AtApDataManagementApplication` is a candidate, unverified) to
-   how archives get mounted, and from there choose one archived file type that small, understood code consumes.
-2. Library separation, now that there is enough code to tell engine from library: the denominators are still unclassified.
-3. `AtIoDirectoryListing` and the `List` slots, and the sorted container at 0x000761B0-0x00076600, when something needs them.
+1. Recover the `Levels.txt` reader (around 0x0013E150, opened at 0x0013EB84): the first code to give real game data a meaning, and it yields a checked level inventory for M5.
+   `RUMBLE.RMB` (0x000746A0-0x000748C8) is the smaller alternative if that class pulls in too much.
+2. The mounting class at vftable 0x00278548, which ties the archive layer to start-up.
+3. Library separation: the denominators are still unclassified.
+4. `AtIoDirectoryListing` and the `List` slots, and the sorted container at 0x000761B0-0x00076600, when something needs them.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

@@ -20,10 +20,14 @@ add_library(knd_at STATIC
     ${KND_AT_SRC}/AtIoFastAlignedJamHeader.cpp
     ${KND_AT_SRC}/AtIoFastJamHeader.cpp
     ${KND_AT_SRC}/AtIoFileSystem.cpp
+    ${KND_AT_SRC}/AtIoFormatHost.cpp
     ${KND_AT_SRC}/AtIoJamFileSystem.cpp
     ${KND_AT_SRC}/AtIoJamFile.cpp
     ${KND_AT_SRC}/AtIoJamNameTable.cpp
     ${KND_AT_SRC}/AtIoJamPending.cpp
+    ${KND_AT_SRC}/AtIoStream.cpp
+    ${KND_AT_SRC}/AtIoTextTokenizer.cpp
+    ${KND_AT_SRC}/AtIoTokenizer.cpp
 )
 target_include_directories(knd_at PUBLIC include)
 
@@ -38,6 +42,10 @@ add_executable(test_at_e2e tests/native/test_at_e2e.cpp platform/fatal.cpp platf
 target_include_directories(test_at_e2e PRIVATE platform)
 target_link_libraries(test_at_e2e PRIVATE knd_at)
 add_test(NAME at_e2e COMMAND test_at_e2e)
+add_executable(test_at_tok tests/native/test_at_tok.cpp)
+target_include_directories(test_at_tok PRIVATE tests/oracle)
+target_link_libraries(test_at_tok PRIVATE knd_at)
+add_test(NAME at_tok COMMAND test_at_tok)
 
 # Local-only differential oracle: 32-bit Windows, runs original code from the owner's XBE beside recovered source.
 # Never part of a release. Build with: cmake -S . -B build/oracle -A Win32
@@ -47,6 +55,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     target_link_libraries(oracle_gm PRIVATE knd_gm)
     add_executable(oracle_jam tests/oracle/reserve.asm tests/oracle/oracle_jam.cpp)
     target_link_libraries(oracle_jam PRIVATE knd_at)
+    add_executable(oracle_tok tests/oracle/reserve.asm tests/oracle/oracle_tok.cpp)
+    target_link_libraries(oracle_tok PRIVATE knd_at)
+    target_link_options(oracle_tok PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     target_link_options(oracle_jam PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     # Base 0x10000: tests/oracle/reserve.asm owns the XBE's address range from process creation.
     target_link_options(oracle_gm PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

@@ -181,9 +181,108 @@ name. See docs/STATE.md for the evidence-based partial map.
 | 0x0007DAD0 | 10 | `?SetHeap@AtIoJamFileSystem@@SAXPAX@Z` | at/jam | MATCH |
 | 0x0007DB10 | 173 | `?Create@AtIoJamFileSystem@@SAPAV1@PBDIH@Z` | at/jam | SIZE |
 | 0x000817D0 | 8 | `?SetRoot@AtIoFileSystem@@UAEXPBD@Z` | at/jam | SIZE |
+| 0x00013ED0 | 35 | `?AtCopyName@@YAXPBDPAD@Z` | at/text | MISMATCH |
+| 0x00013F90 | 36 | `?AtCopyName9@@YAXPADPBD@Z` | at/text | SIZE |
+| 0x00015460 | 77 | `??0AtIoTokenFile@@QAE@XZ` | at/text | SIZE |
+| 0x000154B0 | 77 | `?Close@AtIoTokenFile@@QAEXXZ` | at/text | SIZE |
+| 0x00015500 | 86 | `??1AtIoTokenFile@@QAE@XZ` | at/text | SIZE |
+| 0x00015560 | 415 | `?Open@AtIoTokenFile@@QAEHPBD0HPAVAtIoTokenizer@@@Z` | at/text | SIZE |
+| 0x00015700 | 371 | `?Open@AtIoTokenFile@@QAEHPBDHPAVAtIoTokenizer@@@Z` | at/text | SIZE |
+| 0x00015880 | 27 | `?ExpectInt@AtIoTokenizer@@QAEHXZ` | at/text | MISMATCH |
+| 0x000158A0 | 27 | `?ExpectReal@AtIoTokenizer@@QAEMXZ` | at/text | MISMATCH |
+| 0x000158C0 | 27 | `?ExpectString@AtIoTokenizer@@QAEPBDXZ` | at/text | MISMATCH |
+| 0x000158E0 | 50 | `?ExpectString@AtIoTokenizer@@QAEPBDI@Z` | at/text | MISMATCH |
+| 0x00015920 | 100 | `?ExpectStringCopy@AtIoTokenizer@@QAEXPAPAD@Z` | at/text | SIZE |
+| 0x00015990 | 61 | `?ExpectName@AtIoTokenizer@@QAEXPAD@Z` | at/text | SIZE |
+| 0x000159D0 | 27 | `?ExpectToken@AtIoTokenizer@@QAEXH@Z` | at/text | MISMATCH |
+| 0x000159F0 | 24 | `?ExpectLeftBracket@AtIoTokenizer@@QAEXXZ` | at/text | MISMATCH |
+| 0x00015A10 | 24 | `?ExpectRightBracket@AtIoTokenizer@@QAEXXZ` | at/text | MISMATCH |
+| 0x00015A30 | 24 | `?ExpectLeftCurly@AtIoTokenizer@@QAEXXZ` | at/text | MISMATCH |
+| 0x00015A50 | 24 | `?ExpectRightCurly@AtIoTokenizer@@QAEXXZ` | at/text | MISMATCH |
+| 0x00015A70 | 90 | `?ExpectCount@AtIoTokenizer@@QAEHXZ` | at/text | MISMATCH |
+| 0x00015AD0 | 41 | `?CopyName@AtIoTokenizer@@QAEXPAD@Z` | at/text | SIZE |
+| 0x00015B00 | 348 | `?ErrorText@AtIoTokenizer@@QAEPBDH@Z` | at/text | SIZE |
+| 0x00015D00 | 6 | `?GetIdentifier@AtIoTokenizer@@UAEPBDXZ` | at/text | MATCH |
+| 0x00015D10 | 53 | `??0AtIoTokenizer@@QAE@XZ` | at/text | SIZE |
+| 0x00015D50 | 37 | `?SetStream@AtIoTokenizer@@QAEXPAVAtIoStream@@@Z` | at/text | SIZE |
+| 0x00015D80 | 45 | `?Reset@AtIoTokenizer@@UAEXXZ` | at/text | SIZE |
+| 0x00015DB0 | 286 | `?Report@AtIoTokenizer@@UAEXH@Z` | at/text | SIZE |
+| 0x00015ED0 | 282 | `?Error@AtIoTokenizer@@UAEXH@Z` | at/text | SIZE |
+| 0x00015FF0 | 51 | `??1AtIoTokenizer@@UAE@XZ` | at/text | SIZE |
+| 0x00016030 | 75 | `??_GAtIoTokenizer@@UAEPAXI@Z` | at/text | SIZE |
+| 0x00018810 | 16 | `??0AtIoFileRef@@QAE@XZ` | at/text | MISMATCH |
+| 0x00018820 | 37 | `?Close@AtIoFileRef@@QAEXXZ` | at/text | MISMATCH |
+| 0x00018850 | 68 | `?Read@AtIoFileRef@@QAEHPAXIPAI@Z` | at/text | SIZE |
+| 0x000188A0 | 63 | `?Write@AtIoFileRef@@QAEHPBXI@Z` | at/text | SIZE |
+| 0x000188E0 | 8 | `?Flush@AtIoFileRef@@QAEHXZ` | at/text | MATCH |
+| 0x000188F0 | 71 | `?OpenOn@AtIoFileRef@@QAEHPAVAtIoFileSystem@@PBDH@Z` | at/text | SIZE |
+| 0x00018940 | 129 | `?Open@AtIoFileRef@@QAEHPBDH@Z` | at/text | SIZE |
+| 0x000189D0 | 184 | `?OpenWithExtension@AtIoFileRef@@QAEHPBD0H@Z` | at/text | SIZE |
+| 0x000206F0 | 21 | `?AtFormatInt@@YAXHPAD@Z` | at/text | SIZE |
+| 0x00020710 | 29 | `?AtFormatReal@@YAXMPAD@Z` | at/text | SIZE |
+| 0x000222A0 | 26 | `??0AtIoFileStream@@QAE@XZ` | at/text | SIZE |
+| 0x000222C0 | 52 | `?Detach@AtIoFileStream@@QAEXXZ` | at/text | SIZE |
+| 0x00022300 | 200 | `?Refill@AtIoFileStream@@UAEHXZ` | at/text | SIZE |
+| 0x000223D0 | 123 | `??1AtIoFileStream@@UAE@XZ` | at/text | SIZE |
+| 0x00022450 | 74 | `?Attach@AtIoFileStream@@QAEXPAVAtIoFileRef@@I@Z` | at/text | SIZE |
+| 0x000224A0 | 30 | `??_GAtIoFileStream@@UAEPAXI@Z` | at/text | SIZE |
+| 0x000224C0 | 56 | `?HashOf@AtIoTextTokenizer@@SAIPBD@Z` | at/text | SIZE |
+| 0x00022500 | 38 | `??0AtIoTextTokenizer@@QAE@XZ` | at/text | SIZE |
+| 0x00022530 | 452 | `?SetKeywords@AtIoTextTokenizer@@UAEXPBUAtIoKeyword@@IPAVAtIoTokenizer@@@Z` | at/text | SIZE |
+| 0x00022700 | 178 | `?LookUpIdentifier@AtIoTextTokenizer@@QAEXXZ` | at/text | SIZE |
+| 0x000227C0 | 74 | `?PutInt@AtIoTextTokenizer@@UAEXH@Z` | at/text | SIZE |
+| 0x00022810 | 83 | `?PutReal@AtIoTextTokenizer@@UAEXM@Z` | at/text | SIZE |
+| 0x00022870 | 91 | `?PutString@AtIoTextTokenizer@@UAEXPBD@Z` | at/text | SIZE |
+| 0x000228D0 | 94 | `?PutComment@AtIoTextTokenizer@@UAEXPBD@Z` | at/text | SIZE |
+| 0x00022930 | 125 | `?PutKeyword@AtIoTextTokenizer@@UAEXH@Z` | at/text | SIZE |
+| 0x000229B0 | 41 | `?PutRaw@AtIoTextTokenizer@@UAEXPBD@Z` | at/text | SIZE |
+| 0x000229E0 | 18 | `?PutLeftBracket@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022A00 | 18 | `?PutRightBracket@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022A20 | 18 | `?PutLeftCurly@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022A40 | 18 | `?PutRightCurly@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022A60 | 18 | `?PutComma@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022A80 | 18 | `?PutSemicolon@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022AA0 | 18 | `?PutColon@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022AC0 | 18 | `?PutExclamation@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022AE0 | 18 | `?PutPercent@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022B00 | 18 | `?PutCaret@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022B20 | 18 | `?PutAmpersand@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022B40 | 18 | `?PutTimes@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022B60 | 18 | `?PutLeftParen@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022B80 | 18 | `?PutRightParen@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022BA0 | 18 | `?PutMinus@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022BC0 | 18 | `?PutPlus@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022BE0 | 18 | `?PutDivide@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022C00 | 18 | `?PutEquals@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022C20 | 18 | `?PutLess@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022C40 | 18 | `?PutGreater@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022C60 | 18 | `?PutOr@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022C80 | 18 | `?PutQuestion@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022CA0 | 18 | `?PutAt@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022CC0 | 18 | `?PutTilde@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022CE0 | 25 | `?PutNewline@AtIoTextTokenizer@@UAEXXZ` | at/text | MISMATCH |
+| 0x00022D00 | 11 | `?PutSpace@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022D10 | 34 | `?PutSpaces@AtIoTextTokenizer@@UAEXI@Z` | at/text | SIZE |
+| 0x00022D40 | 11 | `?PutTab@AtIoTextTokenizer@@UAEXXZ` | at/text | MATCH |
+| 0x00022D50 | 34 | `?PutTabs@AtIoTextTokenizer@@UAEXI@Z` | at/text | SIZE |
+| 0x00022D80 | 48 | `?PutName@AtIoTextTokenizer@@UAEXPBD@Z` | at/text | SIZE |
+| 0x00022DB0 | 7 | `?GetIdentifier@AtIoTextTokenizer@@UAEPBDXZ` | at/text | MATCH |
+| 0x00022DC0 | 30 | `??_GAtIoTextTokenizer@@UAEPAXI@Z` | at/text | SIZE |
+| 0x00022DE0 | 5 | `??1AtIoTextTokenizer@@UAE@XZ` | at/text | SIZE |
+| 0x00022DF0 | 1258 | `?Next@AtIoTextTokenizer@@UAEHXZ` | at/text | SIZE |
+| 0x00031590 | 10 | `?SetHeap@AtIoStream@@SAXPAX@Z` | at/text | MATCH |
+| 0x000315A0 | 60 | `?SkipLine@AtIoStream@@QAEHXZ` | at/text | SIZE |
+| 0x000315E0 | 71 | `?SkipWhitespace@AtIoStream@@QAEHXZ` | at/text | SIZE |
+| 0x00031630 | 67 | `?Put@AtIoStream@@QAEXD@Z` | at/text | SIZE |
+| 0x00031680 | 41 | `?Refill@AtIoStream@@UAEHXZ` | at/text | SIZE |
+| 0x000316B0 | 29 | `??0AtIoStream@@QAE@XZ` | at/text | SIZE |
+| 0x000316D0 | 43 | `?Free@AtIoStream@@QAEXXZ` | at/text | SIZE |
+| 0x00031700 | 49 | `??1AtIoStream@@UAE@XZ` | at/text | SIZE |
+| 0x00031740 | 160 | `?Allocate@AtIoStream@@QAEXI@Z` | at/text | SIZE |
+| 0x000317E0 | 69 | `??_GAtIoStream@@UAEPAXI@Z` | at/text | SIZE |
 
-Relocation-aware matches with the host compiler: 27 functions, 418 unique bytes.
-Share of `.text` raw bytes: 0.0204% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 57 functions, 903 unique bytes.
+Share of `.text` raw bytes: 0.0442% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -210,12 +309,18 @@ Exact linked match (whole XBE): not attempted.
 | 0x00279B88 | 10 | `??_7AtIoFastJamHeader@@6B@` | MATCH |
 | 0x00272644 | 15 | `??_7AtIoFileSystem@@6B@` | MATCH |
 | 0x00279404 | 15 | `??_7AtIoJamFileSystem@@6B@` | MATCH |
+| 0x00271D58 | 43 | `??_7AtIoTokenizer@@6B@` | MATCH |
+| 0x00272AF4 | 2 | `??_7AtIoFileStream@@6B@` | MATCH |
+| 0x00272C78 | 43 | `??_7AtIoTextTokenizer@@6B@` | MATCH |
+| 0x00274A54 | 2 | `??_7AtIoStream@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
 Suite `gm`: runs with no observed difference 20 / 20 (NO DIFFERENCE OBSERVED: seed 1, 5000 random operations, 20273883 comparisons, 0 differences). Recorded function entries reached in every run: 47 / 47. Source mutants detected: 23 / 23. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 196466943 comparisons, 0 differences). Recorded function entries reached in every run: 101 / 101. Source mutants detected: 136 / 136. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `tok`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 5864 files (60 binary samples), 12749375 bytes, 1372044 tokens, 22236514 comparisons, 0 differences, 0 x87 precision differences, 145 rumble keywords). Recorded function entries reached in every run: 99 / 99. Source mutants detected: 172 / 172. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

@@ -26,6 +26,18 @@ stdio, so that is the seam for Linux and Android (Android's storage access will 
 but has only been built and run on Windows x64. Files over 2 GB are out of its scope, as `long` offsets on Windows are 32 bits; no game file is
 that large. `platform/fatal.cpp` stands in for the unrecovered heap and error helpers.
 
+Text and numbers: the tokenizer is why this matters most, because its numbers become game data.
+
+* Fractions: the original evaluates on the x87 and rounds only on storing. The source does the arithmetic in `double` and rounds once to `float`. Tested equal to the original on
+  every text file on an SSE x64 build, and the original gives the same result under both x87 precisions. It is not proven for every possible input: a sum spanning more than 53
+  bits could round differently, which needs a fraction far longer than any in these files.
+* Writing reals: a modern `printf` rounds ties differently from the original's C library, and keeps the sign of negative zero. `AtFormatReal` reproduces the original from 17
+  significant digits, using only `%.16e` from the host (`src/at/AtIoFormatHost.cpp`). `1.#INF00` and `1.#QNAN0` are the original's spellings. The sign of a NaN is read assuming
+  little-endian floats.
+* `char` is unsigned on Android ARM64: the hash and the keyword comparison cast to `signed char` explicitly. Only ASCII names have been exercised.
+* Quirks kept, for port hardening later as separate tested changes: `PutReal` can overflow its 0x20-byte buffer, a keyword over 0x3F characters and a string over 0xFF bytes write
+  past their fields after reporting, and `AtCopyName9` reads eight bytes whatever the name's length.
+
 Native build today: `CMakeLists.txt` builds `knd_gm` and `knd_at` (`src/`) and the semantic tests for x64 with the VS 2022
 generator. Ninja is not installed; Linux/Android builds are untested. The 32-bit oracle target is Windows-only analysis
 tooling and is excluded from x64 builds.

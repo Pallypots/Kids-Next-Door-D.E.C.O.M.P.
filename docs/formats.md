@@ -89,3 +89,28 @@ fixed 256-byte stack buffers with no length check. Path separator is a backslash
 
 Contents of the archived files (`.AGD`, `.AGM`, `.AGN`, `.AGT`, `.AFA`, `.AFD`, ... and `.DDS`) are not yet recovered.
 Next format work starts from the code that consumes one of these types, never from guessing at the bytes alone.
+
+## Text files (tokenizer: src/at/AtIoTextTokenizer.cpp)
+
+Many archived files are plain text, read through one shared tokenizer, not per-format parsers: `.RMB`, `.GOB`, `.GOD`, `.GOV`, `.ADD`, `.AUS`, `.AUD`,
+`.AES`, `.AET`, `.AIS`, `Levels.txt` and others. Which file types use it is shown so far only by their first bytes and, for `.RMB` and `Levels.txt`, by the
+code that opens them; the other types' readers are not recovered. `tools/jam.py textcases` found 5,804 distinct files that begin as text.
+
+The lexical rules, from 0x00022DF0, are:
+
+| Input | Token |
+| --- | --- |
+| blanks, tabs, CR, LF between tokens; `//` to end of line | skipped |
+| `"..."` | string, at most 255 bytes; may span lines. Backslash escapes (`\\n \\t \\" \\\\`, capitals too) only if the tokenizer's flag at +0x11C is set, and nothing recovered sets it, so a path like `"Design\\Registry\\Actor"` keeps its backslashes |
+| decimal, `0x` hex, either with a leading `-` | int, wrapping at 32 bits |
+| digits with `.`, or a leading `.`; never an exponent | real |
+| letter, then letters, digits, `_` | keyword, case-insensitive, looked up in a table the caller supplies; not in the table gives the error token 1 |
+| `! % ^ & * ( ) + = < > \| ? @ ~ [ ] { } , ; : / -` | their own tokens |
+
+**Reals are not the nearest float to their text.** The code adds digit times a running single-precision scale, so `100.001` reads as `0x42C80083` (values in
+`tests/native/test_at_tok.cpp`, each asserted against the original). A port must parse them the same way, or positions and tuning values
+change in their low bits.
+
+The usual shape is a counted block: `Name [ n ] { ... }` (`ExpectCount`, 0x00015A70).
+
+A keyword table is `{ int id; const char* name; }[]`. The rumble table is at 0x002B2940, six entries from id 0x39, and recognises 145 keywords in `RUMBLE.RMB`.

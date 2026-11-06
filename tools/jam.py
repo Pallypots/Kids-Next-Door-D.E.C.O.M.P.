@@ -4,6 +4,7 @@
   python -I tools/jam.py check <image>            parse every .JAM on a disc image and validate each one
   python -I tools/jam.py ls <image> <jam name>    list the files in one archive (matched on the end of its path)
   python -I tools/jam.py cases <image> <out dir>  write oracle inputs (git-ignored directory only: real game data)
+  python -I tools/jam.py textcases <image> <out dir>  each distinct text file once, for the tokenizer oracle (git-ignored directory only)
   python -I tools/jam.py e2e <image> <out dir> [--all]  extract archives and a manifest of CRC-32s (git-ignored directory only);
                                                   by default small archives and the first files of each; --all means everything
 
@@ -354,12 +355,51 @@ def write_e2e(image, out_dir, limit=1 << 25, per_archive=400):
                 m.write("F\t%s\t%d\t%d\n" % (path, size, zlib.crc32(body) & 0xFFFFFFFF))
 
 
+def write_text_cases(image, out_dir, binary_samples=60):
+    """Oracle inputs for tests/oracle/oracle_tok.cpp: each distinct text file once, and some binary files (git-ignored directory only)."""
+    import hashlib
+    img, entries = _jams_on_image(image)
+    os.makedirs(out_dir, exist_ok=True)
+    seen, index, binary = set(), [], 0
+    total = 0
+    for e in entries:
+        j = _load(img, e)
+        base = img.sector_offset(e.sector)
+        for path, off, size in j.files:
+            if size > 1 << 22:
+                continue
+            data = img._read(base + off + (JAM2_RECORD if j.token == b"JAM2" else 0), size)
+            digest = hashlib.sha256(data).hexdigest()[:16]
+            if digest in seen:
+                continue
+            seen.add(digest)
+            head = data[:512]
+            text = bool(head) and not any(c < 9 or 13 < c < 32 for c in head)
+            name = None
+            if text:
+                name = digest + ".bin"
+            elif binary < binary_samples and len(seen) % 40 == 0:
+                name = "b_" + digest + ".bin"
+                binary += 1
+            if name:
+                with open(os.path.join(out_dir, name), "wb") as f:
+                    f.write(data)
+                index.append("%s	%s	%s	%d" % (name, e.path, path, size))
+                total += size
+    with open(os.path.join(out_dir, "index.txt"), "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(index) + "\n")
+    print("%d files (%d binary samples), %d bytes, in %s" % (len(index), binary, total, out_dir))
+
+
 def main(argv):
     if len(argv) >= 3 and argv[0] == "e2e":
         if len(argv) == 4 and argv[3] == "--all":
             write_e2e(argv[1], argv[2], limit=1 << 40, per_archive=1 << 30)
         else:
             write_e2e(argv[1], argv[2])
+        return 0
+    if len(argv) == 3 and argv[0] == "textcases":
+        write_text_cases(argv[1], argv[2])
         return 0
     if len(argv) == 3 and argv[0] == "cases":
         write_cases(argv[1], argv[2])
