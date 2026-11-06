@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "gm/GmAppSettings.h"
+#include "oracle_guard.h"
 #include "oracle_image.h"
 
 static bool g_mutate;
@@ -252,23 +253,14 @@ static void run_parts() {
 }
 
 // ---- no App.ini, and one that will not open ------------------------------------------------------------------------------
-static volatile bool g_expect_crash, g_resumed;
-static volatile int g_crashes;
-static CONTEXT g_resume;
-static uint32_t g_resume_seh;
 
 static __declspec(noinline) void load_expecting_crash(GmAppSettings* s, int side) {
-    g_resumed = false;
-    g_resume_seh = __readfsdword(0);
-    RtlCaptureContext(&g_resume);
-    if (!g_resumed) {
-        g_expect_crash = true;
+    guarded([&]() {
         g_side = side;
         g_recording = true;
         if (side) s->Load();
         else at<Fn0>(0x00098A50)(s, nullptr);
-        g_expect_crash = false;
-    }
+    });
     g_recording = false;
     g_side = 0;
 }
@@ -310,17 +302,12 @@ static __declspec(noinline) void original_command_line(GmAppSettings* self, unsi
 }
 
 static __declspec(noinline) void command_expecting_crash(GmAppSettings* s, int side, unsigned int count) {
-    g_resumed = false;
-    g_resume_seh = __readfsdword(0);
-    RtlCaptureContext(&g_resume);
-    if (!g_resumed) {
-        g_expect_crash = true;
+    guarded([&]() {
         g_side = side;
         g_recording = true;
         if (side) s->ReadCommandLine();
         else original_command_line(s, count);
-        g_expect_crash = false;
-    }
+    });
     g_recording = false;
     g_side = 0;
 }
@@ -460,15 +447,10 @@ static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
     const DWORD c = e->ExceptionRecord->ExceptionCode;
     if (c == EXCEPTION_ACCESS_VIOLATION || c == EXCEPTION_ILLEGAL_INSTRUCTION || c == EXCEPTION_INT_DIVIDE_BY_ZERO) {
         if (g_expect_crash) {
-            g_expect_crash = false;
             g_recording = false;  // Here, not after the resume: the harness's own allocations must not reach the log.
             g_side = 0;
-            g_resumed = true;
-            g_crashes = g_crashes + 1;
-            __writefsdword(0, g_resume_seh);
-            *e->ContextRecord = g_resume;
-            return EXCEPTION_CONTINUE_EXECUTION;
         }
+        if (guard_resume(e)) return EXCEPTION_CONTINUE_EXECUTION;
         char text[300];
         const int len = sprintf_s(text, "CRASH 0x%08X at 0x%p during [%.200s]\n", (unsigned)c, e->ExceptionRecord->ExceptionAddress, g_context.c_str());
         DWORD ignored;

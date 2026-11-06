@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "gm/GmLevelManager.h"
+#include "oracle_guard.h"
 #include "oracle_image.h"
 
 static bool g_mutate;
@@ -320,22 +321,11 @@ static void run_names() {
 }
 
 // ---- both implementations dereference null if the error routine returns after a failed open ------------------------------
-static volatile bool g_expect_crash, g_resumed;
-static volatile int g_crashes;
-static CONTEXT g_resume;
-static uint32_t g_resume_seh;
 
 static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
     const DWORD c = e->ExceptionRecord->ExceptionCode;
     if (c != EXCEPTION_ACCESS_VIOLATION && c != EXCEPTION_ILLEGAL_INSTRUCTION && c != EXCEPTION_INT_DIVIDE_BY_ZERO) return EXCEPTION_CONTINUE_SEARCH;
-    if (g_expect_crash) {
-        g_expect_crash = false;
-        g_resumed = true;
-        g_crashes = g_crashes + 1;
-        __writefsdword(0, g_resume_seh);
-        *e->ContextRecord = g_resume;
-        return EXCEPTION_CONTINUE_EXECUTION;
-    }
+    if (guard_resume(e)) return EXCEPTION_CONTINUE_EXECUTION;
     char text[256];
     const int len = sprintf_s(text, "CRASH 0x%08X at 0x%p during [%s]\n", (unsigned)c, e->ExceptionRecord->ExceptionAddress, g_context.c_str());
     DWORD ignored;
@@ -345,16 +335,11 @@ static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
 }
 
 static __declspec(noinline) void load_expecting_crash(GmLevelManager* m, int side) {
-    g_resumed = false;
-    g_resume_seh = __readfsdword(0);
-    RtlCaptureContext(&g_resume);
-    if (!g_resumed) {
-        g_expect_crash = true;
+    guarded([&]() {
         g_side = side;
         g_recording = true;
         m->Load("MISSING.TXT");
-        g_expect_crash = false;  // Reached only if the implementation did not crash, which the count below catches.
-    }
+    });
     g_recording = false;
     g_side = 0;
 }

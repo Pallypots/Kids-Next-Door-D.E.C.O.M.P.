@@ -662,9 +662,9 @@ TXT_MUTANTS = [
     ('ComputeEnd: none', 'AtText.cpp', 'return m_capacity - 1;', 'return m_capacity;'),
     ('ClearFields: capacity', 'AtText.cpp', 'void AtText::ClearFields() {\n    m_capacity = 0;\n', 'void AtText::ClearFields() {\n'),
     ('Status: 20', 'AtText.cpp', 'case 20: return "feature is unimplemented";', 'case 19: return "feature is unimplemented";'),
-    ('Report: separator', 'AtText.cpp', 'strcat(message, ": ");', 'strcat(message, " ");'),
+    ('Report: separator', 'AtText.cpp', 'strcat(message, ": ");\n    strcat(message, path);', 'strcat(message, " ");\n    strcat(message, path);'),
     ('Report: dot', 'AtText.cpp', 'strcat(message, ".");', 'strcat(message, "");'),
-    ('Report: fatal argument', 'AtText.cpp', 'AtFatal(message, 0, 0, 0);', 'AtFatal(message, 1, 0, 0);'),
+    ('Report: fatal argument', 'AtText.cpp', 'strcat(message, extension);\n    AtFatal(message, 0, 0, 0);', 'strcat(message, extension);\n    AtFatal(message, 1, 0, 0);'),
     ('Table ctor: loaded', 'AtText.cpp', '    m_ascii = 0;\n    m_loaded = 0;\n    m_charCount = 0;\n    m_charsUsed = 0;\n    m_stringCount = 0;\n    m_stringsUsed = 0;\n    m_strings = 0;\n    m_chars = 0;\n}\n\nAtTextTable::~AtTextTable', '    m_ascii = 0;\n    m_charCount = 0;\n    m_charsUsed = 0;\n    m_stringCount = 0;\n    m_stringsUsed = 0;\n    m_strings = 0;\n    m_chars = 0;\n}\n\nAtTextTable::~AtTextTable'),
     ('Clear: map kept', 'AtText.cpp', 'void AtTextTable::Clear() {\n    GmNameMap::Clear();\n', 'void AtTextTable::Clear() {\n'),
     ('Clear: ignores loaded', 'AtText.cpp', 'void AtTextTable::Clear() {\n    GmNameMap::Clear();\n    if (m_loaded != 0) {', 'void AtTextTable::Clear() {\n    GmNameMap::Clear();\n    if (1) {'),
@@ -1248,7 +1248,7 @@ SUITES = {
 
 
 def run(cmd, **kw):
-    return subprocess.run(cmd, capture_output=True, text=True, **kw)
+    return subprocess.run(cmd, capture_output=True, text=True, errors="replace", **kw)
 
 
 def configure_and_build(build_dir, target, extra=()):

@@ -339,3 +339,7 @@ Limits: fatals and `AtIoTokenFile::s_heap` are replaced or set by the harness. T
 Limits: unbalanced pops write outside the table, in the original and here, and are not run; what they would overwrite differs on a host. Deleting destructors run without the delete. Slot 0 of the base class is pure in the original, so a double supplies it on both sides. The device call's identity, `XInitDevices`, is a guess from its shape and its section.
 
 Inventory: 0x001038C0 has no entry in `analysis-local/inv/functions.json`, because it is reached only through a thunk, so its recorded size, 25, is from the disassembly.
+
+## Crash guard: tests/oracle/oracle_guard.h
+
+Four suites and the memory suite run code that crashes on purpose, on both sides, since the original carries on past a report that does not stop in this harness. Up to cycle 14 `oracle_lvl`, `oracle_set` and `oracle_txt` resumed from `RtlCaptureContext`, which on x86 captures its caller's frame: a resume left the capturing function with callee-saved registers as they stood at the crash. Those suites had given no false results that are known of, but their comparisons after a crash rested on registers no one had restored. All now use one guard that saves and restores them, and their figures in docs/PROGRESS.md are from reruns with it.

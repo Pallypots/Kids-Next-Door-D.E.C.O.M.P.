@@ -16,6 +16,7 @@
 #include <vector>
 
 #include "at/AtText.h"
+#include "oracle_guard.h"
 #include "oracle_image.h"
 
 static bool g_mutate;
@@ -344,23 +345,14 @@ static void run_table_synthetic() {
 }
 
 // Parse on a tokenizer the caller keeps: what it leaves on it shows. And a failed open, where both report and then dereference null.
-static volatile bool g_expect_crash, g_resumed;
-static volatile int g_crashes;
-static CONTEXT g_resume;
-static uint32_t g_resume_seh;
 
 static __declspec(noinline) void load_expecting_crash(AtTextTable* t, int side) {
-    g_resumed = false;
-    g_resume_seh = __readfsdword(0);
-    RtlCaptureContext(&g_resume);
-    if (!g_resumed) {
-        g_expect_crash = true;
+    guarded([&]() {
         g_side = side;
         g_recording = true;
         if (side) t->Load(g_ctx[1], "MISSING", 0);
         else at<FnLoad>(0x0001FA70)(t, nullptr, g_ctx[0], "MISSING", 0);
-        g_expect_crash = false;
-    }
+    });
     g_recording = false;
     g_side = 0;
 }
@@ -505,14 +497,7 @@ static void run_context() {
 static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
     const DWORD c = e->ExceptionRecord->ExceptionCode;
     if (c == EXCEPTION_ACCESS_VIOLATION || c == EXCEPTION_ILLEGAL_INSTRUCTION || c == EXCEPTION_INT_DIVIDE_BY_ZERO) {
-        if (g_expect_crash) {
-            g_expect_crash = false;
-            g_resumed = true;
-            g_crashes = g_crashes + 1;
-            __writefsdword(0, g_resume_seh);
-            *e->ContextRecord = g_resume;
-            return EXCEPTION_CONTINUE_EXECUTION;
-        }
+        if (guard_resume(e)) return EXCEPTION_CONTINUE_EXECUTION;
         char text[300];
         const int len = sprintf_s(text, "CRASH 0x%08X at 0x%p address 0x%p during [%.200s]\n", (unsigned)c, e->ExceptionRecord->ExceptionAddress, (void*)e->ExceptionRecord->ExceptionInformation[1], g_context.c_str());
         DWORD ignored;
