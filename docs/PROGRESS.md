@@ -280,9 +280,20 @@ name. See docs/STATE.md for the evidence-based partial map.
 | 0x00031700 | 49 | `??1AtIoStream@@UAE@XZ` | at/text | SIZE |
 | 0x00031740 | 160 | `?Allocate@AtIoStream@@QAEXI@Z` | at/text | SIZE |
 | 0x000317E0 | 69 | `??_GAtIoStream@@UAEPAXI@Z` | at/text | SIZE |
+| 0x00013F70 | 31 | `?AtCopyName8@@YAXPADPBD@Z` | gm/levels | SIZE |
+| 0x0013D8E0 | 10 | `?SetHeap@GmLevelManager@@SAXPAX@Z` | gm/levels | MATCH |
+| 0x0013D8F0 | 84 | `??_EGmLevelName@@UAEPAXI@Z` | gm/levels | SIZE |
+| 0x0013D950 | 115 | `?Reset@GmLevelManager@@QAEXXZ` | gm/levels | SIZE |
+| 0x0013DFE0 | 354 | `?Resize@GmLevelNameArray@@QAEXI@Z` | gm/levels | SIZE |
+| 0x0013E1F0 | 797 | `?Load@GmLevelManager@@UAEXPBD@Z` | gm/levels | SIZE |
+| 0x0013E670 | 137 | `?Unload@GmLevelManager@@UAEXXZ` | gm/levels | SIZE |
+| 0x001950A0 | 29 | `??4GmLevelName@@QAEAAV0@ABV0@@Z` | gm/levels | SIZE |
+| 0x001950C0 | 26 | `?SetName@GmLevelName@@QAEXPBD@Z` | gm/levels | SIZE |
+| 0x001950E0 | 18 | `??0GmLevelName@@QAE@XZ` | gm/levels | SIZE |
+| 0x00195100 | 11 | `??1GmLevelName@@UAE@XZ` | gm/levels | SIZE |
 
-Relocation-aware matches with the host compiler: 57 functions, 903 unique bytes.
-Share of `.text` raw bytes: 0.0442% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 58 functions, 913 unique bytes.
+Share of `.text` raw bytes: 0.0446% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -313,6 +324,8 @@ Exact linked match (whole XBE): not attempted.
 | 0x00272AF4 | 2 | `??_7AtIoFileStream@@6B@` | MATCH |
 | 0x00272C78 | 43 | `??_7AtIoTextTokenizer@@6B@` | MATCH |
 | 0x00274A54 | 2 | `??_7AtIoStream@@6B@` | MATCH |
+| 0x00292F9C | 1 | `??_7GmLevelName@@6B@` | MATCH |
+| 0x0028DAB4 | 3 | `??_7GmLevelManager@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
@@ -321,6 +334,8 @@ Suite `gm`: runs with no observed difference 20 / 20 (NO DIFFERENCE OBSERVED: se
 Suite `jam`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 62 archives, 174373 paths, 196466943 comparisons, 0 differences). Recorded function entries reached in every run: 101 / 101. Source mutants detected: 136 / 136. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `tok`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 5864 files (60 binary samples), 12749375 bytes, 1372044 tokens, 22236514 comparisons, 0 differences, 0 x87 precision differences, 145 rumble keywords). Recorded function entries reached in every run: 99 / 99. Source mutants detected: 172 / 172. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `lvl`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: Levels.txt with 47 entries, 17 described; 1910 comparisons, 0 differences). Recorded function entries reached in every run: 11 / 11. Source mutants detected: 60 / 60. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

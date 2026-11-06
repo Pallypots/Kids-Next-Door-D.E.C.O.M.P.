@@ -114,3 +114,21 @@ change in their low bits.
 The usual shape is a counted block: `Name [ n ] { ... }` (`ExpectCount`, 0x00015A70).
 
 A keyword table is `{ int id; const char* name; }[]`. The rumble table is at 0x002B2940, six entries from id 0x39, and recognises 145 keywords in `RUMBLE.RMB`.
+
+## Levels.txt (reader: GmLevelManager::Load, 0x0013E1F0)
+
+In `AppInit.JAM`. The game's list of everything it can play, in order:
+
+    Levels [ count ] { Level "NAME" kind [ { NumLoadItems n  Description "text" } ] ... }
+
+* `NAME` is at most eight bytes: the longer one reports "invalid string" and is cut to eight.
+* `kind`: `NormalLevel` 0, `HiddenLevel` 1, `NonSelectableLevel` 2, `FMVCinema` 3. `Type`, `ToolCinema`, `DesignerCinema` and `ConversationCinema` are keywords the reader knows and does
+  nothing with: the entry's kind stays whatever the heap held.
+* Inside a block, any other token is skipped, and an entry with no `NumLoadItems` keeps whatever the heap held. The end of the file inside a block never ends the loop, so a truncated file hangs.
+* A second `Levels` block in the file replaces the count and leaks the first tables.
+
+Meaning, from the code that uses the table: a movie entry is played and stepped past when reached (0x0009A820), and only kind 0 goes in the level-select list (0x000A0FC0). `NumLoadItems` is copied
+to a field near the loading code (0x00093798), so it is presumably what a loading bar counts to; that is unconfirmed. Hidden and non-selectable are named by their keywords only.
+
+This disc's file has 47 entries: 16 movies, 15 normal, 13 non-selectable, 3 hidden, 17 with descriptions. The list itself is game data and is not in this repository:
+`python -I tools/levels.py <image> analysis-local/levels`, then `test_gm_levels analysis-local/levels analysis-local/levels/levels.tsv --print` writes it from recovered code.

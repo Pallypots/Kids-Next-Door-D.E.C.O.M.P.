@@ -20,6 +20,8 @@ python -I tools/jam.py textcases "<your disc>.iso" analysis-local/oracle-tok
 python -I tools/oracle_run.py
 build/oracle/RelWithDebInfo/oracle_tok orig/xiso/default.xbe analysis-local/oracle-tok --digest analysis-local/oracle-tok/digests.txt
 build/native-x64/Release/test_at_tok analysis-local/oracle-tok analysis-local/oracle-tok/digests.txt
+python -I tools/levels.py "<your disc>.iso" analysis-local/levels
+build/native-x64/Release/test_gm_levels analysis-local/levels analysis-local/levels/levels.tsv
 python -I tools/jam.py e2e "<your disc>.iso" analysis-local/e2e --all
 build/native/Release/test_at_e2e analysis-local/e2e analysis-local/e2e/manifest.txt
 python -I -m unittest discover -s tests -v

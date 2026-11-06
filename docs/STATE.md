@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 6 (shared text tokenizer). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 7 (Levels.txt reader). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-05, dev cycle 6 (shared text tokenizer). Per-function resu
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 247 functions and 23 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 258 functions and 25 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -26,7 +26,9 @@ All source is in `src/`, types in `include/`. 247 functions and 23 vftables are 
   their vftable slots are checked by position only. `platform/fatal.cpp` stands in for the helpers.
 
 * `at/text` (99 functions): the stream and file wrapper, and the tokenizer most text formats go through, both reading and writing. It works on 64-bit, with the same results as the
-  original on every text file on the disc. **Nothing recovered yet uses its tokens**: each format's own reader is still missing, so no game data is interpreted.
+  original on every text file on the disc.
+* `gm/levels` (11 functions), **partial**: the reader of `Levels.txt`, the first recovered code to give game data a meaning. **Recovered source now goes from the archive on disc to the game's level table**, on x64. Not recovered: the rest of its class, which
+  owns level content (constructor 0x0013E150, destructor 0x0013E930, 0x0013E530), and everything that uses the table. `ReleaseLevelData` stops with a diagnostic, so unloading cannot yet work in a port.
 
 | Measure | Result |
 | --- | --- |
@@ -37,7 +39,7 @@ All source is in `src/`, types in `include/`. 247 functions and 23 vftables are 
 
 State of each function: **Semantic-tested** (differential oracle plus host tests); those with a MATCH line in docs/PROGRESS.md
 are also a relocation-aware match under MSVC 19.44, which does **not** show which compiler shipped the game. The freeing path of
-deleting destructors is not run by the oracle. The game itself cannot run from this source: this is the layer that loads its files and splits text into tokens, and nothing yet gives those tokens meaning.
+deleting destructors is not run by the oracle. The game itself cannot run from this source: this reaches its files, its text and its list of levels, and nothing yet loads a level.
 
 The JAM directory layout is also recovered as a format (docs/formats.md, tools/jam.py), validated against all 56 archives.
 
@@ -73,8 +75,7 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
   vftable 0x00278548 and its methods are not recovered.
 * Text formats share one tokenizer (docs/formats.md). `AtIoTokenFile` opens the file; a format's reader passes a keyword table and pulls tokens. 0x00074800 (rumble) is the
   shape: open with extension `RMB`, pass the table at 0x002B2940, read blocks.
-* `Levels.txt` lists all 47 entries, in order: 16 `FMVCinema`, 15 `NormalLevel`, 13 `NonSelectableLevel`, 3 `HiddenLevel`, with display names and load-item counts. That is an
-  evidence-backed starting inventory for M5. Its reader is opened at 0x0013EB84, through slot 1 of the object from 0x0013E150. Not yet recovered.
+* `Levels.txt` lists 47 entries in order: 16 movies, 15 normal, 13 non-selectable, 3 hidden. Read by recovered code and checked against a separate Python parse (docs/formats.md). That is a checked starting inventory for M5; it does not show that each entry works.
 * The tokenizer also writes. What the game writes as text is not established.
 * The original's numeric parser is not correctly rounded, so its results must be reproduced, not improved (docs/formats.md).
 
@@ -95,12 +96,10 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-The tokenizer now works, so a format reader can be recovered end to end, and it can run on real data.
+The list of levels exists; the question now is what it takes to start one. The level table's users show the way in.
 
-1. Recover the `Levels.txt` reader (around 0x0013E150, opened at 0x0013EB84): the first code to give real game data a meaning, and it yields a checked level inventory for M5.
-   `RUMBLE.RMB` (0x000746A0-0x000748C8) is the smaller alternative if that class pulls in too much.
-2. The mounting class at vftable 0x00278548, which ties the archive layer to start-up.
+1. Follow start-up to the first thing the game loads, using the recovered pieces: 0x0013EA90 (owner of the level manager, passes `Levels.txt`), the mounting class at vftable 0x00278548 and the `AtAp*Application` start-up order. Recover the mounting class and the owner.
+2. A small text format that start-up depends on, chosen from what step 1 shows (`LIBRARY.ADD`, `GLOBAL.GOB`, `RUMBLE.RMB`).
 3. Library separation: the denominators are still unclassified.
-4. `AtIoDirectoryListing` and the `List` slots, and the sorted container at 0x000761B0-0x00076600, when something needs them.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

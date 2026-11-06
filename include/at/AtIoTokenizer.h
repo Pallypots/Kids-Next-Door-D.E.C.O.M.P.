@@ -143,7 +143,7 @@ public:
     void SetStream(AtIoStream* stream);              // 0x00015D50
 
     AtIoStream* m_stream;      // +0x004
-    int m_pushedBack;          // +0x008 nothing recovered sets it: the next Next() returns m_type again
+    int m_pushedBack;          // +0x008 the next Next() returns m_type again; a format's reader sets it (0x0013E4A1)
     int m_type;                // +0x00C
     int m_int;                 // +0x010
     float m_real;              // +0x014

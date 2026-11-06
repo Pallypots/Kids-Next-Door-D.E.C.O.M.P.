@@ -400,9 +400,75 @@ TOK_MUTANTS = [
 ]
 
 
+LVL_MUTANTS = [
+    ('Copy8: null', 'GmLevelManager.cpp', '    if (from == 0) {\n        to[0] = 0;\n        return;\n    }\n', ''),
+    ('Copy8: length', 'GmLevelManager.cpp', 'for (int i = 0; i < 8; i++) {\n        to[i] = from[i];', 'for (int i = 0; i < 7; i++) {\n        to[i] = from[i];'),
+    ('Name assign: nothing copied', 'GmLevelManager.cpp', '    AtCopyName8(m_name, other.m_name);\n', ''),
+    ('Name SetName: nothing copied', 'GmLevelManager.cpp', '    AtCopyName8(m_name, name);\n', ''),
+    ('Resize: zero keeps count', 'GmLevelManager.cpp', '        m_items = 0;\n        m_count = 0;\n        return;', '        m_items = 0;\n        return;'),
+    ('Resize: zero keeps items', 'GmLevelManager.cpp', '        delete[] m_items;\n        m_items = 0;\n        m_count = 0;', '        m_items = 0;\n        m_count = 0;'),
+    ('Resize: same size reallocates', 'GmLevelManager.cpp', '    if (count == m_count) {\n        return;\n    }\n', ''),
+    ('Resize: heap check', 'GmLevelManager.cpp', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    GmLevelName*', '    AtPushHeap(s_heap);\n    GmLevelName*'),
+    ('Resize: heap not pushed', 'GmLevelManager.cpp', '    AtPushHeap(s_heap);\n    GmLevelName*', '    GmLevelName*'),
+    ('Resize: names lost', 'GmLevelManager.cpp', '            items[i] = m_items[i];\n', ''),
+    ('Resize: keep too few', 'GmLevelManager.cpp', 'count < m_count ? count : m_count', 'count < m_count ? count : (m_count ? m_count - 1 : 0)'),
+    ('Resize: old kept', 'GmLevelManager.cpp', '            items[i] = m_items[i];\n        }\n        delete[] m_items;', '            items[i] = m_items[i];\n        }'),
+    ('Resize: count unset', 'GmLevelManager.cpp', '    m_items = items;\n    m_count = count;', '    m_items = items;'),
+    ('Reset: current index', 'GmLevelManager.cpp', '    m_currentIndex = -1;\n', ''),
+    ('Reset: current name', 'GmLevelManager.cpp', '        m_currentName[i] = 0;\n', ''),
+    ('Reset: previous index', 'GmLevelManager.cpp', '    m_previousIndex = -1;\n', ''),
+    ('Reset: level count', 'GmLevelManager.cpp', '    m_levelCount = 0;\n', ''),
+    ('Reset: 5C', 'GmLevelManager.cpp', '    m_unknown05C = 0;\n', ''),
+    ('Reset: kinds', 'GmLevelManager.cpp', '    m_kinds = 0;\n', ''),
+    ('Reset: load items', 'GmLevelManager.cpp', '    m_loadItems = 0;\n', ''),
+    ('Reset: 60', 'GmLevelManager.cpp', '    m_unknown060 = 0;\n', ''),
+    ('Reset: 20', 'GmLevelManager.cpp', '    m_unknown020 = 1;\n', '    m_unknown020 = 0;\n'),
+    ('Reset: start point', 'GmLevelManager.cpp', 'AtCopyName("Start", m_startPoint);', 'AtCopyName("Stop", m_startPoint);'),
+    ('Reset: 2C', 'GmLevelManager.cpp', '        m_unknown02C[i] = 0;\n', ''),
+    ('Reset: loaded', 'GmLevelManager.cpp', '    m_loaded = 0;\n}', '}'),
+    ('Load: no unload first', 'GmLevelManager.cpp', '    if (m_loaded != 0) {\n        Unload();\n    }\n', ''),
+    ('Load: open flags', 'GmLevelManager.cpp', 'file.Open(path, 2, 0)', 'file.Open(path, 4, 0)'),
+    ('Load: message', 'GmLevelManager.cpp', '"  \\n return code :"', '" return code :"'),
+    ('Load: message number', 'GmLevelManager.cpp', 'AtFormatInt(status, number);', 'AtFormatInt(0, number);'),
+    ('Load: fatal argument', 'GmLevelManager.cpp', 'AtFatal(message, 0, 0, 0);', 'AtFatal(message, 1, 0, 0);'),
+    ('Load: first keyword id', 'GmLevelManager.cpp', '{kLevels, "Levels"},', '{kLevels, "Level_s"},'),
+    ('Load: other token stops', 'GmLevelManager.cpp', '        if (token != kLevels) {\n            continue;\n        }\n', ''),
+    ('Load: heap for names', 'GmLevelManager.cpp', '        GmLevelNameArray::s_heap = s_heap;\n', ''),
+    ('Load: names not sized', 'GmLevelManager.cpp', '        m_names.Resize((unsigned int)m_levelCount);\n', ''),
+    # Not used: swapping the order of two same-sized allocations is an equivalent mutant; only the addresses differ.
+    ('Load: table size', 'GmLevelManager.cpp', '(unsigned int)count * elementSize', '(unsigned int)count * elementSize * 2'),
+    ('Load: table heap check', 'GmLevelManager.cpp', '    if (GmLevelManager::s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n', ''),
+    ('Load: table heap', 'GmLevelManager.cpp', '    AtPushHeap(GmLevelManager::s_heap);\n    void* table', '    void* table'),
+    ('Load: level token', 'GmLevelManager.cpp', 't->ExpectToken(kLevel);', 't->ExpectToken(kLevels);'),
+    ('Load: name not set', 'GmLevelManager.cpp', '            m_names.m_items[i].SetName(name);\n', ''),
+    ('Load: description unset', 'GmLevelManager.cpp', '            m_descriptions[i] = 0;\n            switch', '            switch'),
+    ('Load: movie kind', 'GmLevelManager.cpp', 'm_kinds[i] = kMovie;', 'm_kinds[i] = kNormal;'),
+    ('Load: normal kind', 'GmLevelManager.cpp', 'm_kinds[i] = kNormal;', 'm_kinds[i] = kHidden;'),
+    ('Load: hidden kind', 'GmLevelManager.cpp', 'm_kinds[i] = kHidden;', 'm_kinds[i] = kNormal;'),
+    ('Load: non-selectable kind', 'GmLevelManager.cpp', 'm_kinds[i] = kNonSelectable;', 'm_kinds[i] = kNormal;'),
+    ('Load: designer cinema acted on', 'GmLevelManager.cpp', '            case kFmvCinema:', '            case kDesignerCinema: case kFmvCinema:'),
+    ('Load: tool cinema acted on', 'GmLevelManager.cpp', '            case kFmvCinema:', '            case kToolCinema: case kFmvCinema:'),
+    ('Load: conversation cinema acted on', 'GmLevelManager.cpp', '            case kFmvCinema:', '            case kConversationCinema: case kFmvCinema:'),
+    ('Load: type acted on', 'GmLevelManager.cpp', '            case kFmvCinema:', '            case kType: case kFmvCinema:'),
+    ('Load: load items', 'GmLevelManager.cpp', 'm_loadItems[i] = t->ExpectInt();', 't->ExpectInt();'),
+    ('Load: description', 'GmLevelManager.cpp', 't->ExpectStringCopy(&m_descriptions[i]);', 't->ExpectString();'),
+    ('Load: token not handed back', 'GmLevelManager.cpp', '                t->m_pushedBack = 1;\n', ''),
+    ('Load: end brace', 'GmLevelManager.cpp', '        t->ExpectRightCurly();\n', ''),
+    ('Load: never marked', 'GmLevelManager.cpp', '    m_loaded = 1;\n', ''),
+    ('Unload: content kept', 'GmLevelManager.cpp', '        ReleaseLevelData();\n', ''),
+    ('Unload: ignores loaded', 'GmLevelManager.cpp', 'void GmLevelManager::Unload() {\n    if (m_loaded != 0) {', 'void GmLevelManager::Unload() {\n    if (1) {'),
+    ('Unload: description kept', 'GmLevelManager.cpp', '                operator delete(m_descriptions[i]);\n', ''),
+    ('Unload: description table kept', 'GmLevelManager.cpp', '        operator delete(m_descriptions);\n', ''),
+    ('Unload: kinds kept', 'GmLevelManager.cpp', '            operator delete(m_kinds);\n', ''),
+    ('Unload: load items kept', 'GmLevelManager.cpp', '            operator delete(m_loadItems);\n', ''),
+    ('Unload: no reset', 'GmLevelManager.cpp', '    }\n    Reset();\n}\n\nGmLevelManager::GmLevelManager', '    }\n}\n\nGmLevelManager::GmLevelManager'),
+]
+
+
 SUITES = {
-    "gm": {"target": "oracle_gm", "subsystem": "gm/", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
+    "lvl": {"target": "oracle_lvl", "subsystem": "gm/levels", "mutants": LVL_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
 
@@ -445,7 +511,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
     target = SUITES[suite]["target"]
     if suite == "gm":
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
-    elif suite == "tok":
+    elif suite in ("tok", "lvl"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -573,7 +639,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -586,7 +652,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

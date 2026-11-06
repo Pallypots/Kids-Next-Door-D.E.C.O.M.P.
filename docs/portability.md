@@ -38,6 +38,9 @@ Text and numbers: the tokenizer is why this matters most, because its numbers be
 * Quirks kept, for port hardening later as separate tested changes: `PutReal` can overflow its 0x20-byte buffer, a keyword over 0x3F characters and a string over 0xFF bytes write
   past their fields after reporting, and `AtCopyName9` reads eight bytes whatever the name's length.
 
+Sizes copied from the original: a literal `* 4` or `0x10` in the disassembly can mean the size of a pointer. `GmLevelManager::Load` had exactly this and overflowed on x64 (docs/verification.md). When a recovered allocation holds pointers or
+objects with pointers, write it with `sizeof`. The AddressSanitizer build is the check: configure with `-DCMAKE_CXX_FLAGS="/fsanitize=address /Zi /EHsc" -DCMAKE_TRY_COMPILE_CONFIGURATION=Release`, build Release. From Git Bash set `MSYS_NO_PATHCONV=1` first.
+
 Native build today: `CMakeLists.txt` builds `knd_gm` and `knd_at` (`src/`) and the semantic tests for x64 with the VS 2022
 generator. Ninja is not installed; Linux/Android builds are untested. The 32-bit oracle target is Windows-only analysis
 tooling and is excluded from x64 builds.

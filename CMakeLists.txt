@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(KND_GM_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/gm" CACHE PATH "Directory of the gm sources")
 add_library(knd_gm STATIC
     ${KND_GM_SRC}/GmConnection.cpp
+    ${KND_GM_SRC}/GmLevelManager.cpp
+    ${KND_GM_SRC}/GmLevelPending.cpp
     ${KND_GM_SRC}/GmLinkedList.cpp
     ${KND_GM_SRC}/GmSocket.cpp
 )
@@ -46,6 +48,10 @@ add_executable(test_at_tok tests/native/test_at_tok.cpp)
 target_include_directories(test_at_tok PRIVATE tests/oracle)
 target_link_libraries(test_at_tok PRIVATE knd_at)
 add_test(NAME at_tok COMMAND test_at_tok)
+add_executable(test_gm_levels tests/native/test_gm_levels.cpp platform/fatal.cpp platform/host_file_system.cpp)
+target_include_directories(test_gm_levels PRIVATE platform)
+target_link_libraries(test_gm_levels PRIVATE knd_gm knd_at)
+add_test(NAME gm_levels COMMAND test_gm_levels)
 
 # Local-only differential oracle: 32-bit Windows, runs original code from the owner's XBE beside recovered source.
 # Never part of a release. Build with: cmake -S . -B build/oracle -A Win32
@@ -55,6 +61,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     target_link_libraries(oracle_gm PRIVATE knd_gm)
     add_executable(oracle_jam tests/oracle/reserve.asm tests/oracle/oracle_jam.cpp)
     target_link_libraries(oracle_jam PRIVATE knd_at)
+    add_executable(oracle_lvl tests/oracle/reserve.asm tests/oracle/oracle_lvl.cpp)
+    target_link_libraries(oracle_lvl PRIVATE knd_gm knd_at)
+    target_link_options(oracle_lvl PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_tok tests/oracle/reserve.asm tests/oracle/oracle_tok.cpp)
     target_link_libraries(oracle_tok PRIVATE knd_at)
     target_link_options(oracle_tok PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

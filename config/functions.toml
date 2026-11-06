@@ -1983,6 +1983,94 @@ source = "src/at/AtIoStream.cpp"
 subsystem = "at/text"
 evidence = "tests/oracle/oracle_tok.cpp; address noted beside the declaration in include/at/AtIoTokenizer.h"
 
+[[function]]
+va = 0x00013F70
+size = 31
+symbol = "?AtCopyName8@@YAXPADPBD@Z"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x0013D8E0
+size = 10
+symbol = "?SetHeap@GmLevelManager@@SAXPAX@Z"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x0013D8F0
+size = 84
+symbol = "??_EGmLevelName@@UAEPAXI@Z"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x0013D950
+size = 115
+symbol = "?Reset@GmLevelManager@@QAEXXZ"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x0013DFE0
+size = 354
+symbol = "?Resize@GmLevelNameArray@@QAEXI@Z"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x0013E1F0
+size = 797
+symbol = "?Load@GmLevelManager@@UAEXPBD@Z"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x0013E670
+size = 137
+symbol = "?Unload@GmLevelManager@@UAEXXZ"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x001950A0
+size = 29
+symbol = "??4GmLevelName@@QAEAAV0@ABV0@@Z"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x001950C0
+size = 26
+symbol = "?SetName@GmLevelName@@QAEXPBD@Z"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x001950E0
+size = 18
+symbol = "??0GmLevelName@@QAE@XZ"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
+[[function]]
+va = 0x00195100
+size = 11
+symbol = "??1GmLevelName@@UAE@XZ"
+source = "src/gm/GmLevelManager.cpp"
+subsystem = "gm/levels"
+evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -2123,7 +2211,24 @@ slots = 2
 symbol = "??_7AtIoStream@@6B@"
 source = "src/at/AtIoStream.cpp"
 
+[[vtable]]
+va = 0x00292F9C
+slots = 1
+symbol = "??_7GmLevelName@@6B@"
+source = "src/gm/GmLevelManager.cpp"
+
+[[vtable]]
+va = 0x0028DAB4
+slots = 3
+symbol = "??_7GmLevelManager@@6B@"
+source = "src/gm/GmLevelManager.cpp"
+
 [symbols]
+"?s_instance@GmLevelManager@@2PAV1@A" = 0x003B3570  # compared at 0x0013E1B7; the constructor is NOT recovered
+"?s_heap@GmLevelManager@@2PAXA" = 0x003B356C  # written at 0x0013D8E4
+"?s_heap@GmLevelNameArray@@2PAXA" = 0x003B3574  # written at 0x0013E2A8
+"?ReleaseLevelData@GmLevelManager@@QAEXXZ" = 0x0013E530  # called from 0x0013E67B: NOT recovered
+"??_GGmLevelManager@@UAEPAXI@Z" = 0x0013E9F0  # slot position only: this destructor is NOT recovered
 "?s_context@AtIoFileRef@@2PAVAtIoContext@@A" = 0x002C6278  # read at 0x0001894D; cleared beside s_instance at 0x0001925E
 "?s_heap@AtIoStream@@2PAXA" = 0x002C63CC  # written at 0x00031594
 "?s_heap@AtIoTokenFile@@2PAXA" = 0x002C60B0  # read at 0x000155BC

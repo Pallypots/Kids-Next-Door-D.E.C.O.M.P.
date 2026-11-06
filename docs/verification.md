@@ -159,6 +159,28 @@ Differences from the original, each deliberate:
 Not covered: the code that uses tokens, which is per format and not recovered; `Report`, whose result goes nowhere, so only reaching it is tested; allocation failure beyond the
 missing-heap case; `PutReal` of values too long for its 0x20-byte buffer, which overflows in both.
 
+## Levels.txt reader: tests/oracle/oracle_lvl.cpp
+
+The original's `Load`, `Unload`, `Reset`, name array and name class beside the recovered ones. Tables, names, descriptions, heap calls, file calls and messages are compared after each step, on the real file and on 42
+inputs written for each path, including a second block that grows or shrinks the table, wrong tokens, reloading over a table, and no heap. A failed open makes both sides dereference null after reporting; the harness
+catches that, so the message can be compared.
+
+Result on 2026-11-05: `Levels.txt`, 47 entries, 1,910 comparisons, no difference; 11/11 entries reached; positive control passes; `--mutate` fails; 60/60 source mutants detected (54 as a difference, 6 by a crash).
+
+First run 59/61. One survivor was a real gap: the harness's allocator returned zeroes, which hid a missing store, and the game's heap is not cleared. This suite now fills allocations with 0xCD. The other, swapping two same-sized
+allocations, changes only addresses, so that mutant is equivalent and was dropped.
+
+Not covered: 0x0013E530, which releases level content and is not recovered (the harness replaces it on both sides); the constructor and destructor, for the same reason; a file ending inside a block, which hangs on both sides by reading
+the code, and was not run.
+
+**End to end on x64.** `test_gm_levels <dir> <expected>` mounts the real `AppInit.JAM` over host files and calls `Load`, so everything from the archive to the level table is recovered code. The expected list comes from `tools/levels.py`, a separate
+parse in Python written from the text alone. 47 entries, no difference.
+
+**A bug this found in the recovered code.** The original allocates the description table as `count * 4`. Copying that overflowed the table on x64, and every value still compared equal; the run only showed it as heap corruption at exit. The source now uses the element
+size, which is unchanged on 32 bits. No 32-bit test could have seen this.
+
+**AddressSanitizer** (x64 build, `/fsanitize=address`): all five native tests, the real `Levels.txt` run, and all 5,864 tokenizer files: no report. As a control, putting the bug back makes it report a heap overflow. Reads of `AtCopyName9` past a short name were not seen in these runs. This does not cover the oracles, which run original code.
+
 ## End to end: tests/native/test_at_e2e.cpp
 
 Opens real archives through the recovered layers (`AtIoContext`, `AtIoJamFileSystem`, the header and file classes) over host files, and
