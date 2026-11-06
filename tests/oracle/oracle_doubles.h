@@ -108,7 +108,7 @@ public:
         if (mode == kOneByte && n > 1) n = 1;
         if (n) std::memcpy(out, data + m_position, n);
         m_position += n;
-        *done = n;
+        if (done) *done = n;
         const int status = (n || mode == kZeroAtEnd) ? 0 : (int)AtIoFile::kEndOfFile;
         if (mode == kPendingIo || mode == kWaitFails) {
             request.side = side;
@@ -134,7 +134,7 @@ public:
             *done = (unsigned int)(uintptr_t)&request;
             return AtIoFile::kPending;
         }
-        *done = n;
+        if (done) *done = n;
         return 0;
     }
     int Flush() override { g_log[side].add('f'); return 5; }

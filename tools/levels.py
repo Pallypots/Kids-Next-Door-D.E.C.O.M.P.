@@ -3,7 +3,7 @@
 
   python -I tools/levels.py <image> <out dir>
 
-out dir receives AppInit.JAM and levels.tsv: name, kind, load items, description, one line per entry. The list comes from this file's own small
+out dir receives JamFiles/XBox/AppInit.JAM, where the mount manager looks for it, and levels.tsv: name, kind, load items, description, one line per entry. The list comes from this file's own small
 parse of Levels.txt, written from the text alone, so a test against it owes nothing to the recovered reader.
 """
 import os
@@ -81,7 +81,11 @@ def main(argv):
     with open(os.path.join(out_dir, "levels.tsv"), "w", encoding="latin-1", newline="\n") as f:
         for row in levels:
             f.write("\t".join(str(v) for v in row) + "\n")
-    target = os.path.join(out_dir, "AppInit.JAM")
+    os.makedirs(os.path.join(out_dir, "JamFiles", "XBox"), exist_ok=True)
+    target = os.path.join(out_dir, "JamFiles", "XBox", "AppInit.JAM")
+    old = os.path.join(out_dir, "AppInit.JAM")
+    if os.path.exists(old) and not os.path.exists(target):
+        os.replace(old, target)
     if not os.path.exists(target) or os.path.getsize(target) != entry.size:
         with open(target, "wb") as f:
             for start in range(0, entry.size, 1 << 24):

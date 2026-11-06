@@ -465,10 +465,79 @@ LVL_MUTANTS = [
 ]
 
 
+MNT_MUTANTS = [
+    ('Notify mounted: nothing', 'AtIoMountManager.cpp', '    fs->m_header->Unknown4();\n', ''),
+    ('Notify unmounted: nothing', 'AtIoMountManager.cpp', '    fs->m_header->Unknown5();\n', ''),
+    ('Delete: not deleted', 'AtIoMountManager.cpp', '        delete fs;\n', ''),
+    ('Space heap', 'AtIoMountManager.cpp', 'AtIoSpaceManager::SetHeap(s_heap);', ''),
+    ('Space ctor: instance', 'AtIoMountManager.cpp', '    s_instance = this;\n    m_unknown04 = 0;', '    m_unknown04 = 0;'),
+    ('Space dtor: instance', 'AtIoMountManager.cpp', '    s_instance = 0;\n}\n\nvoid AtIoSpaceManager::Clear', '}\n\nvoid AtIoSpaceManager::Clear'),
+    ('Space Clear: field', 'AtIoMountManager.cpp', 'void AtIoSpaceManager::Clear() {\n    m_unknown04 = 0;\n', 'void AtIoSpaceManager::Clear() {\n'),
+    ('Space Clear: device', 'AtIoMountManager.cpp', 'void AtIoSpaceManager::Clear() {\n    m_unknown04 = 0;\n    m_device = 0;\n', 'void AtIoSpaceManager::Clear() {\n    m_unknown04 = 0;\n'),
+    ('Space Init: device not kept', 'AtIoMountManager.cpp', '    m_device = *(AtIoContextDevice**)AtIoMountManager::s_instance->m_context;\n    return m_device->Unknown1();', '    return (*(AtIoContextDevice**)AtIoMountManager::s_instance->m_context)->Unknown1();'),
+    ('Space Init: result', 'AtIoMountManager.cpp', 'return m_device->Unknown1();', 'm_device->Unknown1(); return 0;'),
+    ('Ctor: instance', 'AtIoMountManager.cpp', 'AtIoMountManager::AtIoMountManager() {\n    s_instance = this;\n', 'AtIoMountManager::AtIoMountManager() {\n'),
+    ('Ctor: root', 'AtIoMountManager.cpp', '    s_instance = this;\n    m_device = 0;\n    m_root = 0;\n', '    s_instance = this;\n    m_device = 0;\n'),
+    ('Dtor: instance', 'AtIoMountManager.cpp', '    s_instance = 0;\n    AtIoMountManager::Shutdown();', '    AtIoMountManager::Shutdown();'),
+    ('Dtor: no shutdown', 'AtIoMountManager.cpp', '    s_instance = 0;\n    AtIoMountManager::Shutdown();', '    s_instance = 0;'),
+    ('Init: no shutdown first', 'AtIoMountManager.cpp', '    if (s_heap != 0) {\n        Shutdown();\n    }\n', ''),
+    ('Init: owner', 'AtIoMountManager.cpp', '    m_owner = params->m_owner;\n', ''),
+    ('Init: heap check', 'AtIoMountManager.cpp', '    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n', ''),
+    ('Init: heap not pushed', 'AtIoMountManager.cpp', '    AtPushHeap(s_heap);\n', ''),
+    ('Init: space not initialised', 'AtIoMountManager.cpp', '    m_space->Init();\n', ''),
+    ('Init: no file systems', 'AtIoMountManager.cpp', '    m_space->Init();\n    CreateFileSystems();', '    m_space->Init();'),
+    ('Shutdown: space kept', 'AtIoMountManager.cpp', '        m_space->Clear();\n        delete m_space;\n        m_space = 0;', '        m_space = 0;'),
+    ('Shutdown: device kept', 'AtIoMountManager.cpp', '            m_factory->Destroy(m_device);\n', ''),
+    ('Shutdown: root kept', 'AtIoMountManager.cpp', '            m_factory->Destroy(m_root);\n', ''),
+    ('Shutdown: 28 kept', 'AtIoMountManager.cpp', '            m_factory->Destroy(m_unknown28);\n', ''),
+    ('Shutdown: destroy without factory check', 'AtIoMountManager.cpp', '    if (m_factory != 0) {\n        if (m_device != 0)', '    if (1) {\n        if (m_device != 0)'),
+    ('Shutdown: heap', 'AtIoMountManager.cpp', '    m_factory = 0;\n    s_heap = 0;\n    m_mounted = 0;\n    m_side = 0;\n    m_region[0] = 0;\n    m_space = 0;\n}\n\nvoid AtIoMountManager::CreateFileSystems', '    m_factory = 0;\n    m_mounted = 0;\n    m_side = 0;\n    m_region[0] = 0;\n    m_space = 0;\n}\n\nvoid AtIoMountManager::CreateFileSystems'),
+    ('Shutdown: mounted', 'AtIoMountManager.cpp', '    s_heap = 0;\n    m_mounted = 0;\n    m_side = 0;\n    m_region[0] = 0;\n    m_space = 0;\n}\n\nvoid AtIoMountManager::CreateFileSystems', '    s_heap = 0;\n    m_side = 0;\n    m_region[0] = 0;\n    m_space = 0;\n}\n\nvoid AtIoMountManager::CreateFileSystems'),
+    ('Shutdown: region', 'AtIoMountManager.cpp', '    m_side = 0;\n    m_region[0] = 0;\n    m_space = 0;\n}\n\nvoid AtIoMountManager::CreateFileSystems', '    m_side = 0;\n    m_space = 0;\n}\n\nvoid AtIoMountManager::CreateFileSystems'),
+    ('CreateFileSystems: kinds', 'AtIoMountManager.cpp', 'm_device = m_factory->Create(AtIoFileSystemFactory::kDevice, 0, 1);', 'm_device = m_factory->Create(AtIoFileSystemFactory::kRoot, 0, 1);'),
+    ('CreateFileSystems: argument', 'AtIoMountManager.cpp', 'm_root = m_factory->Create(AtIoFileSystemFactory::kRoot, 0, 1);', 'm_root = m_factory->Create(AtIoFileSystemFactory::kRoot, 0, 0);'),
+    ('CreateFileSystems: not pushed', 'AtIoMountManager.cpp', '    m_context->Push(m_device);\n', ''),
+    ('SetRegion: null', 'AtIoMountManager.cpp', '    if (name == 0) {\n        m_region[0] = 0;\n    } else {\n', '    {\n'),
+    ('SetRegion: length', 'AtIoMountManager.cpp', 'for (int i = 0; i < 8; i++) {\n            m_region[i]', 'for (int i = 0; i < 7; i++) {\n            m_region[i]'),
+    ('SetRegion: device not told', 'AtIoMountManager.cpp', '    m_device->SetRoot(root);\n', ''),
+    ('WriteList: length', 'AtIoMountManager.cpp', 'm_listFile.Write(text, (unsigned int)strlen(text));', 'm_listFile.Write(text, (unsigned int)strlen(text) - 1);'),
+    ('Mount: separator', 'AtIoMountManager.cpp', 'strcat(prefix, "\\\\");', 'strcat(prefix, "/");'),
+    ('Mount: separator when empty', 'AtIoMountManager.cpp', '    if (strlen(prefix) != 0) {\n        strcat', '    {\n        strcat'),
+    ('Mount: base path', 'AtIoMountManager.cpp', 'strcpy(path, "JamFiles\\\\XBox\\\\");', 'strcpy(path, "JamFiles\\\\Xbox\\\\");'),
+    ('Mount: limits', 'AtIoMountManager.cpp', 'm_mounted = AtIoJamFileSystem::Create(path, 4, 2);', 'm_mounted = AtIoJamFileSystem::Create(path, 3, 2);'),
+    ('Mount: flags', 'AtIoMountManager.cpp', 'm_mounted = AtIoJamFileSystem::Create(path, 4, 2);', 'm_mounted = AtIoJamFileSystem::Create(path, 4, 0);'),
+    ('Mount: no check', 'AtIoMountManager.cpp', '    if (m_device->IsFileMissing(path) == 0) {', '    {'),
+    ('Mount: not notified', 'AtIoMountManager.cpp', '        AtIoNotifyMounted(m_mounted);\n        m_context->Push(m_mounted);\n    }\n}\n\nvoid AtIoMountManager::MountPath', '        m_context->Push(m_mounted);\n    }\n}\n\nvoid AtIoMountManager::MountPath'),
+    ('Mount: not pushed', 'AtIoMountManager.cpp', '        AtIoNotifyMounted(m_mounted);\n        m_context->Push(m_mounted);\n    }\n}\n\nvoid AtIoMountManager::MountPath', '        AtIoNotifyMounted(m_mounted);\n    }\n}\n\nvoid AtIoMountManager::MountPath'),
+    ('MountPath: limit', 'AtIoMountManager.cpp', 'if ((int)(length + 4) >= 0x100) {\n        return;\n    }\n    char full[0x100];\n    strcpy(full, path);\n    strcpy(full + length, ".JAM");\n    if (m_device->IsFileMissing(full) == 0) {\n        m_mounted', 'if ((int)(length + 4) >= 0xFF) {\n        return;\n    }\n    char full[0x100];\n    strcpy(full, path);\n    strcpy(full + length, ".JAM");\n    if (m_device->IsFileMissing(full) == 0) {\n        m_mounted'),
+    ('MountPath: no check', 'AtIoMountManager.cpp', '    if (m_device->IsFileMissing(full) == 0) {\n        m_mounted', '    {\n        m_mounted'),
+    ('MountPath: not pushed', 'AtIoMountManager.cpp', '        AtIoNotifyMounted(m_mounted);\n        m_context->Push(m_mounted);\n    }\n}\n\nvoid AtIoMountManager::Unmount', '        AtIoNotifyMounted(m_mounted);\n    }\n}\n\nvoid AtIoMountManager::Unmount'),
+    ('Unmount: not popped', 'AtIoMountManager.cpp', '        m_context->Pop();\n        AtIoNotifyUnmounted(m_mounted);', '        AtIoNotifyUnmounted(m_mounted);'),
+    ('Unmount: not notified', 'AtIoMountManager.cpp', '        AtIoNotifyUnmounted(m_mounted);\n', ''),
+    ('Unmount: not deleted', 'AtIoMountManager.cpp', '        AtIoDeleteObject(m_mounted);\n', ''),
+    ('Unmount: kept', 'AtIoMountManager.cpp', '        m_mounted = 0;\n    }\n}\n\nvoid AtIoMountManager::DropSideArchive', '    }\n}\n\nvoid AtIoMountManager::DropSideArchive'),
+    ('Drop: always popped', 'AtIoMountManager.cpp', '        if (m_context->Top() == m_side) {\n            m_context->Pop();\n        }\n', '        m_context->Pop();\n'),
+    ('Drop: never popped', 'AtIoMountManager.cpp', '        if (m_context->Top() == m_side) {\n            m_context->Pop();\n        }\n', ''),
+    ('Drop: not notified', 'AtIoMountManager.cpp', '        AtIoNotifyUnmounted(m_side);\n', ''),
+    ('Drop: not deleted', 'AtIoMountManager.cpp', '        AtIoDeleteObject(m_side);\n', ''),
+    ('Swap: previous kept', 'AtIoMountManager.cpp', '    DropSideArchive();\n', ''),
+    ('Swap: limit', 'AtIoMountManager.cpp', 'if ((int)(length + 4) >= 0x100) {\n        return;\n    }\n    char full[0x100];\n    strcpy(full, path);\n    strcpy(full + length, ".JAM");\n    if (m_device->IsFileMissing(full) == 0) {\n        m_side', 'if ((int)(length + 4) >= 0x101) {\n        return;\n    }\n    char full[0x101];\n    strcpy(full, path);\n    strcpy(full + length, ".JAM");\n    if (m_device->IsFileMissing(full) == 0) {\n        m_side'),
+    ('Swap: no check', 'AtIoMountManager.cpp', '    if (m_device->IsFileMissing(full) == 0) {\n        m_side', '    {\n        m_side'),
+    ('Swap: not notified', 'AtIoMountManager.cpp', '        AtIoNotifyMounted(m_side);\n', ''),
+    ('OpenList: flags', 'AtIoMountManager.cpp', 'm_listFile.OpenOn(m_root, name, 0x24)', 'm_listFile.OpenOn(m_root, name, 0x21)'),
+    ('OpenList: pointer set on failure', 'AtIoMountManager.cpp', 'if (m_listFile.OpenOn(m_root, name, 0x24) == 0) {', 'm_listFile.OpenOn(m_root, name, 0x24); {'),
+    ('OpenList: pointer unset', 'AtIoMountManager.cpp', '        m_device->m_unknown6B4 = &m_listFile;\n', ''),
+    ('OpenList: path kept', 'AtIoMountManager.cpp', '    m_root->m_path.Pop(0);\n', ''),
+    ('CloseList: pointer kept', 'AtIoMountManager.cpp', '    m_device->m_unknown6B4 = 0;\n    m_listFile.Close();', '    m_listFile.Close();'),
+    ('CloseList: file kept', 'AtIoMountManager.cpp', '    m_device->m_unknown6B4 = 0;\n    m_listFile.Close();', '    m_device->m_unknown6B4 = 0;'),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "lvl": {"target": "oracle_lvl", "subsystem": "gm/levels", "mutants": LVL_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "mnt": {"target": "oracle_mnt", "subsystem": "at/mount", "mutants": MNT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
 
@@ -511,6 +580,8 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
     target = SUITES[suite]["target"]
     if suite == "gm":
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
+    elif suite == "mnt":
+        cmd = [exe(build_dir, target), XBE, CASES]
     elif suite in ("tok", "lvl"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
@@ -639,7 +710,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -652,7 +723,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

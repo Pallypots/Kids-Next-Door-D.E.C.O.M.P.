@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "at/AtIoJam.h"
+#include "at/AtIoMountManager.h"
 #include "gm/GmLevelManager.h"
 #include "host_file_system.h"
 
@@ -82,6 +83,26 @@ public:
     int Unknown12() override { return 0; }
 };
 
+// What a port supplies in place of the Xbox's device layer: host files, under one directory, for both kinds.
+class HostFactory : public AtIoFileSystemFactory {
+public:
+    explicit HostFactory(const std::string& root) : m_rootDir(root) {}
+    void Unknown0() override {}
+    void Unknown1() override {}
+    void Unknown2() override {}
+    void Unknown3() override {}
+    void Unknown4() override {}
+    AtIoFileSystem* Create(int, int, int) override { return new AtIoHostFileSystem(m_rootDir); }
+    void Destroy(AtIoFileSystem* fs) override { delete fs; }
+    std::string m_rootDir;
+};
+
+class NoDevice : public AtIoContextDevice {
+public:
+    void Unknown0() override {}
+    int Unknown1() override { return 0; }
+};
+
 static std::string name_of(const GmLevelManager& m, int i) {
     char text[9] = {0};
     std::memcpy(text, m.m_names.m_items[i].m_name, 8);
@@ -115,10 +136,21 @@ static void run_synthetic() {
 }
 
 static void run_real(const std::string& dir, const std::string& expected, bool print) {
-    g_context->Push(new AtIoHostFileSystem(dir));
-    AtIoJamFileSystem* jam = AtIoJamFileSystem::Create("AppInit.JAM", 2, 0);
-    CHECK(jam != nullptr);
-    g_context->Push(jam);
+    // The same steps as start-up: 0x0008E6FF creates the file systems, 0x0008E78C mounts AppInit.
+    static NoDevice contextDevice;
+    *(AtIoContextDevice**)g_context = &contextDevice;
+    static HostFactory factory(dir);
+    static AtIoMountOwner owner;
+    owner.m_factory = &factory;
+    AtIoMountParams params = {};
+    params.m_owner = &owner;
+    params.m_heap = &g_heap;
+    params.m_context = g_context;
+    static AtIoMountManager mount;
+    mount.Init(&params);
+    mount.Mount("AppInit", "");
+    CHECK(mount.m_mounted != nullptr);
+    CHECK(g_context->Top() == mount.m_mounted);
 
     GmLevelManager m;
     m.Load("Levels.txt");

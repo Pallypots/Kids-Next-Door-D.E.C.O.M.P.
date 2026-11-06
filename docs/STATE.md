@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 7 (Levels.txt reader). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 8 (start-up order, mount manager). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-05, dev cycle 7 (Levels.txt reader). Per-function results 
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 258 functions and 25 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 281 functions and 26 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -27,6 +27,7 @@ All source is in `src/`, types in `include/`. 258 functions and 25 vftables are 
 
 * `at/text` (99 functions): the stream and file wrapper, and the tokenizer most text formats go through, both reading and writing. It works on 64-bit, with the same results as the
   original on every text file on the disc.
+* `at/mount` (23 functions): what mounts archives, and the small manager it creates. A port supplies the factory of file systems. Start-up order: docs/startup.md.
 * `gm/levels` (11 functions), **partial**: the reader of `Levels.txt`, the first recovered code to give game data a meaning. **Recovered source now goes from the archive on disc to the game's level table**, on x64. Not recovered: the rest of its class, which
   owns level content (constructor 0x0013E150, destructor 0x0013E930, 0x0013E530), and everything that uses the table. `ReleaseLevelData` stops with a diagnostic, so unloading cannot yet work in a port.
 
@@ -70,9 +71,6 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
   in 0x00014250–0x0011FF80 and 0x00139F10–0x00192200 (and a few at 0x00200F20–0x00203A20); CRT strings around
   0x00127958–0x0012DE9A; CRI middleware 0x001B9A60–0x001F2000. Raw data: analysis-local/inv/string_tags.json.
 
-* Mounting: the code at 0x0008E77C asks the object in 0x002E26E0 to mount a name (string at 0x0027AF84) through 0x000766E0, which builds `JamFiles\XBox\%s%s.JAM`, checks the file
-  exists, creates the archive file system (0x0007DB10), calls 0x0007D140, which forwards to slot 4 of its header at +0x6E0 (meaning not checked), and pushes it on the context. So a missing archive is silently skipped. That class has
-  vftable 0x00278548 and its methods are not recovered.
 * Text formats share one tokenizer (docs/formats.md). `AtIoTokenFile` opens the file; a format's reader passes a keyword table and pulls tokens. 0x00074800 (rumble) is the
   shape: open with extension `RMB`, pass the table at 0x002B2940, read blocks.
 * `Levels.txt` lists 47 entries in order: 16 movies, 15 normal, 13 non-selectable, 3 hidden. Read by recovered code and checked against a separate Python parse (docs/formats.md). That is a checked starting inventory for M5; it does not show that each entry works.
@@ -96,10 +94,8 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-The list of levels exists; the question now is what it takes to start one. The level table's users show the way in.
-
-1. Follow start-up to the first thing the game loads, using the recovered pieces: 0x0013EA90 (owner of the level manager, passes `Levels.txt`), the mounting class at vftable 0x00278548 and the `AtAp*Application` start-up order. Recover the mounting class and the owner.
-2. A small text format that start-up depends on, chosen from what step 1 shows (`LIBRARY.ADD`, `GLOBAL.GOB`, `RUMBLE.RMB`).
-3. Library separation: the denominators are still unclassified.
+1. More small text readers from start-up: `RUMBLE.RMB` (0x000746A0-0x000748C8), `LIBRARY.ADD`, audio and UI manifests.
+2. Library separation: the denominators are still unclassified.
+3. Follow docs/startup.md into what start-up does after mounting, as far as it stays dependency-light.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

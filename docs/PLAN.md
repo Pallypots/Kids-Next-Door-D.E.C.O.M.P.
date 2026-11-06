@@ -1,6 +1,6 @@
 # Plan (no numbers here — measured progress is in docs/PROGRESS.md)
 
-1. **Start-up order.** From the level manager's owner and the mounting class to the application framework: what loads first, and which small formats it needs.
+1. **Small text readers and start-up.** docs/startup.md is the map. Recover what it reaches while it stays dependency-light.
 2. **Rest of the first translation unit.** Sorted container at 0x000761B0-0x00076600, then what remains around it.
 3. **Library separation.** Grow the string-reference map into evidence-backed ranges for LIBCMT, XAPI, CRI
    (ADX/Sofdec), libjpeg and D3DX inside `.text`; keep an `unknown` bucket; never rename from an unreviewed signature

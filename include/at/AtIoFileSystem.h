@@ -72,7 +72,7 @@ public:
     int m_openFiles;           // +0x6A8
     unsigned int m_maxOpen;    // +0x6AC
     int m_peakOpenFiles;       // +0x6B0
-    int m_unknown6B4;          // +0x6B4
+    void* m_unknown6B4;        // +0x6B4 the mount manager stores its list file here
     int m_unknown6B8;          // +0x6B8 an archive copies this from its device
 };
 

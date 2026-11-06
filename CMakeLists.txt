@@ -27,6 +27,7 @@ add_library(knd_at STATIC
     ${KND_AT_SRC}/AtIoJamFile.cpp
     ${KND_AT_SRC}/AtIoJamNameTable.cpp
     ${KND_AT_SRC}/AtIoJamPending.cpp
+    ${KND_AT_SRC}/AtIoMountManager.cpp
     ${KND_AT_SRC}/AtIoStream.cpp
     ${KND_AT_SRC}/AtIoTextTokenizer.cpp
     ${KND_AT_SRC}/AtIoTokenizer.cpp
@@ -64,6 +65,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     add_executable(oracle_lvl tests/oracle/reserve.asm tests/oracle/oracle_lvl.cpp)
     target_link_libraries(oracle_lvl PRIVATE knd_gm knd_at)
     target_link_options(oracle_lvl PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    add_executable(oracle_mnt tests/oracle/reserve.asm tests/oracle/oracle_mnt.cpp)
+    target_link_libraries(oracle_mnt PRIVATE knd_at)
+    target_link_options(oracle_mnt PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_tok tests/oracle/reserve.asm tests/oracle/oracle_tok.cpp)
     target_link_libraries(oracle_tok PRIVATE knd_at)
     target_link_options(oracle_tok PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

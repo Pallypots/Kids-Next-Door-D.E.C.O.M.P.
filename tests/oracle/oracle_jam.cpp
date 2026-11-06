@@ -843,7 +843,7 @@ static void same_fs(const char* what, const AtIoJamFileSystem& o, const AtIoJamF
     eq(what, o.m_openFiles, r.m_openFiles);
     eq(what, o.m_maxOpen, r.m_maxOpen);
     eq(what, o.m_peakOpenFiles, r.m_peakOpenFiles);
-    eq(what, o.m_unknown6B4, r.m_unknown6B4);
+    eq(what, (intptr_t)o.m_unknown6B4, (intptr_t)r.m_unknown6B4);
     eq(what, o.m_unknown6B8, r.m_unknown6B8);
     eq(what, o.m_info.m_token, r.m_info.m_token);
     eq(what, o.m_info.m_headerSize, r.m_info.m_headerSize);

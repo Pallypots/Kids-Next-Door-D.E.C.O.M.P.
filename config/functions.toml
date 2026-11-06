@@ -2071,6 +2071,190 @@ source = "src/gm/GmLevelManager.cpp"
 subsystem = "gm/levels"
 evidence = "tests/oracle/oracle_lvl.cpp; address noted beside the declaration in include/gm/GmLevelManager.h"
 
+[[function]]
+va = 0x00076640
+size = 48
+symbol = "?CreateFileSystems@AtIoMountManager@@UAEXXZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076670
+size = 40
+symbol = "?WriteList@AtIoMountManager@@QAEXPBD@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x000766A0
+size = 56
+symbol = "?SetRegion@AtIoMountManager@@UAEXPBD@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x000766E0
+size = 163
+symbol = "?Mount@AtIoMountManager@@QAEXPBD0@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076790
+size = 146
+symbol = "?MountPath@AtIoMountManager@@QAEXPBD@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076830
+size = 47
+symbol = "?Unmount@AtIoMountManager@@QAEXXZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076860
+size = 58
+symbol = "??0AtIoMountManager@@QAE@XZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x000768A0
+size = 226
+symbol = "?Init@AtIoMountManager@@UAEXPBUAtIoMountParams@@@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076990
+size = 56
+symbol = "?OpenListFile@AtIoMountManager@@QAEXPBD@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x000769D0
+size = 21
+symbol = "?CloseListFile@AtIoMountManager@@QAEXXZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x000769F0
+size = 131
+symbol = "?Shutdown@AtIoMountManager@@UAEXXZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076A80
+size = 57
+symbol = "?DropSideArchive@AtIoMountManager@@QAEXXZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076AC0
+size = 83
+symbol = "??1AtIoMountManager@@UAE@XZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076B20
+size = 198
+symbol = "?SwapSideArchive@AtIoMountManager@@QAEXPBD@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x00076BF0
+size = 30
+symbol = "??_GAtIoMountManager@@UAEPAXI@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x0007CEE0
+size = 10
+symbol = "?SetHeap@AtIoSpaceManager@@SAXPAX@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x0007CEF0
+size = 14
+symbol = "?Clear@AtIoSpaceManager@@QAEXXZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x0007CFC0
+size = 21
+symbol = "??0AtIoSpaceManager@@QAE@XZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x0007CFE0
+size = 19
+symbol = "??1AtIoSpaceManager@@QAE@XZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x0007D000
+size = 19
+symbol = "?Init@AtIoSpaceManager@@QAEHXZ"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x0007D140
+size = 11
+symbol = "?AtIoNotifyMounted@@YAXPAVAtIoJamFileSystem@@@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x0007D150
+size = 11
+symbol = "?AtIoNotifyUnmounted@@YAXPAVAtIoJamFileSystem@@@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
+[[function]]
+va = 0x000EB9D0
+size = 23
+symbol = "?AtIoDeleteObject@@YAXPAVAtIoFileSystem@@@Z"
+source = "src/at/AtIoMountManager.cpp"
+subsystem = "at/mount"
+evidence = "tests/oracle/oracle_mnt.cpp; address noted beside the declaration in include/at/AtIoMountManager.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -2223,7 +2407,17 @@ slots = 3
 symbol = "??_7GmLevelManager@@6B@"
 source = "src/gm/GmLevelManager.cpp"
 
+[[vtable]]
+va = 0x00278548
+slots = 5
+symbol = "??_7AtIoMountManager@@6B@"
+source = "src/at/AtIoMountManager.cpp"
+
 [symbols]
+"?s_instance@AtIoMountManager@@2PAV1@A" = 0x002E26E0  # written at 0x00076873
+"?s_heap@AtIoMountManager@@2PAXA" = 0x002E26E4  # written at 0x000768E3
+"?s_heap@AtIoSpaceManager@@2PAXA" = 0x00301B48  # written at 0x0007CEE4
+"?s_instance@AtIoSpaceManager@@2PAV1@A" = 0x00301B4C  # written at 0x0007CFC4
 "?s_instance@GmLevelManager@@2PAV1@A" = 0x003B3570  # compared at 0x0013E1B7; the constructor is NOT recovered
 "?s_heap@GmLevelManager@@2PAXA" = 0x003B356C  # written at 0x0013D8E4
 "?s_heap@GmLevelNameArray@@2PAXA" = 0x003B3574  # written at 0x0013E2A8

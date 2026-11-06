@@ -181,6 +181,18 @@ size, which is unchanged on 32 bits. No 32-bit test could have seen this.
 
 **AddressSanitizer** (x64 build, `/fsanitize=address`): all five native tests, the real `Levels.txt` run, and all 5,864 tokenizer files: no report. As a control, putting the bug back makes it report a heap overflow. Reads of `AtCopyName9` past a short name were not seen in these runs. This does not cover the oracles, which run original code.
 
+## Mount manager: tests/oracle/oracle_mnt.cpp
+
+Each side has its own device, root, factory and context; a synthetic FSTA archive goes through the original's and the recovered archive classes. Result on 2026-11-06: 946 comparisons, no difference; 23/23 entries; positive control passes; 64/64 mutants
+(51 as a difference, 13 by a crash).
+
+Its first run was 50/64, and it was partly hollow: three non-virtual methods were called as recovered code on both sides, so they compared with themselves. Entry coverage showed it: three entries unreached. They now call the original by address. The header's slots 4
+and 5 are empty in the real classes, so the harness patches logging stubs into both vftables to show that they are called.
+
+`test_gm_levels` now reaches the real archive through `AtIoMountManager::Init` and `Mount`, with a factory of host file systems, as start-up does.
+
+Not covered: the real factory and device classes, which are not recovered; `AtIoSpaceManager`'s other methods at 0x0007CF00-0x0007D0E9.
+
 ## End to end: tests/native/test_at_e2e.cpp
 
 Opens real archives through the recovered layers (`AtIoContext`, `AtIoJamFileSystem`, the header and file classes) over host files, and
