@@ -1204,7 +1204,7 @@ static void run_file_system_base() {
     o->m_openFiles = r.m_openFiles = 4;
     o->m_maxOpen = r.m_maxOpen = 5;
     o->m_peakOpenFiles = r.m_peakOpenFiles = 6;
-    o->m_unknown6B4 = r.m_unknown6B4 = 7;
+    o->m_unknown6B4 = r.m_unknown6B4 = (void*)(uintptr_t)7;
     o->m_unknown6B8 = r.m_unknown6B8 = 8;
     at<Fn0>(0x0001F510)(mem, nullptr);
     r.ResetFileSystem();
@@ -1213,7 +1213,7 @@ static void run_file_system_base() {
     eq("Reset open", o->m_openFiles, r.m_openFiles);
     eq("Reset max", o->m_maxOpen, r.m_maxOpen);
     eq("Reset peak", o->m_peakOpenFiles, r.m_peakOpenFiles);
-    eq("Reset 6B4", o->m_unknown6B4, r.m_unknown6B4);
+    eq("Reset 6B4", (intptr_t)o->m_unknown6B4, (intptr_t)r.m_unknown6B4);
     eq("Reset 6B8", o->m_unknown6B8, r.m_unknown6B8);
     at<Fn0>(0x0001F450)(mem, nullptr);
     eq("~vptr", *(uintptr_t*)mem, 0x00272644);
