@@ -145,7 +145,7 @@ The real rumble file was also read with the game's own keyword table from 0x002B
 later write hid an earlier one (3); inputs short of a limit (5); a failure path never entered and a field not compared (2); state a normal sequence never leaves (2); and one branch of
 my own that did nothing, now removed (1).
 
-**x87 precision.** The Xbox's setting is not established, so each file was also tokenized by the original under 53-bit and 64-bit precision. No file's result changed.
+**x87 precision.** When this was written the Xbox's setting was not established, so each file was also tokenized by the original under 53-bit and 64-bit precision. No file's result changed. The setting on the game's main thread is since read from the binary: 53 bits, see docs/portability.md.
 
 **On a 64-bit host.** `test_at_tok <cases> <digests>` tokenizes the same files in an x64 build (SSE, no x87) and compares with digests written from the original: 5,864 files,
 1,355,279 tokens, no difference. The digest covers each token's values, floats as bits.
@@ -343,3 +343,15 @@ Inventory: 0x001038C0 has no entry in `analysis-local/inv/functions.json`, becau
 ## Crash guard: tests/oracle/oracle_guard.h
 
 Four suites and the memory suite run code that crashes on purpose, on both sides, since the original carries on past a report that does not stop in this harness. Up to cycle 14 `oracle_lvl`, `oracle_set` and `oracle_txt` resumed from `RtlCaptureContext`, which on x86 captures its caller's frame: a resume left the capturing function with callee-saved registers as they stood at the crash. Those suites had given no false results that are known of, but their comparisons after a crash rested on registers no one had restored. All now use one guard that saves and restores them, and their figures in docs/PROGRESS.md are from reruns with it.
+
+## Vector math: tests/oracle/oracle_vec.cpp
+
+`python -I tools/oracle_run.py --suite vec` compares 14 functions by bits at x87 precision 53, over 200,000 rounds of ordinary and edge values, 50,000 with infinities and NaNs, and 1,000,000 built to land next to a float midpoint, where a sum's order can show. Result: no difference over 44,000,024 comparisons, 14/14 entries, 41/41 mutants, positive control fails as it should.
+
+`tests/native/test_at_vector.cpp` holds the x64 build to a hash of the original's own results, printed by the oracle, for the 11 functions with no sine or cosine: **the hash matches, 0x7B61BE23F1D29A03**, so on those inputs SSE double arithmetic gives the original's bits, NaNs counted as alike.
+
+**Eight mutants survive and are not counted.** Each changes only the order of a sum, or `(1 / length) * x` to `x / length`: `Dist2: order`, `Dist: order`, `Normalize: direct`, `Rotate: y order`, `Rotate: z order`, `Rotated: z order`, `Project: order`, `SetProjected: order`. They are not equivalents: such a change moves a double by its last bit, which reaches a float only next to a midpoint, about once in 2^29 random inputs, and the midpoint inputs did not reach these. So the source's order for those sums rests on reading the disassembly, not on this test. Effect if one were wrong: a last-bit difference in one float, on rare input.
+
+Limits: NaNs that differ only in sign count as alike, and 10,522 such are counted and printed: that sign depends on operand order and x87 rules, so it is not claimed. Signalling NaNs are not generated. The functions return a float in st(0), compared after storing, so a caller that goes on computing with the unrounded value is not modelled until such callers are recovered. On x64 the rotations are not held to the original: see portability.
+
+Printed, not failing: the same comparison at 24 bits gives 1.47 million differences in all, and at 64 bits some thousands, mostly `reject`. So precision does matter to this code, and the finding that the main thread is at 53 bits is what makes this source correct. A thread at another setting would not match.

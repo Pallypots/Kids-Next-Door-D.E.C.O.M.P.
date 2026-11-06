@@ -27,6 +27,8 @@ add_library(knd_at STATIC
     ${KND_AT_SRC}/AtHeap.cpp
     ${KND_AT_SRC}/AtMemory.cpp
     ${KND_AT_SRC}/AtMemorySystem.cpp
+    ${KND_AT_SRC}/AtMathHost.cpp
+    ${KND_AT_SRC}/AtVector3.cpp
     ${KND_AT_SRC}/AtIoFastAlignedJamHeader.cpp
     ${KND_AT_SRC}/AtIoFastJamHeader.cpp
     ${KND_AT_SRC}/AtIoFileSystem.cpp
@@ -61,6 +63,10 @@ add_executable(test_at_tok tests/native/test_at_tok.cpp)
 target_include_directories(test_at_tok PRIVATE tests/oracle)
 target_link_libraries(test_at_tok PRIVATE knd_at)
 add_test(NAME at_tok COMMAND test_at_tok)
+add_executable(test_at_vector tests/native/test_at_vector.cpp platform/fatal.cpp)
+target_include_directories(test_at_vector PRIVATE tests/oracle)
+target_link_libraries(test_at_vector PRIVATE knd_at knd_gm)
+add_test(NAME at_vector COMMAND test_at_vector)
 add_executable(test_at_memory tests/native/test_at_memory.cpp platform/fatal.cpp)
 target_link_libraries(test_at_memory PRIVATE knd_at knd_gm)
 add_test(NAME at_memory COMMAND test_at_memory)
@@ -95,6 +101,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     add_executable(oracle_set tests/oracle/reserve.asm tests/oracle/oracle_set.cpp)
     target_link_libraries(oracle_set PRIVATE knd_gm knd_at)
     target_link_options(oracle_set PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    add_executable(oracle_vec tests/oracle/reserve.asm tests/oracle/oracle_vec.cpp platform/fatal.cpp)
+    target_link_libraries(oracle_vec PRIVATE knd_at knd_gm)
+    target_link_options(oracle_vec PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_mem tests/oracle/reserve.asm tests/oracle/oracle_mem.cpp)
     target_link_libraries(oracle_mem PRIVATE knd_at knd_gm)
     target_link_options(oracle_mem PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

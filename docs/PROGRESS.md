@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 415 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 429 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -478,6 +478,20 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x000B3ED0 | 30 | `??_GAtRegionMemorySystem@@UAEPAXI@Z` | at/memory | SIZE |
 | 0x001038C0 | 25 | `?Save@AtMemoryGlobals@@QAEXXZ` | at/memory | SIZE |
 | 0x001038E0 | 78 | `?Restore@AtMemoryGlobals@@QAEXXZ` | at/memory | SIZE |
+| 0x00042D80 | 55 | `?Lerp@AtVector3@@QAEXABV1@0M@Z` | at/vector | SIZE |
+| 0x00042DC0 | 45 | `?DistanceSquared@AtVector3@@QBEMABV1@@Z` | at/vector | MISMATCH |
+| 0x00042DF0 | 42 | `?Read@AtVector3@@QAEXPAVAtIoTokenizer@@@Z` | at/vector | MISMATCH |
+| 0x00042E20 | 89 | `?Normalize@AtVector3@@QAEXXZ` | at/vector | SIZE |
+| 0x00042E80 | 97 | `?SetNormalized@AtVector3@@QAEXABV1@@Z` | at/vector | SIZE |
+| 0x00042EF0 | 97 | `?NormalizeReturningLength@AtVector3@@QAEMXZ` | at/vector | SIZE |
+| 0x00042F60 | 47 | `?Distance@AtVector3@@QBEMABV1@@Z` | at/vector | SIZE |
+| 0x00042F90 | 264 | `?Rotate@AtVector3@@QAEXABV1@M@Z` | at/vector | SIZE |
+| 0x000430A0 | 272 | `?SetRotated@AtVector3@@QAEXABV1@M0@Z` | at/vector | SIZE |
+| 0x000431B0 | 47 | `?RotateZ@AtVector3@@QAEXM@Z` | at/vector | SIZE |
+| 0x000431E0 | 109 | `?Project@AtVector3@@QAEXABV1@@Z` | at/vector | SIZE |
+| 0x00043250 | 117 | `?SetProjected@AtVector3@@QAEXABV1@0@Z` | at/vector | SIZE |
+| 0x000432D0 | 146 | `?Reject@AtVector3@@QAEXABV1@@Z` | at/vector | SIZE |
+| 0x00043370 | 162 | `?SetRejected@AtVector3@@QAEXABV1@0@Z` | at/vector | SIZE |
 
 Relocation-aware matches with the host compiler: 69 functions, 1119 unique bytes.
 Share of `.text` raw bytes: 0.0547% (denominator includes unclassified library code).
@@ -549,6 +563,8 @@ Suite `ldr`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 51 
 Suite `hep`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 40 seeds of 3000 operations; 3100506 comparisons, 0 differences). Recorded function entries reached in every run: 22 / 22. Source mutants detected: 154 / 154. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `mem`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 9715 comparisons, 0 differences). Recorded function entries reached in every run: 19 / 19. Source mutants detected: 61 / 61. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `vec`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 44000024 comparisons, 0 differences). Recorded function entries reached in every run: 14 / 14. Source mutants detected: 41 / 41. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

@@ -1003,6 +1003,59 @@ LDR_MUTANTS = [
 ]
 
 
+VEC_MUTANTS = [
+    ('Lerp: x', 'AtVector3.cpp', 'x = (float)(((double)to.x - from.x) * t + from.x);', 'x = (float)(((double)to.x - from.x) * t + to.x);'),
+    ('Lerp: y swapped', 'AtVector3.cpp', 'y = (float)(((double)to.y - from.y) * t + from.y);', 'y = (float)(((double)from.y - to.y) * t + from.y);'),
+    ('Lerp: z single', 'AtVector3.cpp', 'z = (float)(((double)to.z - from.z) * t + from.z);', 'z = (to.z - from.z) * t + from.z;'),
+    # Not distinguished by test, and not an equivalent: Dist2: order. See docs/verification.md.
+    ('Dist2: dropped', 'AtVector3.cpp', '    return (float)(dz * dz + dy * dy + dx * dx);', '    return (float)(dz * dz + dy * dy);'),
+    # Not distinguished by test, and not an equivalent: Dist: order. See docs/verification.md.
+    ('Dist: no root', 'AtVector3.cpp', '    return (float)sqrt(dz * dz + dy * dy + dx * dx);', '    return (float)(dz * dz + dy * dy + dx * dx);'),
+    ('Read: order', 'AtVector3.cpp', '    x = tokenizer->ExpectReal();\n    y = tokenizer->ExpectReal();\n', '    y = tokenizer->ExpectReal();\n    x = tokenizer->ExpectReal();\n'),
+    ('Read: last', 'AtVector3.cpp', '    z = tokenizer->ExpectReal();\n', ''),
+    ('Shortest: value', 'AtVector3.cpp', 'kShortest = 5.0e-6f;', 'kShortest = 5.0000005e-6f;'),
+    ('Normalize: comparison', 'AtVector3.cpp', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (length <= kShortest) {', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (length < kShortest) {'),
+    ('Normalize: nan', 'AtVector3.cpp', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (length <= kShortest) {', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (!(length > kShortest)) {'),
+    ('Normalize: order', 'AtVector3.cpp', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(a * a + b * b + c * c);', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(c * c + b * b + a * a);'),
+    # Not distinguished by test, and not an equivalent: Normalize: direct. See docs/verification.md.
+    ('Normalize: x when short', 'AtVector3.cpp', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (length <= kShortest) {\n        x = 1.0f;\n', 'void AtVector3::Normalize() {\n    const double a = x, b = y, c = z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (length <= kShortest) {\n        x = 0.0f;\n'),
+    ('SetNormalized: short keeps', 'AtVector3.cpp', 'void AtVector3::SetNormalized(const AtVector3& from) {\n    const double a = from.x, b = from.y, c = from.z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (length <= kShortest) {\n        x = 1.0f;\n        y = 0.0f;\n        z = 0.0f;\n        return;\n    }\n', 'void AtVector3::SetNormalized(const AtVector3& from) {\n    const double a = from.x, b = from.y, c = from.z;\n    const double length = sqrt(a * a + b * b + c * c);\n    if (length <= kShortest) {\n        x = 1.0f;\n        y = 0.0f;\n        return;\n    }\n'),
+    ('SetNormalized: this', 'AtVector3.cpp', '    x = (float)(scale * from.x);\n    y = (float)(scale * from.y);\n    z = (float)(scale * from.z);\n}\n\nfloat AtVector3::NormalizeReturningLength', '    x = (float)(scale * x);\n    y = (float)(scale * from.y);\n    z = (float)(scale * from.z);\n}\n\nfloat AtVector3::NormalizeReturningLength'),
+    ('Length: short returns', 'AtVector3.cpp', '        return 0.0f;\n', '        return (float)length;\n'),
+    ('Length: returns', 'AtVector3.cpp', '    return (float)length;\n', '    return 1.0f;\n'),
+    ('Length: z', 'AtVector3.cpp', '    z = (float)(scale * z);\n    return (float)length;\n', '    return (float)length;\n'),
+    ('Rotate: zero', 'AtVector3.cpp', 'void AtVector3::Rotate(const AtVector3& axis, float angle) {\n    if (angle == 0.0f) {\n        return;\n    }\n', 'void AtVector3::Rotate(const AtVector3& axis, float angle) {\n'),
+    ('Rotate: minus cos', 'AtVector3.cpp', 'void AtVector3::Rotate(const AtVector3& axis, float angle) {\n    if (angle == 0.0f) {\n        return;\n    }\n    const double s = AtSin(angle);\n    const double c = AtCos(angle);\n    const float oldX = x;\n    const float oldY = y;\n    const double d = AtOneMinusCos(angle);\n', 'void AtVector3::Rotate(const AtVector3& axis, float angle) {\n    if (angle == 0.0f) {\n        return;\n    }\n    const double s = AtSin(angle);\n    const double c = AtCos(angle);\n    const float oldX = x;\n    const float oldY = y;\n    const double d = 1.0 - c;\n'),
+    ('Rotate: oldX', 'AtVector3.cpp', '((double)xy - sz) * oldX + ((double)yy + c) * y);', '((double)xy - sz) * x + ((double)yy + c) * y);'),
+    ('Rotate: oldY', 'AtVector3.cpp', '((double)yz - sx) * oldY + ((double)sy + xz) * oldX);', '((double)yz - sx) * y + ((double)sy + xz) * oldX);'),
+    ('Rotate: oldX in z', 'AtVector3.cpp', '((double)yz - sx) * oldY + ((double)sy + xz) * oldX);', '((double)yz - sx) * oldY + ((double)sy + xz) * x);'),
+    ('Rotate: x term sign', 'AtVector3.cpp', 'x = (float)((dax * axis.x + c) * x + ((double)xz - sy) * z + ((double)sz + xy) * y);', 'x = (float)((dax * axis.x + c) * x + ((double)xz + sy) * z + ((double)sz + xy) * y);'),
+    ('Rotate: x order', 'AtVector3.cpp', 'x = (float)((dax * axis.x + c) * x + ((double)xz - sy) * z + ((double)sz + xy) * y);', 'x = (float)(((double)sz + xy) * y + ((double)xz - sy) * z + (dax * axis.x + c) * x);'),
+    # Not distinguished by test, and not an equivalent: Rotate: y order. See docs/verification.md.
+    # Not distinguished by test, and not an equivalent: Rotate: z order. See docs/verification.md.
+    ('Rotated: zero', 'AtVector3.cpp', '    if (angle == 0.0f) {\n        x = from.x;\n        y = from.y;\n        z = from.z;\n        return;\n    }\n', ''),
+    ('Rotated: zero z', 'AtVector3.cpp', '        y = from.y;\n        z = from.z;\n        return;\n    }\n    const double s = AtSin(angle);', '        y = from.y;\n        return;\n    }\n    const double s = AtSin(angle);'),
+    ('Rotated: x order', 'AtVector3.cpp', 'x = (float)((dax * axis.x + c) * from.x + ((double)xz - sy) * from.z + ((double)sz + xy) * from.y);', 'x = (float)(((double)sz + xy) * from.y + ((double)xz - sy) * from.z + (dax * axis.x + c) * from.x);'),
+    ('Rotated: y order', 'AtVector3.cpp', 'y = (float)(((double)xy - sz) * from.x + ((double)sx + yz) * from.z + ((double)yy + c) * from.y);', 'y = (float)(((double)yy + c) * from.y + ((double)sx + yz) * from.z + ((double)xy - sz) * from.x);'),
+    # Not distinguished by test, and not an equivalent: Rotated: z order. See docs/verification.md.
+    ('RotateZ: sign', 'AtVector3.cpp', '    x = (float)(c * a - s * b);\n', '    x = (float)(c * a + s * b);\n'),
+    ('RotateZ: stale', 'AtVector3.cpp', '    y = (float)(c * b + s * a);\n', '    y = (float)(c * b + s * x);\n'),
+    ('Project: zero x', 'AtVector3.cpp', '    if (lengthSquared == 0.0) {\n        y = 0.0f;\n        z = 0.0f;\n        return;\n    }\n', '    if (lengthSquared == 0.0) {\n        x = 0.0f;\n        y = 0.0f;\n        z = 0.0f;\n        return;\n    }\n'),
+    ('Project: zero', 'AtVector3.cpp', '    if (lengthSquared == 0.0) {\n        y = 0.0f;\n        z = 0.0f;\n        return;\n    }\n', ''),
+    # Not distinguished by test, and not an equivalent: Project: order. See docs/verification.md.
+    ('SetProjected: zero', 'AtVector3.cpp', '    if (lengthSquared == 0.0) {\n        x = from.x;\n        y = 0.0f;\n', '    if (lengthSquared == 0.0) {\n        x = 0.0f;\n        y = 0.0f;\n'),
+    # Not distinguished by test, and not an equivalent: SetProjected: order. See docs/verification.md.
+    ('Reject: zero', 'AtVector3.cpp', '    if (lengthSquared == 0.0) {\n        x = 0.0f;\n        return;\n    }\n', '    if (lengthSquared == 0.0) {\n        return;\n    }\n'),
+    ('Reject: order', 'AtVector3.cpp', '((double)direction.y * y + (double)z * direction.z + (double)direction.x * x)', '((double)direction.x * x + (double)z * direction.z + (double)direction.y * y)'),
+    ('Reject: float x', 'AtVector3.cpp', '    const double alongX = scale * direction.x;\n    const float alongY = (float)(scale * direction.y);\n    const float alongZ = (float)(scale * direction.z);\n    x = (float)(x - alongX);', '    const float alongX = (float)(scale * direction.x);\n    const float alongY = (float)(scale * direction.y);\n    const float alongZ = (float)(scale * direction.z);\n    x = (float)(x - (double)alongX);'),
+    ('Reject: double y', 'AtVector3.cpp', '    const float alongY = (float)(scale * direction.y);\n    const float alongZ = (float)(scale * direction.z);\n    x = (float)(x - alongX);', '    const double alongY = scale * direction.y;\n    const float alongZ = (float)(scale * direction.z);\n    x = (float)(x - alongX);'),
+    ('SetRejected: zero', 'AtVector3.cpp', '        x = 0.0f;\n        y = from.y;\n', '        x = from.x;\n        y = from.y;\n'),
+    ('SetRejected: zero z', 'AtVector3.cpp', '        y = from.y;\n        z = from.z;\n        return;\n    }\n    const double scale', '        y = from.y;\n        return;\n    }\n    const double scale'),
+    ('SetRejected: order', 'AtVector3.cpp', '((double)from.x * direction.x + (double)from.z * direction.z + (double)from.y * direction.y)', '((double)from.y * direction.y + (double)from.z * direction.z + (double)from.x * direction.x)'),
+    ('SetRejected: double z', 'AtVector3.cpp', '    const float alongZ = (float)(scale * direction.z);\n    x = (float)(from.x - alongX);', '    const double alongZ = scale * direction.z;\n    x = (float)(from.x - alongX);'),
+]
+
+
 MEM_MUTANTS = [
     ('Raise: 0', 'AtMemory.cpp', 'case 0: message = "Invalid error condition"; break;\n', ''),
     ('Raise: -1', 'AtMemory.cpp', 'case -1: message = "General error occurred"; break;\n', ''),
@@ -1239,6 +1292,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "vec": {"target": "oracle_vec", "subsystem": "at/vector", "mutants": VEC_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "mem": {"target": "oracle_mem", "subsystem": "at/memory", "mutants": MEM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "hep": {"target": "oracle_hep", "subsystem": "at/heap", "mutants": HEP_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "ldr": {"target": "oracle_ldr", "subsystem": "gm/loader", "mutants": LDR_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
@@ -1287,7 +1341,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("hep", "mem"):
+    elif suite in ("hep", "mem", "vec"):
         cmd = [exe(build_dir, target), XBE]
     elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
@@ -1423,7 +1477,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1436,7 +1490,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

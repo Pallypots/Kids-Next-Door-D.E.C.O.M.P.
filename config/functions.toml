@@ -3503,6 +3503,118 @@ source = "src/at/AtMemorySystem.cpp"
 subsystem = "at/memory"
 evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
 
+[[function]]
+va = 0x00042D80
+size = 55
+symbol = "?Lerp@AtVector3@@QAEXABV1@0M@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00042DC0
+size = 45
+symbol = "?DistanceSquared@AtVector3@@QBEMABV1@@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00042DF0
+size = 42
+symbol = "?Read@AtVector3@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00042E20
+size = 89
+symbol = "?Normalize@AtVector3@@QAEXXZ"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00042E80
+size = 97
+symbol = "?SetNormalized@AtVector3@@QAEXABV1@@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00042EF0
+size = 97
+symbol = "?NormalizeReturningLength@AtVector3@@QAEMXZ"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00042F60
+size = 47
+symbol = "?Distance@AtVector3@@QBEMABV1@@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00042F90
+size = 264
+symbol = "?Rotate@AtVector3@@QAEXABV1@M@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x000430A0
+size = 272
+symbol = "?SetRotated@AtVector3@@QAEXABV1@M0@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x000431B0
+size = 47
+symbol = "?RotateZ@AtVector3@@QAEXM@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x000431E0
+size = 109
+symbol = "?Project@AtVector3@@QAEXABV1@@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00043250
+size = 117
+symbol = "?SetProjected@AtVector3@@QAEXABV1@0@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x000432D0
+size = 146
+symbol = "?Reject@AtVector3@@QAEXABV1@@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
+[[function]]
+va = 0x00043370
+size = 162
+symbol = "?SetRejected@AtVector3@@QAEXABV1@0@Z"
+source = "src/at/AtVector3.cpp"
+subsystem = "at/vector"
+evidence = "tests/oracle/oracle_vec.cpp; address noted beside the declaration in include/at/AtVector3.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
