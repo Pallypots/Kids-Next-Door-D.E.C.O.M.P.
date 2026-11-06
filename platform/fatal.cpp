@@ -15,3 +15,7 @@ void AtRaise(int code, int a, int b, int c) {
 
 void AtPushHeap(void*) {}
 void AtPopHeap() {}
+
+// What a port reports in place of the Xbox's language setting and game region: English, North America.
+int AtPlatformLanguage() { return 1; }
+int AtPlatformGameRegion() { return 1; }

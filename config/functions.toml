@@ -3007,6 +3007,62 @@ source = "src/at/AtText.cpp"
 subsystem = "at/gametext"
 evidence = "tests/oracle/oracle_txt.cpp; address noted beside the declaration"
 
+[[function]]
+va = 0x0006C2D0
+size = 17
+symbol = "?SetTraceHistory@GmHistoryLogs@@QAEXH@Z"
+source = "src/gm/GmAppSettings.cpp"
+subsystem = "gm/settings"
+evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
+[[function]]
+va = 0x0006C2F0
+size = 18
+symbol = "?SetErrorHistory@GmHistoryLogs@@QAEXH@Z"
+source = "src/gm/GmAppSettings.cpp"
+subsystem = "gm/settings"
+evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
+[[function]]
+va = 0x000981C0
+size = 577
+symbol = "?SetChannel@GmAppSettings@@SAXPBDH@Z"
+source = "src/gm/GmAppSettings.cpp"
+subsystem = "gm/settings"
+evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
+[[function]]
+va = 0x00098900
+size = 128
+symbol = "?SetDefaultLanguage@GmAppSettings@@QAEXXZ"
+source = "src/gm/GmAppSettings.cpp"
+subsystem = "gm/settings"
+evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
+[[function]]
+va = 0x000989D0
+size = 118
+symbol = "??0GmAppSettings@@QAE@XZ"
+source = "src/gm/GmAppSettings.cpp"
+subsystem = "gm/settings"
+evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
+[[function]]
+va = 0x00098A50
+size = 1346
+symbol = "?Load@GmAppSettings@@QAEXXZ"
+source = "src/gm/GmAppSettings.cpp"
+subsystem = "gm/settings"
+evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
+[[function]]
+va = 0x0015DA00
+size = 12
+symbol = "?GmSetDebugChannels@@YAXG@Z"
+source = "src/gm/GmAppSettings.cpp"
+subsystem = "gm/settings"
+evidence = "tests/oracle/oracle_set.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -3202,6 +3258,16 @@ symbol = "??_7AtTextTable@@6B@"
 source = "src/at/AtText.cpp"
 
 [symbols]
+"?g_debugChannels@@3GA" = 0x002B93A4  # see include/gm/GmAppSettings.h
+"?g_usePlatformBinary@@3HA" = 0x002B9348  # see include/gm/GmAppSettings.h
+"?g_backgroundMusic@@3HA" = 0x002B9110  # see include/gm/GmAppSettings.h
+"?g_consoleMemStats@@3HA" = 0x002B93A0  # see include/gm/GmAppSettings.h
+"?g_skipProfileLoad@@3HA" = 0x003ADA5C  # see include/gm/GmAppSettings.h
+"?g_enableAllUnlockables@@3HA" = 0x003ADA60  # see include/gm/GmAppSettings.h
+"?g_noDialogs@@3HA" = 0x003B3908  # see include/gm/GmAppSettings.h
+"?g_showFlashHeapInfo@@3HA" = 0x003B3544  # see include/gm/GmAppSettings.h
+"?s_instance@GmAppAudioOptions@@2PAU1@A" = 0x003B360C  # see include/gm/GmAppSettings.h
+"?s_instance@GmHistoryLogs@@2PAU1@A" = 0x002CB0A8  # see include/gm/GmAppSettings.h
 "?s_heap@AtTextTable@@2PAXA" = 0x002C62F8  # read at 0x0001F70F
 "?s_heap@GmNameSpaceDb@@2PAXA" = 0x002C6274  # written at 0x00018004
 "?ToFloat@AtTextUnicode@@UAEMXZ" = 0x0002DDC0  # vftable slot: swscanf cannot run in the harness, so this is NOT recorded as tested

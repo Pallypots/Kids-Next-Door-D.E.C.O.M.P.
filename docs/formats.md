@@ -154,3 +154,7 @@ The closing brace is never read. The end of the file before the opening brace is
 ## Namespaces
 
 `AtIoContext` holds a default `GmNameMapGroup` and a `GmNameSpaceDb`. A namespace is a list of maps, newest first, so a later file's names shadow an earlier one's. An emptied namespace returns to a fixed pool; running out reports `Atlas Base: Name space database overflow.`
+
+## App.ini (reader: GmAppSettings, 0x00098A50)
+
+On the disc at the root, as `{ DataFolder "DataXbox" }`, and read before anything else. The reader knows 46 keywords, for development: `Level` (a starting level, default `ALMOND`), `Resolution`, screen presets including `XB720pScreen` and `XB1080iScreen`, `SkipLegal`, `SkipIntro`, `SkipMainMenu`, `EnableDebugMenu`, `EnableAllUnlockables`, audio switches, and `add_dio`/`no_dio` for debug output channels. Whether a retail build acts on all of them elsewhere is not established.

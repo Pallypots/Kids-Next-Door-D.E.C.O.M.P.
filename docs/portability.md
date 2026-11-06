@@ -41,6 +41,8 @@ Text and numbers: the tokenizer is why this matters most, because its numbers be
 Sizes copied from the original: a literal `* 4` or `0x10` in the disassembly can mean the size of a pointer. `GmLevelManager::Load` had exactly this and overflowed on x64 (docs/verification.md). When a recovered allocation holds pointers or
 objects with pointers, write it with `sizeof`. The AddressSanitizer build is the check: configure with `-DCMAKE_CXX_FLAGS="/fsanitize=address /Zi /EHsc" -DCMAKE_TRY_COMPILE_CONFIGURATION=Release`, build Release. From Git Bash set `MSYS_NO_PATHCONV=1` first.
 
+File names: the game asks for `App.INI` and the disc has `app.ini`; it asks for `Levels.txt` and the archive has `LEVELS.TXT`. Xbox file systems ignore case, Windows does too, Linux and Android do not. `AtIoHostFileSystem` will need to fold case there, and it is not tested. The archive layer already compares without case.
+
 Native build today: `CMakeLists.txt` builds `knd_gm` and `knd_at` (`src/`) and the semantic tests for x64 with the VS 2022
 generator. Ninja is not installed; Linux/Android builds are untested. The 32-bit oracle target is Windows-only analysis
 tooling and is excluded from x64 builds.

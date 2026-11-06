@@ -17,7 +17,7 @@ Read from the disassembly. "Recovered" means in `src/`, with the results in docs
 In order, for what is shown so far:
 
 1. Memory report and heap set-up (0x00141500: slot 5), then 0x000703B0, 0x00083490, 0x00143DD0.
-2. Command line or settings at +0x654C (0x000989D0; the strings near it are `testalllevels`, `noaudio` and similar).
+2. Settings at +0x654C: constructed (0x000989D0: recovered), the command line read (0x00098410: not recovered), then `app.ini` (0x00098A50: recovered) reached from 0x0008E72D, a little later.
 3. 0x0008CE00 (calls 0x00031590, which sets the stream heap: recovered), 0x0008DBA0, and 0x0008E240, which names `DataXbox\UI\DirtyDsk\loader`.
 4. **Mount `AppInit`** through the mount manager (0x000766E0: recovered). If the flag at +0x6574 is set, a list file `AppInit.txt` is opened first (0x00076990: recovered).
 5. 0x001416A0, 0x0008CFB0, slot calls on the object at +0x65B8, 0x00090210, then 0x0008DC70, 0x0008DDF0, 0x0008DEA0, 0x00139F10, 0x00097EB0.

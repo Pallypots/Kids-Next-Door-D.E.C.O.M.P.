@@ -29,13 +29,13 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 
 | Owner | Functions | Unique bytes | Direct evidence | Signature hint only | Inferred from neighbours | No evidence |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| game | 10560 | 1553503 | 866 | 0 | 9694 | 0 |
+| game | 10560 | 1553503 | 873 | 0 | 9687 | 0 |
 | crt | 279 | 35723 | 9 | 0 | 270 | 0 |
 | xdk | 1300 | 208507 | 1189 | 24 | 87 | 0 |
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 373 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 380 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -416,9 +416,16 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00031BA0 | 12 | `?ClearFields@AtText@@QAEXXZ` | at/gametext | SIZE |
 | 0x000398B0 | 55 | `?ComputeEnd@AtText@@QAEIXZ` | at/gametext | SIZE |
 | 0x000398F0 | 20 | `??0AtText@@QAE@XZ` | at/gametext | SIZE |
+| 0x0006C2D0 | 17 | `?SetTraceHistory@GmHistoryLogs@@QAEXH@Z` | gm/settings | SIZE |
+| 0x0006C2F0 | 18 | `?SetErrorHistory@GmHistoryLogs@@QAEXH@Z` | gm/settings | SIZE |
+| 0x000981C0 | 577 | `?SetChannel@GmAppSettings@@SAXPBDH@Z` | gm/settings | SIZE |
+| 0x00098900 | 128 | `?SetDefaultLanguage@GmAppSettings@@QAEXXZ` | gm/settings | SIZE |
+| 0x000989D0 | 118 | `??0GmAppSettings@@QAE@XZ` | gm/settings | SIZE |
+| 0x00098A50 | 1346 | `?Load@GmAppSettings@@QAEXXZ` | gm/settings | SIZE |
+| 0x0015DA00 | 12 | `?GmSetDebugChannels@@YAXG@Z` | gm/settings | MATCH |
 
-Relocation-aware matches with the host compiler: 63 functions, 983 unique bytes.
-Share of `.text` raw bytes: 0.0481% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 64 functions, 995 unique bytes.
+Share of `.text` raw bytes: 0.0487% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -474,6 +481,8 @@ Suite `mnt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 946
 Suite `rmb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: seed 1, RUMBLE.RMB with 15 effects; 3525053 comparisons, 0 differences). Recorded function entries reached in every run: 55 / 55. Source mutants detected: 125 / 125. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `txt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 72 .AIS files, 2685 strings, 27924 comparisons, 0 differences). Recorded function entries reached in every run: 39 / 39. Source mutants detected: 64 / 64. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `set`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 8637 comparisons, 0 differences). Recorded function entries reached in every run: 7 / 7. Source mutants detected: 86 / 86. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

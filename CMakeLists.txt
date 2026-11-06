@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(KND_GM_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/gm" CACHE PATH "Directory of the gm sources")
 add_library(knd_gm STATIC
     ${KND_GM_SRC}/GmConnection.cpp
+    ${KND_GM_SRC}/GmAppSettings.cpp
     ${KND_GM_SRC}/GmLevelManager.cpp
     ${KND_GM_SRC}/GmLevelPending.cpp
     ${KND_GM_SRC}/GmLinkedList.cpp
@@ -80,6 +81,9 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     add_executable(oracle_txt tests/oracle/reserve.asm tests/oracle/oracle_txt.cpp)
     target_link_libraries(oracle_txt PRIVATE knd_at knd_gm)
     target_link_options(oracle_txt PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    add_executable(oracle_set tests/oracle/reserve.asm tests/oracle/oracle_set.cpp)
+    target_link_libraries(oracle_set PRIVATE knd_gm knd_at)
+    target_link_options(oracle_set PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
     add_executable(oracle_tok tests/oracle/reserve.asm tests/oracle/oracle_tok.cpp)
     target_link_libraries(oracle_tok PRIVATE knd_at)
     target_link_options(oracle_tok PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)

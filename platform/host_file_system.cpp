@@ -57,7 +57,8 @@ int AtIoHostFile::Read(void* out, unsigned int size, unsigned int* done, AtIoFil
     if (done) {
         *done = (unsigned int)got;
     }
-    return got == size ? kOk : kIoError;
+    // A short read with something in it is success: the buffered stream asks for a whole buffer and takes what comes. Nothing at all is the end of the file.
+    return got != 0 || size == 0 ? kOk : kEndOfFile;
 }
 
 int AtIoHostFile::Write(const void*, unsigned int, unsigned int* done) {

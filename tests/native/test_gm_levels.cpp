@@ -18,6 +18,7 @@
 #include "at/AtIoJam.h"
 #include "at/AtIoMountManager.h"
 #include "gm/GmLevelManager.h"
+#include "gm/GmAppSettings.h"
 #include "gm/GmRumble.h"
 #include "host_file_system.h"
 
@@ -149,6 +150,15 @@ static void run_real(const std::string& dir, const std::string& expected, bool p
     params.m_context = g_context;
     static AtIoMountManager mount;
     mount.Init(&params);
+    // As the game does, before anything else: 0x0008E72D.
+    {
+        static GmAppSettings settings;
+        settings.Load();
+        char folder[9] = {0};
+        std::memcpy(folder, settings.m_dataFolder, 8);
+        CHECK(std::strcmp(folder, "DataXbox") == 0);
+        std::printf("app.ini read: data folder %s\n", folder);
+    }
     mount.Mount("AppInit", "");
     CHECK(mount.m_mounted != nullptr);
     CHECK(g_context->Top() == mount.m_mounted);

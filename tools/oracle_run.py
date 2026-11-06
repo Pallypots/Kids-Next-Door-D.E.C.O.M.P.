@@ -740,6 +740,97 @@ RMB_MUTANTS += [
 ]
 
 
+SET_MUTANTS = [
+    ('Channel: table name', 'GmAppSettings.cpp', '{"event", 0x1000}', '{"events", 0x1000}'),
+    ('Channel: top bit', 'GmAppSettings.cpp', '{"innerloop", 0x8000}', '{"innerloop", 0x4000}'),
+    ('Channel: low bit', 'GmAppSettings.cpp', '{"framework", 0x0004}', '{"framework", 0x0002}'),
+    ('Channel: case', 'GmAppSettings.cpp', 'const int x = toupper((unsigned char)*a);\n        if (x != toupper((unsigned char)*b)) {', 'const int x = (unsigned char)*a;\n        if (x != (unsigned char)*b) {'),
+    ('Channel: prefix accepted', 'GmAppSettings.cpp', '        if (x == 0) {\n            return 1;\n        }\n', '        if (x == 0 || b[1] == 0) {\n            return 1;\n        }\n'),
+    ('Channel: on means nonzero', 'GmAppSettings.cpp', 'if (on == 1) {', 'if (on != 0) {'),
+    ('Channel: clear', 'GmAppSettings.cpp', 'g_debugChannels &= (unsigned short)~kChannels[i].m_bit;', 'g_debugChannels &= (unsigned short)kChannels[i].m_bit;'),
+    ('Channel: null name', 'GmAppSettings.cpp', '    if (name == 0) {\n        return;\n    }\n', ''),
+    ('Size: fullscreen kept', 'GmAppSettings.cpp', '    s->m_fullscreen = 0;\n', ''),
+    ('SetDebugChannels: nothing', 'GmAppSettings.cpp', 'g_debugChannels = channels;', ''),
+    ('Trace: null not checked', 'GmAppSettings.cpp', 'void GmHistoryLogs::SetTraceHistory(int lines) {\n    if (m_traces != 0) {', 'void GmHistoryLogs::SetTraceHistory(int lines) {\n    {'),
+    ('Trace: wrong log', 'GmAppSettings.cpp', 'm_traces->SetLength(lines);', 'm_errors->SetLength(lines);'),
+    ('Error: tests its own', 'GmAppSettings.cpp', 'void GmHistoryLogs::SetErrorHistory(int lines) {\n    if (m_traces != 0) {', 'void GmHistoryLogs::SetErrorHistory(int lines) {\n    {'),
+    ('Error: wrong log', 'GmAppSettings.cpp', 'm_errors->SetLength(lines);', 'm_traces->SetLength(lines);'),
+    ('Language: german', 'GmAppSettings.cpp', 'case 3: AtCopyName("GERMAN", language); break;', 'case 3: AtCopyName("FRENCH", language); break;'),
+    ('Language: french', 'GmAppSettings.cpp', 'case 4: AtCopyName("FRENCH", language); break;', 'case 5: AtCopyName("FRENCH", language); break;'),
+    ('Language: italian', 'GmAppSettings.cpp', 'case 6: AtCopyName("ITALIAN", language); break;', 'case 7: AtCopyName("ITALIAN", language); break;'),
+    ('Language: default', 'GmAppSettings.cpp', 'default: AtCopyName("ENGLISH", language); break;', 'default: AtCopyName("JAPANES", language); break;'),
+    ('Language: region', 'GmAppSettings.cpp', 'if (AtPlatformGameRegion() == 1) {', 'if (AtPlatformGameRegion() != 0) {'),
+    ('Language: region ignored', 'GmAppSettings.cpp', '    if (AtPlatformGameRegion() == 1) {\n        AtCopyName8(language, "ENGLISH\\0");\n    }\n', ''),
+    ('Ctor: channels', 'GmAppSettings.cpp', '    GmSetDebugChannels(3);\n', ''),
+    ('Ctor: level', 'GmAppSettings.cpp', 'AtCopyName8(m_level, "ALMOND\\0\\0");', 'AtCopyName8(m_level, "ALMONE\\0\\0");'),
+    ('Ctor: data folder', 'GmAppSettings.cpp', '    AtCopyName8(m_dataFolder, "\\0\\0\\0\\0\\0\\0\\0");\n', ''),
+    ('Ctor: language', 'GmAppSettings.cpp', '    SetDefaultLanguage();\n', ''),
+    ('Ctor: width', 'GmAppSettings.cpp', 'm_width = 640;', 'm_width = 641;'),
+    ('Ctor: height', 'GmAppSettings.cpp', 'm_height = 480;', 'm_height = 481;'),
+    ('Ctor: dead zone', 'GmAppSettings.cpp', 'm_controllerDeadZone = 25.0f;', 'm_controllerDeadZone = 24.0f;'),
+    ('Ctor: ready', 'GmAppSettings.cpp', '    m_ready = 1;\n', ''),
+    ('Load: no file check', 'GmAppSettings.cpp', '    if (AtIoMountManager::s_instance->m_device->IsFileMissing("App.ini") != 0) {\n        return;\n    }\n', ''),
+    ('Load: file name', 'GmAppSettings.cpp', 'file.Open("App", "INI", 2, 0)', 'file.Open("App", "INX", 2, 0)'),
+    ('Load: flags', 'GmAppSettings.cpp', 'file.Open("App", "INI", 2, 0)', 'file.Open("App", "INI", 4, 0)'),
+    ('Load: report', 'GmAppSettings.cpp', 'AtReportFileErrorText(status, "App.ini");', 'AtReportFileErrorText(0, "App.ini");'),
+    ('Load: keywords', 'GmAppSettings.cpp', '    t->SetKeywords(kKeywords, sizeof kKeywords / sizeof kKeywords[0], 0);\n', ''),
+    ('Load: opening brace', 'GmAppSettings.cpp', '    t->ExpectLeftCurly();\n', ''),
+    # Not used: 'Load: close'. The destructor closes it just after, the same way.
+    ('Data folder', 'GmAppSettings.cpp', 't->ExpectName(m_dataFolder);', 't->ExpectName(m_level);'),
+    ('Level: limit', 'GmAppSettings.cpp', 'if (strlen(text) <= 8) {', 'if (strlen(text) < 8) {'),
+    ('Level: copy', 'GmAppSettings.cpp', '                AtCopyName(text, m_level);\n', ''),
+    ('Resolution: width', 'GmAppSettings.cpp', 'm_width = t->ExpectInt();', 't->ExpectInt();'),
+    ('Resolution: height', 'GmAppSettings.cpp', 'm_height = t->ExpectInt();', 't->ExpectInt();'),
+    ('Fullscreen', 'GmAppSettings.cpp', '            m_fullscreen = 1;\n', ''),
+    ('Maximized acted on', 'GmAppSettings.cpp', '        case kFullscreen:\n', '        case kMaximized:\n        case kFullscreen:\n'),
+    ('NTSC', 'GmAppSettings.cpp', 'SetSize(this, 640, 448);', 'SetSize(this, 640, 480);'),
+    ('PS2 not as NTSC', 'GmAppSettings.cpp', '        case kNtsc:\n        case kPs2:\n', '        case kNtsc:\n'),
+    ('PAL', 'GmAppSettings.cpp', 'SetSize(this, 512, 512);', 'SetSize(this, 512, 448);'),
+    ('XB', 'GmAppSettings.cpp', 'SetSize(this, 720, 480);', 'SetSize(this, 720, 576);'),
+    ('XB720', 'GmAppSettings.cpp', 'SetSize(this, 1280, 720);', 'SetSize(this, 1280, 768);'),
+    ('XB1080', 'GmAppSettings.cpp', 'SetSize(this, 1920, 1080);', 'SetSize(this, 1920, 1088);'),
+    ('Keyword: second XB name', 'GmAppSettings.cpp', '{kXb, "XB480pScreen"}', '{kXb720, "XB480pScreen"}'),
+    ('Test all', 'GmAppSettings.cpp', '            m_testAllLevels = 1;\n', ''),
+    ('Open list', 'GmAppSettings.cpp', '            m_openList = 1;\n', ''),
+    ('Dead zone: low', 'GmAppSettings.cpp', 'if (value >= 0 && value < 100) {', 'if (value < 100) {'),
+    ('Dead zone: high', 'GmAppSettings.cpp', 'if (value >= 0 && value < 100) {', 'if (value >= 0 && value <= 100) {'),
+    ('Dead zone: value', 'GmAppSettings.cpp', 'm_controllerDeadZone = (float)value;', 'm_controllerDeadZone = (float)value + 1;'),
+    ('Trace: range', 'GmAppSettings.cpp', '            if (value >= 0 && value < 1000) {\n                GmHistoryLogs::s_instance->SetTraceHistory(value);', '            if (value >= 0 && value <= 1000) {\n                GmHistoryLogs::s_instance->SetTraceHistory(value);'),
+    ('Trace: negative', 'GmAppSettings.cpp', '            if (value >= 0 && value < 1000) {\n                GmHistoryLogs::s_instance->SetTraceHistory(value);', '            if (value < 1000) {\n                GmHistoryLogs::s_instance->SetTraceHistory(value);'),
+    ('Error: range', 'GmAppSettings.cpp', '            if (value >= 0 && value < 1000) {\n                GmHistoryLogs::s_instance->SetErrorHistory(value);', '            if (value >= 0 && value <= 1000) {\n                GmHistoryLogs::s_instance->SetErrorHistory(value);'),
+    ('Error: negative', 'GmAppSettings.cpp', '            if (value >= 0 && value < 1000) {\n                GmHistoryLogs::s_instance->SetErrorHistory(value);', '            if (value < 1000) {\n                GmHistoryLogs::s_instance->SetErrorHistory(value);'),
+    ('Vsync', 'GmAppSettings.cpp', '            m_verticalSyncOff = 1;\n', ''),
+    ('add_dio', 'GmAppSettings.cpp', 'SetChannel(t->ExpectString(), 1);', 'SetChannel(t->ExpectString(), 0);'),
+    ('no_dio', 'GmAppSettings.cpp', 'SetChannel(t->ExpectString(), 0);', 'SetChannel(t->ExpectString(), 1);'),
+    ('Platform binary', 'GmAppSettings.cpp', '            g_usePlatformBinary = 0;\n', ''),
+    ('Music', 'GmAppSettings.cpp', '            g_backgroundMusic = 0;\n', ''),
+    ('Language key', 'GmAppSettings.cpp', 'AtCopyName8(m_language, name);\n            break;', 'break;'),
+    ('Controller', 'GmAppSettings.cpp', 'm_activeControllers[t->ExpectInt()] = 1;', 'm_activeControllers[0] = t->ExpectInt();'),
+    ('Character: index', 'GmAppSettings.cpp', 'AtCopyName8(m_character + index * 8, name);', 'AtCopyName8(m_character, name);'),
+    ('Character: name', 'GmAppSettings.cpp', 'AtCopyName8(m_character + index * 8, name);', '(void)index;'),
+    ('Skip intro', 'GmAppSettings.cpp', '            m_skipIntro = 1;\n', ''),
+    ('Mem stats field', 'GmAppSettings.cpp', '            m_memStats = 0;\n', ''),
+    ('Mem stats global', 'GmAppSettings.cpp', '            g_consoleMemStats = 0;\n', ''),
+    ('Main menu field', 'GmAppSettings.cpp', '            m_skipMainMenu = 1;\n', ''),
+    ('Main menu global', 'GmAppSettings.cpp', '            m_skipMainMenu = 1;\n            g_skipProfileLoad = 1;\n', '            m_skipMainMenu = 1;\n'),
+    ('Profile', 'GmAppSettings.cpp', '        case kSkipProfileLoadCreate:\n            g_skipProfileLoad = 1;\n            break;\n', ''),
+    ('Debug menu', 'GmAppSettings.cpp', '            m_enableDebugMenu = 1;\n', ''),
+    ('Skip legal', 'GmAppSettings.cpp', '            m_skipLegal = 1;\n', ''),
+    ('Audio: m_noMusic', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_noMusic = 1;', ''),
+    ('Audio: m_noAmbientAudio', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_noAmbientAudio = 1;', ''),
+    ('Audio: m_noAudio', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_noAudio = 1;', ''),
+    ('Audio: m_displayBanks', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_displayBanks = 1;', ''),
+    ('Audio: m_displaySounds', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_displaySounds = 1;', ''),
+    ('Audio: m_displayMusic', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_displayMusic = 1;', ''),
+    ('Audio: m_audioTest', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_audioTest = 1;', ''),
+    ('Audio mode: range', 'GmAppSettings.cpp', 'if (value < 3) {', 'if (value <= 3) {'),
+    ('Audio mode: value', 'GmAppSettings.cpp', 'GmAppAudioOptions::s_instance->m_audioMode = (int)value;', 'GmAppAudioOptions::s_instance->m_audioMode = 1;'),
+    ('No dialogs', 'GmAppSettings.cpp', '            g_noDialogs = 1;\n', ''),
+    ('Flash heap', 'GmAppSettings.cpp', '            g_showFlashHeapInfo = 1;\n', ''),
+    ('Unlockables', 'GmAppSettings.cpp', '            g_enableAllUnlockables = 1;\n', ''),
+]
+
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -747,6 +838,7 @@ SUITES = {
     "mnt": {"target": "oracle_mnt", "subsystem": "at/mount", "mutants": MNT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
+    "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "tok": {"target": "oracle_tok", "subsystem": "at/text", "mutants": TOK_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
 }
 
@@ -791,7 +883,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite in ("tok", "lvl", "rmb", "txt"):
+    elif suite in ("tok", "lvl", "rmb", "txt", "set"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -919,7 +1011,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -932,7 +1024,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

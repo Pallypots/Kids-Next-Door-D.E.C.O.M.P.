@@ -104,6 +104,9 @@ def main(argv):
     with open(os.path.join(out_dir, "rumble.tsv"), "w", encoding="latin-1", newline="\n") as f:
         for row in parse_rumble(img._read(base + off, size).decode("latin-1")):
             f.write("\t".join(str(v) for v in row) + "\n")
+    ini = [e for e in img.entries() if not e.is_dir and e.path.upper() == "/APP.INI"][0]
+    with open(os.path.join(out_dir, "app.ini"), "wb") as f:
+        f.write(img._read(img.sector_offset(ini.sector), ini.size))
     os.makedirs(os.path.join(out_dir, "JamFiles", "XBox"), exist_ok=True)
     target = os.path.join(out_dir, "JamFiles", "XBox", "AppInit.JAM")
     old = os.path.join(out_dir, "AppInit.JAM")

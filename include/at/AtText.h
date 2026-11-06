@@ -5,7 +5,9 @@
 #include "gm/GmNameMap.h"
 
 const char* AtIoStatusText(int status);    // 0x000140D0 the meaning of a file status code
-void AtReportFileError(int status, const char* path, const char* extension);   // the only use so far of 0x00014230 and 0x000141C0
+// The original's 0x00014230 and 0x000141C0 are variadic. These are the two forms its recovered callers use.
+void AtReportFileError(int status, const char* path, const char* extension);
+void AtReportFileErrorText(int status, const char* text);
 
 // In AtIoFormatHost.cpp: the host's C library. The Xbox's wchar_t is 16 bits, a host's may not be, so wide text is narrowed first.
 int AtNarrowToInt(const char* text);       // atoi

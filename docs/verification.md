@@ -216,6 +216,14 @@ Library differences found: `atoi` wraps on overflow in the original and may satu
 
 The harness now reserves up to 0x004EF000, because the C library touches uninitialised data past the old limit.
 
+## App.ini reader: tests/oracle/oracle_set.cpp
+
+Every key with good and bad values, the file on the disc, each debug channel on and off, each language and region, a missing file and one that will not open. Result on 2026-11-06: 8,637 comparisons, no difference; 7/7 entries; positive control passes; `--mutate` fails; 86/86 source mutants (81 as a difference, 5 by a crash). First run 82/87; the gaps were fields the zeroed test memory hid. One mutant was equivalent and dropped.
+
+The language and region calls, 0x001B7B84 and 0x001B7B12, read the console's settings and are replaced on both sides in the harness.
+
+`test_gm_levels` now reads the real `app.ini` first, as the game does. That run found a bug in the port's host file layer, which treated any short read as an error: the buffered stream asks for a whole buffer, and the archive code had never asked for more than there was. A short read with data in it now succeeds.
+
 ## End to end: tests/native/test_at_e2e.cpp
 
 Opens real archives through the recovered layers (`AtIoContext`, `AtIoJamFileSystem`, the header and file classes) over host files, and

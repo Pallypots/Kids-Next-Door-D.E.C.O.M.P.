@@ -48,6 +48,14 @@ const char* AtIoStatusText(int status) {
     }
 }
 
+void AtReportFileErrorText(int status, const char* text) {
+    char message[0x200];
+    strcpy(message, AtIoStatusText(status));
+    strcat(message, ": ");
+    strcat(message, text);
+    AtFatal(message, 0, 0, 0);
+}
+
 void AtReportFileError(int status, const char* path, const char* extension) {
     // The original is variadic, at 0x00014230 and 0x000141C0. Every caller recovered so far passes "%s.%s" with these two.
     char message[0x200];

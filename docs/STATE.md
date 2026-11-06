@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-05, dev cycle 10 (namespaces, strings, game text). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-05, dev cycle 11 (app.ini). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-05, dev cycle 10 (namespaces, strings, game text). Per-fun
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 375 functions and 32 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 382 functions and 32 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -28,6 +28,7 @@ All source is in `src/`, types in `include/`. 375 functions and 32 vftables are 
 * `at/text` (99 functions): the stream and file wrapper, and the tokenizer most text formats go through, both reading and writing. It works on 64-bit, with the same results as the
   original on every text file on the disc.
 * `at/mount` (23 functions): what mounts archives, and the small manager it creates. A port supplies the factory of file systems. Start-up order: docs/startup.md.
+* `gm/settings` (7 functions): `app.ini`, the first file the game reads, and what it sets. Its command line twin at 0x00098410 is not recovered.
 * `at/gametext` (39 functions): text strings of both kinds and the `.AIS` table. Every game text string on the disc reads the same as the original's.
 * `gm/names` (34 functions): the name-to-object hash table used across the engine, and the namespace tree above it. `gm/rumble` (21 functions): the reader of `RUMBLE.RMB`. What plays the effects is not recovered.
 * `gm/levels` (11 functions), **partial**: the reader of `Levels.txt`, the first recovered code to give game data a meaning. **Recovered source now goes from the archive on disc to the game's level table**, on x64. Not recovered: the rest of its class, which
@@ -97,8 +98,8 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. `app.ini`: `GmAppSettings`, 0x00098A50. The first file the game reads. Source written, not yet tested.
-2. The other small readers: analysis-local/scratch/readers.py lists 80.
-3. Follow docs/startup.md into what start-up does after mounting, as far as it stays dependency-light.
+1. `LIBRARY.ADD` (0x0009BD50), the data registry start-up mounts files from, with the database manager it fills.
+2. The command line reader at 0x00098410, beside the settings.
+3. Other small readers: analysis-local/scratch/readers.py lists 80.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.
