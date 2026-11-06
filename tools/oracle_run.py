@@ -1003,6 +1003,71 @@ LDR_MUTANTS = [
 ]
 
 
+MEM_MUTANTS = [
+    ('Raise: 0', 'AtMemory.cpp', 'case 0: message = "Invalid error condition"; break;\n', ''),
+    ('Raise: -1', 'AtMemory.cpp', 'case -1: message = "General error occurred"; break;\n', ''),
+    ('Raise: -2', 'AtMemory.cpp', 'case -2: message = "Invalid parameter detected"; break;\n', ''),
+    ('Raise: -3', 'AtMemory.cpp', 'case -3: message = "Invalid value detected"; break;\n', ''),
+    ('Raise: -4', 'AtMemory.cpp', 'case -4: message = "Out of memory error occured"; break;\n', ''),
+    ('Raise: -5', 'AtMemory.cpp', 'case -5: message = "Critical resource busy"; break;\n', ''),
+    ('Raise: -6 named', 'AtMemory.cpp', 'case -7: message = "Assertion Failed"; break;\n', 'case -7: case -6: message = "Assertion Failed"; break;\n'),
+    ('Raise: -7', 'AtMemory.cpp', 'case -7: message = "Assertion Failed"; break;\n', ''),
+    ('Raise: args', 'AtMemory.cpp', 'AtFatal(message, file, line, 0);', 'AtFatal(message, line, file, 0);'),
+    ('Raise: fourth passed', 'AtMemory.cpp', 'AtFatal(message, file, line, 0);', 'AtFatal(message, file, line, unused);'),
+    ('New: top', 'AtMemory.cpp', 'Allocate(AtHeapStack::s_heaps[AtHeapStack::s_top], size)', 'Allocate(AtHeapStack::s_heaps[0], size)'),
+    ('Delete: null', 'AtMemory.cpp', 'if (data != 0 && AtHeapManager::s_instance->Free(data) == 0) {', 'if (AtHeapManager::s_instance->Free(data) == 0) {'),
+    ('Delete: owned too', 'AtMemory.cpp', 'if (data != 0 && AtHeapManager::s_instance->Free(data) == 0) {', 'if (data != 0) {\n        AtHeapManager::s_instance->Free(data);'),
+    ('Delete: no library', 'AtMemory.cpp', '        AtLibraryFree(data);\n', ''),
+    ('Push: bound', 'AtMemory.cpp', 'if (++AtHeapStack::s_top < 16) {', 'if (++AtHeapStack::s_top < 17) {'),
+    ('Push: bound low', 'AtMemory.cpp', 'if (++AtHeapStack::s_top < 16) {', 'if (++AtHeapStack::s_top < 15) {'),
+    ('Pop: no clear', 'AtMemory.cpp', '    AtHeapStack::s_heaps[AtHeapStack::s_top] = 0;\n', ''),
+    ('Pop: no decrement', 'AtMemory.cpp', '    AtHeapStack::s_top--;\n', ''),
+    ('Current: bound', 'AtMemory.cpp', 'if (AtHeapStack::s_top >= 0) {', 'if (AtHeapStack::s_top > 0) {'),
+    ('Content: not set', 'AtMemory.cpp', '    AtHeapStack::s_contentHeap = heap;\n', ''),
+    ('Top: starts', 'AtMemory.cpp', 'int AtHeapStack::s_top = -1;', 'int AtHeapStack::s_top = 0;'),
+    ('Ctor: started', 'AtMemorySystem.cpp', 'AtMemorySystem::AtMemorySystem() {\n    m_started = 0;\n', 'AtMemorySystem::AtMemorySystem() {\n'),
+    ('Dtor: pop always', 'AtMemorySystem.cpp', 'AtMemorySystem::~AtMemorySystem() {\n    if (AtIoTokenFile::s_heap != 0 && AtCurrentHeap() != 0) {\n', 'AtMemorySystem::~AtMemorySystem() {\n    {\n'),
+    ('Dtor: no reset', 'AtMemorySystem.cpp', '        AtPopHeap();\n    }\n    m_manager.ResetAll();\n    m_started = 0;\n}\n\nvoid AtMemorySystem::Startup', '        AtPopHeap();\n    }\n    m_started = 0;\n}\n\nvoid AtMemorySystem::Startup'),
+    ('Dtor: started', 'AtMemorySystem.cpp', '    m_manager.ResetAll();\n    m_started = 0;\n}\n\nvoid AtMemorySystem::Startup', '    m_manager.ResetAll();\n}\n\nvoid AtMemorySystem::Startup'),
+    ('Startup: no shutdown', 'AtMemorySystem.cpp', '    if (m_started != 0) {\n        Shutdown();\n    }\n', ''),
+    ('Startup: always shutdown', 'AtMemorySystem.cpp', '    if (m_started != 0) {\n        Shutdown();\n    }\n', '    Shutdown();\n'),
+    ('Startup: no init', 'AtMemorySystem.cpp', '    Initialize(params);\n', ''),
+    ('Startup: instance', 'AtMemorySystem.cpp', '    AtHeapManager::s_instance = &m_manager;\n', ''),
+    ('Startup: default', 'AtMemorySystem.cpp', '    AtIoTokenFile::s_heap = m_defaultHeap;\n    if (m_defaultHeap != 0) {\n', '    if (m_defaultHeap != 0) {\n'),
+    ('Startup: push always', 'AtMemorySystem.cpp', '    if (m_defaultHeap != 0) {\n        AtPushHeap(m_defaultHeap);\n    }\n', '    AtPushHeap(m_defaultHeap);\n'),
+    ('Startup: no push', 'AtMemorySystem.cpp', '        AtPushHeap(m_defaultHeap);\n', ''),
+    ('Startup: started', 'AtMemorySystem.cpp', '    m_started = 1;\n', ''),
+    ('Shutdown: heap condition', 'AtMemorySystem.cpp', 'void AtMemorySystem::Shutdown() {\n    if (AtIoTokenFile::s_heap != 0 && AtCurrentHeap() != 0) {\n', 'void AtMemorySystem::Shutdown() {\n    if (AtCurrentHeap() != 0) {\n'),
+    ('Shutdown: top condition', 'AtMemorySystem.cpp', 'void AtMemorySystem::Shutdown() {\n    if (AtIoTokenFile::s_heap != 0 && AtCurrentHeap() != 0) {\n', 'void AtMemorySystem::Shutdown() {\n    if (AtIoTokenFile::s_heap != 0) {\n'),
+    ('Shutdown: no reset', 'AtMemorySystem.cpp', '    m_manager.ResetAll();\n    m_started = 0;\n}\n\nAtRegionMemorySystem::AtRegionMemorySystem', '    m_started = 0;\n}\n\nAtRegionMemorySystem::AtRegionMemorySystem'),
+    ('Shutdown: started', 'AtMemorySystem.cpp', '    m_manager.ResetAll();\n    m_started = 0;\n}\n\nAtRegionMemorySystem::AtRegionMemorySystem', '    m_manager.ResetAll();\n}\n\nAtRegionMemorySystem::AtRegionMemorySystem'),
+    ('Region ctor: region', 'AtMemorySystem.cpp', '    m_region = 0;\n    s_unknown3ADE44', '    s_unknown3ADE44'),
+    ('Region ctor: short', 'AtMemorySystem.cpp', '    s_unknown3ADE44 = 0;\n', ''),
+    ('Region ctor: word', 'AtMemorySystem.cpp', '    s_unknown3ADE40 = 0;\n', ''),
+    ('Init: no raise', 'AtMemorySystem.cpp', '    if (m_region == 0) {\n        AtRaise(-4, 0, 0, 0);\n    }\n', ''),
+    ('Init: other code', 'AtMemorySystem.cpp', 'AtRaise(-4, 0, 0, 0);', 'AtRaise(-2, 0, 0, 0);'),
+    ('Init: manager size', 'AtMemorySystem.cpp', 'm_manager.Init(m_region, params->m_regionSize, params->m_unused);', 'm_manager.Init(m_region, params->m_regionSize / 2, params->m_unused);'),
+    ('Init: default size', 'AtMemorySystem.cpp', '        size = 0x10000;\n', '        size = 0x8000;\n'),
+    ('Init: no default size', 'AtMemorySystem.cpp', '    if (size == 0) {\n        size = 0x10000;\n    }\n', ''),
+    ('Init: heap shift', 'AtMemorySystem.cpp', 'm_manager.CreateHeap(size, 2);', 'm_manager.CreateHeap(size, 3);'),
+    ('Init: heap kept', 'AtMemorySystem.cpp', 'm_defaultHeap = m_manager.CreateHeap(size, 2);', 'm_manager.CreateHeap(size, 2);'),
+    ('Init: no devices', 'AtMemorySystem.cpp', '    AtPlatformInitDevices();\n', ''),
+    ('Region shutdown: base', 'AtMemorySystem.cpp', 'void AtRegionMemorySystem::Shutdown() {\n    AtMemorySystem::Shutdown();\n', 'void AtRegionMemorySystem::Shutdown() {\n'),
+    ('Region shutdown: free', 'AtMemorySystem.cpp', 'void AtRegionMemorySystem::Shutdown() {\n    AtMemorySystem::Shutdown();\n    if (m_region != 0) {\n        AtPlatformFreeRegion(m_region);\n    }\n', 'void AtRegionMemorySystem::Shutdown() {\n    AtMemorySystem::Shutdown();\n'),
+    ('Region shutdown: forgets', 'AtMemorySystem.cpp', 'void AtRegionMemorySystem::Shutdown() {\n    AtMemorySystem::Shutdown();\n    if (m_region != 0) {\n        AtPlatformFreeRegion(m_region);\n', 'void AtRegionMemorySystem::Shutdown() {\n    AtMemorySystem::Shutdown();\n    if (m_region != 0) {\n        AtPlatformFreeRegion(m_region);\n        m_region = 0;\n'),
+    ('Region dtor: base', 'AtMemorySystem.cpp', 'AtRegionMemorySystem::~AtRegionMemorySystem() {\n    AtMemorySystem::Shutdown();\n', 'AtRegionMemorySystem::~AtRegionMemorySystem() {\n'),
+    ('Region dtor: free', 'AtMemorySystem.cpp', 'AtRegionMemorySystem::~AtRegionMemorySystem() {\n    AtMemorySystem::Shutdown();\n    if (m_region != 0) {\n        AtPlatformFreeRegion(m_region);\n    }\n', 'AtRegionMemorySystem::~AtRegionMemorySystem() {\n    AtMemorySystem::Shutdown();\n'),
+    ('Save: manager', 'AtMemorySystem.cpp', '    m_manager = AtHeapManager::s_instance;\n', ''),
+    ('Save: heap', 'AtMemorySystem.cpp', '    m_defaultHeap = (AtHeap*)AtIoTokenFile::s_heap;\n', ''),
+    ('Save: fatal', 'AtMemorySystem.cpp', '    m_fatal = s_fatal;\n', ''),
+    ('Restore: manager', 'AtMemorySystem.cpp', '    AtHeapManager::s_instance = m_manager;\n', ''),
+    ('Restore: heap', 'AtMemorySystem.cpp', '    AtIoTokenFile::s_heap = m_defaultHeap;\n    if (m_defaultHeap != 0 && AtCurrentHeap() == 0) {\n', '    if (m_defaultHeap != 0 && AtCurrentHeap() == 0) {\n'),
+    ('Restore: push with null', 'AtMemorySystem.cpp', 'if (m_defaultHeap != 0 && AtCurrentHeap() == 0) {', 'if (AtCurrentHeap() == 0) {'),
+    ('Restore: push when full', 'AtMemorySystem.cpp', 'if (m_defaultHeap != 0 && AtCurrentHeap() == 0) {', 'if (m_defaultHeap != 0) {'),
+    ('Restore: fatal', 'AtMemorySystem.cpp', '    s_fatal = m_fatal;\n', ''),
+]
+
+
 HEP_MUTANTS = [
     ('Overhead: round', 'AtHeap.cpp', '((unsigned int)offsetof(AtHeapBlock, m_nextFree) + mask) & ~mask', '(unsigned int)offsetof(AtHeapBlock, m_nextFree)'),
     ('Size: flags lost', 'AtHeap.cpp', 'block->m_word = (block->m_word & ~(unsigned int)AtHeapBlock::kSizeMask) | (size & AtHeapBlock::kSizeMask);', 'block->m_word = size & AtHeapBlock::kSizeMask;'),
@@ -1174,6 +1239,7 @@ SUITES = {
     "rmb": {"target": "oracle_rmb", "subsystem": ("gm/names", "gm/rumble"), "mutants": RMB_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
+    "mem": {"target": "oracle_mem", "subsystem": "at/memory", "mutants": MEM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "hep": {"target": "oracle_hep", "subsystem": "at/heap", "mutants": HEP_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "ldr": {"target": "oracle_ldr", "subsystem": "gm/loader", "mutants": LDR_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "aud": {"target": "oracle_aud", "subsystem": "gm/audiodata", "mutants": AUD_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
@@ -1221,7 +1287,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
-    elif suite == "hep":
+    elif suite in ("hep", "mem"):
         cmd = [exe(build_dir, target), XBE]
     elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
@@ -1357,7 +1423,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1370,7 +1436,7 @@ def main(argv):
         with open(path) as f:
             report["suites"] = json.load(f).get("suites", {})
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         report["suites"][suite] = rep

@@ -41,3 +41,7 @@ From the callers of 0x000766E0: 0x0008E78C (`AppInit`), 0x0008EAEB (`Persist`), 
 ## The loader start-up waits on
 
 At 0x0008EB33 start-up configures a loader held at App+0x6D48, then calls its `Update(30)` (0x00142040) in a loop until it returns non-zero. Each call spends up to 30 milliseconds on: opening the `.MNG` file, reading its tokens, then running queued items one at a time. The base class is recovered as `GmManifestLoader`. On the disc, `LOADER.MNG` files list the sound and graphics databases of a level; which file this first wait reads has not been traced.
+
+## The memory system
+
+`AtMemorySystem` (vftable 0x00286694) and its derived class (vftable 0x00284840) are recovered. Startup, slot 2, calls Initialize, which allocates the region, starts the manager, creates the default heap, default size 0x10000, and calls what is probably `XInitDevices`; then sets the instance and the default heap, and pushes it. The object is a member, at +4, of the class whose constructor is at 0x00141840: not recovered, and neither is what passes the sizes. The application's own four heaps come later, from 0x0008C860, which reports `***Mem For Heaps` and reads each heap's size and partner from +0x64A4: -2 joins the default heap's group, -1 none, otherwise another of the four.

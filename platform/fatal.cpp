@@ -1,21 +1,18 @@
-// Host stand-ins for the game's error routines and heap stack (0x00011070, 0x00011170, 0x00011240, 0x00011260, none recovered):
-// report and stop; a host build allocates from the normal heap. Not recovered code.
+// Host stand-ins for what is not recovered, or is the platform's: the game's fatal error routine (0x00011070), its calls to the Xbox's memory and device services, and the C library's free.
+// Not recovered code.
 #include <chrono>
 #include <cstdio>
 #include <cstdlib>
 
-void AtFatal(const char* message, int a, int b, int c) {
-    std::fprintf(stderr, "fatal: %s(%d, %d, %d)\n", message, a, b, c);
+void AtFatal(const char* message, int file, int line, int) {
+    std::fprintf(stderr, "fatal: %s (%d, %d)\n", message, file, line);
     std::abort();
 }
 
-void AtRaise(int code, int a, int b, int c) {
-    std::fprintf(stderr, "fatal: error %d (%d, %d, %d)\n", code, a, b, c);
-    std::abort();
-}
-
-void AtPushHeap(void*) {}
-void AtPopHeap() {}
+void* AtPlatformAllocateRegion(unsigned int size) { return std::malloc(size); }
+void AtPlatformFreeRegion(void* region) { std::free(region); }
+void AtPlatformInitDevices() {}
+void AtLibraryFree(void* data) { std::free(data); }
 
 // What a port reports in place of the Xbox's language setting and game region: English, North America.
 int AtPlatformLanguage() { return 1; }

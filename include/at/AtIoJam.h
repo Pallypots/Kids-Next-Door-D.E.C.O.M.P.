@@ -14,8 +14,8 @@
 #pragma once
 #include "at/AtIoFileSystem.h"
 
-void AtFatal(const char* message, int a, int b, int c);  // 0x00011070: not recovered; platform/ supplies a diagnostic.
-void AtRaise(int code, int a, int b, int c);             // 0x00011170: -2 heap not set, -4 out of memory. Not recovered.
+void AtFatal(const char* message, int file, int line, int unused);  // 0x00011070: not recovered, as it reaches into graphics and sound; platform/ supplies a diagnostic.
+void AtRaise(int code, int file, int line, int unused);  // 0x00011170: src/at/AtMemory.cpp. -2 is reported for a heap not set, -4 out of memory.
 void AtPushHeap(void* heap);                             // 0x00011240: operator new allocates from the top heap.
 void AtPopHeap();                                        // 0x00011260
 

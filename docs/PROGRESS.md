@@ -35,7 +35,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 722 | 84529 | 0 | 0 | 0 | 722 |
 
-**Estimate**, because most of the game row is inferred: 404 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 415 of about 10560 game functions are recorded in config/functions.toml. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -459,9 +459,28 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00016900 | 34 | `??1AtHeap@@QAE@XZ` | at/heap | SIZE |
 | 0x00016930 | 41 | `?Init@AtHeap@@QAEXPAXIHH@Z` | at/heap | SIZE |
 | 0x00016960 | 64 | `?AllocateAligned@AtHeap@@QAEPAXII@Z` | at/heap | SIZE |
+| 0x00011170 | 126 | `?AtRaise@@YAXHHHH@Z` | at/memory | SIZE |
+| 0x000111F0 | 30 | `?AtHeapNew@@YAPAXI@Z` | at/memory | SIZE |
+| 0x00011210 | 36 | `?AtHeapDelete@@YAXPAX@Z` | at/memory | MATCH |
+| 0x00011240 | 28 | `?AtPushHeap@@YAXPAX@Z` | at/memory | SIZE |
+| 0x00011260 | 23 | `?AtPopHeap@@YAXXZ` | at/memory | MATCH |
+| 0x00011280 | 20 | `?AtCurrentHeap@@YAPAVAtHeap@@XZ` | at/memory | MISMATCH |
+| 0x000112A0 | 10 | `?AtSetContentHeap@@YAXPAVAtHeap@@@Z` | at/memory | MATCH |
+| 0x000C9AF0 | 28 | `??0AtMemorySystem@@QAE@XZ` | at/memory | SIZE |
+| 0x000C9B10 | 123 | `??1AtMemorySystem@@UAE@XZ` | at/memory | SIZE |
+| 0x000C9BE0 | 30 | `??_GAtMemorySystem@@UAEPAXI@Z` | at/memory | MATCH |
+| 0x000C9B90 | 70 | `?Startup@AtMemorySystem@@UAEXPBUAtMemoryParams@@@Z` | at/memory | SIZE |
+| 0x000C9AC0 | 43 | `?Shutdown@AtMemorySystem@@UAEXXZ` | at/memory | MISMATCH |
+| 0x000B3D80 | 37 | `??0AtRegionMemorySystem@@QAE@XZ` | at/memory | SIZE |
+| 0x000B3DB0 | 116 | `?Initialize@AtRegionMemorySystem@@UAEXPBUAtMemoryParams@@@Z` | at/memory | SIZE |
+| 0x000B3E30 | 33 | `?Shutdown@AtRegionMemorySystem@@UAEXXZ` | at/memory | SIZE |
+| 0x000B3E60 | 102 | `??1AtRegionMemorySystem@@UAE@XZ` | at/memory | SIZE |
+| 0x000B3ED0 | 30 | `??_GAtRegionMemorySystem@@UAEPAXI@Z` | at/memory | SIZE |
+| 0x001038C0 | 25 | `?Save@AtMemoryGlobals@@QAEXXZ` | at/memory | SIZE |
+| 0x001038E0 | 78 | `?Restore@AtMemoryGlobals@@QAEXXZ` | at/memory | SIZE |
 
-Relocation-aware matches with the host compiler: 65 functions, 1020 unique bytes.
-Share of `.text` raw bytes: 0.0499% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 69 functions, 1119 unique bytes.
+Share of `.text` raw bytes: 0.0547% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -502,6 +521,8 @@ Exact linked match (whole XBE): not attempted.
 | 0x002748F0 | 10 | `??_7AtTextAscii@@6B@` | MATCH |
 | 0x002726B4 | 2 | `??_7AtTextTable@@6B@` | MATCH |
 | 0x0028DEB8 | 5 | `??_7GmManifestLoader@@6B@` | MATCH |
+| 0x00286694 | 4 | `??_7AtMemorySystem@@6B@` | MATCH |
+| 0x00284840 | 4 | `??_7AtRegionMemorySystem@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
 
@@ -526,6 +547,8 @@ Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 f
 Suite `ldr`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 51 files; 19502 comparisons, 0 differences). Recorded function entries reached in every run: 10 / 10. Source mutants detected: 56 / 56. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `hep`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 40 seeds of 3000 operations; 3100506 comparisons, 0 differences). Recorded function entries reached in every run: 22 / 22. Source mutants detected: 154 / 154. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `mem`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 9715 comparisons, 0 differences). Recorded function entries reached in every run: 19 / 19. Source mutants detected: 61 / 61. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

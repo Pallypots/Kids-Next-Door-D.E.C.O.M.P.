@@ -3351,6 +3351,158 @@ source = "src/at/AtHeap.cpp"
 subsystem = "at/heap"
 evidence = "tests/oracle/oracle_hep.cpp; address noted beside the declaration in include/at/AtHeap.h"
 
+[[function]]
+va = 0x00011170
+size = 126
+symbol = "?AtRaise@@YAXHHHH@Z"
+source = "src/at/AtMemory.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000111F0
+size = 30
+symbol = "?AtHeapNew@@YAPAXI@Z"
+source = "src/at/AtMemory.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x00011210
+size = 36
+symbol = "?AtHeapDelete@@YAXPAX@Z"
+source = "src/at/AtMemory.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x00011240
+size = 28
+symbol = "?AtPushHeap@@YAXPAX@Z"
+source = "src/at/AtMemory.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x00011260
+size = 23
+symbol = "?AtPopHeap@@YAXXZ"
+source = "src/at/AtMemory.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x00011280
+size = 20
+symbol = "?AtCurrentHeap@@YAPAVAtHeap@@XZ"
+source = "src/at/AtMemory.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000112A0
+size = 10
+symbol = "?AtSetContentHeap@@YAXPAVAtHeap@@@Z"
+source = "src/at/AtMemory.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000C9AF0
+size = 28
+symbol = "??0AtMemorySystem@@QAE@XZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000C9B10
+size = 123
+symbol = "??1AtMemorySystem@@UAE@XZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000C9BE0
+size = 30
+symbol = "??_GAtMemorySystem@@UAEPAXI@Z"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000C9B90
+size = 70
+symbol = "?Startup@AtMemorySystem@@UAEXPBUAtMemoryParams@@@Z"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000C9AC0
+size = 43
+symbol = "?Shutdown@AtMemorySystem@@UAEXXZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000B3D80
+size = 37
+symbol = "??0AtRegionMemorySystem@@QAE@XZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000B3DB0
+size = 116
+symbol = "?Initialize@AtRegionMemorySystem@@UAEXPBUAtMemoryParams@@@Z"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000B3E30
+size = 33
+symbol = "?Shutdown@AtRegionMemorySystem@@UAEXXZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000B3E60
+size = 102
+symbol = "??1AtRegionMemorySystem@@UAE@XZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x000B3ED0
+size = 30
+symbol = "??_GAtRegionMemorySystem@@UAEPAXI@Z"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x001038C0
+size = 25
+symbol = "?Save@AtMemoryGlobals@@QAEXXZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
+[[function]]
+va = 0x001038E0
+size = 78
+symbol = "?Restore@AtMemoryGlobals@@QAEXXZ"
+source = "src/at/AtMemorySystem.cpp"
+subsystem = "at/memory"
+evidence = "tests/oracle/oracle_mem.cpp; address noted beside the declaration in include/at/AtMemory.h"
+
 [[vtable]]
 va = 0x00278418
 slots = 5
@@ -3603,7 +3755,14 @@ source = "src/gm/GmManifestLoader.cpp"
 "?AtRaise@@YAXHHHH@Z" = 0x00011170  # -2 and -4 arguments; maps codes to messages, ends in 0x00011070
 "?AtPushHeap@@YAXPAX@Z" = 0x00011240  # stores into the heap stack at 0x002C6068
 "?AtPopHeap@@YAXXZ" = 0x00011260  # pops the same stack
+"?AtLibraryFree@@YAXPAX@Z" = 0x001256A3  # the C library's free, on what no heap owns
 "??2@YAPAXI@Z" = 0x000111F0  # operator new: allocates from the top of that stack
+"?s_top@AtHeapStack@@2HA" = 0x002AF048  # see include/at/AtMemory.h
+"?s_heaps@AtHeapStack@@2PAPAVAtHeap@@A" = 0x002C6068  # see include/at/AtMemory.h
+"?s_contentHeap@AtHeapStack@@2PAVAtHeap@@A" = 0x002C60A8  # see include/at/AtMemory.h
+"?s_unknown3ADE40@AtRegionMemorySystem@@2HA" = 0x003ADE40  # see include/at/AtMemory.h
+"?s_unknown3ADE44@AtRegionMemorySystem@@2FA" = 0x003ADE44  # see include/at/AtMemory.h
+"?s_fatal@AtMemoryGlobals@@2PAXA" = 0x002B48E4  # see include/at/AtMemory.h
 "?s_heap@AtIoFastAlignedJamHeader@@2PAXA" = 0x00301B5C  # read at 0x0007F781
 "?s_heap@AtIoFastJamHeader@@2PAXA" = 0x00301B60  # read at 0x00080481
 "?Clear@AtIoJamNameTable@@QAEXXZ" = 0x00082C50  # same code as the destructor: folded
@@ -3627,3 +3786,15 @@ source = "src/gm/GmManifestLoader.cpp"
 "?GetFileInfo@AtIoJam1Header@@QAEHPBDPAI1@Z" = 0x00081000  # the JAM1 class is NOT recovered
 "?Clear@AtIoPath@@QAEXXZ" = 0x00018760  # same code as the destructor: folded
 "?Clear@AtIoJamInfoHeader@@QAEXXZ" = 0x0007FE60  # also the info header's member destructor at 0x0007D74B
+
+[[vtable]]
+va = 0x00286694
+slots = 4
+symbol = "??_7AtMemorySystem@@6B@"
+source = "src/at/AtMemorySystem.cpp"
+
+[[vtable]]
+va = 0x00284840
+slots = 4
+symbol = "??_7AtRegionMemorySystem@@6B@"
+source = "src/at/AtMemorySystem.cpp"

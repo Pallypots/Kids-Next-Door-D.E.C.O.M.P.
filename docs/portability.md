@@ -48,3 +48,5 @@ generator. Ninja is not installed; Linux/Android builds are untested. The 32-bit
 tooling and is excluded from x64 builds.
 
 * Allocator (`src/at/AtHeap.cpp`): a block's header holds pointers, so every offset goes through `AtHeapBlock`. On a 64-bit host `AtHeap::Init` raises the alignment shift to at least 3, which changes nothing on x86. Sizes keep the original's 24 bits, so a heap of 16 MB or more does not work, on any host, until that is changed deliberately. `AtHeapManager::s_instance` is not yet set by any port code.
+
+* Global new and delete: the original replaces them with the heap stack. Recovered code does not, since the host's library shares the process and would then allocate from a stack nothing has set up. `AtHeapNew` and `AtHeapDelete` are the original's two, under other names. How recovered classes come to use them is a decision for the port, and not yet made. `AtPlatformAllocateRegion`, `AtPlatformFreeRegion` and `AtPlatformInitDevices` are the seams; `platform/fatal.cpp` has host versions.
