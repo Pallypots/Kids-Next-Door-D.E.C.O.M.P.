@@ -68,7 +68,7 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
   in 0x00014250–0x0011FF80 and 0x00139F10–0x00192200 (and a few at 0x00200F20–0x00203A20); CRT strings around
   0x00127958–0x0012DE9A; CRI middleware 0x001B9A60–0x001F2000. Raw data: analysis-local/inv/string_tags.json.
 
-* Mounting: the code at 0x0008E77C asks the object in 0x002E26E0 to mount a name (string at 0x0027AF84) through 0x000766E0, which builds `JamFiles\\XBox\\%s%s.JAM`, checks the file
+* Mounting: the code at 0x0008E77C asks the object in 0x002E26E0 to mount a name (string at 0x0027AF84) through 0x000766E0, which builds `JamFiles\XBox\%s%s.JAM`, checks the file
   exists, creates the archive file system (0x0007DB10, then `vInit` by 0x0007D140) and pushes it on the context. So a missing archive is silently skipped. That class has
   vftable 0x00278548 and its methods are not recovered.
 * Text formats share one tokenizer (docs/formats.md). `AtIoTokenFile` opens the file; a format's reader passes a keyword table and pulls tokens. 0x00074800 (rumble) is the

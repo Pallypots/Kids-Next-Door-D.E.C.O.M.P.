@@ -84,7 +84,7 @@ static std::string real_text(float v) {
 
 static void test_reading() {
     static const AtIoKeyword words[] = {{60, "Levels"}, {61, "Level"}};
-    static const char text[] = "// comment\r\nLevels [2]\r\n{\r\n\tLEVEL \"FMV01\" unknown -0x10 0.5 -1.5 .25\r\n}\r\n";
+    static const char text[] = "// comment\r\nLevels [2]\r\n{\r\n\tLEVEL \"NAME1\" unknown -0x10 0.5 -1.5 .25\r\n}\r\n";
     g_fs->file.data = (const unsigned char*)text;
     g_fs->file.size = sizeof text - 1;
     AtIoTokenFile f;
@@ -95,7 +95,7 @@ static void test_reading() {
     CHECK(t->ExpectCount() == 2);
     CHECK(t->m_stream->m_line == 3);
     CHECK(t->Next() == 61);
-    CHECK(std::strcmp(t->ExpectString(), "FMV01") == 0);
+    CHECK(std::strcmp(t->ExpectString(), "NAME1") == 0);
     CHECK(t->Next() == AtIoTokenizer::kError);
     CHECK(std::strcmp(t->GetIdentifier(), "UNKNOWN") == 0);
     CHECK(t->ExpectInt() == -16);

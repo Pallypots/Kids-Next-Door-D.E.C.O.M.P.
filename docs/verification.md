@@ -134,16 +134,16 @@ buffer positions are compared, along with calls to the file below and every mess
 
 Input: every distinct file on the disc that begins as text, plus 60 binary samples (`python -I tools/jam.py textcases`); text written to reach each state and limit;
 1,500 random strings; six read behaviours (normal, pending, one byte at a time, zero at end, failing, failing wait); every write method on its own with the fields
-it sets made dirty first; 300,000 random floats and every small exact tie through the float formatter.
+it sets made dirty first; 300,000 random floats and many small exact ties through the float formatter.
 
 Result on 2026-11-05: 5,864 files, 12,749,375 bytes, 1,372,044 tokens, 22,236,514 comparisons, no difference; 99/99 entries reached; positive control passes; `--mutate`
 fails; 172/172 source mutants detected (166 as a reported difference, 6 by a crash or hang).
 
 The real rumble file was also read with the game's own keyword table from 0x002B2940: 145 keywords recognised, no difference.
 
-`python -I tools/oracle_run.py` needs `analysis-local/oracle-tok`. Its first run was 159/172. The survivors were: types checked only after a whole series of writes, so a
-later write hid an earlier one (5); inputs one byte short of each limit (5); state a normal sequence never leaves (2); and one branch of my own that did nothing, now
-removed.
+`python -I tools/oracle_run.py` needs `analysis-local/oracle-tok`. Its first run was 159/172. The 13 survivors were: types checked only after a whole series of writes, so a
+later write hid an earlier one (3); inputs short of a limit (5); a failure path never entered and a field not compared (2); state a normal sequence never leaves (2); and one branch of
+my own that did nothing, now removed (1).
 
 **x87 precision.** The Xbox's setting is not established, so each file was also tokenized by the original under 53-bit and 64-bit precision. No file's result changed.
 

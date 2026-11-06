@@ -101,7 +101,7 @@ The lexical rules, from 0x00022DF0, are:
 | Input | Token |
 | --- | --- |
 | blanks, tabs, CR, LF between tokens; `//` to end of line | skipped |
-| `"..."` | string, at most 255 bytes; may span lines. Backslash escapes (`\\n \\t \\" \\\\`, capitals too) only if the tokenizer's flag at +0x11C is set, and nothing recovered sets it, so a path like `"Design\\Registry\\Actor"` keeps its backslashes |
+| `"..."` | string, at most 255 bytes; may span lines. Backslash escapes (`\n \t \" \\`, capitals too) only if the tokenizer's flag at +0x11C is set, and nothing recovered sets it, so a path like `"Design\Registry\Actor"` keeps its backslashes |
 | decimal, `0x` hex, either with a leading `-` | int, wrapping at 32 bits |
 | digits with `.`, or a leading `.`; never an exponent | real |
 | letter, then letters, digits, `_` | keyword, case-insensitive, looked up in a table the caller supplies; not in the table gives the error token 1 |
