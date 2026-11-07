@@ -59,7 +59,7 @@ def main():
             if game and rep_now:
                 recorded = {r["va"] for r in rep_now["results"]}
                 game_vas = {k for k, v in own["functions"].items() if v[0] == "game"}
-                out += ["", "**Estimate**, because most of the game row is inferred: %d of about %d game functions are recorded in config/functions.toml. "
+                out += ["", "**Estimate**, because most of the game row is inferred: %d of about %d game functions are recorded in config/functions.toml and config/functions.d/. "
                         "This counts source written, whatever its verification state, not a playable fraction." % (len(recorded & game_vas), game["functions"]), ""]
         else:
             out += ["unknown (run tools/ownership.py)", ""]
