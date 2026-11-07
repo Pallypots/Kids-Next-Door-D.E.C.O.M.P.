@@ -17,14 +17,14 @@ class AtSceneNode;
 enum AtSceneWord {
     kAtWordNode = 57, kAtWordRotTransCoordSys = 58, kAtWordScaleCoordSys = 59, kAtWordMotionState = 60, kAtWordModifierNode = 61, kAtWordModifier = 62, kAtWordModelActor = 64, kAtWordJointedModelActor = 65, kAtWordCoordSysDatabase = 66,
     kAtWordCopyCoordSysDatabase = 67, kAtWordAnimationChannel = 68, kAtWordPlayAnimation = 69, kAtWordWeights = 70, kAtWordWeightMultiplier = 71, kAtWordPlaybackRate = 72, kAtWordMatAssignmentOffset = 80,
-    kAtWordParticleSystemActor = 81, kAtWordGroupActor = 84, kAtWordSwitchGroupActor = 86, kAtWordLodGroupActor = 88, kAtWordBoundingSphere = 90, kAtWordActiveDistance = 91, kAtWordMatAssignment = 92, kAtWordAttach = 93, kAtWordAttachBase = 94,
+    kAtWordParticleSystemActor = 81, kAtWordEmitter = 82, kAtWordGroupActor = 84, kAtWordSwitchGroupActor = 86, kAtWordLodGroupActor = 88, kAtWordBoundingSphere = 90, kAtWordActiveDistance = 91, kAtWordMatAssignment = 92, kAtWordAttach = 93, kAtWordAttachBase = 94,
     kAtWordPosition = 95, kAtWordOrthoNormalize = 96, kAtWordQuaternion = 97, kAtWordLookAt = 98, kAtWordLinearVelocity = 99, kAtWordAngularVelocity = 100, kAtWordCollisionEnable = 101, kAtWordCollisionDisable = 102,
     kAtWordModificationEnable = 103, kAtWordModificationDisable = 104, kAtWordDrawingEnable = 105, kAtWordDrawingDisable = 106, kAtWordMatAnimationChannel = 109, kAtWordPlayMatAnimation = 110, kAtWordScale = 111, kAtWordDataLink = 112, kAtWordMesh = 113,
     kAtWordNameSpace = 114, kAtWordModifierReceiver = 115, kAtWordBoundingGeometry = 116, kAtWordLineSegIntersectEnable = 117, kAtWordLineSegIntersectDisable = 118, kAtWordAnimateAtDrawEnable = 119, kAtWordAnimateAtDrawDisable = 120,
     kAtWordShareCoordSysDatabase = 121, kAtWordCoordSysMirrorDatabase = 124, kAtWordCoordSysMirroringEnable = 125, kAtWordCoordSysMirroringDisable = 126, kAtWordProjectionReceiver = 127, kAtWordTextureCoordSysDatabase = 130,
     kAtWordCopyTextureCoordSysDatabase = 131, kAtWordShareTextureCoordSysDatabase = 132, kAtWordTextureCoordAnimationChannel = 133, kAtWordScaleTranslations = 134, kAtWordLensFlareActor = 135,
     kAtWordEnableBoundingGeometryDraw = 139, kAtWordEnableNodeBoundingSphereDraw = 140, kAtWordDisableBoundingGeometryDraw = 141, kAtWordDisableNodeBoundingSphereDraw = 142, kAtWordBoundingGeometryMatAssignment = 143,
-    kAtWordBoundingSphereMatAssignment = 144, kAtWordWaterActor = 147, kAtWordSoundNode = 148, kAtWordAttachNodeToThisJoint = 149, kAtWordAttachNodeToThisBase = 150, kAtWordPhysicsActor = 163, kAtWordPhysicsActorInstance = 164, kAtWordPhysicsJointedModelActor = 166, kAtWordPhysicsEntitiesFile = 168, kAtWordAnimationSkeletonFile = 169,
+    kAtWordBoundingSphereMatAssignment = 144, kAtWordWorldAdditiveInitialVelocity = 145, kAtWordWorldAdditiveAcceleration = 146, kAtWordWaterActor = 147, kAtWordSoundNode = 148, kAtWordAttachNodeToThisJoint = 149, kAtWordAttachNodeToThisBase = 150, kAtWordUpdateAtDraw = 151, kAtWordPlayParticles = 153, kAtWordPauseParticles = 154, kAtWordPhysicsActor = 163, kAtWordPhysicsActorInstance = 164, kAtWordPhysicsJointedModelActor = 166, kAtWordPhysicsEntitiesFile = 168, kAtWordAnimationSkeletonFile = 169,
     kAtWordRigidBodySkeletonFile = 170, kAtWordInitWithHavokPosition = 171, kAtWordInitWithHavokOrientation = 172
 };
 

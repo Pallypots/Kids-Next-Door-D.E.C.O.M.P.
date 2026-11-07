@@ -1,0 +1,153 @@
+# ParticleSystemActor and what it starts when it loads. See include/at/AtSceneParticle.h. Sizes are from the disassembly.
+
+[[function]]
+va = 0x0003B920
+size = 87
+symbol = "??_GAtSceneParticleSystemActor@@UAEPAXI@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "slot 7 of 0x002767C0; a vector deleting destructor over 0xFC with 0x0004D390"
+
+[[function]]
+va = 0x00035820
+size = 18
+symbol = "?SetIdentity@AtQuaternion@@QAEXXZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "(0, 0, 0, 1) at +0x1C of a layer; returns nothing of note, so not a constructor"
+
+[[function]]
+va = 0x0004C180
+size = 10
+symbol = "?SetHeap@AtSceneParticleSystemActor@@SAXPAX@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "stores 0x002C7E10, which 0x0004C3B0 pushes for the layers"
+
+[[function]]
+va = 0x0004C370
+size = 55
+symbol = "?FindEmitter@AtNameTableOwner@@QAEPAXPBD0@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "the owner's +0x120 by name space, +0x108 otherwise; those are what 0x00040030 adds a list of .ASE emitters to"
+
+[[function]]
+va = 0x0004C3B0
+size = 689
+symbol = "?StartLayers@AtSceneParticleSystemActor@@QAEXPAUAtNameTableOwner@@@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "after the base's reader; one layer, then one more per echo of MotionBlur; one draw from the random table; the sphere from the emitter; has the message 'Particle system actor missing actor'"
+
+[[function]]
+va = 0x0004C670
+size = 151
+symbol = "?Reset@AtSceneParticleSystemActor@@QAEXXZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "called by the constructor, Clear and the destructor; clears +0x98 onward but +0xF4, and +0xB0 to 1"
+
+[[function]]
+va = 0x0004C710
+size = 301
+symbol = "?ReadBody@AtSceneParticleSystemActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "slot 1 of 0x002767C0; a table over words 82, 145, 146, 151, 153, 154 and the base's reader for the rest"
+
+[[function]]
+va = 0x0004D1D0
+size = 31
+symbol = "??0AtSceneParticleSystemActor@@QAE@XZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "sets 0x002767C0 over the actor's constructor, class 8"
+
+[[function]]
+va = 0x0004D1F0
+size = 60
+symbol = "?Read@AtSceneParticleSystemActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "slot 10 of 0x002767C0"
+
+[[function]]
+va = 0x0004D310
+size = 59
+symbol = "?Clear@AtSceneParticleSystemActor@@UAEXXZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "slot 11 of 0x002767C0; destroys the array, by its count, with 0x0005B2D0"
+
+[[function]]
+va = 0x0004D390
+size = 127
+symbol = "??1AtSceneParticleSystemActor@@UAE@XZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "called by the deleter 0x0003B920; sets 0x002767C0 and ends in the actor's destructor"
+
+[[function]]
+va = 0x0005AAC0
+size = 10
+symbol = "?SetHeap@AtSceneParticleLayer@@SAXPAX@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "stores 0x002C9C10, which 0x0005B2E0 pushes for the particles"
+
+[[function]]
+va = 0x0005AC90
+size = 48
+symbol = "??0AtSceneParticleLayer@@QAE@XZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "the element constructor passed to the eh vector constructor in 0x0004C3B0, 0x38 bytes"
+
+[[function]]
+va = 0x0005ACC0
+size = 79
+symbol = "?Clear@AtSceneParticleLayer@@QAEXXZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "gives the drawer back by slot 1 of what its second word leads to, frees the particles, and clears as the constructor does"
+
+[[function]]
+va = 0x0005B2D0
+size = 5
+symbol = "??1AtSceneParticleLayer@@QAE@XZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "a jump to 0x0005ACC0; the element destructor passed in 0x0004C3B0 and 0x0004D310"
+
+[[function]]
+va = 0x0005B2E0
+size = 295
+symbol = "?Start@AtSceneParticleLayer@@QAEXPAUAtNameTableOwner@@PAUAtSceneParticleEmitter@@PBVAtQuaternion@@@Z"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "an array of MaxParticles + 1 at 0x40 each; slot 0 of the owner's first word's object, and slot 1 of what that answers"
+
+[[function]]
+va = 0x0005FF30
+size = 52
+symbol = "??0AtSceneParticle@@QAE@XZ"
+source = "src/at/AtSceneParticle.cpp"
+subsystem = "at/particle"
+evidence = "called for each of the 0x40-byte elements in 0x0005B2E0; clears all sixteen words"
+
+[[vtable]]
+va = 0x002767C0
+slots = 43
+symbol = "??_7AtSceneParticleSystemActor@@6B@"
+source = "src/at/AtSceneParticle.cpp"
+
+[symbols]
+"?s_heap@AtSceneParticleSystemActor@@2PAXA" = 0x002C7E10
+"?s_heap@AtSceneParticleLayer@@2PAXA" = 0x002C9C10
+"?g_atRandomCursor@@3IA" = 0x002C60C0
+"?Slot12@AtSceneParticleSystemActor@@UAEXXZ" = 0x0004D350  # vftable slots from here on: not recovered
+"?Slot34@AtSceneParticleSystemActor@@UAEXXZ" = 0x0004D180
+"?Slot35@AtSceneParticleSystemActor@@UAEXXZ" = 0x0004D190
+"?Slot38@AtSceneParticleSystemActor@@UAEXXZ" = 0x0004D060
+"?Slot39@AtSceneParticleSystemActor@@UAEXXZ" = 0x0004D0A0

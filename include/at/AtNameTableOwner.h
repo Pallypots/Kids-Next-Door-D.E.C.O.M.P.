@@ -10,6 +10,7 @@ class AtAudioBankLoader;  // include/at/AtAudioBank.h
 class AtMatrixDevice;     // include/at/AtCoordSys.h
 class AtSceneDevice;      // include/at/AtScene.h
 class AtSceneNode;        // include/at/AtScene.h
+class AtSceneParticleDrawerMaker;  // include/at/AtSceneParticle.h
 
 struct AtNameTableOwner {
     // The image draw lists (0x0003B0C0, 0x0003B490) use these two as well, on an owner of their own, so they are not only for sound.
@@ -24,8 +25,9 @@ struct AtNameTableOwner {
     AtSceneNode* FindActor(const char* name, const char* ns);      // 0x000456C0 reports a node not of an actor's class, and hands it back. In src/at/AtSpace.cpp
     void* FindCellTable(const char* name, const char* ns);         // 0x00045710 in src/at/AtSpace.cpp
     class AtModifier* FindModifier(const char* name, const char* ns);  // 0x000464E0 in src/at/AtSpace.cpp
+    void* FindEmitter(const char* name, const char* ns);           // 0x0004C370 ns may be empty or null. src/at/AtSceneParticle.cpp
 
-    int m_unknown00;                   // +0x00
+    AtSceneParticleDrawerMaker* m_particleDrawers;  // +0x00 a word of the scene owner's, set in 0x00040770. The sound owner, which is also this layout, has its vftable here. 0x0005B2E0, 0x0005ACC0.
     AtSceneDevice* m_device;           // +0x04
     AtMatrixDevice* m_unknown08;       // +0x08 where emitters take their matrices from. 0x0011ED90, 0x0011EE30.
     AtAudioBankLoader* m_loader;       // +0x0C
@@ -39,7 +41,8 @@ struct AtNameTableOwner {
     GmNameSpaceDb m_nodeSpaces;        // +0xA8
     GmNameMapGroup m_modifiers;        // +0xCC
     GmNameSpaceDb m_modifierSpaces;    // +0xE4
-    char m_unknown108[0x3C];
+    GmNameMapGroup m_emitters;         // +0x108 Emitter
+    GmNameSpaceDb m_emitterSpaces;     // +0x120
     GmNameMapGroup m_lensFlares;       // +0x144
     GmNameSpaceDb m_lensFlareSpaces;   // +0x15C
     GmNameMapGroup m_geometry;         // +0x180

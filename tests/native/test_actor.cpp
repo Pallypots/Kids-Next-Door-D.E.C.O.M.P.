@@ -15,6 +15,7 @@
 
 #include "at/AtIoTokenizer.h"
 #include "at/AtSceneActor.h"
+#include "at/AtSceneParticle.h"
 
 static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
@@ -75,21 +76,42 @@ public:
 
 int g_heap;
 
+// What a real build must have running by the time it loads a scene: the drawers. Nothing in them is recovered.
+class Drawer : public AtSceneParticleDrawer {
+public:
+    void Slot0() override {}
+    void Start(AtNameTableOwner* owner, AtSceneParticleEmitter*) override { m_owner = owner; }
+};
+class DrawerMaker : public AtSceneParticleDrawerMaker {
+public:
+    int m_alive = 0;
+    AtSceneParticleDrawer* New() override { m_alive++; return new Drawer; }
+    void Release(AtSceneParticleDrawer* drawer) override { m_alive--; delete (Drawer*)drawer; }
+};
+
 // What a device and an owner would hold, for each of the names given.
 struct World {
     Device device;
     AtNameTableOwner* owner;
+    DrawerMaker drawers;
+    AtSceneParticleEmitter emitter = {};
     int thing = 0;
     AtSceneMatAnimation matAnimation = {};
     AtSceneAnimation animation = {};
     std::map<std::string, AtCoordSysDatabase*> database;
     AtCoordSysDatabase targetDatabase;
-    GmNameMap things, modifiers, geometry, meshes, matAssignments, matAnimations, mirrors, inner, animations, weights, databases, nodes;
+    GmNameMap emitters, things, modifiers, geometry, meshes, matAssignments, matAnimations, mirrors, inner, animations, weights, databases, nodes;
     AtSceneJointedModelActor* target = nullptr;
 
     explicit World(const std::set<std::string>& names) {
         owner = new (std::calloc(1, sizeof(AtNameTableOwner))) AtNameTableOwner;
         owner->m_device = &device;
+        owner->m_particleDrawers = &drawers;
+        owner->m_emitterSpaces.Init(4);
+        emitter.m_blurCount = 2;
+        emitter.m_blurStep = 0.25f;
+        emitter.m_maxParticles = 8;
+        emitter.m_localSphere.radius = 100.0f;
         const unsigned size = (unsigned)names.size() + 4;
         owner->m_nodeSpaces.Init(4);
         owner->m_modifierSpaces.Init(4);
@@ -108,7 +130,7 @@ struct World {
             d->m_root = &d->m_rotTrans[0];
             for (const std::string& n : names) d->Insert(n.c_str(), &d->m_rotTrans[1]);
         };
-        for (GmNameMap* m : {&modifiers, &geometry, &meshes, &matAssignments, &matAnimations, &mirrors, &inner, &animations, &weights, &databases, &nodes}) m->Init(size);
+        for (GmNameMap* m : {&emitters, &modifiers, &geometry, &meshes, &matAssignments, &matAnimations, &mirrors, &inner, &animations, &weights, &databases, &nodes}) m->Init(size);
         target = new AtSceneJointedModelActor;
         target->m_owner = owner;
         makeDatabase(&targetDatabase);
@@ -116,6 +138,7 @@ struct World {
         target->m_joints.m_database = &targetDatabase;
         for (const std::string& n : names) {
             modifiers.Insert(n.c_str(), &thing);
+            emitters.Insert(n.c_str(), &emitter);
             geometry.Insert(n.c_str(), &thing);
             meshes.Insert(n.c_str(), &thing);
             matAssignments.Insert(n.c_str(), &thing);
@@ -137,6 +160,7 @@ struct World {
         device.m_matAnimations.Add(&matAnimations);
         device.m_mirrorDatabases.Add(&mirrors);
         device.m_animationDatabases.Add(&animations);
+        owner->m_emitters.Add(&emitters);
         device.m_weightDatabases.Add(&weights);
         device.m_coordSysDatabases.Add(&databases);
     }
@@ -158,6 +182,8 @@ void set_tables() {
     AtScene::SetHeap(&g_heap);
     AtSceneNode::SetHeap(&g_heap);
     AtSceneActor::SetHeap(&g_heap);
+    AtSceneParticleSystemActor::SetHeap(&g_heap);
+    AtSceneParticleLayer::SetHeap(&g_heap);
     AtSceneAnimSet::SetHeap(&g_heap);
     AtSceneAnimBlend::SetHeap(&g_heap);
     AtCoordSysDatabase::SetHeap(&g_heap);
