@@ -45,6 +45,8 @@ The `subsystem` must not be a prefix of another. Do not edit `CMakeLists.txt`, `
 * **Check a header edit against every user.** A member you change or retype can break a harness you did not touch. Before committing a shared edit, run every suite with no mutants, which also compiles them.
 * **Say what a green result does not show.** If doubles stand in for the classes that matter on real files, say that first, not in a limit further down.
 * **Shell pitfall.** Backslashes in `sed` and heredoc patches get eaten. Use the edit tool, or a Python file written with the write tool.
+* **A seam is a claim.** Say which real members a seam stands for; replacing one later should mean deleting it, not writing a second class. Use a real member at its offset where you can.
+* **A shared rename reaches further than your suite.** A renamed or retyped member can break other suites and host tests, which you may not see. Prefer adding to renaming; if you must rename, say so in your report with the old and new names.
 * Name worklogs by the day you start them.
 
 ## Commands, in the worktree
