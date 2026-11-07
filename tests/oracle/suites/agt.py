@@ -1,0 +1,212 @@
+# Mutants of the texture database. Each text occurs exactly once in the source.
+F = "AtTextureDatabase.cpp"
+
+_CTOR = "AtTextureDatabase::AtTextureDatabase() {\n"
+_CLEAR = "void AtTextureDatabase::Clear() {\n    GmNameMap::Clear();\n    if (m_directory != 0) {\n        operator delete(m_directory);\n    }\n"
+_FIELDS = ["m_surface2DCount", "m_surface3DCount", "m_texture2DCount", "m_texture3DCount", "m_cubeMapCount", "m_fileSystem", "m_directory", "m_more"]
+_ZEROES = "".join("    %s = 0;\n" % f for f in _FIELDS)
+
+
+def _without(head, field):
+    return head + _ZEROES, head + _ZEROES.replace("    %s = 0;\n" % field, "")
+
+
+_ALLOC_HEAD = "const char* ns) {\n    if (m_surface2DCount + m_surface3DCount != 0) {\n        Clear();\n    }\n    m_surface2DCount = surfaces2D;"
+_READ_HEAD = "void AtTextureDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {\n    if (m_surface2DCount + m_surface3DCount != 0) {\n        Clear();\n    }\n"
+
+MUTANTS = [
+    # The keyword table.
+    ("keywords: an id", F, '{0x55, "DemandLoad"}', '{0x56, "DemandLoad"}'),
+    ("keywords: a word", F, '{0x3D, "Texture2D"}', '{0x3D, "Texture2d"}'),
+    # Brackets.
+    ("count: no left bracket", F, "    tokenizer->ExpectLeftBracket();\n", ""),
+    ("count: no right bracket", F, "    tokenizer->ExpectRightBracket();\n", ""),
+    ("count: no report of empty", F, "    if (count < 1) {\n        tokenizer->Error(kListIsEmpty);\n    }\n", ""),
+    ("count: another report of empty", F, "    if (count < 1) {\n        tokenizer->Error(kListIsEmpty);", "    if (count < 1) {\n        tokenizer->Error(kListAlreadyGiven);"),
+    ("count: empty at one", F, "if (count < 1) {", "if (count < 2) {"),
+    # Names' memory.
+    ("names: no raise without heap", F, "    if (AtIoTokenFile::s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n", ""),
+    ("names: other raise", F, "    if (AtIoTokenFile::s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);", "    if (AtIoTokenFile::s_heap == 0) {\n        AtRaise(-3, 0, 0, 0);"),
+    ("names: other heap", F, "    AtPushHeap(AtIoTokenFile::s_heap);", "    AtPushHeap((void*)1);"),
+    ("names: no push", F, "    AtPushHeap(AtIoTokenFile::s_heap);\n", ""),
+    ("names: no pop", F, "operator new(count * kNameSize);\n    AtPopHeap();\n", "operator new(count * kNameSize);\n"),
+    ("names: size", F, "operator new(count * kNameSize)", "operator new((count + 1) * kNameSize)"),
+    ("names: no raise on null", F, "    if (names == 0) {\n        AtRaise(-4, 0, 0, 0);\n    }\n", ""),
+    ("names: other raise on null", F, "    if (names == 0) {\n        AtRaise(-4, 0, 0, 0);", "    if (names == 0) {\n        AtRaise(-5, 0, 0, 0);"),
+    # Which item.
+    ("item: 2D is 3D", F, "        return database->Texture2DAt(index);", "        return database->Texture3DAt(index);"),
+    ("item: 3D is cube", F, "        return database->Texture3DAt(index);", "        return database->CubeMapAt(index);"),
+    ("item: cube is 2D", F, "    return database->CubeMapAt(index);", "    return database->Texture2DAt(index);"),
+    # The owner.
+    ("owner: never a space", F, "    if (ns != 0 && ns[0] != 0) {\n        m_textureSpaces.Add(ns, map);\n        return;\n    }\n", ""),
+    ("owner: always a space", F, "    if (ns != 0 && ns[0] != 0) {\n        m_textureSpaces.Add(ns, map);\n        return;\n    }\n    m_textures.Add(map);", "    m_textureSpaces.Add(ns != 0 ? ns : \"\", map);"),
+    ("owner: empty is a space", F, "    if (ns != 0 && ns[0] != 0) {\n        m_textureSpaces.Add(ns, map);", "    if (ns != 0) {\n        m_textureSpaces.Add(ns, map);"),
+    ("owner: also the plain group", F, "        m_textureSpaces.Add(ns, map);\n        return;\n", "        m_textureSpaces.Add(ns, map);\n"),
+    ("owner: materials", F, "    m_textures.Add(map);", "    m_materials.Add(map);"),
+    ("owner: space's materials", F, "        m_textureSpaces.Add(ns, map);", "        m_materialSpaces.Add(ns, map);"),
+    # Small ones.
+    ("SetHeap: nothing", F, "    s_heap = heap;\n", "    (void)heap;\n"),
+    ("dtor: frees the directory", F, "AtTextureDatabase::~AtTextureDatabase() {\n}", "AtTextureDatabase::~AtTextureDatabase() {\n    operator delete(m_directory);\n}"),
+    ("dtor: clears a count", F, "AtTextureDatabase::~AtTextureDatabase() {\n}", "AtTextureDatabase::~AtTextureDatabase() {\n    m_surface2DCount = 0;\n}"),
+    ("Clear: not the base's", F, "void AtTextureDatabase::Clear() {\n    GmNameMap::Clear();\n", "void AtTextureDatabase::Clear() {\n"),
+    ("Clear: directory not freed", F, "    if (m_directory != 0) {\n        operator delete(m_directory);\n    }\n", ""),
+    # Allocate.
+    ("Allocate: never clears", F, _ALLOC_HEAD, "const char* ns) {\n    m_surface2DCount = surfaces2D;"),
+    ("Allocate: clears on 2D surfaces only", F, _ALLOC_HEAD, "const char* ns) {\n    if (m_surface2DCount != 0) {\n        Clear();\n    }\n    m_surface2DCount = surfaces2D;"),
+    ("Allocate: clears on 3D surfaces only", F, _ALLOC_HEAD, "const char* ns) {\n    if (m_surface3DCount != 0) {\n        Clear();\n    }\n    m_surface2DCount = surfaces2D;"),
+    ("Allocate: 2D surfaces", F, "    m_surface2DCount = surfaces2D;\n", "    m_surface2DCount = surfaces3D;\n"),
+    ("Allocate: 3D surfaces", F, "    m_surface3DCount = surfaces3D;\n", "    m_surface3DCount = surfaces2D;\n"),
+    ("Allocate: 2D textures", F, "    m_texture2DCount = textures2D;\n", "    m_texture2DCount = textures3D;\n"),
+    ("Allocate: 3D textures", F, "    m_texture3DCount = textures3D;\n", "    m_texture3DCount = textures2D;\n"),
+    ("Allocate: cube maps", F, "    m_cubeMapCount = cubeMaps;\n", "    m_cubeMapCount = textures2D;\n"),
+    ("Allocate: table without 2D", F, "Init(textures2D + textures3D + cubeMaps);", "Init(textures3D + cubeMaps);"),
+    ("Allocate: table without 3D", F, "Init(textures2D + textures3D + cubeMaps);", "Init(textures2D + cubeMaps);"),
+    ("Allocate: table without cubes", F, "Init(textures2D + textures3D + cubeMaps);", "Init(textures2D + textures3D);"),
+    ("Allocate: table with surfaces", F, "Init(textures2D + textures3D + cubeMaps);", "Init(surfaces2D + textures2D + textures3D + cubeMaps);"),
+    ("Allocate: no ready", F, "cubeMaps);\n    OnReady(owner);\n", "cubeMaps);\n"),
+    ("Allocate: no 2D surfaces", F, "    if (m_surface2DCount != 0) {\n        MakeSurfaces2D();\n    }\n", ""),
+    ("Allocate: 2D surfaces unasked", F, "    if (m_surface2DCount != 0) {\n        MakeSurfaces2D();\n    }\n", "    MakeSurfaces2D();\n"),
+    ("Allocate: no 3D surfaces", F, "    if (m_surface3DCount != 0) {\n        MakeSurfaces3D();\n    }\n", ""),
+    ("Allocate: 3D surfaces unasked", F, "    if (m_surface3DCount != 0) {\n        MakeSurfaces3D();\n    }\n", "    MakeSurfaces3D();\n"),
+    ("Allocate: no 2D textures", F, "    if (m_texture2DCount != 0) {\n        MakeTextures2D();\n    }\n", ""),
+    ("Allocate: 2D textures unasked", F, "    if (m_texture2DCount != 0) {\n        MakeTextures2D();\n    }\n", "    MakeTextures2D();\n"),
+    ("Allocate: no 3D textures", F, "    if (m_texture3DCount != 0) {\n        MakeTextures3D();\n    }\n", ""),
+    ("Allocate: 3D textures unasked", F, "    if (m_texture3DCount != 0) {\n        MakeTextures3D();\n    }\n", "    MakeTextures3D();\n"),
+    ("Allocate: no cube maps", F, "    if (m_cubeMapCount != 0) {\n        MakeCubeMaps();\n    }\n", ""),
+    ("Allocate: cube maps unasked", F, "    if (m_cubeMapCount != 0) {\n        MakeCubeMaps();\n    }\n", "    MakeCubeMaps();\n"),
+    ("Allocate: not added", F, "    }\n    owner->AddTextures(this, ns);\n}", "    }\n}"),
+    ("Allocate: added with no space", F, "    }\n    owner->AddTextures(this, ns);\n}", "    }\n    owner->AddTextures(this, 0);\n}"),
+    ("Allocate: added before ready", F, "cubeMaps);\n    OnReady(owner);\n", "cubeMaps);\n    owner->AddTextures(this, ns);\n    OnReady(owner);\n"),
+    # Count and find.
+    ("Count: from one", F, "    unsigned int found = 0;\n", "    unsigned int found = 1;\n"),
+    ("Count: levels above one", F, "        if (Texture2DAt(i)->m_levels != 0) {\n", "        if (Texture2DAt(i)->m_levels > 1) {\n"),
+    ("Count: signed levels", F, "        if (Texture2DAt(i)->m_levels != 0) {\n", "        if ((signed char)Texture2DAt(i)->m_levels > 0) {\n"),
+    ("Count: 3D", F, "        if (Texture2DAt(i)->m_levels != 0) {\n", "        if (Texture3DAt(i)->m_levels != 0) {\n"),
+    ("Count: every one", F, "        if (Texture2DAt(i)->m_levels != 0) {\n            found++;\n        }\n", "        found++;\n"),
+    ("Count: last short", F, "    for (unsigned int i = 0; i < m_texture2DCount; i++) {\n        if (Texture2DAt", "    for (unsigned int i = 0; i + 1 < m_texture2DCount; i++) {\n        if (Texture2DAt"),
+    ("Count: not along more", F, "    if (m_more != 0) {\n        return found + m_more->CountUsedTextures();\n    }\n", ""),
+    ("Count: more instead", F, "return found + m_more->CountUsedTextures();", "return m_more->CountUsedTextures();"),
+    ("Find: one level is free", F, "            if (item->m_levels == 0) {\n", "            if (item->m_levels <= 1) {\n"),
+    ("Find: signed levels", F, "            if (item->m_levels == 0) {\n", "            if ((signed char)item->m_levels <= 0) {\n"),
+    ("Find: 3D", F, "            AtTextureItem* item = database->Texture2DAt(i);\n", "            AtTextureItem* item = database->Texture3DAt(i);\n"),
+    ("Find: first of this database only", F, "for (unsigned int i = 0; i < database->m_texture2DCount; i++) {", "for (unsigned int i = 0; i < database->m_texture2DCount && i < 1; i++) {"),
+    ("Find: always makes more", F, "        if (database->m_more == 0) {\n            database->MakeMore();\n        }\n", "        database->MakeMore();\n"),
+    ("Find: makes on this", F, "            database->MakeMore();\n", "            MakeMore();\n"),
+    # The directory.
+    ("Push: without a file system", F, "void AtTextureDatabase::PushDirectory() {\n    if (m_fileSystem != 0 && m_directory != 0) {", "void AtTextureDatabase::PushDirectory() {\n    if (m_directory != 0) {"),
+    ("Push: without a directory", F, "void AtTextureDatabase::PushDirectory() {\n    if (m_fileSystem != 0 && m_directory != 0) {", "void AtTextureDatabase::PushDirectory() {\n    if (m_fileSystem != 0) {"),
+    ("Push: nothing", F, "        m_fileSystem->m_path.PushFromFile(m_directory);\n", ""),
+    ("Push: as it stands", F, "        m_fileSystem->m_path.PushFromFile(m_directory);\n", "        m_fileSystem->m_path.Push(m_directory);\n"),
+    ("Pop: without a file system", F, "void AtTextureDatabase::PopDirectory() {\n    if (m_fileSystem != 0 && m_directory != 0) {", "void AtTextureDatabase::PopDirectory() {\n    if (m_directory != 0) {"),
+    ("Pop: without a directory", F, "void AtTextureDatabase::PopDirectory() {\n    if (m_fileSystem != 0 && m_directory != 0) {", "void AtTextureDatabase::PopDirectory() {\n    if (m_fileSystem != 0) {"),
+    ("Pop: nothing", F, "    if (m_fileSystem != 0 && m_directory != 0) {\n        m_fileSystem->m_path.Pop(0);\n    }\n", ""),
+    # Load.
+    ("Load: extension", F, 'file.Open(name, "AGT", 2, 0)', 'file.Open(name, "AGM", 2, 0)'),
+    ("Load: flags", F, 'file.Open(name, "AGT", 2, 0)', 'file.Open(name, "AGT", 0, 0)'),
+    ("Load: no report", F, '    if (status != 0) {\n        AtReportFileError(status, name, "AGT");\n    }\n', ""),
+    ("Load: report's extension", F, 'AtReportFileError(status, name, "AGT");', 'AtReportFileError(status, name, "AGM");'),
+    ("Load: report's status", F, 'AtReportFileError(status, name, "AGT");', 'AtReportFileError(status + 1, name, "AGT");'),
+    ("Load: file system not kept", F, "    m_fileSystem = file.m_file.m_fs;\n    m_fileSystem->m_path.PushFromFile(file.m_file.m_file->m_path);\n", "    file.m_file.m_fs->m_path.PushFromFile(file.m_file.m_file->m_path);\n"),
+    ("Load: no directory while reading", F, "    m_fileSystem->m_path.PushFromFile(file.m_file.m_file->m_path);\n", ""),
+    ("Load: path as it stands", F, "    m_fileSystem->m_path.PushFromFile(file.m_file.m_file->m_path);\n", "    m_fileSystem->m_path.Push(file.m_file.m_file->m_path);\n"),
+    ("Load: reads nothing", F, "    Read(owner, file.m_tokenizer);\n", ""),
+    ("Load: always keeps the path", F, "    if (s_demandLoadCount > 0) {\n", "    {\n"),
+    ("Load: never keeps the path", F, "    if (s_demandLoadCount > 0) {\n", "    if (s_demandLoadCount > 0x7FFFFFFF) {\n"),
+    ("Load: keeps the path past one", F, "    if (s_demandLoadCount > 0) {\n", "    if (s_demandLoadCount > 1) {\n"),
+    ("Load: no raise without heap", F, "        if (s_heap == 0) {\n            AtRaise(-2, 0, 0, 0);\n        }\n", ""),
+    ("Load: other raise", F, "        if (s_heap == 0) {\n            AtRaise(-2, 0, 0, 0);", "        if (s_heap == 0) {\n            AtRaise(-3, 0, 0, 0);"),
+    ("Load: other heap", F, "        AtPushHeap(s_heap);\n", "        AtPushHeap((void*)1);\n"),
+    ("Load: no push", F, "        AtPushHeap(s_heap);\n", ""),
+    ("Load: no pop", F, "operator new(length + 1);\n        AtPopHeap();\n", "operator new(length + 1);\n"),
+    ("Load: short", F, "operator new(length + 1);", "operator new(length);"),
+    ("Load: long", F, "operator new(length + 1);", "operator new(length + 2);"),
+    ("Load: no raise on null", F, "        if (m_directory == 0) {\n            AtRaise(-4, 0, 0, 0);\n        }\n", ""),
+    ("Load: other raise on null", F, "        if (m_directory == 0) {\n            AtRaise(-4, 0, 0, 0);", "        if (m_directory == 0) {\n            AtRaise(-5, 0, 0, 0);"),
+    ("Load: copy short", F, "for (unsigned int i = 0; i <= length; i++) {\n            m_directory[i] = path[i];", "for (unsigned int i = 0; i + 1 <= length; i++) {\n            m_directory[i] = path[i];"),
+    ("Load: copy from the name", F, "        const char* path = file.m_file.m_file->m_path;\n", "        const char* path = name;\n"),
+    ("Load: no pop of the directory", F, "    m_fileSystem->m_path.Pop(0);\n    file.Close();\n", "    file.Close();\n"),
+    # Dropped as equivalent: removing the explicit file.Close(). The file's destructor, on the next statement, calls the same Close, and nothing runs between. The original has both calls, 0x0001C8C3 and 0x0001C8D4.
+    # Read: before the words.
+    ("Read: never clears", F, _READ_HEAD, "void AtTextureDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {\n"),
+    ("Read: clears on 2D surfaces only", F, _READ_HEAD, "void AtTextureDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {\n    if (m_surface2DCount != 0) {\n        Clear();\n    }\n"),
+    ("Read: clears on 3D surfaces only", F, _READ_HEAD, "void AtTextureDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {\n    if (m_surface3DCount != 0) {\n        Clear();\n    }\n"),
+    ("Read: no keywords", F, "    tokenizer->SetKeywords(s_keywords, kKeywordCount, 0);\n", ""),
+    ("Read: fewer keywords", F, "tokenizer->SetKeywords(s_keywords, kKeywordCount, 0);", "tokenizer->SetKeywords(s_keywords, kKeywordCount - 1, 0);"),
+    ("Read: no name space", F, "    if (token == kNameSpace) {\n        tokenizer->ExpectName(space);\n        ns = space;\n        token = tokenizer->Next();\n    }\n", ""),
+    ("Read: name space not kept", F, "        ns = space;\n", ""),
+    ("Read: stuck on the name space", F, "        ns = space;\n        token = tokenizer->Next();\n", "        ns = space;\n"),
+    ("Read: no ready", F, "    OnReady(owner);\n    s_demandLoadCount = 0;\n", "    s_demandLoadCount = 0;\n"),
+    ("Read: ready first", F, "    tokenizer->SetKeywords(s_keywords, kKeywordCount, 0);\n    int token = tokenizer->Next();\n", "    OnReady(owner);\n    tokenizer->SetKeywords(s_keywords, kKeywordCount, 0);\n    int token = tokenizer->Next();\n"),
+    ("Read: demand count kept", F, "    OnReady(owner);\n    s_demandLoadCount = 0;\n", "    OnReady(owner);\n"),
+    # Read: the surfaces.
+    ("Surface2D: no report of twice", F, "            if (m_surface2DCount > 0) {\n                tokenizer->Error(kListAlreadyGiven);\n            }\n", ""),
+    ("Surface2D: other report of twice", F, "            if (m_surface2DCount > 0) {\n                tokenizer->Error(kListAlreadyGiven);", "            if (m_surface2DCount > 0) {\n                tokenizer->Error(kListIsEmpty);"),
+    ("Surface2D: not stored", F, "            m_surface2DCount = ReadCountInBrackets(tokenizer);\n", "            ReadCountInBrackets(tokenizer);\n"),
+    ("Surface2D: not made", F, "            MakeSurfaces2D();\n", ""),
+    ("Surface2D: wrong make", F, "            MakeSurfaces2D();\n", "            MakeSurfaces3D();\n"),
+    ("Surface3D: no report of twice", F, "            if (m_surface3DCount > 0) {\n                tokenizer->Error(kListAlreadyGiven);\n            }\n", ""),
+    ("Surface3D: not stored", F, "            m_surface3DCount = ReadCountInBrackets(tokenizer);\n", "            ReadCountInBrackets(tokenizer);\n"),
+    ("Surface3D: not made", F, "            MakeSurfaces3D();\n", ""),
+    ("Surface3D: wrong make", F, "            MakeSurfaces3D();\n", "            MakeSurfaces2D();\n"),
+    ("Surface3D: in the other count", F, "            m_surface3DCount = ReadCountInBrackets(tokenizer);\n", "            m_surface2DCount = ReadCountInBrackets(tokenizer);\n"),
+    # Read: the word Texture.
+    ("Texture: no report of twice", F, "            if (m_entries != 0) {\n                tokenizer->Error(kListAlreadyGiven);\n            }\n", ""),
+    ("Texture: count not kept", F, "            nameCount = ReadCountInBrackets(tokenizer);\n            Init(nameCount);\n", "            Init(ReadCountInBrackets(tokenizer));\n"),
+    ("Texture: no table", F, "            Init(nameCount);\n", ""),
+    ("Texture: table one larger", F, "            Init(nameCount);\n", "            Init(nameCount + 8);\n"),
+    ("Texture: not added", F, "            owner->AddTextures(this, ns);\n            break;\n", "            break;\n"),
+    ("Texture: added with no space", F, "            owner->AddTextures(this, ns);\n            break;\n", "            owner->AddTextures(this, 0);\n            break;\n"),
+    # Read: the lists.
+    ("list: 2D word only", F, "        case kTexture2D:\n        case kTexture3D:\n", "        case kTexture2D:\n"),
+    ("list: 3D is no cube", F, "        case kTexture3D:\n        case kCubeMapTexture: {\n", "        case kTexture3D: {\n"),
+    ("list: report without the name count", F, "            if (*counts[kind] > 0 && nameCount > 0) {\n", "            if (*counts[kind] > 0) {\n"),
+    ("list: report without a count", F, "            if (*counts[kind] > 0 && nameCount > 0) {\n", "            if (nameCount > 0) {\n"),
+    ("list: no report of twice", F, "            if (*counts[kind] > 0 && nameCount > 0) {\n                tokenizer->Error(kListAlreadyGiven);\n            }\n", ""),
+    ("list: not stored", F, "*counts[kind] = (unsigned int)tokenizer->ExpectCount();", "tokenizer->ExpectCount();"),
+    ("list: no report of empty", F, "            if (*counts[kind] < 1) {\n                tokenizer->Error(kListIsEmpty);\n            }\n", ""),
+    ("list: other report of empty", F, "            if (*counts[kind] < 1) {\n                tokenizer->Error(kListIsEmpty);", "            if (*counts[kind] < 1) {\n                tokenizer->Error(kListAlreadyGiven);"),
+    ("list: empty at one", F, "if (*counts[kind] < 1) {", "if (*counts[kind] < 2) {"),
+    ("list: 2D not made", F, "                MakeTextures2D();\n            } else if (kind == 1) {", "            } else if (kind == 1) {"),
+    ("list: 3D not made", F, "            } else if (kind == 1) {\n                MakeTextures3D();\n", "            } else if (kind == 1) {\n"),
+    ("list: cube not made", F, "            } else {\n                MakeCubeMaps();\n", "            } else {\n"),
+    ("list: made after the names", F, "            names[kind] = NewNames(*counts[kind]);\n", "            names[kind] = NewNames(*counts[kind]);\n            MakeSurfaces2D();\n"),
+    ("list: names not kept", F, "            names[kind] = NewNames(*counts[kind]);\n            char* name = names[kind];\n", "            char* name = NewNames(*counts[kind]);\n"),
+    ("list: last short", F, "for (unsigned int i = 0; i < *counts[kind]; i++, name += kNameSize) {", "for (unsigned int i = 0; i + 1 < *counts[kind]; i++, name += kNameSize) {"),
+    ("list: names on top of each other", F, "i++, name += kNameSize) {", "i++) {"),
+    ("list: no word before each", F, "                tokenizer->ExpectToken(token);\n", ""),
+    ("list: wrong word before each", F, "                tokenizer->ExpectToken(token);\n", "                tokenizer->ExpectToken(kTexture2D);\n"),
+    ("list: no name", F, "                tokenizer->ExpectName(name);\n", ""),
+    ("list: item not read", F, "                item->Read(this, name, tokenizer);\n", ""),
+    ("list: read after the lookup", F, "                item->Read(this, name, tokenizer);\n                // The owner holds this database too, from the word Texture, so a name given twice in a file is already known the second time.\n                void* known = ns != 0 && ns[0] != 0 ? owner->m_textureSpaces.Find(ns, name) : owner->m_textures.Find(name);\n", "                void* known = ns != 0 && ns[0] != 0 ? owner->m_textureSpaces.Find(ns, name) : owner->m_textures.Find(name);\n                item->Read(this, name, tokenizer);\n"),
+    ("list: lookup ignores the space", F, "void* known = ns != 0 && ns[0] != 0 ? owner->m_textureSpaces.Find(ns, name) : owner->m_textures.Find(name);", "void* known = owner->m_textures.Find(name);"),
+    ("list: lookup always in the space", F, "void* known = ns != 0 && ns[0] != 0 ? owner->m_textureSpaces.Find(ns, name) : owner->m_textures.Find(name);", "void* known = owner->m_textureSpaces.Find(ns != 0 ? ns : \"\", name);"),
+    ("list: lookup with empty as a space", F, "void* known = ns != 0 && ns[0] != 0 ? owner", "void* known = ns != 0 ? owner"),
+    ("list: only own table", F, "void* known = ns != 0 && ns[0] != 0 ? owner->m_textureSpaces.Find(ns, name) : owner->m_textures.Find(name);", "void* known = Find(name);"),
+    ("list: known keeps its name", F, "                    name[0] = 0;\n", ""),
+    ("list: known is inserted", F, "                if (known != 0) {\n                    name[0] = 0;\n                } else {\n                    Insert(name, item);\n                }\n", "                if (known != 0) {\n                    name[0] = 0;\n                }\n                Insert(name, item);\n"),
+    ("list: never known", F, "                if (known != 0) {\n", "                if (known == (void*)1) {\n"),
+    ("list: not inserted", F, "                    Insert(name, item);\n", ""),
+    ("list: no right curly", F, "            tokenizer->ExpectRightCurly();\n", ""),
+    ("default: no report", F, "        default:\n            tokenizer->Error(AtIoTokenizer::kExpectedKeyword);\n", "        default:\n"),
+    ("default: other report", F, "tokenizer->Error(AtIoTokenizer::kExpectedKeyword);", "tokenizer->Error(AtIoTokenizer::kExpectedString);"),
+    # Read: after the words.
+    ("end: starts past 2D", F, "    for (int kind = 0; kind < kKinds; kind++) {\n        for (unsigned int i = 0; i < *counts[kind]; i++) {\n            if (names", "    for (int kind = 1; kind < kKinds; kind++) {\n        for (unsigned int i = 0; i < *counts[kind]; i++) {\n            if (names"),
+    ("end: stops before cubes", F, "    for (int kind = 0; kind < kKinds; kind++) {\n        for (unsigned int i = 0; i < *counts[kind]; i++) {\n            if (names", "    for (int kind = 0; kind < kKinds - 1; kind++) {\n        for (unsigned int i = 0; i < *counts[kind]; i++) {\n            if (names"),
+    ("end: last short", F, "        for (unsigned int i = 0; i < *counts[kind]; i++) {\n            if (names", "        for (unsigned int i = 0; i + 1 < *counts[kind]; i++) {\n            if (names"),
+    ("end: every name", F, "            if (names[kind][i * kNameSize] != 0) {\n", "            if (names[kind] != 0) {\n"),
+    ("end: wrong name", F, "if (names[kind][i * kNameSize] != 0) {", "if (names[kind][0] != 0) {"),
+    ("end: wrong flag", F, "if (item->m_flags & AtTextureItem::kDemandLoad) {", "if (item->m_flags & 0x200) {"),
+    ("end: demand-loaded too", F, "                    s_demandLoadCount++;\n                } else {\n                    item->OnLoaded(owner);\n                }\n", "                    s_demandLoadCount++;\n                }\n                item->OnLoaded(owner);\n"),
+    ("end: never counted", F, "                    s_demandLoadCount++;\n", ""),
+    ("end: never loaded", F, "                    item->OnLoaded(owner);\n", ""),
+    ("end: 2D names not freed", F, "    for (int kind = 0; kind < kKinds; kind++) {\n        if (names[kind] != 0) {", "    for (int kind = 1; kind < kKinds; kind++) {\n        if (names[kind] != 0) {"),
+    ("end: cube names not freed", F, "    for (int kind = 0; kind < kKinds; kind++) {\n        if (names[kind] != 0) {", "    for (int kind = 0; kind < kKinds - 1; kind++) {\n        if (names[kind] != 0) {"),
+    ("end: nothing freed", F, "            operator delete(names[kind]);\n", ""),
+]
+
+# Every field the constructor and Clear set. The destructor and comparisons see each.
+for _f in _FIELDS:
+    MUTANTS.append(("ctor: " + _f, F) + _without(_CTOR, _f))
+    MUTANTS.append(("Clear: " + _f, F) + _without(_CLEAR, _f))
+
+SUITE = {"target": "oracle_agt", "subsystem": "at/agt", "src": "at", "var": "KND_AT_SRC", "cases": "tok", "mutants": MUTANTS}

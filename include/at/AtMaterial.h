@@ -18,6 +18,7 @@ class AtMaterialDatabase;  // include/at/AtMaterialDatabase.h
 struct AtMaterialOwner {
     void* FindShader(const char* name, const char* ns);     // 0x000383A0 ns may be empty or null
     void AddMaterials(GmNameMap* map, const char* ns);      // 0x00025EB0 ns may be empty or null
+    void AddTextures(GmNameMap* map, const char* ns);       // 0x00025E70 ns may be empty or null; src/at/AtTextureDatabase.cpp
 
     char m_unknown00[0x30];
     signed char m_noTextures;          // +0x30 negative: a material loaded for it keeps no shader or textures
