@@ -47,6 +47,10 @@ The `subsystem` must not be a prefix of another. Do not edit `CMakeLists.txt`, `
 * **Shell pitfall.** Backslashes in `sed` and heredoc patches get eaten. Use the edit tool, or a Python file written with the write tool.
 * **A seam is a claim.** Say which real members a seam stands for; replacing one later should mean deleting it, not writing a second class. Use a real member at its offset where you can.
 * **A shared rename reaches further than your suite.** A renamed or retyped member can break other suites and host tests, which you may not see. Prefer adding to renaming; if you must rename, say so in your report with the old and new names.
+* **`AtFatal` cuts the fatal path.** A failed open reaches 0x00014230, 0x000141C0 and `AtFatal` 0x00011070, which stops rumble, draws an error screen and launches out. Those 39 functions say nothing about what a loader needs: stop at `AtFatal`, which exists.
+* **Check a subsystem string against the prefix rule first.** `at/ana` claimed `at/anafile`'s functions.
+* **A renamed member with the same name at a new offset still compiles.** Rename to a name not used before, or check every use.
+* **`/tmp` and the session scratchpad are shared with other agents.** Keep your scripts in `analysis-local/scratch/<your subsystem>/`.
 * Name worklogs by the day you start them.
 
 ## Commands, in the worktree
