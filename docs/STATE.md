@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-06, dev cycle 20 (material database). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-06, dev cycle 21 (first parallel batch: textures, sound lists, shaders, scenes). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-06, dev cycle 20 (material database). Per-function results
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 515 functions and 37 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 686 functions and 51 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -33,6 +33,11 @@ All source is in `src/`, types in `include/`. 515 functions and 37 vftables are 
 * `at/memory` (19 functions, 2 vftables): the stack of heaps, the original's global new and delete, the error routine, and the object that takes a region from the platform, starts the manager and makes the default heap. A port can now start the allocator, as the host test does. **Recovered code does not use it yet**: `new` still reaches the host's allocator, by decision, since the host's library shares the process (`include/at/AtMemory.h`). Which concrete object the game starts, and with what sizes, is not recovered: its class at 0x00141840 holds this as a member. `AtFatal` stays a stand-in, since the original reaches into graphics and sound.
 * `at/material` (14 functions, 1 vftable): the material as read from `.AGM` files, and its keyword table. Reads every material on the disc the same as the original. Not recovered: the concrete material at 0x0028A204 that passes this to the graphics device.
 * `at/matdb` (12 functions, 1 vftable): the database that loads an `.AGM` file, its texture lists, and the owner's lookups for shaders and materials. Loads every `.AGM` on the disc the same as the original. Not recovered: the concrete database at vftable 0x00289300 in the graphics layer, and the rest of the owner.
+* `at/agt` (13 functions, 1 vftable): the texture database, the loader of `.AGT`. Not recovered: the concrete database in the device layer and the items' own reader, so what a texture holds is not read yet.
+* `at/aob` (40 functions, 4 vftables): the sound bank and segment lists, `.AOB` and `.AOS`. Not recovered: the concrete banks, so nothing here plays a sound.
+* `at/ags` (33 functions, 2 vftables): shaders, `.AGS`, with staged and programmable components and texture stages. Not recovered: the concrete shader and the AGV and AGP loaders that fill the process groups. The disc's text cases hold only staged components, so the programmable path rests on written text alone.
+* `at/asn` (85 functions, 7 vftables), **partial**: scenes, `.ASN`: the scene, the base and modifier nodes, the coordinate systems and their database. **A real build stops with a diagnostic on nearly every real `.ASN` file**, since nine classes of node are not recovered (`src/at/AtSceneActorsHost.cpp`). Also not recovered: node slots 12 to 31, 0x0003CE10, the modifier set beyond its removal functions, and the matrix table at 0x002C60C8, which the graphics layer fills.
+* `AtNameTableOwner` (`include/at/AtNameTableOwner.h`, vftable 0x00274A78 not recovered): what sound lists and scenes load for. Two branches named it separately; folded at integration on the evidence given in that header.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
@@ -107,8 +112,8 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. `LIBRARY.ADD` (0x0009BD50), the data registry start-up mounts files from, with the database manager it fills.
-2. The command line reader at 0x00098410, beside the settings.
-3. Other small readers: analysis-local/scratch/readers.py lists 80.
+1. The actor base at vftable 0x00276FA8 (reader 0x00056500) and the first node classes, ModelActor (0x00276620), which is what stops real `.ASN` files.
+2. Next parallel batch of loaders: AKC 0x00026DB0 (its `AtCoordSysDatabase::Allocate` is now recovered), AOE 0x00025450, AOD 0x00018AC0, ASL 0x0003FAC0, AGN 0x00027D50, ASB 0x00040F90, the texture items' reader 0x000312D0. `docs/subsystem-work.md` is the brief for each.
+3. `LIBRARY.ADD` (0x0009BD50), the data registry start-up mounts files from.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.

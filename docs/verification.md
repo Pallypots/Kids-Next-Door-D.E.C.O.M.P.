@@ -385,3 +385,31 @@ The mat suite still answers shader lookups itself, which is why `AtMaterialOwner
 ## Mutants in parallel
 
 `tools/oracle_run.py` now runs mutants in `--jobs` private trees, by default up to six. Verdicts were compared with the serial run's record: identical on mat (87), tok (172) and hep (154). Safeguards: each tree passes its own positive control; a build that did not recompile the mutated file is refused; a timeout, which counts as detection, must repeat when run alone.
+
+## Parallel batch: integration
+
+Four branches, written separately, were merged and all results below were rerun on the merged source, not taken from the branches. Two classes one branch each had named were found to be one and folded (`AtNameTableOwner`), after which the mutants were run. Doubles of classes not recovered are the same on both sides, so none of this is evidence about those classes.
+
+## Texture database: tests/oracle/oracle_agt.cpp
+
+`--suite agt`: 579 files, 2358 textures, 2424 surfaces, 112 on demand; no difference over 502,261 comparisons, 13/13 entries, 187/187 mutants. Each file is loaded, loaded over itself, cleared and loaded again under five states of what the owner knows; about 90 written texts under the same states and two heap fills. Stand-ins: the items, whose reader here is the harness's, and database slots 2 to 13. Not tested: counts too large or negative, the real item classes, the concrete database at 0x0028A6E0 and its `MakeMore` at 0x001100D0. Crashes on both sides are compared up to the crash. `Load` is not run on x64.
+
+## Sound banks and segments: tests/oracle/oracle_aob.cpp
+
+`--suite aob`: 160 .AOB and 160 .AOS files, 160 banks, 1517 segments; no difference over 152,766 comparisons, 40/40 entries, 244/244 mutants. Limits: concrete classes are the harness's; the loader at the owner's +0x0C is a double; bank slots 3 to 9 are never called and slot 14 is the harness's. Not run: an empty segment name through a database (the hash reads past the terminator into stack bytes), directory paths too long for the buffer, counts negative or above the pool of 1,024 segments. Names are compared as strings, because bytes after a terminator are stack garbage.
+
+## Shaders: tests/oracle/oracle_ags.cpp
+
+`--suite ags`: 267 files, 485 shaders, 647 staged and 0 programmable components; no difference over 55,387 comparisons, 33/33 entries, 282/282 mutants. Limits: database slots 2 and 3 are a harness double; the concrete shader is not recovered; the harness fills the process groups; `__ehvec_ctor` and `__ehvec_dtor` are compared by what they leave. Not tested: a non-string where a name is required (uninitialised stack), counts so large that the size wraps. Texts that run out inside a block spin if the report returns, so file-code texts all balance and only direct cases reach the end of the data, with a tokenizer that stops after 12 reports.
+
+**One deliberate difference from the original.** 0x00045070 builds a name and message, up to 72 bytes, in 52 bytes of room before its saved registers. In the game the report does not come back, so the overrun of saved registers does no harm; if it did come back the original would crash in whatever follows. A stack overrun cannot be reproduced meaningfully in C++, so the recovered buffer has room. The oracle stops the original at the report and compares everything up to it: message, log, fields. Past the report is not compared.
+
+## Scenes: tests/oracle/oracle_asn.cpp
+
+`--suite asn`: 652 files, 14413 nodes seen, 5684 actors; no difference over 7,346,860 comparisons, 85/85 entries, 413/413 mutants.
+
+**This does not show that real scenes load in a port.** The nine unrecovered node classes are doubles on both sides, and the words they own (Mesh, channels, emitters, their coordinate system databases) are consumed by one shared function and not compared. On real files what is compared is the scene, the base node and the coordinate systems. Every jointed actor gets a harness joint map holding all names in the file, and a fallback map supplies attachment targets outside it. The matrix table is logging functions on both sides, and what each matrix function does is inferred from its arguments only.
+
+Not run: a node attached to itself and cycles of coordinate systems, which recurse for ever on both sides; a non-string where a name is required. Compared in part: a file ending inside a node, up to a deliberate crash after 40 reports; after any crash, logs and messages only; stale or out-of-bounds node pointers only as "unknown on both sides"; `Next` with no file name, where the report starts from an uninitialised buffer. The original's vector deleters have no recovered twin, and are compared by effect.
+
+The mutant run found 30 survivors at first, most from written text using integers where reals are read, so values never reached the matrices. A green oracle on hollow cases would have looked the same, which is why mutants gate every commit here.

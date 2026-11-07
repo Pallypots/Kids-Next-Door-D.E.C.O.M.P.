@@ -58,3 +58,23 @@ tooling and is excluded from x64 builds.
 ## Copying a material database can run past its lists
 
 `AtMaterial::Copy` packs each material's range of stages and textures after the last one, into lists sized as the source's. In a file, materials may share slots, so the ranges can add up to more than the list holds. Copying such a file writes past the end of the heap block. `AtMaterialDatabase::CopyFrom` copies the sizes and nothing checks them. 21 of the oracle's copies did this on real files. Whether the game ever copies those databases is not established. The recovered source keeps this as it is; the port should make it a separate, tested change.
+
+## Array counts written by hand
+
+`AtShader` and the scene write out the count ahead of an array by hand (`NewArray`, `src/at/AtSceneArray.h`), since a heap here may answer null and a modern `new[]` is assumed not to. The count takes one `size_t` before the elements on x64, 4 bytes on the Xbox, with the elements still aligned.
+
+## Writing past a shader's lists
+
+`m_transforms` holds eight and is not bounds checked; `TextureStage[n]` over eight reports and, if the report returns, reads on over the fields after it. Kept. Compared only with values that stay in the object on x86. On x64 this is undefined behaviour, and hardening belongs in a separate, tested change.
+
+## Fields read by offset in scene nodes
+
+`AtSceneActorSharedCoordSys` (+0x90) and `AtSceneActorJoints` (+0xA0) are seams, because the base node reads fields of classes derived from it, by offset. They must become real members when the actors are recovered.
+
+## A thiscall pointer that became a plain one
+
+`AtConstructEach` (0x00011000) takes a thiscall pointer in the original and a plain function pointer here, since `__thiscall` does not exist on a 64-bit or GCC build.
+
+## Find on a cleared name map divides by zero
+
+The hash divides by the table's size, which a cleared map has as zero. The original does the same. Any new code calling `Find` on a cleared map crashes, on this hardware and on the Xbox.

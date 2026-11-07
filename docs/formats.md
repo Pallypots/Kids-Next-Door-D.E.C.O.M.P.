@@ -169,18 +169,18 @@ Every loader that opens a text file, from the callers of `AtIoTokenFile::Open`, 
 
 | Ext | Files | Loader | Reader state or content |
 | --- | --- | --- | --- |
-| ASN | 2001 | 0x0003CD60 | |
+| ASN | 2001 | 0x0003CD60 | Scenes: below. Scene, base nodes and coordinate systems recovered; nine node classes not |
 | AGM | 1944 | 0x00038FB0 | Materials: `AtMaterial` and `AtMaterialDatabase` recovered |
-| AGT | 1722 | 0x0001C7B0 | Lists of textures (`Surface2D`, `Texture2D`) |
+| AGT | 1722 | 0x0001C7B0 | Lists of textures: below. The database is recovered; the items are not |
 | AKC | 1489 | 0x00026DB0 | |
 | ASD | 1380 | 0x0002F7F0 | |
 | ASL | 1127 | 0x0003FAC0 | |
 | AGD | 1215 | 0x0001ADC0 | Lists of databases (`MaterialDatabase`, `FontDatabase`, `ImageDatabase`, `MatAssignmentDatabase`) |
-| AGS | 786 | 0x0002B2E0 | |
+| AGS | 786 | 0x0002B2E0 | Shaders: below. Recovered |
 | ASE | 737 | 0x0003F760 | |
 | ASB | 632 | 0x00040F90 | |
 | ADR | 311 | 0x00068880 | |
-| AOB, AOS | 271 each | 0x00025A90, 0x00025640 | |
+| AOB, AOS | 271 each | 0x00025A90, 0x00025640 | Sound banks and segments: below. The lists are recovered; the concrete banks are not |
 | AOD | 261 | 0x00018AC0 | |
 | AGN | 229 | 0x00027D50 | |
 | GON | 171 | 0x00139090 | |
@@ -196,3 +196,66 @@ Files with no text loader above, by count: DDS 3913, XKA 1489, SDL 1269, SSM 112
 `Material "name" { ... }`, inside a `Material[n] { }` list, often after shader definitions and under `NameSpace "x"`. The keywords are in `AtMaterial::s_keywords`. Colours are four integers, or three for `ConstantColor`, with `ConstantAlpha` the fourth. `SimpleTextureShader n` takes one texture from the store at index n. `Shader "name" firstStage stageCount firstTexture textureCount` names a shader, and `ShaderWithNameSpace` a space too. Blending by `Add` or by `BlendInverseAlpha` also turns fog off. Unless `BlendSeparateAlpha` is given, alpha blends as colour does.
 
 A file is an optional `NameSpace "x"` as its very first token, then in any order `ProgShaderTexture[n] { }`, `StagedShaderTexture[n] { }` and `Material[n] { }`. A list holds names or the word `Default`, meaning none. The `...WithNameSpace` forms take each name followed by a name space; an empty one means no space. `NameSpace` anywhere but first is an error.
+
+## Textures (.AGT)
+
+A file is `Surface2D[n] Texture[n] Texture2D[n] { Texture2D "name" { ... } ... }`, optionally with `Surface3D[n]`, `Texture3D[n]`, `CubeMapTexture[n]`, and `NameSpace "x"` as the first word. On the disc's 579 distinct files: 2,358 textures, 2,424 surfaces, 112 on demand. The body of an item (`PlatformSource`, `DDSSource`, `MipMap n`, `DemandLoad` and so on) is read by the item's own slot 2, which is not recovered. An item whose name the owner already knows is read and made, but not named here.
+
+## Shaders (.AGS)
+
+```
+[NameSpace "space"]
+Shader[n] {
+  Shader "name" {                       eight-byte names
+    StagedShaderComponent[n] {
+      StagedShaderComponent {
+        TextureStage { ...stage... }
+        CombineOp Add | BlendAlpha | BlendDestAlpha | Modulate | Modulate2x | ModulateByAlpha | ModulateByAlpha2x | ModulateByAlphaAddColor | Subtract | BlendInverseAlpha
+        ModulateOp SelectConstant | SelectDiffuse | SelectTexture | ModulateTextureByConstant | ModulateTextureByDiffuse | ModulateTextureByDiffuseAndConstant
+        AlphaSource SelectConstant | SelectDiffuse | SelectTexture | SelectModulatedOutput       default SelectModulatedOutput
+        FlipFaceCulling  DisableDepthBuffer  DisableDepthWrites  DisableColorWrites
+      }
+    }
+    ProgShaderComponent[n] {
+      ProgShaderComponent {
+        CombineOp ...  and the same four switches
+        VertexProcess[n] { "name" ... }     at least one; a second list is an error
+        PixelProcess "name"
+        TextureStage[n] { TextureStage { ...stage... } ... }     at most eight
+      }
+    }
+  }
+}
+```
+
+A stage: `Texture "name"`; `TextureWithNameSpace "name" "space"`; `CubeNormalizationTexture` (not with a texture); `TxtCoordOffset n`; filter `PointSampled`, `Bilinear`, `Anisotropic x`, `FlatCubic`, `GaussianCubic`; `MipNearest`, `MipLinear` (the default); `Wrap`, `Clamp`, `Border r g b a`; a generator `CoordGenCameraSpaceNormal`, `...NormalWithScaleAndBias`, `...Pos`, `...Reflection`, `...ReflectionWithScaleAndBias`, `...ToonLighting`; `CoordViewToWorldTransform`; `Coord2DTransform n`, `Coord3DTransform n`, `Coord4DTransform n`, cut to a byte; `CoordProjected`. A texture is found in the file's name space, if it has one that is not empty. The disc's 267 distinct files use only staged components.
+
+## Sound banks and segments (.AOB, .AOS)
+
+An `.AOD` file lists them, under `BankDatabase` and `SegmentDatabase`.
+
+* `.AOB`: `Bank[n] { Bank "name" { ... } ... }`. Each entry gives a residence (`DiskResident`, `SoundRamResident`, `PrimaryRamResident`), a format (`MsaFormat`, `MiaFormat`, `RwfFormat`, `WbaFormat`, `SbaFormat`, `GmdFormat`, `GmsFormat`, `PlatformSource`), `BlockID n`, `DelayLoad`, `Streaming`. Real files have only `PlatformSource`, with `Streamed`, `StreamedStereo` or `StreamedMemory` after it in 78 of 161 uses; those three are taken and ignored.
+* `.AOS`: `Segment[n] { Segment "name" { Bank "bank" "namespace" index  Looping } ... }`. A segment names an index in a bank.
+
+Both readers stop after the first `Bank` or `Segment` block. Not established: what a bank's data file is, what the format values mean to the player, what `BlockID` selects.
+
+## Scenes (.ASN)
+
+```
+NameSpace "x"                 optional
+RotTransCoordSys[n]           any order, each optional: counts only
+ScaleCoordSys[n]
+MotionState[n]
+Node[n]                       the size of the name map. Required, and ends this part
+ClassWord[count]              then any number of lists, one to a class
+{
+    ClassWord "name" RotTransCoordSys MotionState ScaleCoordSys
+    {
+        Position, Quaternion, BoundingSphere, Attach, ... the words of that class
+    }
+}
+```
+
+`Node[n]` has two meanings: first the total of names, later a list of plain nodes. Real files have both. The 652 distinct files use five classes: Node, ModifierNode, ModelActor, JointedModelActor, ParticleSystemActor. Keyword table 0x002B1990, 116 words.
+
+The base node reads BoundingSphere, ActiveDistance (stored squared), Attach, AttachBase, AttachNodeToThisJoint, AttachNodeToThisBase, Position, OrthoNormalize, Quaternion, LookAt, LinearVelocity, AngularVelocity, CollisionEnable and Disable, BoundingGeometry, LineSegIntersectEnable and Disable, two MatAssignment words whose integer is thrown away, and four debug draw words that do nothing. The modifier node adds Modifier, ModificationEnable and Disable. Mesh, animation channels, emitters and the rest belong to classes not recovered.

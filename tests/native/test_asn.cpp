@@ -22,7 +22,7 @@ public:
 // The classes not recovered, here a base node that takes Mesh and nothing else of its own.
 class Actor : public AtSceneNode {
 public:
-    void ReadBody(AtSceneOwner* owner, AtIoTokenizer* t, int token) override {
+    void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
         if (token == 113) {
             char name[8];
             t->ExpectName(name);
@@ -92,7 +92,7 @@ public:
 
 int g_heap;
 
-void read(AtScene& scene, AtSceneOwner& owner, const char* text) {
+void read(AtScene& scene, AtNameTableOwner& owner, const char* text) {
     std::vector<char> copy(text, text + std::strlen(text));
     Memory stream;
     stream.m_base = copy.data();
@@ -142,8 +142,8 @@ int main() {
     AtSceneNode::SetHeap(&g_heap);
     AtCoordSysDatabase::SetHeap(&g_heap);
 
-    AtSceneOwner* holder = static_cast<AtSceneOwner*>(std::calloc(1, sizeof(AtSceneOwner)));
-    AtSceneOwner& owner = *new (holder) AtSceneOwner;
+    AtNameTableOwner* holder = static_cast<AtNameTableOwner*>(std::calloc(1, sizeof(AtNameTableOwner)));
+    AtNameTableOwner& owner = *new (holder) AtNameTableOwner;
     Device device;
     owner.m_device = &device;
     owner.m_nodeSpaces.Init(4);

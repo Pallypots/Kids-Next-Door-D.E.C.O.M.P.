@@ -198,7 +198,7 @@ AtSceneMotionState* AtScene::NextMotionState(AtIoTokenizer* tokenizer) {
     return &m_motionStates[m_motionUsed++];
 }
 
-void AtScene::Load(AtSceneOwner* owner, const char* name, int) {
+void AtScene::Load(AtNameTableOwner* owner, const char* name, int) {
     AtIoTokenFile file;
     m_owner = owner;
     const int status = file.Open(name, "ASN", 2, 0);
@@ -209,7 +209,7 @@ void AtScene::Load(AtSceneOwner* owner, const char* name, int) {
     file.Close();
 }
 
-void AtScene::ReadActors(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int kind, int word, unsigned int* count, void** actors) {
+void AtScene::ReadActors(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, int kind, int word, unsigned int* count, void** actors) {
     if (*count != 0) {
         tokenizer->Error(kAtProblemWrongUse);
     }
@@ -233,7 +233,7 @@ void AtScene::ReadActors(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int kind
     tokenizer->ExpectRightCurly();
 }
 
-void AtScene::Read(AtSceneOwner* owner, AtIoTokenizer* tokenizer) {
+void AtScene::Read(AtNameTableOwner* owner, AtIoTokenizer* tokenizer) {
     if (m_entries != 0) {
         Clear();
     }

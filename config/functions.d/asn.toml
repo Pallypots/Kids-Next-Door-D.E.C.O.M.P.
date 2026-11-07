@@ -123,7 +123,7 @@ evidence = "vftable 0x00275A44 slot 0; calls 0x0003E8C0, size 0xF8"
 [[function]]
 va = 0x00031A90
 size = 50
-symbol = "?AddScene@AtSceneOwner@@QAEXPAVGmNameMap@@PBD@Z"
+symbol = "?AddScene@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0003BE99 with the scene and its name space"
@@ -403,7 +403,7 @@ evidence = "stores vftable 0x00275A44; passed to the array iterator by 0x0002E5D
 [[function]]
 va = 0x0003BCD0
 size = 3969
-symbol = "?Read@AtScene@@QAEXPAUAtSceneOwner@@PAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtScene@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
 source = "src/at/AtScene.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0003CDCF with the tokenizer; sets the keywords at 0x002B1990"
@@ -419,7 +419,7 @@ evidence = "vftable 0x00276C68 slot 7; size 0x70"
 [[function]]
 va = 0x0003CD60
 size = 162
-symbol = "?Load@AtScene@@QAEXPAUAtSceneOwner@@PBDH@Z"
+symbol = "?Load@AtScene@@QAEXPAUAtNameTableOwner@@PBDH@Z"
 source = "src/at/AtScene.cpp"
 subsystem = "at/asn"
 evidence = "opens name + .ASN; called by 0x0002F0CB"
@@ -459,7 +459,7 @@ evidence = "stores vftable 0x00275A44; calls 0x0003D6F0, 0x00027280 and 0x000252
 [[function]]
 va = 0x00045680
 size = 55
-symbol = "?FindNode@AtSceneOwner@@QAEPAVAtSceneNode@@PBD0@Z"
+symbol = "?FindNode@AtNameTableOwner@@QAEPAVAtSceneNode@@PBD0@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "the tables AddScene fills; called by 0x0004AAE6 for Attach"
@@ -515,7 +515,7 @@ evidence = "called by 0x0004ACE7 for OrthoNormalize, calls 0x002C60F4"
 [[function]]
 va = 0x000499B0
 size = 55
-symbol = "?FindBoundingGeometry@AtSceneOwner@@QAEPAXPBD0@Z"
+symbol = "?FindBoundingGeometry@AtNameTableOwner@@QAEPAXPBD0@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0004AE4A for BoundingGeometry"
@@ -523,7 +523,7 @@ evidence = "called by 0x0004AE4A for BoundingGeometry"
 [[function]]
 va = 0x000499F0
 size = 135
-symbol = "?Read@AtSceneNode@@UAEXPAUAtSceneOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtSceneNode@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "vftable 0x002765A0 slot 10; called by each array loop of 0x0003BCD0"
@@ -531,7 +531,7 @@ evidence = "vftable 0x002765A0 slot 10; called by each array loop of 0x0003BCD0"
 [[function]]
 va = 0x00049A80
 size = 543
-symbol = "?CopyFrom@AtSceneNode@@UAEXPAUAtSceneOwner@@PBV1@@Z"
+symbol = "?CopyFrom@AtSceneNode@@UAEXPAUAtNameTableOwner@@PBV1@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "vftable 0x002765A0 slot 8"
@@ -539,7 +539,7 @@ evidence = "vftable 0x002765A0 slot 8"
 [[function]]
 va = 0x00049CA0
 size = 129
-symbol = "?InitFrom@AtSceneNode@@UAEXPAUAtSceneOwner@@PBUAtSceneNodeDesc@@@Z"
+symbol = "?InitFrom@AtSceneNode@@UAEXPAUAtNameTableOwner@@PBUAtSceneNodeDesc@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "vftable 0x002765A0 slot 9"
@@ -603,7 +603,7 @@ evidence = "stores vftable 0x002765A0; passed to the array iterator by 0x0003BF3
 [[function]]
 va = 0x0004AA10
 size = 1163
-symbol = "?ReadBody@AtSceneNode@@UAEXPAUAtSceneOwner@@PAVAtIoTokenizer@@H@Z"
+symbol = "?ReadBody@AtSceneNode@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "vftable 0x002765A0 slot 1"
@@ -627,7 +627,7 @@ evidence = "stores vftable 0x002765A0; jumps to 0x0004AF30"
 [[function]]
 va = 0x0004F370
 size = 5
-symbol = "?Read@AtSceneModifierNode@@UAEXPAUAtSceneOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtSceneModifierNode@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "vftable 0x00276C68 slot 10; jumps to 0x000499F0"
@@ -651,7 +651,7 @@ evidence = "vftable 0x00276C68 slot 11"
 [[function]]
 va = 0x0004F3F0
 size = 192
-symbol = "?ReadBody@AtSceneModifierNode@@UAEXPAUAtSceneOwner@@PAVAtIoTokenizer@@H@Z"
+symbol = "?ReadBody@AtSceneModifierNode@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "vftable 0x00276C68 slot 1"

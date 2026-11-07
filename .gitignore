@@ -42,3 +42,6 @@ desktop.ini
 # Loose owner notes dropped next to the discs
 Game Walkthrough.txt
 info.txt
+
+# Agent worktrees
+.claude/worktrees/

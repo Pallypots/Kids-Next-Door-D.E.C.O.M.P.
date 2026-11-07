@@ -344,7 +344,7 @@ public:
             AtSceneNode::ReadHeader(scene, t, token);
         }
     }
-    void ReadBody(AtSceneOwner* owner, AtIoTokenizer* t, int token) override {
+    void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
         if (actor_word(this, t, token, 1)) return;
         AtSceneNode::ReadBody(owner, t, token);
     }
@@ -390,7 +390,7 @@ static void* value_of(const std::string& name, uint32_t salt) {
     return (void*)(uintptr_t)(h | 0x1000);
 }
 
-static AtSceneOwner* g_own[2];
+static AtNameTableOwner* g_own[2];
 static char* g_fake_jointed[2];
 static char* g_fake_plain[2];
 static AtCoordSys* g_fake_cs[2];
@@ -429,9 +429,9 @@ struct Env {
             g_device[side].side = side;
             g_matdev[side].side = side;
             g_pool[side].side = side;
-            g_own[side] = new AtSceneOwner;
-            AtSceneOwner& w = *g_own[side];
-            std::memset(w.m_unknown08, 0, sizeof w.m_unknown08);
+            g_own[side] = new AtNameTableOwner;
+            AtNameTableOwner& w = *g_own[side];
+            w.m_unknown08 = 0; w.m_loader = 0; w.m_unknown10 = 0; w.m_unknown14 = 0;
             w.m_device = &g_device[side];
             const unsigned pool = (unsigned)spaces.size() + 8;
             w.m_nodeSpaces.Init(pool);

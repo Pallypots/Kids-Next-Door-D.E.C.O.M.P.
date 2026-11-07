@@ -353,7 +353,7 @@ AtSceneNode* AtSceneNode::AsJointed(AtSceneNode* node) {
     return node;
 }
 
-void AtSceneNode::ReadBody(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int token) {
+void AtSceneNode::ReadBody(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, int token) {
     char name[8];
     char ns[8];
     switch (token) {
@@ -529,7 +529,7 @@ void AtSceneNode::ReadBody(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int to
     }
 }
 
-void AtSceneNode::Read(AtSceneOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer) {
+void AtSceneNode::Read(AtNameTableOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer) {
     if ((m_flags & kLoaded) != 0) {
         Clear();
     }
@@ -549,7 +549,7 @@ void AtSceneNode::Read(AtSceneOwner* owner, AtScene* scene, AtIoTokenizer* token
     m_flags |= kLoaded;
 }
 
-void AtSceneNode::CopyFrom(AtSceneOwner* owner, const AtSceneNode* from) {
+void AtSceneNode::CopyFrom(AtNameTableOwner* owner, const AtSceneNode* from) {
     if ((m_flags & kLoaded) != 0) {
         Clear();
     }
@@ -596,7 +596,7 @@ void AtSceneNode::CopyFrom(AtSceneOwner* owner, const AtSceneNode* from) {
     m_unknown40 = from->m_unknown40;
 }
 
-void AtSceneNode::InitFrom(AtSceneOwner* owner, const AtSceneNodeDesc* desc) {
+void AtSceneNode::InitFrom(AtNameTableOwner* owner, const AtSceneNodeDesc* desc) {
     if ((m_flags & kLoaded) != 0) {
         Clear();
     }
@@ -647,7 +647,7 @@ AtSceneModifierNode::AtSceneModifierNode() {
 
 AtSceneModifierNode::~AtSceneModifierNode() {}
 
-void AtSceneModifierNode::Read(AtSceneOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer) {
+void AtSceneModifierNode::Read(AtNameTableOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer) {
     AtSceneNode::Read(owner, scene, tokenizer);
 }
 
@@ -661,7 +661,7 @@ void AtSceneModifierNode::Clear() {
 
 void AtSceneModifierNode::Slot12() { NotRecovered(); }
 
-void AtSceneModifierNode::ReadBody(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int token) {
+void AtSceneModifierNode::ReadBody(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, int token) {
     switch (token) {
     case kAtWordModifier: {
         char name[8];
@@ -692,21 +692,21 @@ void AtSceneModifierNode::ReadBody(AtSceneOwner* owner, AtIoTokenizer* tokenizer
 
 // ---- what the owner finds -----------------------------------------------------------------------------------------------
 
-AtSceneNode* AtSceneOwner::FindNode(const char* name, const char* ns) {
+AtSceneNode* AtNameTableOwner::FindNode(const char* name, const char* ns) {
     if (ns != 0 && ns[0] != 0) {
         return (AtSceneNode*)m_nodeSpaces.Find(ns, name);
     }
     return (AtSceneNode*)m_nodes.Find(name);
 }
 
-void* AtSceneOwner::FindBoundingGeometry(const char* name, const char* ns) {
+void* AtNameTableOwner::FindBoundingGeometry(const char* name, const char* ns) {
     if (ns != 0 && ns[0] != 0) {
         return m_geometrySpaces.Find(ns, name);
     }
     return m_geometry.Find(name);
 }
 
-void AtSceneOwner::AddScene(GmNameMap* scene, const char* ns) {
+void AtNameTableOwner::AddScene(GmNameMap* scene, const char* ns) {
     if (ns != 0) {
         m_nodeSpaces.Add(ns, scene);
     } else {

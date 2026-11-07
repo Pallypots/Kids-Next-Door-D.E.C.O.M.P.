@@ -6,6 +6,7 @@
 // AtSceneActors functions below, which src/at/AtSceneActorsHost.cpp answers with a diagnostic, so a scene that has any stops there. A test may supply them.
 #pragma once
 
+#include "at/AtNameTableOwner.h"
 #include "at/AtCoordSys.h"
 #include "at/AtIoTokenizer.h"
 
@@ -46,24 +47,6 @@ public:
     virtual void Slot15() = 0;
     virtual void Slot16() = 0;
     virtual AtMatrixDevice* MatrixDevice() = 0;  // slot 17
-};
-
-// What scenes load for, known here by the tables they use. Most of it is not recovered, and its constructor is not known; these members' own constructors stand in. A different class from AtMaterialOwner, as far as these offsets show.
-struct AtSceneOwner {
-    AtSceneNode* FindNode(const char* name, const char* ns);       // 0x00045680 ns may be empty or null
-    void AddScene(GmNameMap* scene, const char* ns);               // 0x00031A90 ns may be empty, which is a name space with an empty name, or null
-    void* FindBoundingGeometry(const char* name, const char* ns);  // 0x000499B0 ns may be empty or null
-
-    int m_unknown00;                   // +0x00
-    AtSceneDevice* m_device;           // +0x04
-    char m_unknown08[0x88];
-    GmNameMapGroup m_nodes;            // +0x90
-    GmNameSpaceDb m_nodeSpaces;        // +0xA8
-    GmNameMapGroup m_modifiers;        // +0xCC
-    GmNameSpaceDb m_modifierSpaces;    // +0xE4
-    char m_unknown108[0x78];
-    GmNameMapGroup m_geometry;         // +0x180
-    GmNameSpaceDb m_geometrySpaces;    // +0x198
 };
 
 // A bounding sphere.
@@ -152,16 +135,16 @@ public:
 
     AtSceneNode();                                 // 0x0004A740
     virtual void ReadHeader(AtScene* scene, AtIoTokenizer* tokenizer, int token);  // slot 0, 0x00049800 a word between the name and the curly bracket
-    virtual void ReadBody(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int token);  // slot 1, 0x0004AA10 a word inside the curly brackets
+    virtual void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, int token);  // slot 1, 0x0004AA10 a word inside the curly brackets
     virtual void FinishBody();                     // slot 2, 0x00049F30 the sphere in world space
     virtual void OnMoved();                        // slot 3, 0x0004A040 once, until something clears kMoved: joins each kind's dirty list, and so does everything attached
     virtual AtCoordSys* CoordSys();                // slot 4, 0x000498A0
     virtual AtCoordSys* ParentCoordSys();          // slot 5, 0x000498A0 the same code; other classes differ
     virtual void FinishHeader();                   // slot 6, 0x001CC9F0 empty here, folded with others
     virtual ~AtSceneNode();                        // slot 7, 0x0003B7F0 deleting, for arrays too; 0x0004AFD0 complete
-    virtual void CopyFrom(AtSceneOwner* owner, const AtSceneNode* from);  // slot 8, 0x00049A80
-    virtual void InitFrom(AtSceneOwner* owner, const AtSceneNodeDesc* desc);  // slot 9, 0x00049CA0
-    virtual void Read(AtSceneOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer);  // slot 10, 0x000499F0
+    virtual void CopyFrom(AtNameTableOwner* owner, const AtSceneNode* from);  // slot 8, 0x00049A80
+    virtual void InitFrom(AtNameTableOwner* owner, const AtSceneNodeDesc* desc);  // slot 9, 0x00049CA0
+    virtual void Read(AtNameTableOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer);  // slot 10, 0x000499F0
     virtual void Clear();                          // slot 11, 0x0004AF30
     virtual void Slot12();                         // slot 12, 0x00049870 not recovered
     virtual void Slot13();                         // slot 13, 0x000CBF30 not recovered
@@ -198,7 +181,7 @@ public:
     AtSceneSphere m_sphere;            // +0x0C
     AtSceneSphere m_worldSphere;       // +0x1C
     float m_activeDistanceSquared;     // +0x2C
-    AtSceneOwner* m_owner;             // +0x30
+    AtNameTableOwner* m_owner;             // +0x30
     AtCoordSys* m_coordSys;            // +0x34
     AtSceneMotionState* m_motion;      // +0x38
     void* m_boundingGeometry;          // +0x3C
@@ -218,9 +201,9 @@ public:
 class AtSceneModifierNode : public AtSceneNode {
 public:
     AtSceneModifierNode();                         // 0x0004F3A0
-    void ReadBody(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int token) override;  // slot 1, 0x0004F3F0
+    void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, int token) override;  // slot 1, 0x0004F3F0
     ~AtSceneModifierNode() override;               // slot 7, 0x0003CD00 deleting, for arrays too; 0x0003B910 complete
-    void Read(AtSceneOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer) override;  // slot 10, 0x0004F370 the base's
+    void Read(AtNameTableOwner* owner, AtScene* scene, AtIoTokenizer* tokenizer) override;  // slot 10, 0x0004F370 the base's
     void Clear() override;                         // slot 11, 0x0004F3C0
     void Slot12() override;                        // slot 12, 0x0004F380 not recovered
 
@@ -248,8 +231,8 @@ public:
     ~AtScene() override;                           // slot 0, 0x0002E640 deleting, for arrays too; 0x0003E8C0 complete
     void Clear() override;                         // slot 1, 0x0003D6F0
 
-    void Load(AtSceneOwner* owner, const char* name, int unused);  // 0x0003CD60 name + ".ASN"
-    void Read(AtSceneOwner* owner, AtIoTokenizer* tokenizer);      // 0x0003BCD0
+    void Load(AtNameTableOwner* owner, const char* name, int unused);  // 0x0003CD60 name + ".ASN"
+    void Read(AtNameTableOwner* owner, AtIoTokenizer* tokenizer);      // 0x0003BCD0
 
     AtRotTransCoordSys* NextRotTrans(AtIoTokenizer* tokenizer);    // 0x0003D8C0 reports running out, and hands one back regardless
     AtScaleCoordSys* NextScale(AtIoTokenizer* tokenizer);          // 0x0003D8F0 likewise
@@ -292,14 +275,14 @@ public:
     void* m_switchGroups;              // +0xE8
     void* m_lodGroups;                 // +0xEC
     void* m_sounds;                    // +0xF0
-    AtSceneOwner* m_owner;             // +0xF4 the constructor leaves it
+    AtNameTableOwner* m_owner;             // +0xF4 the constructor leaves it
 
     static void* s_heap;               // 0x002C640C
 
 private:
     void ResetFields();                            // 0x0003BB60 all but the owner
     // A count in brackets and a list of named nodes, of a class not recovered.
-    void ReadActors(AtSceneOwner* owner, AtIoTokenizer* tokenizer, int kind, int word, unsigned int* count, void** actors);
+    void ReadActors(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, int kind, int word, unsigned int* count, void** actors);
 };
 
 void AtConstructEach(void* first, unsigned int size, int count, void (*construct)(void*));  // 0x00011000 the original's takes a thiscall pointer
@@ -308,13 +291,6 @@ void AtConstructEach(void* first, unsigned int size, int count, void (*construct
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(AtSceneOwner, m_device) == 0x04, "AtSceneOwner::m_device");
-static_assert(offsetof(AtSceneOwner, m_nodes) == 0x90, "AtSceneOwner::m_nodes");
-static_assert(offsetof(AtSceneOwner, m_nodeSpaces) == 0xA8, "AtSceneOwner::m_nodeSpaces");
-static_assert(offsetof(AtSceneOwner, m_modifiers) == 0xCC, "AtSceneOwner::m_modifiers");
-static_assert(offsetof(AtSceneOwner, m_modifierSpaces) == 0xE4, "AtSceneOwner::m_modifierSpaces");
-static_assert(offsetof(AtSceneOwner, m_geometry) == 0x180, "AtSceneOwner::m_geometry");
-static_assert(offsetof(AtSceneOwner, m_geometrySpaces) == 0x198, "AtSceneOwner::m_geometrySpaces");
 static_assert(sizeof(AtSceneLink) == 0x20, "AtSceneLink");
 static_assert(sizeof(AtSceneLinkItem) == 0x20, "AtSceneLinkItem");
 static_assert(offsetof(AtSceneDirtyOwner, m_first) == 0x14, "AtSceneDirtyOwner::m_first");

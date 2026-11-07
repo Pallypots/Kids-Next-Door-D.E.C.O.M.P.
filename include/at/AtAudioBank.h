@@ -4,6 +4,7 @@
 #pragma once
 
 #include "at/AtIoTokenizer.h"
+#include "at/AtNameTableOwner.h"
 #include "gm/GmNameMap.h"
 
 class AtAudioBank;
@@ -16,26 +17,6 @@ public:
     virtual void Unknown1() = 0;
     virtual void Add(AtAudioBank* bank) = 0;     // slot 2
     virtual void Remove(AtAudioBank* bank) = 0;  // slot 3
-};
-
-// The class with vftable 0x00274A78, of which only the part these lists use is recovered. It has three tables, each a plain group and a database of name spaces. For sound, the first holds banks and
-// the second segments. The image draw lists (0x0003B0C0, 0x0003B490) use the same two methods on an owner of their own, so the class is not only for sound. The third table's method is 0x00031A90.
-struct AtNameTableOwner {
-    void AddToFirst(GmNameMap* map, const char* ns);   // 0x00031A30 a null ns means the plain group; an empty one is a name space with an empty name
-    void AddToSecond(GmNameMap* map, const char* ns);  // 0x00031A60 the same
-    // The original has this inline in 0x00031C50. Here an empty ns does mean the plain group, unlike the two above.
-    void* FindInFirst(const char* name, const char* ns) { return ns != 0 && ns[0] != 0 ? m_firstSpaces.Find(ns, name) : m_first.Find(name); }
-
-    char m_unknown00[0x0C];
-    AtAudioBankLoader* m_loader;       // +0x0C
-    int m_unknown10;                   // +0x10
-    int m_unknown14;                   // +0x14
-    GmNameMapGroup m_first;            // +0x18
-    GmNameSpaceDb m_firstSpaces;       // +0x30
-    GmNameMapGroup m_second;           // +0x54
-    GmNameSpaceDb m_secondSpaces;      // +0x6C
-    GmNameMapGroup m_third;            // +0x90
-    GmNameSpaceDb m_thirdSpaces;       // +0xA8
 };
 
 // A file held by a bank. The same shape as AtIoFileRef, and the constructor is the same code, but this destructor does not check m_fs.
@@ -200,13 +181,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(AtNameTableOwner, m_loader) == 0x0C, "AtNameTableOwner::m_loader");
-static_assert(offsetof(AtNameTableOwner, m_first) == 0x18, "AtNameTableOwner::m_first");
-static_assert(offsetof(AtNameTableOwner, m_firstSpaces) == 0x30, "AtNameTableOwner::m_firstSpaces");
-static_assert(offsetof(AtNameTableOwner, m_second) == 0x54, "AtNameTableOwner::m_second");
-static_assert(offsetof(AtNameTableOwner, m_secondSpaces) == 0x6C, "AtNameTableOwner::m_secondSpaces");
-static_assert(offsetof(AtNameTableOwner, m_third) == 0x90, "AtNameTableOwner::m_third");
-static_assert(offsetof(AtNameTableOwner, m_thirdSpaces) == 0xA8, "AtNameTableOwner::m_thirdSpaces");
 static_assert(sizeof(AtAudioBankDesc) == 0x1C, "AtAudioBankDesc");
 static_assert(offsetof(AtAudioBank, m_state) == 0x18, "AtAudioBank::m_state");
 static_assert(offsetof(AtAudioBank, m_users) == 0x20, "AtAudioBank::m_users");
