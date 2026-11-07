@@ -49,7 +49,7 @@ public:
     void Slot0() override {}
     void Reserve(unsigned int count) override { m_blocks.push_back(new std::vector<Mat>(count + 1)); }
     void Clear() override {}
-    void Slot3() override {}
+    unsigned int Count() override { return m_blocks.empty() ? 0 : (unsigned int)m_blocks.back()->size() - 1; }
     AtMatrix* At(unsigned int index) override { return (AtMatrix*)&m_blocks.back()->at(index); }
 };
 
