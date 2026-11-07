@@ -123,7 +123,7 @@ evidence = "a jump to 0x0005ACC0; the element destructor passed in 0x0004C3B0 an
 [[function]]
 va = 0x0005B2E0
 size = 295
-symbol = "?Start@AtSceneParticleLayer@@QAEXPAUAtNameTableOwner@@PAUAtSceneParticleEmitter@@PBVAtQuaternion@@@Z"
+symbol = "?Start@AtSceneParticleLayer@@QAEXPAUAtNameTableOwner@@PAVAtEmitter@@PBVAtQuaternion@@@Z"
 source = "src/at/AtSceneParticle.cpp"
 subsystem = "at/particle"
 evidence = "an array of MaxParticles + 1 at 0x40 each; slot 0 of the owner's first word's object, and slot 1 of what that answers"

@@ -104,7 +104,7 @@ static void run_particle_layers() {
     compare("layer cleared, with nothing");
 
     const AtQuaternion color = {1.5f, -2.5f, 3.25f, 0.125f};
-    AtSceneParticleEmitter* e[2][2] = {{g_emitters[0], (AtSceneParticleEmitter*)((char*)g_emitters[0] + kEmitterRoom)}, {g_emitters[1], (AtSceneParticleEmitter*)((char*)g_emitters[1] + kEmitterRoom)}};
+    AtEmitter* e[2][2] = {{g_emitters[0], (AtEmitter*)((char*)g_emitters[0] + kEmitterRoom)}, {g_emitters[1], (AtEmitter*)((char*)g_emitters[1] + kEmitterRoom)}};
     // With a colour, with none, over one another and from a stale colour.
     const AtQuaternion* const colors[] = {&color, nullptr, &color, &color, nullptr};
     int n = 0;

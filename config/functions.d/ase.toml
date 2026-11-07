@@ -225,62 +225,6 @@ subsystem = "at/ase"
 evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
 
 [[function]]
-va = 0x000552A0
-size = 10
-symbol = "?SetHeap@AtQuery@@SAXPAX@Z"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
-va = 0x00055360
-size = 55
-symbol = "?Attach@AtQuery@@UAEXIPAX0@Z"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
-va = 0x000553A0
-size = 233
-symbol = "?Reserve@AtQuery@@UAEXI@Z"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
-va = 0x00055490
-size = 131
-symbol = "?Reset@AtQuery@@QAEXXZ"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
-va = 0x000555A0
-size = 14
-symbol = "??0AtQuery@@QAE@XZ"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
-va = 0x000555B0
-size = 55
-symbol = "?Clear@AtQuery@@UAEXXZ"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
-va = 0x000555F0
-size = 61
-symbol = "??1AtQuery@@UAE@XZ"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
 va = 0x00057330
 size = 10
 symbol = "?SetHeap@AtQueryPool@@SAXPAX@Z"
@@ -292,14 +236,6 @@ evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in
 va = 0x00057340
 size = 252
 symbol = "?Allocate@AtQueryPool@@UAEXXZ"
-source = "src/at/AtSegmentQuery.cpp"
-subsystem = "at/ase"
-evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
-
-[[function]]
-va = 0x00057440
-size = 87
-symbol = "??_EAtQuery@@UAEPAXI@Z"
 source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/ase"
 evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
@@ -355,7 +291,7 @@ evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in
 [[function]]
 va = 0x00057A70
 size = 39
-symbol = "?Attach@AtSegmentQuery@@QAEXIPAX00@Z"
+symbol = "?SetStorage@AtSegmentQuery@@QAEXIPAX00@Z"
 source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/ase"
 evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
@@ -363,7 +299,7 @@ evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in
 [[function]]
 va = 0x00057AA0
 size = 104
-symbol = "?Reserve@AtSegmentQuery@@UAEXI@Z"
+symbol = "?Allocate@AtSegmentQuery@@UAEXI@Z"
 source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/ase"
 evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
@@ -411,18 +347,13 @@ symbol = "??_7AtQueryPool@@6B@"
 source = "src/at/AtSegmentQuery.cpp"
 
 [[vtable]]
-va = 0x00276F28
-slots = 4
-symbol = "??_7AtQuery@@6B@"
-source = "src/at/AtSegmentQuery.cpp"
-
-[[vtable]]
 va = 0x002770F4
-slots = 4
+slots = 5
 symbol = "??_7AtSegmentQuery@@6B@"
 source = "src/at/AtSegmentQuery.cpp"
 
 [symbols]
+"?CountOne@AtSegmentQuery@@UAEXXZ" = 0x00057B10
 "?TakeNext@AtQueryPool@@UAEPAXXZ" = 0x000574F0
 "?Update@AtQueryPool@@UAEXPAX@Z" = 0x00057800
 "?TakeNext@AtSegmentQueryPool@@UAEPAXXZ" = 0x00048070
@@ -430,4 +361,4 @@ source = "src/at/AtSegmentQuery.cpp"
 "?s_keywords@AtEmitterDatabase@@2QBUAtIoKeyword@@B" = 0x002B1F20
 "?s_heap@AtEmitterDatabase@@2PAXA" = 0x002C6414
 "?s_heap@AtQueryPool@@2PAXA" = 0x002C7F64
-"?s_heap@AtQuery@@2PAXA" = 0x002C7F58
+

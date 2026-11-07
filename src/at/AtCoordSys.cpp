@@ -25,10 +25,13 @@ void NoMultiply(AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 
 void NoProduct(AtMatrix*, const AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
 void NoTransform(const AtMatrix*, const AtVector3*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
 void NoUniformScale(AtMatrix*, float) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
+void NoGetPosition(const AtMatrix*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
+void NoGetAxes(const AtMatrix*, AtVector3*, AtVector3*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
+void NoTransformDirection(const AtMatrix*, const AtVector3*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
 
 }  // namespace
 
-AtMatrixTable g_atMatrix = {NoCopy, NoIdentity, NoTranslation, NoRotation, NoLookAt, NoScale, NoInverse, NoMultiply, NoProduct, NoTransform, NoUniformScale, AtMatrixRead};
+AtMatrixTable g_atMatrix = {NoCopy, NoIdentity, NoTranslation, NoRotation, NoLookAt, NoScale, NoInverse, NoMultiply, NoProduct, NoTransform, NoUniformScale, AtMatrixRead, NoGetPosition, NoGetAxes, NoTransformDirection};
 
 void AtQuaternion::Read(AtIoTokenizer* tokenizer) {
     x = tokenizer->ExpectReal();

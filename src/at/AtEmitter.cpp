@@ -46,14 +46,6 @@ const float kShortestInterval = 0.004f;          // 0x00276D90, 0x3B83126F; also
 const float kOverSteps = 1.0f / 2047.0f;         // 0x002767B8, 0x3A001002
 const float kShortestAxis = 5.0e-6f;             // 0x00272AC8, 0x36A7C5AC
 
-// 0x00035820 in the original, a method of the quaternion that the particle work owns. This stands in until that merges: replace it then.
-void SetIdentity(AtQuaternion* quaternion) {
-    quaternion->x = 0;
-    quaternion->y = 0;
-    quaternion->z = 0;
-    quaternion->w = 1.0f;
-}
-
 // Of an event, or a particle, not happening, in 2047ths. The original has this inline for particles and as a method, 0x00050E90, for events.
 int ChanceToInt(float chance) {
     double against = 1.0f - (double)chance;
@@ -177,11 +169,11 @@ void AtEmitter::Reset() {
     m_coneScaleA = 1.0f;
     m_coneScaleB = 1.0f;
     m_color.SetWhite();
-    SetIdentity(&m_colorLinear);
-    SetIdentity(&m_colorQuadratic);
-    SetIdentity(&m_blur);
-    SetIdentity(&m_blurLinear);
-    SetIdentity(&m_blurQuadratic);
+    m_colorLinear.SetIdentity();
+    m_colorQuadratic.SetIdentity();
+    m_blur.SetIdentity();
+    m_blurLinear.SetIdentity();
+    m_blurQuadratic.SetIdentity();
     m_blurCount = 0;
     m_blurLength = 0;
     m_blurStep = 0;

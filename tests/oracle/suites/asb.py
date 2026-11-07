@@ -16,6 +16,7 @@ B = "AtBoundingBox.cpp"
 G = "AtBoundingGeometry.cpp"
 D = "AtBoundingDraw.cpp"
 H = "AtBoundingMath.h"
+Q = "AtSegmentQuery.cpp"
 _SRC = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(sys.argv[0]))), "src", "at")  # The runner compiles this with no __file__; it is tools/oracle_run.py.
 _TEXT = {}
 
@@ -235,7 +236,7 @@ for a, b in [
     ('{0x3A, "BoxBoundingGeometry"}', '{0x3B, "BoxBoundingGeometry"}'), ('{0x46, "GroupBoundingGeometry"}', '{0x45, "GroupBoundingGeometry"}'), ('{0x44, "Parent"}', '{0x44, "Parent2"}'),
     ("    return &((AtSceneJointedModelActor*)node)->m_joints.m_database->m_rotTrans[index - 1];", "    return &((AtSceneJointedModelActor*)node)->m_joints.m_database->m_rotTrans[index];"),
     ("    if (node->m_class != 3) {", "    if (false) {"), ("    if (((AtSceneJointedModelActor*)node)->m_joints.m_database == 0) {", "    if (false) {"),
-    ("    g_atGeometryMatrix.GetPosition(m, position);\n", ""), ("    g_atGeometryMatrix.GetAxes(m, &axes[0], &axes[1], &axes[2]);", "    g_atGeometryMatrix.GetAxes(m, &axes[1], &axes[0], &axes[2]);"),
+    ("    g_atMatrix.GetPosition(m, position);\n", ""), ("    g_atMatrix.GetAxes(m, &axes[0], &axes[1], &axes[2]);", "    g_atMatrix.GetAxes(m, &axes[1], &axes[0], &axes[2]);"),
     ("    if (AtBoundingGeometry::s_contacts != 0) {", "    if (false) {"), ("->Add(mine, other, AtBoundingGeometry::s_node, AtBoundingGeometry::s_otherNode);", "->Add(other, mine, AtBoundingGeometry::s_node, AtBoundingGeometry::s_otherNode);"), ("->Add(mine, other, AtBoundingGeometry::s_node, AtBoundingGeometry::s_otherNode);", "->Add(mine, other, AtBoundingGeometry::s_otherNode, AtBoundingGeometry::s_node);"),
     ("            AtCoordSysTransformDirection(coordSys, vector, normal);", "            *normal = *vector;"), ("            *normal = *vector;", "            AtCoordSysTransformDirection(AtBoundingGeometry::s_coordSys, vector, normal);"), ("        AtCoordSysTransformDirection(JointOf(node, jointIndex), vector, normal);", "        *normal = *vector;"),
     ("    if (jointIndex == 0) {\n        AtCoordSys* coordSys = node->ParentCoordSys();\n        if (coordSys != 0) {\n            AtCoordSysTransformDirection", "    if (jointIndex != 0) {\n        AtCoordSys* coordSys = node->ParentCoordSys();\n        if (coordSys != 0) {\n            AtCoordSysTransformDirection"),
@@ -250,7 +251,7 @@ for a, b in [
     ("        m_parent->UpdateDrawing(base, generation, multiply);\n", ""), ("        if ((m_dirty & 2) == 0 && generation == m_unknown20) {", "        if (generation == m_unknown20) {"), ("        if ((m_dirty & 2) == 0 && generation == m_unknown20) {", "        if ((m_dirty & 2) == 0) {"), ("        m_unknown20 = generation;\n        if (multiply", "        if (multiply"),
     ("            g_atMatrix.SetProduct(m_world, m_local, m_parent->m_world);", "            g_atMatrix.SetProduct(m_world, m_parent->m_world, m_local);"), ("            g_atMatrix.Copy(m_world, m_parent->m_world);", "            g_atMatrix.Copy(m_world, m_local);"),
     ("        child->m_dirty |= 2;\n", "        ;\n"), ("    m_dirty = (m_dirty & ~2u) | 0x29;", "    m_dirty = (m_dirty & ~2u) | 0x2B;"), ("    m_dirty = (m_dirty & ~2u) | 0x29;", "    m_dirty = m_dirty | 0x29;"), ("    return 2;\n", "    return 1;\n"),
-    ("    UpdateInverse();\n", ""), ("    g_atGeometryMatrix.TransformDirection(m_world, from, to);", "    g_atGeometryMatrix.TransformDirection(m_local, from, to);"),
+    ("    UpdateInverse();\n", ""), ("    g_atMatrix.TransformDirection(m_world, from, to);", "    g_atMatrix.TransformDirection(m_local, from, to);"),
     ("        m_geometrySpaces.Add(ns, map);", "        m_geometry.Add(map);"), ("        m_geometry.Add(map);", "        m_geometrySpaces.Add(\"\", map);"),
     # Contacts.
     ("    if (m_count >= m_capacity) {", "    if (false) {"), ("    if ((m_flags & kLeavesOnly) != 0 && (first->m_firstChild != 0 || second->m_firstChild != 0)) {", "    if ((first->m_firstChild != 0 || second->m_firstChild != 0)) {"), ("    if ((m_flags & kLeavesOnly) != 0 && (first->m_firstChild != 0 || second->m_firstChild != 0)) {", "    if ((m_flags & kLeavesOnly) != 0 && (first->m_firstChild != 0)) {"), ("    if ((m_flags & kLeavesOnly) != 0 && (first->m_firstChild != 0 || second->m_firstChild != 0)) {", "    if ((m_flags & kLeavesOnly) != 0 && (second->m_firstChild != 0)) {"),
@@ -267,7 +268,7 @@ for a, b in [
     ("            axes[0].x = 1.0f;", "            axes[0].x = 0.0f;"), ("            axes[1].y = 1.0f;", "            axes[1].y = 0.0f;"), ("            axes[2].z = 1.0f;", "            axes[2].z = 0.0f;"), ("            position.y = 0.0f;", "            position.y = 1.0f;"), ("            axes[1].x = 0.0f;", "            axes[1].x = 1.0f;"), ("            axes[2].y = 0.0f;", "            axes[2].y = 1.0f;"),
     ("            coordSys->UpdateWorld();\n", ""), ("        AtCoordSys* joint = CheckedJointOf(s_otherNode, other->m_jointIndex);", "        AtCoordSys* joint = CheckedJointOf(s_node, other->m_jointIndex);"), ("        AtCoordSys* joint = CheckedJointOf(s_otherNode, other->m_jointIndex);", "        AtCoordSys* joint = CheckedJointOf(s_otherNode, m_jointIndex);"), ("        joint->UpdateWorld();\n", ""), ("        ReadMatrixAxes(joint->m_world, &position, axes);", "        ReadMatrixAxes(joint->m_local, &position, axes);"),
     ("    if (m_jointIndex == 0) {\n        mine = s_coordSys;", "    if (m_jointIndex != 0) {\n        mine = s_coordSys;"), ("        mine = s_coordSys;", "        mine = s_otherCoordSys;"), ("        if (mine == 0) {", "        if (false) {"), ("            s_relativePosition = position;\n", ""), ("            s_relativeAxes[0] = axes[0];\n", ""), ("            s_relativeAxes[1] = axes[1];\n", ""), ("            s_relativeAxes[2] = axes[2];\n", ""),
-    ("        mine = CheckedJointOf(s_node, m_jointIndex);", "        mine = CheckedJointOf(s_otherNode, m_jointIndex);"), ("    mine->UpdateInverse();\n", ""), ("    g_atMatrix.TransformPoint(mine->m_world, &position, &s_relativePosition);", "    g_atGeometryMatrix.TransformDirection(mine->m_world, &position, &s_relativePosition);"), ("&axes[0], &s_relativeAxes[0]);", "&axes[1], &s_relativeAxes[0]);"), ("&axes[1], &s_relativeAxes[1]);", "&axes[2], &s_relativeAxes[1]);"), ("&axes[2], &s_relativeAxes[2]);", "&axes[0], &s_relativeAxes[2]);"),
+    ("        mine = CheckedJointOf(s_node, m_jointIndex);", "        mine = CheckedJointOf(s_otherNode, m_jointIndex);"), ("    mine->UpdateInverse();\n", ""), ("    g_atMatrix.TransformPoint(mine->m_world, &position, &s_relativePosition);", "    g_atMatrix.TransformDirection(mine->m_world, &position, &s_relativePosition);"), ("&axes[0], &s_relativeAxes[0]);", "&axes[1], &s_relativeAxes[0]);"), ("&axes[1], &s_relativeAxes[1]);", "&axes[2], &s_relativeAxes[1]);"), ("&axes[2], &s_relativeAxes[2]);", "&axes[0], &s_relativeAxes[2]);"),
     # Kinds and the group.
     ("    m_kind = kGroup;", "    m_kind = 3;"), ("    m_kind = kSphere;", "    m_kind = kBox;"), ("    m_kind = kBox;\n}", "    m_kind = kSphere;\n}"),
     ("void AtGroupBoundingGeometry::ReadWord(AtIoTokenizer* tokenizer, int) {\n    tokenizer->Error(kUnexpectedWord);", "void AtGroupBoundingGeometry::ReadWord(AtIoTokenizer* tokenizer, int) {\n    tokenizer->Error(kAtProblemWrongUse);"),
@@ -324,7 +325,10 @@ for a, b in [
     ("    const unsigned int total = m_groupCount + m_sphereCount + m_boxCount;", "    const unsigned int total = m_groupCount + m_sphereCount;"), ("    Init(total);\n", ""), ("    Init(total);\n    owner->AddGeometry(this, ns);\n", "    Init(total);\n"), ("    if (listed > total) {", "    if (listed >= total) {"), ("    if (listed > total) {", "    if (false) {"), ("        tokenizer->Error(kAtProblemIsEmpty);", "        tokenizer->Error(kUnexpectedWord);"),
     ("            if (boxes >= m_boxCount) {", "            if (false) {"), ("            if (spheres >= m_sphereCount) {", "            if (false) {"), ("            if (groups >= m_groupCount) {", "            if (false) {"), ("            geometry = m_boxes + boxes;", "            geometry = m_boxes;"), ("            geometry = m_spheres + spheres;", "            geometry = m_spheres;"), ("            geometry = m_groups + groups;", "            geometry = m_groups;"),
     ("            boxes++;\n", ""), ("            spheres++;\n", ""), ("            groups++;\n", ""), ("            continue;\n", "            geometry = m_boxes;\n"), ("        tokenizer->ExpectName(name);\n        Insert(name, geometry);", "        tokenizer->ExpectName(name);"), ("        geometry->Read(this, tokenizer);\n", ""), ("    tokenizer->ExpectRightCurly();\n", ""),
-    # The list of hits.
+]:
+    GEO.append(one(G, a, b))
+# The list of hits, in the file of the class it now belongs to.
+for a, b in [
     ("    m_first0 = &m_vectors0[0];", "    m_first0 = &m_vectors0[1];"), ("    m_second0 = &m_vectors0[1];", "    m_second0 = &m_vectors0[0];"), ("    m_first2 = &m_vectors2[0];", "    m_first2 = &m_vectors2[1];"), ("    m_second2 = &m_vectors2[1];", "    m_second2 = &m_vectors2[0];"), ("    m_vectors0[0].x = 0.0f;\n", ""), ("    m_vectors0[1].z = 0.0f;\n", ""), ("    m_vectors1[0].x = 0.0f;\n", ""), ("    m_vectors1[1].z = 0.0f;\n", ""), ("    m_vectors2[0].x = 0.0f;\n", ""), ("    m_vectors2[1].z = 0.0f;\n", ""),
     ("    m_unknown60[0] = 0;\n", ""), ("    m_unknown60[3] = 0;\n", ""), ("    m_unknown60[4] = 0;\n", ""), ("    m_unknown60[5] = 0;\n", ""), ("    m_flags = 0;\n", ""), ("    m_capacity = 0;\n", ""), ("    m_keys = 0;\n", ""), ("    m_hits = 0;\n", ""), ("    m_count = 0;\n", ""), ("    m_unknown8C = 0;\n", ""),
     ("AtSegmentHitList::~AtSegmentHitList() {\n    if ((m_flags & kNotOwned) == 0) {", "AtSegmentHitList::~AtSegmentHitList() {\n    if (true) {"), ("void AtSegmentHitList::Clear() {\n    if ((m_flags & kNotOwned) == 0) {", "void AtSegmentHitList::Clear() {\n    if (true) {"),
@@ -333,7 +337,7 @@ for a, b in [
     ("    m_keys = operator new(m_capacity * kKeySize);", "    m_keys = operator new(m_capacity * 4);"), ("    m_hits = operator new(m_capacity * kHitSize);", "    m_hits = operator new(m_capacity * 4);"), ("        keyBytes[i] = 0;\n", "        ;\n"), ("    for (unsigned int i = 0; i < m_capacity * kKeySize; i++) {", "    for (unsigned int i = 0; i < m_capacity; i++) {"),
     ("    if (m_keys == 0) {\n        AtRaise(-4, 0, 0, 0);", "    if (false) {\n        AtRaise(-4, 0, 0, 0);"), ("    if (m_hits == 0) {\n        AtRaise(-4, 0, 0, 0);", "    if (false) {\n        AtRaise(-4, 0, 0, 0);"),
 ]:
-    GEO.append(one(G, a, b))
+    GEO.append(one(Q, a, b))
 GEO += all_of(G, "RelateTo(other);\n", "\n")
 GEO += all_of(G, "        sphere.radius = theirs.radius;\n", "")
 GEO += all_of(G, "        sphere.center = StoredRelative(m_box.m_center, theirs.center);", "        sphere.center = theirs.center;")

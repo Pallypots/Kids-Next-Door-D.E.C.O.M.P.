@@ -80,7 +80,7 @@ int g_heap;
 class Drawer : public AtSceneParticleDrawer {
 public:
     void Slot0() override {}
-    void Start(AtNameTableOwner* owner, AtSceneParticleEmitter*) override { m_owner = owner; }
+    void Start(AtNameTableOwner* owner, AtEmitter*) override { m_owner = owner; }
 };
 class DrawerMaker : public AtSceneParticleDrawerMaker {
 public:
@@ -94,7 +94,8 @@ struct World {
     Device device;
     AtNameTableOwner* owner;
     DrawerMaker drawers;
-    AtSceneParticleEmitter emitter = {};
+    alignas(16) unsigned char emitterRoom[sizeof(AtEmitter)] = {};  // Zeroed, unconstructed: only what a test sets.
+    AtEmitter& emitter = *(AtEmitter*)emitterRoom;
     int thing = 0;
     AtSceneMatAnimation matAnimation = {};
     AtSceneAnimation animation = {};
@@ -111,7 +112,7 @@ struct World {
         emitter.m_blurCount = 2;
         emitter.m_blurStep = 0.25f;
         emitter.m_maxParticles = 8;
-        emitter.m_localSphere.radius = 100.0f;
+        emitter.m_boundingSphere.radius = 100.0f;
         const unsigned size = (unsigned)names.size() + 4;
         owner->m_nodeSpaces.Init(4);
         owner->m_modifierSpaces.Init(4);

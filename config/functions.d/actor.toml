@@ -467,7 +467,7 @@ evidence = "called by 0x0005A750 with what word 69 found"
 [[function]]
 va = 0x0005FF90
 size = 17
-symbol = "??1AtSceneMatPlayback@@QAE@XZ"
+symbol = "?Clear@AtSceneMatPlayback@@QAEXXZ"
 source = "src/at/AtSceneAnimation.cpp"
 subsystem = "at/actor"
 evidence = "clears four words through 0x000B9A90, and +0x10"
@@ -499,6 +499,7 @@ symbol = "??_7AtSceneJointedModelActor@@6B@"
 source = "src/at/AtSceneModelActor.cpp"
 
 [symbols]
+"??0AtScenePlayback@@QAE@XZ" = 0x0017AED0
 "?s_heap@AtSceneActor@@2PAXA" = 0x002C7F5C
 "?s_heap@AtSceneAnimSet@@2PAXA" = 0x002C9C0C
 "?s_heap@AtSceneAnimBlend@@2PAXA" = 0x002C63D8

@@ -126,12 +126,12 @@ void read_emitters() {
     CHECK(first.m_queries.m_made == 1);
     CHECK(first.m_queries.m_segmentQueries != nullptr);
     const AtSegmentQuery& query = first.m_queries.m_segmentQueries[3];
-    CHECK(query.m_count == 1);
-    CHECK(query.m_flags == AtQuery::kStorageNotOwned);
-    CHECK(query.m_storage80 == first.m_queries.m_entries8 + 3 * 8);
-    CHECK(query.m_storage84 == first.m_queries.m_entries2C + 3 * 0x2C);
-    CHECK(query.m_storage90 == first.m_queries.m_entries10 + 3 * 0x10);
-    CHECK(query.m_headB == query.m_listB);
+    CHECK(query.m_capacity == 1);
+    CHECK(query.m_flags == AtSegmentHitList::kNotOwned);
+    CHECK(query.m_keys == first.m_queries.m_entries8 + 3 * 8);
+    CHECK(query.m_hits == first.m_queries.m_entries2C + 3 * 0x2C);
+    CHECK((unsigned char*)query.m_records == first.m_queries.m_entries10 + 3 * sizeof(AtSegmentHit));
+    CHECK(query.m_second0 == &query.m_vectors0[1]);
 
     CHECK((second.m_flags & AtEmitter::kSquareParticles) == 0);
     CHECK(second.m_flags & AtEmitter::kQuadraticSize);

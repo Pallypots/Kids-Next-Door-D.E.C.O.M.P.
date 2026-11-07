@@ -27,7 +27,7 @@ struct AtModifierSlot {
 class AtModifierState {
 public:
     AtModifierState();                                  // 0x00018810 the same code as AtIoFileRef's, folded
-    ~AtModifierState();                                 // 0x00053570 seam
+    ~AtModifierState();                                 // 0x00053570 the same code as AtMatAssignment's, folded, where it is recorded
     void Init(unsigned int slots, int fromFileHeap);    // 0x000535A0
     void Assign(const AtModifierState& from);           // 0x00053720 a new array of the same size, then CopyFrom
     void CopyFrom(const AtModifierState& from);         // 0x000534D0 seam. Takes `from`'s entries for as many slots as this has

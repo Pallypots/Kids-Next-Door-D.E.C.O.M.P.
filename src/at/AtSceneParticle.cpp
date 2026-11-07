@@ -88,7 +88,7 @@ void AtSceneParticleLayer::Clear() {
     m_unknown34 = 0;
 }
 
-void AtSceneParticleLayer::Start(AtNameTableOwner* owner, AtSceneParticleEmitter* emitter, const AtQuaternion* color) {
+void AtSceneParticleLayer::Start(AtNameTableOwner* owner, AtEmitter* emitter, const AtQuaternion* color) {
     if (m_emitter != 0) {
         Clear();
     }
@@ -178,7 +178,7 @@ void AtSceneParticleSystemActor::ReadBody(AtNameTableOwner* owner, AtIoTokenizer
         char ns[8];
         tokenizer->ExpectName(name);
         tokenizer->ExpectName(ns);
-        m_emitter = (AtSceneParticleEmitter*)owner->FindEmitter(name, ns);
+        m_emitter = (AtEmitter*)owner->FindEmitter(name, ns);
         if (m_emitter == 0) {
             tokenizer->Error(kAtProblemNotFound);
         }
@@ -237,30 +237,30 @@ void AtSceneParticleSystemActor::StartLayers(AtNameTableOwner* owner) {
     // The first layer has no colour. Each echo has the colour at its time, a sum of three terms.
     float time = 0.0f;
     for (unsigned int i = 1; i < m_layerCount; i++) {
-        const AtSceneParticleEmitter* emitter = m_emitter;
+        const AtEmitter* emitter = m_emitter;
         time = time + emitter->m_blurStep;
-        AtQuaternion color = emitter->m_blurColor;
-        color.x = (float)((double)time * emitter->m_blurColorLinear.x + color.x);
-        color.y = (float)((double)time * emitter->m_blurColorLinear.y + color.y);
-        color.z = (float)((double)time * emitter->m_blurColorLinear.z + color.z);
-        color.w = (float)((double)time * emitter->m_blurColorLinear.w + color.w);
+        AtQuaternion color = emitter->m_blur;
+        color.x = (float)((double)time * emitter->m_blurLinear.x + color.x);
+        color.y = (float)((double)time * emitter->m_blurLinear.y + color.y);
+        color.z = (float)((double)time * emitter->m_blurLinear.z + color.z);
+        color.w = (float)((double)time * emitter->m_blurLinear.w + color.w);
         const double squared = (double)time * time;
-        color.x = (float)(squared * emitter->m_blurColorQuadratic.x + color.x);
-        color.y = (float)(squared * emitter->m_blurColorQuadratic.y + color.y);
-        color.z = (float)(squared * emitter->m_blurColorQuadratic.z + color.z);
-        color.w = (float)(squared * emitter->m_blurColorQuadratic.w + color.w);
+        color.x = (float)(squared * emitter->m_blurQuadratic.x + color.x);
+        color.y = (float)(squared * emitter->m_blurQuadratic.y + color.y);
+        color.z = (float)(squared * emitter->m_blurQuadratic.z + color.z);
+        color.w = (float)(squared * emitter->m_blurQuadratic.w + color.w);
         m_layers[i].Start(owner, m_emitter, &color);
     }
 
     m_seed = AtNextRandomWord();
-    m_sphere.center.x = m_emitter->m_localSphere.center.x;
-    m_sphere.center.y = m_emitter->m_localSphere.center.y;
-    m_sphere.center.z = m_emitter->m_localSphere.center.z;
-    m_sphere.radius = m_emitter->m_localSphere.radius;
+    m_sphere.center.x = m_emitter->m_boundingSphere.center.x;
+    m_sphere.center.y = m_emitter->m_boundingSphere.center.y;
+    m_sphere.center.z = m_emitter->m_boundingSphere.center.z;
+    m_sphere.radius = m_emitter->m_boundingSphere.radius;
     m_worldSphere.center.x = m_sphere.center.x;
     m_worldSphere.center.y = m_sphere.center.y;
     m_worldSphere.center.z = m_sphere.center.z;
-    m_worldSphere.radius = m_emitter->m_localSphere.radius;
+    m_worldSphere.radius = m_emitter->m_boundingSphere.radius;
     OnMoved();
     m_unknownA4 = 0;
     m_unknownB0 = 1.0f;

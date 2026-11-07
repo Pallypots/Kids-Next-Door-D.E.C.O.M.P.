@@ -136,9 +136,9 @@ static void set_matrix_table() {
     g_atMatrix.Multiply = m_multiply;
     g_atMatrix.SetProduct = m_product;
     g_atMatrix.TransformPoint = m_point;
-    g_atGeometryMatrix.GetPosition = m_position;
-    g_atGeometryMatrix.GetAxes = m_axes;
-    g_atGeometryMatrix.TransformDirection = m_direction;
+    g_atMatrix.GetPosition = m_position;
+    g_atMatrix.GetAxes = m_axes;
+    g_atMatrix.TransformDirection = m_direction;
     *(void**)(uintptr_t)0x002C60C8 = (void*)m_copy;
     *(void**)(uintptr_t)0x002C60CC = (void*)m_identity;
     *(void**)(uintptr_t)0x002C61D4 = (void*)m_inverse;

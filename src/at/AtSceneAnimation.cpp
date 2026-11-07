@@ -43,6 +43,13 @@ template <class T> T* NewBlendArray(unsigned int count) {
 
 // ---- playback ----------------------------------------------------------------------------------------------------------------
 
+AtScenePlayback::AtScenePlayback() {
+    m_flags = 0;
+    m_time = 0;
+    m_rate = 0;
+    m_listener = 0;
+}
+
 void AtScenePlayback::Rewind() {
     m_flags = kWasRewound;
     m_time = 0;
@@ -52,7 +59,7 @@ AtSceneMatPlayback::AtSceneMatPlayback() {
     m_animation = 0;
 }
 
-AtSceneMatPlayback::~AtSceneMatPlayback() {
+void AtSceneMatPlayback::Clear() {
     m_flags = 0;
     m_time = 0;
     m_rate = 0;
@@ -74,6 +81,7 @@ AtSceneMatChannel::AtSceneMatChannel() {
 AtSceneMatChannel::~AtSceneMatChannel() {
     m_options = 0;
     m_assignmentOffset = 0;
+    Clear();
 }
 
 void AtSceneMatChannel::Read(AtSceneDevice* device, AtIoTokenizer* tokenizer) {

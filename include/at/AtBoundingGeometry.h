@@ -25,6 +25,7 @@
 
 #include "at/AtCoordSys.h"
 #include "at/AtScene.h"
+#include "at/AtSegmentQuery.h"
 
 struct AtNameTableOwner;
 class AtBoundingGeometry;
@@ -48,67 +49,12 @@ struct AtBoundingBox {
     AtVector3 m_half;    // +0x0C
 };
 
-// What a segment test collects its answers in: the class with vftable 0x00276F28. What fills it is at 0x000552B0 and in a class derived from it, vftable 0x002770F8, neither recovered here.
-class AtSegmentHitList {
-public:
-    AtSegmentHitList();                            // 0x000555A0
-    virtual void Allocate(unsigned int capacity);  // slot 0, 0x000553A0 the keys are zeroed, the hits are not
-    virtual void SetStorage(unsigned int capacity, void* keys, void* hits);  // slot 1, 0x00055360 not owned: clearing does not free them
-    virtual ~AtSegmentHitList();                   // slot 2, 0x00057440 deleting, for arrays too; 0x000555F0 complete
-    virtual void Clear();                          // slot 3, 0x000555B0
-    virtual void CountOne();                       // slot 4, 0x00055340 up to the capacity
-
-    void Reset();                                  // 0x00055490 all but m_current
-    static void SetHeap(void* heap);               // 0x000552A0
-
-    enum Flags { kNotOwned = 2 };
-    enum { kKeySize = 8, kHitSize = 0x2C };
-
-    unsigned int m_flags;              // +0x04
-    AtVector3 m_vectors0[2];           // +0x08
-    AtVector3* m_first0;               // +0x20 at m_vectors0[0]
-    AtVector3* m_second0;              // +0x24 at m_vectors0[1]
-    AtVector3 m_vectors1[2];           // +0x28
-    AtVector3 m_vectors2[2];           // +0x40
-    AtVector3* m_first2;               // +0x58 at m_vectors2[0]
-    AtVector3* m_second2;              // +0x5C at m_vectors2[1]
-    int m_unknown60[6];                // +0x60
-    unsigned int m_capacity;           // +0x78
-    unsigned int m_current;            // +0x7C the place the last key went in. Reset leaves it
-    void* m_keys;                      // +0x80 eight bytes each
-    void* m_hits;                      // +0x84 0x2C bytes each
-    unsigned int m_count;              // +0x88
-    int m_unknown8C;                   // +0x8C
-
-    static void* s_heap;               // 0x002C7F58
-};
-
-// The derived class's array, the only part of it this code touches. What a hit is otherwise is not established.
-struct AtSegmentHit {
-    int m_unknown00;                   // +0x00
-    AtBoundingGeometry* m_geometry;    // +0x04
-    unsigned int m_faces;              // +0x08 a box's, from AtBoundingBox::Clip
-    int m_unknown0C;                   // +0x0C
-};
-class AtSegmentQuery : public AtSegmentHitList {
-public:
-    AtSegmentHit* m_records;           // +0x90
-};
-
 // Other subsystems' functions, which stop with a diagnostic in src/at/AtBoundingGeometryHost.cpp, so that a test can supply them. In the original: AtSegmentQueryInsert 0x000552B0 keeps keys in order and returns 0 when a key does not
 // make the list; AtSegmentQueryFinish 0x00057B50; AtCoordSysTransformDirection 0x000327B0, UpdateWorld and then the rotation part of the world matrix; AtSphereSegment 0x000434C0, a method of the sphere.
 int AtSegmentQueryInsert(AtSegmentQuery* query, float key);
 void AtSegmentQueryFinish(AtSegmentQuery* query, int kind);
 void AtCoordSysTransformDirection(AtCoordSys* coordSys, const AtVector3* from, AtVector3* to);
 int AtSphereSegment(const AtSceneSphere* sphere, const AtVector3* start, const AtVector3* end, float* length, const AtVector3* direction, AtVector3* point, float* key, int result);  // the point it enters and the fraction along; 0 if it misses, and result if start is inside
-
-// Three more of the table of matrix functions of at/AtCoordSys.h, kept apart so as not to disturb that aggregate while others add to it. They belong in AtMatrixTable. Each stops with a diagnostic until set.
-struct AtGeometryMatrixTable {
-    void (*GetPosition)(const AtMatrix* m, AtVector3* position);                                        // 0x002C61F8
-    void (*GetAxes)(const AtMatrix* m, AtVector3* x, AtVector3* y, AtVector3* z);                       // 0x002C61FC
-    void (*TransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);                // 0x002C625C
-};
-extern AtGeometryMatrixTable g_atGeometryMatrix;
 
 // How vertices are laid out, as the two drawing functions below use it. Other callers of these exist in the graphics layer, which is not recovered. Names are inferred; the flags are not understood beyond what these functions do to them.
 struct AtVertexAttributes {
@@ -328,13 +274,6 @@ public:
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
 static_assert(sizeof(AtBoundingBox) == 0x18, "AtBoundingBox");
-static_assert(offsetof(AtSegmentHitList, m_first0) == 0x20, "AtSegmentHitList::m_first0");
-static_assert(offsetof(AtSegmentHitList, m_vectors2) == 0x40, "AtSegmentHitList::m_vectors2");
-static_assert(offsetof(AtSegmentHitList, m_capacity) == 0x78, "AtSegmentHitList::m_capacity");
-static_assert(offsetof(AtSegmentHitList, m_count) == 0x88, "AtSegmentHitList::m_count");
-static_assert(sizeof(AtSegmentHitList) == 0x90, "AtSegmentHitList");
-static_assert(offsetof(AtSegmentQuery, m_records) == 0x90, "AtSegmentQuery::m_records");
-static_assert(sizeof(AtSegmentHit) == 0x10, "AtSegmentHit");
 static_assert(sizeof(AtVertexFormat) == 0x1C, "AtVertexFormat");
 static_assert(offsetof(AtGeometryLocked, m_texCoords) == 0x30, "AtGeometryLocked::m_texCoords");
 static_assert(offsetof(AtGeometryLocked, m_texCoordStride) == 0x50, "AtGeometryLocked::m_texCoordStride");

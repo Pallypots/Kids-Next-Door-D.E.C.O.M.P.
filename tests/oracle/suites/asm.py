@@ -3,6 +3,7 @@ M = "AtModifier.cpp"
 S = "AtModifierState.cpp"
 G = "AtSpaceGraph.cpp"
 P = "AtSpace.cpp"
+PLAY = "AtSceneAnimation.cpp"
 
 STATE = [
     ("Align: a heap aligned more", S, "void AlignHeapForSlots() {\n    AtHeap* heap = (AtHeap*)AtModifierState::s_heap;\n    heap->m_allocShift = heap->m_alignShift >= 5 ? heap->m_alignShift : 5;", "void AlignHeapForSlots() {\n    AtHeap* heap = (AtHeap*)AtModifierState::s_heap;\n    heap->m_allocShift = 5;"),
@@ -81,11 +82,11 @@ MODIFIER = [
     ("Priority: word", M, "    if (word == kAtWordPriority) {", "    if (word == kAtWordPriority + 1) {"),
     ("Priority: report", M, "    } else {\n        tokenizer->Error(AtIoTokenizer::kExpectedKeyword);\n    }\n}\n\nvoid AtModifier::Apply", "    }\n}\n\nvoid AtModifier::Apply"),
     ("Base apply: disabled", M, "void AtModifier::Apply(AtModifierState* state, int) {\n    if ((m_flags & kDisabled) == 0) {", "void AtModifier::Apply(AtModifierState* state, int) {\n    {"),
-    ("Light ctor: animation flags", M, "    m_animationFlags = 0;\n", ""),
-    ("Light ctor: animation position", M, "    m_animationPosition = 0;\n    m_animationLength = 0;\n", "    m_animationLength = 0;\n"),
-    ("Light ctor: animation length", M, "    m_animationPosition = 0;\n    m_animationLength = 0;\n", "    m_animationPosition = 0;\n"),
-    ("Light ctor: listener", M, "    m_animationListener = 0;\n", ""),
-    ("Light ctor: animation", M, "    m_animation = 0;\n", ""),
+    ("Light ctor: animation flags", PLAY, "AtScenePlayback::AtScenePlayback() {\n    m_flags = 0;\n", "AtScenePlayback::AtScenePlayback() {\n"),
+    ("Light ctor: animation position", PLAY, "AtScenePlayback::AtScenePlayback() {\n    m_flags = 0;\n    m_time = 0;\n", "AtScenePlayback::AtScenePlayback() {\n    m_flags = 0;\n"),
+    ("Light ctor: animation length", PLAY, "    m_time = 0;\n    m_rate = 0;\n    m_listener = 0;\n}\n\nvoid AtScenePlayback::Rewind", "    m_time = 0;\n    m_listener = 0;\n}\n\nvoid AtScenePlayback::Rewind"),
+    ("Light ctor: listener", PLAY, "    m_rate = 0;\n    m_listener = 0;\n}\n\nvoid AtScenePlayback::Rewind", "    m_rate = 0;\n}\n\nvoid AtScenePlayback::Rewind"),
+    ("Light ctor: animation", PLAY, "AtSceneMatPlayback::AtSceneMatPlayback() {\n    m_animation = 0;\n", "AtSceneMatPlayback::AtSceneMatPlayback() {\n"),
     ("Light ctor: light", M, "    m_light = 0;\n", ""),
     ("Light ctor: +30", M, "    m_unknown30 = 0;\n", ""),
     ("Light ctor: type", M, "    m_type = kDirectional;\n    m_direction.y = 0;\n", "    m_direction.y = 0;\n"),
@@ -95,9 +96,9 @@ MODIFIER = [
     ("Light ctor: position y", M, "    m_position.y = 0;\n", ""),
     ("Light ctor: position z", M, "    m_position.z = 0;\n", ""),
     ("Light ctor: direction x", M, "    m_direction.x = 1.0f;\n", "    m_direction.x = 0;\n"),
-    ("Bind: animation", M, "    m_animation = animation;\n", ""),
-    ("Bind: length", M, "    m_animationLength = ((int*)animation)[1];\n", ""),
-    ("Bind: flags", M, "    m_animationFlags = 1;\n", ""),
+    ("Bind: animation", PLAY, "void AtSceneMatPlayback::SetAnimation(AtSceneMatAnimation* animation) {\n    m_animation = animation;\n", "void AtSceneMatPlayback::SetAnimation(AtSceneMatAnimation* animation) {\n"),
+    ("Bind: length", PLAY, "    m_rate = animation->m_rate;\n    Rewind();\n", "    Rewind();\n"),
+    ("Bind: flags", PLAY, "    m_flags = kWasRewound;\n", ""),
     # Dropped, equivalent: no recovered code writes the position, which the constructor cleared, and a light is read once.
     ("Light read: kind", M, "    m_kind = kAtModifierLight;\n", ""),
     ("Light read: opening", M, "    m_kind = kAtModifierLight;\n    tokenizer->ExpectLeftCurly();\n", "    m_kind = kAtModifierLight;\n"),
@@ -106,9 +107,9 @@ MODIFIER = [
     ("Animation: name space", M, "void* animation = ns[0] != 0 ? device->m_lightAnimationSpaces.Find(ns, name) : device->m_lightAnimations.Find(name);", "void* animation = device->m_lightAnimations.Find(name);"),
     ("Animation: table", M, "void* animation = ns[0] != 0 ? device->m_lightAnimationSpaces.Find(ns, name) : device->m_lightAnimations.Find(name);", "void* animation = ns[0] != 0 ? device->m_lightAnimationSpaces.Find(ns, name) : device->m_lights.Find(name);"),
     ("Animation: not found silent", M, "            if (animation == 0) {\n                tokenizer->Error(kAtProblemNotFound);\n            } else {", "            if (animation != 0) {"),
-    ("Animation: not bound", M, "                BindAnimation(animation);\n", ""),
-    ("Animation: flag 2", M, "                m_animationFlags |= 2;\n", ""),
-    ("Animation: flag 4", M, "                m_animationFlags |= 4;\n", ""),
+    ("Animation: not bound", M, "                m_playback.SetAnimation((AtSceneMatAnimation*)animation);\n", ""),
+    ("Animation: flag 2", M, "                m_playback.m_flags |= AtScenePlayback::kStarted;\n", ""),
+    ("Animation: flag 4", M, "                m_playback.m_flags |= AtScenePlayback::kPlaying;\n", ""),
     ("Directional", M, "            m_type = kDirectional;\n", "            m_type = kPoint;\n"),
     ("Point", M, "            m_type = kPoint;\n", "            m_type = kSpot;\n"),
     ("Spot", M, "            m_type = kSpot;\n", "            m_type = kPoint;\n"),
@@ -361,9 +362,9 @@ SPACE = [
     ("Across: margin above", P, "            margin = distance;\n", "            margin = -distance;\n"),
     ("Across: items crossed above", P, "            negative->Insert(link, radius, second);\n            positive->Insert(link, radius, item);\n", "            negative->Insert(link, radius, item);\n            positive->Insert(link, radius, second);\n"),
     ("Across: least margin", P, "    if (margin < link->m_margin) {", "    if (margin > link->m_margin) {"),
-    ("Actor: bound below", P, "    if (node->m_class < 1 || node->m_class > 13) {", "    if (node->m_class > 13) {"),
-    ("Actor: bound above", P, "    if (node->m_class < 1 || node->m_class > 13) {", "    if (node->m_class < 1 || node->m_class > 12) {"),
-    ("Actor: message", P, "\"Atlas Scene: Error trying to cast a node to an illegal type\"", "\"Atlas Scene\""),
+    ("Actor: bound below", "AtSceneActor.cpp", "    if (node->m_class < kClassActor || node->m_class > kClassLastActor) {", "    if (node->m_class > kClassLastActor) {"),
+    ("Actor: bound above", "AtSceneActor.cpp", "    if (node->m_class < kClassActor || node->m_class > kClassLastActor) {", "    if (node->m_class < kClassActor || node->m_class > kClassLastActor - 1) {"),
+    ("Actor: message", "AtSceneActor.cpp", "\"Atlas Scene: Error trying to cast a node to an illegal type\"", "\"Atlas Scene\""),
     ("Cell table: name space", P, "return ns != 0 && ns[0] != 0 ? m_cellTableSpaces.Find(ns, name) : m_cellTables.Find(name);", "return m_cellTables.Find(name);"),
     ("Modifier: name space", P, "return (AtModifier*)(ns != 0 && ns[0] != 0 ? m_modifierSpaces.Find(ns, name) : m_modifiers.Find(name));", "return (AtModifier*)m_modifiers.Find(name);"),
     ("Second: node", P, "    added->m_node = m_node;\n", ""),

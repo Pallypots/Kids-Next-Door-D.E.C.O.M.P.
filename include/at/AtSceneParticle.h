@@ -4,24 +4,9 @@
 // Only loading and clearing are recovered. Updating and drawing, slots 12, 34, 35, 38 and 39, stop with a diagnostic.
 #pragma once
 
+#include "at/AtEmitter.h"
 #include "at/AtQuaternion.h"
 #include "at/AtSceneActor.h"
-
-// What an .ASE file's Emitter says. Loaded by code at 0x00050790-0x000520CF, not recovered here. These are only the fields read here, and they are a view of that class: where the reader at 0x00051380 puts each word gives the names.
-// A class recovered from that reader should replace this one, not sit beside it.
-struct AtSceneParticleEmitter {
-    char m_unknown000[0x100];
-    AtQuaternion m_blurColor;          // +0x100 MotionBlur's colour, by 255
-    AtQuaternion m_blurColorLinear;    // +0x110 MotionBlurLinearColorChange's, the same
-    AtQuaternion m_blurColorQuadratic; // +0x120 MotionBlurQuadraticColorChange's, the same
-    unsigned int m_blurCount;          // +0x130 MotionBlur's first number
-    float m_blurTime;                  // +0x134 MotionBlur's second
-    float m_blurStep;                  // +0x138 the time over the count
-    char m_unknown13C[0x88];
-    unsigned int m_maxParticles;       // +0x1C4 MaxParticles
-    char m_unknown1C8[0x54];
-    AtSceneSphere m_localSphere;       // +0x21C LocalBoundingSphere
-};
 
 class AtSceneParticleDrawer;
 
@@ -36,7 +21,7 @@ public:
 class AtSceneParticleDrawer {
 public:
     virtual void Slot0() = 0;
-    virtual void Start(AtNameTableOwner* owner, AtSceneParticleEmitter* emitter) = 0;  // slot 1
+    virtual void Start(AtNameTableOwner* owner, AtEmitter* emitter) = 0;  // slot 1
 
     AtNameTableOwner* m_owner;         // +0x04 where the maker is found again. Slot 1 of the real classes must set it
 };
@@ -53,12 +38,12 @@ public:
     AtSceneParticleLayer();            // 0x0005AC90
     ~AtSceneParticleLayer();           // 0x0005B2D0 only Clear
     void Clear();                      // 0x0005ACC0 does not ask whether it has anything but a drawer and particles
-    void Start(AtNameTableOwner* owner, AtSceneParticleEmitter* emitter, const AtQuaternion* color);  // 0x0005B2E0 over any it had. No colour: all four are zero
+    void Start(AtNameTableOwner* owner, AtEmitter* emitter, const AtQuaternion* color);  // 0x0005B2E0 over any it had. No colour: all four are zero
 
     static void SetHeap(void* heap);   // 0x0005AAC0
 
     AtSceneParticleDrawer* m_drawer;   // +0x00
-    AtSceneParticleEmitter* m_emitter; // +0x04
+    AtEmitter* m_emitter; // +0x04
     AtSceneParticle* m_particles;      // +0x08
     unsigned int m_unknown0C;          // +0x0C the last index, to begin with
     unsigned int m_unknown10;          // +0x10 likewise
@@ -94,7 +79,7 @@ public:
 
     static void SetHeap(void* heap);               // 0x0004C180
 
-    AtSceneParticleEmitter* m_emitter; // +0x98 Emitter
+    AtEmitter* m_emitter; // +0x98 Emitter
     unsigned int m_seed;               // +0x9C a word from the random table
     unsigned int m_state;              // +0xA0 PlayParticles, PauseParticles
     unsigned int m_unknownA4;          // +0xA4
@@ -121,11 +106,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(AtSceneParticleEmitter, m_blurColor) == 0x100, "AtSceneParticleEmitter::m_blurColor");
-static_assert(offsetof(AtSceneParticleEmitter, m_blurCount) == 0x130, "AtSceneParticleEmitter::m_blurCount");
-static_assert(offsetof(AtSceneParticleEmitter, m_blurStep) == 0x138, "AtSceneParticleEmitter::m_blurStep");
-static_assert(offsetof(AtSceneParticleEmitter, m_maxParticles) == 0x1C4, "AtSceneParticleEmitter::m_maxParticles");
-static_assert(offsetof(AtSceneParticleEmitter, m_localSphere) == 0x21C, "AtSceneParticleEmitter::m_localSphere");
 static_assert(offsetof(AtSceneParticleDrawer, m_owner) == 0x04, "AtSceneParticleDrawer::m_owner");
 static_assert(sizeof(AtSceneParticle) == 0x40, "AtSceneParticle");
 static_assert(offsetof(AtSceneParticleLayer, m_color) == 0x1C, "AtSceneParticleLayer::m_color");

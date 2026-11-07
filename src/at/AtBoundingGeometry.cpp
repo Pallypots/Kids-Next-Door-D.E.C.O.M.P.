@@ -1,4 +1,4 @@
-// See include/at/AtBoundingGeometry.h. The reader, the classes of geometry and what they do with each other. Original address clusters 0x00040A60-0x000410DF, 0x000539F0-0x000551BF, 0x00055340-0x000555FF.
+// See include/at/AtBoundingGeometry.h. The reader, the classes of geometry and what they do with each other. Original address clusters 0x00040A60-0x000410DF, 0x000539F0-0x000551BF. The list of hits is in src/at/AtSegmentQuery.cpp.
 #include "AtBoundingMath.h"
 
 #include "AtSceneArray.h"
@@ -26,7 +26,6 @@ AtVector3 AtBoundingGeometry::s_relativeAxes[3];
 AtVector3 AtBoundingGeometry::s_segmentMiddle;
 AtVector3 AtBoundingGeometry::s_segmentEnd;
 void* AtBoundingGeometryDatabase::s_heap;
-void* AtSegmentHitList::s_heap;
 
 // 0x002B21A0.
 const AtIoKeyword AtBoundingGeometryDatabase::s_keywords[AtBoundingGeometryDatabase::kKeywordCount] = {
@@ -43,9 +42,6 @@ enum Word {
 // Codes passed to the tokenizer's Error; the meanings are inferred from where they are used.
 enum Problem { kUnexpectedWord = 0x1E };
 
-void NoGetPosition(const AtMatrix*, AtVector3*) { AtFatal("Atlas: the matrix table's position is not set", 0, 0, 0); }
-void NoGetAxes(const AtMatrix*, AtVector3*, AtVector3*, AtVector3*) { AtFatal("Atlas: the matrix table's axes are not set", 0, 0, 0); }
-void NoTransformDirection(const AtMatrix*, const AtVector3*, AtVector3*) { AtFatal("Atlas: the matrix table's direction transform is not set", 0, 0, 0); }
 
 // The joint a geometry follows, without the checks: at +0xA0 in the node, which only a jointed model has.
 AtCoordSys* JointOf(AtSceneNode* node, int index) {
@@ -64,8 +60,8 @@ AtCoordSys* CheckedJointOf(AtSceneNode* node, int index) {
 }
 
 void ReadMatrixAxes(const AtMatrix* m, AtVector3* position, AtVector3* axes) {
-    g_atGeometryMatrix.GetPosition(m, position);
-    g_atGeometryMatrix.GetAxes(m, &axes[0], &axes[1], &axes[2]);
+    g_atMatrix.GetPosition(m, position);
+    g_atMatrix.GetAxes(m, &axes[0], &axes[1], &axes[2]);
 }
 
 // The result of the two kinds of overlap, the same for both: a contact, if anyone is asking.
@@ -154,7 +150,6 @@ unsigned int ReadSize(AtIoTokenizer* tokenizer, unsigned int* count) {
 
 }  // namespace
 
-AtGeometryMatrixTable g_atGeometryMatrix = {NoGetPosition, NoGetAxes, NoTransformDirection};
 
 // ---- AtCoordSys, for this ----------------------------------------------------------------------------------------------
 
@@ -190,7 +185,7 @@ int AtCoordSys::UpdateDrawing(AtMatrix* base, int generation, int multiply) {
 
 void AtCoordSys::TransformDirectionInverse(const AtVector3* from, AtVector3* to) {
     UpdateInverse();
-    g_atGeometryMatrix.TransformDirection(m_world, from, to);
+    g_atMatrix.TransformDirection(m_world, from, to);
 }
 
 // ---- the owner's table --------------------------------------------------------------------------------------------------
@@ -329,9 +324,9 @@ void AtBoundingGeometry::RelateTo(const AtBoundingGeometry* other) {
     }
     mine->UpdateInverse();
     g_atMatrix.TransformPoint(mine->m_world, &position, &s_relativePosition);
-    g_atGeometryMatrix.TransformDirection(mine->m_world, &axes[0], &s_relativeAxes[0]);
-    g_atGeometryMatrix.TransformDirection(mine->m_world, &axes[1], &s_relativeAxes[1]);
-    g_atGeometryMatrix.TransformDirection(mine->m_world, &axes[2], &s_relativeAxes[2]);
+    g_atMatrix.TransformDirection(mine->m_world, &axes[0], &s_relativeAxes[0]);
+    g_atMatrix.TransformDirection(mine->m_world, &axes[1], &s_relativeAxes[1]);
+    g_atMatrix.TransformDirection(mine->m_world, &axes[2], &s_relativeAxes[2]);
 }
 
 // ---- a group ------------------------------------------------------------------------------------------------------------
@@ -717,120 +712,4 @@ void AtBoundingGeometryDatabase::Read(AtNameTableOwner* owner, AtIoTokenizer* to
         geometry->Read(this, tokenizer);
     }
     tokenizer->ExpectRightCurly();
-}
-
-// ---- the list of hits ---------------------------------------------------------------------------------------------------
-
-AtSegmentHitList::AtSegmentHitList() {
-    Reset();
-}
-
-AtSegmentHitList::~AtSegmentHitList() {
-    if ((m_flags & kNotOwned) == 0) {
-        if (m_hits != 0) {
-            operator delete(m_hits);
-        }
-        if (m_keys != 0) {
-            operator delete(m_keys);
-        }
-    }
-    Reset();
-}
-
-void AtSegmentHitList::SetHeap(void* heap) {
-    s_heap = heap;
-}
-
-void AtSegmentHitList::Reset() {
-    m_vectors0[0].x = 0.0f;
-    m_vectors0[0].y = 0.0f;
-    m_vectors0[0].z = 0.0f;
-    m_vectors0[1].x = 0.0f;
-    m_vectors0[1].y = 0.0f;
-    m_vectors0[1].z = 0.0f;
-    m_first0 = &m_vectors0[0];
-    m_second0 = &m_vectors0[1];
-    m_vectors2[0].x = 0.0f;
-    m_vectors2[0].y = 0.0f;
-    m_vectors2[0].z = 0.0f;
-    m_vectors2[1].x = 0.0f;
-    m_vectors2[1].y = 0.0f;
-    m_vectors2[1].z = 0.0f;
-    m_vectors1[0].x = 0.0f;
-    m_vectors1[0].y = 0.0f;
-    m_vectors1[0].z = 0.0f;
-    m_vectors1[1].x = 0.0f;
-    m_vectors1[1].y = 0.0f;
-    m_vectors1[1].z = 0.0f;
-    m_first2 = &m_vectors2[0];
-    m_second2 = &m_vectors2[1];
-    m_unknown60[0] = 0;
-    m_unknown60[1] = 0;
-    m_unknown60[2] = 0;
-    m_unknown60[3] = 0;
-    m_flags = 0;
-    m_unknown60[4] = 0;
-    m_unknown60[5] = 0;
-    m_capacity = 0;
-    m_keys = 0;
-    m_hits = 0;
-    m_count = 0;
-    m_unknown8C = 0;
-}
-
-void AtSegmentHitList::Clear() {
-    if ((m_flags & kNotOwned) == 0) {
-        if (m_hits != 0) {
-            operator delete(m_hits);
-        }
-        if (m_keys != 0) {
-            operator delete(m_keys);
-        }
-    }
-    Reset();
-}
-
-void AtSegmentHitList::CountOne() {
-    if (m_count < m_capacity) {
-        m_count++;
-    }
-}
-
-void AtSegmentHitList::SetStorage(unsigned int capacity, void* keys, void* hits) {
-    if (m_capacity != 0) {
-        Clear();
-    }
-    m_hits = hits;
-    m_capacity = capacity;
-    m_keys = keys;
-    m_flags |= kNotOwned;
-}
-
-void AtSegmentHitList::Allocate(unsigned int capacity) {
-    if (m_capacity != 0) {
-        Clear();
-    }
-    m_capacity = capacity;
-    if (s_heap == 0) {
-        AtRaise(-2, 0, 0, 0);
-    }
-    AtPushHeap(s_heap);
-    m_keys = operator new(m_capacity * kKeySize);
-    AtPopHeap();
-    if (m_keys == 0) {
-        AtRaise(-4, 0, 0, 0);
-    }
-    unsigned char* keyBytes = (unsigned char*)m_keys;
-    for (unsigned int i = 0; i < m_capacity * kKeySize; i++) {
-        keyBytes[i] = 0;
-    }
-    if (s_heap == 0) {
-        AtRaise(-2, 0, 0, 0);
-    }
-    AtPushHeap(s_heap);
-    m_hits = operator new(m_capacity * kHitSize);
-    AtPopHeap();
-    if (m_hits == 0) {
-        AtRaise(-4, 0, 0, 0);
-    }
 }

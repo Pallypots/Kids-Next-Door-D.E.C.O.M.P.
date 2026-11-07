@@ -351,7 +351,7 @@ static void run_actor_direct() {
         std::memset(items, 0, sizeof items);
         for (int side = 0; side < 2; side++) {
             char* a = side ? sr : so;
-            items[side].m_list = &lists[side];
+            items[side].m_list = (AtLeafSpace*)&lists[side];
             items[side].m_node = (AtSceneNode*)a;
             links[side].m_set = &sets[side];
             links[side].m_items = &items[side];

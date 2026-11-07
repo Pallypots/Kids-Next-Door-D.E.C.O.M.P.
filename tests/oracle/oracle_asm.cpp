@@ -328,7 +328,7 @@ static void dump_db(Dump& d, int side, const AtModifierDatabase* db, const Regis
         put(d, bits(m.m_direction.x)); put(d, bits(m.m_direction.y)); put(d, bits(m.m_direction.z));
         put(d, bits(m.m_position.x)); put(d, bits(m.m_position.y)); put(d, bits(m.m_position.z));
         put(d, m.m_unknown30);
-        put(d, m.m_animationFlags); put(d, m.m_animationPosition); put(d, m.m_animationLength); put(d, r.id(m.m_animationListener)); put(d, r.id(m.m_animation));
+        put(d, m.m_playback.m_flags); put(d, bits(m.m_playback.m_time)); put(d, bits(m.m_playback.m_rate)); put(d, r.id(m.m_playback.m_listener)); put(d, r.id(m.m_playback.m_animation));
     }
     for (unsigned i = 0; db->m_ambients && i < db->m_ambientCount; i++) {
         const AtAmbientModifier& m = db->m_ambients[i];

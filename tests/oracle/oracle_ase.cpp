@@ -176,14 +176,14 @@ static void same_map(const GmNameMap* o, const GmNameMap* r, const void* obase, 
     eqs("group's name", group_name(o->m_group).c_str(), group_name(r->m_group).c_str());
 }
 
-static void same_query(const char* what, const AtQuery* o, const AtQuery* r, size_t size, uint32_t vftable, const void* b80o, const void* b84o, const void* b80r, const void* b84r) {
+static void same_query(const char* what, const AtSegmentHitList* o, const AtSegmentHitList* r, size_t size, uint32_t vftable, const void* b80o, const void* b84o, const void* b80r, const void* b84r) {
     eq(what, *(const uint32_t*)o, vftable);
-    eq("head A", (char*)o->m_headA - (char*)o, (char*)r->m_headA - (char*)r);
-    eq("head B", (char*)o->m_headB - (char*)o, (char*)r->m_headB - (char*)r);
-    eq("head C", (char*)o->m_headC - (char*)o, (char*)r->m_headC - (char*)r);
-    eq("head D", (char*)o->m_headD - (char*)o, (char*)r->m_headD - (char*)r);
-    eq("storage 80", (char*)o->m_storage80 - (char*)b80o, (char*)r->m_storage80 - (char*)b80r);
-    eq("storage 84", (char*)o->m_storage84 - (char*)b84o, (char*)r->m_storage84 - (char*)b84r);
+    eq("head A", (char*)o->m_first0 - (char*)o, (char*)r->m_first0 - (char*)r);
+    eq("head B", (char*)o->m_second0 - (char*)o, (char*)r->m_second0 - (char*)r);
+    eq("head C", (char*)o->m_first2 - (char*)o, (char*)r->m_first2 - (char*)r);
+    eq("head D", (char*)o->m_second2 - (char*)o, (char*)r->m_second2 - (char*)r);
+    eq("storage 80", (char*)o->m_keys - (char*)b80o, (char*)r->m_keys - (char*)b80r);
+    eq("storage 84", (char*)o->m_hits - (char*)b84o, (char*)r->m_hits - (char*)b84r);
     same_words(what, o, r, 4, 0x20);
     same_words(what, o, r, 0x28, 0x58);
     same_words(what, o, r, 0x60, 0x80);
@@ -206,7 +206,7 @@ static void same_query_pool(const AtSegmentQueryPool& x, const AtSegmentQueryPoo
         eq("query cookie", ((const unsigned*)x.m_segmentQueries)[-1], ((const unsigned*)y.m_segmentQueries)[-1]);
         for (unsigned i = 0; i < x.m_count; i++) {
             same_query("query", &x.m_segmentQueries[i], &y.m_segmentQueries[i], sizeof(AtSegmentQuery), 0x002770F4, x.m_entries8, x.m_entries2C, y.m_entries8, y.m_entries2C);
-            eq("storage 90", (char*)x.m_segmentQueries[i].m_storage90 - (char*)x.m_entries10, (char*)y.m_segmentQueries[i].m_storage90 - (char*)y.m_entries10);
+            eq("storage 90", (char*)x.m_segmentQueries[i].m_records - (char*)x.m_entries10, (char*)y.m_segmentQueries[i].m_records - (char*)y.m_entries10);
         }
         g_query_pools_seen++;
     }
@@ -819,15 +819,15 @@ static void run_pools() {
                 B* q = raw_object<B>(sizeof(B), fill);
                 eq("base ctor returns this", (uintptr_t)at<FnRet>(0x000578A0)(p, nullptr), (uintptr_t)p);
                 new (q) B;
-                same_base_pool<AtQuery>(p, q, 0x002770D8);
+                same_base_pool<AtSegmentHitList>(p, q, 0x002770D8);
                 { On on(0); at<FnInit>(0x00057950)(p, nullptr, count, per); }
                 { On on(1); q->Init(count, per); }
                 compare_logs("base init");
-                same_base_pool<AtQuery>(p, q, 0x002770D8);
+                same_base_pool<AtSegmentHitList>(p, q, 0x002770D8);
                 { On on(0); at<Fn0>(0x000574A0)(p, nullptr); at<Fn0>(0x000574A0)(p, nullptr); }
                 { On on(1); q->AtQueryPool::Free(); q->AtQueryPool::Free(); }
                 compare_logs("base freed");
-                same_base_pool<AtQuery>(p, q, 0x002770D8);
+                same_base_pool<AtSegmentHitList>(p, q, 0x002770D8);
                 { On on(0); at<Fn0>(0x00057940)(p, nullptr); }
                 { On on(1); q->~B(); }
                 compare_logs("base destroyed");
@@ -890,7 +890,7 @@ static void run_pools() {
             { On on(1); ((B*)rb)->Init(2, 1); }
             compare_logs("no heap");
             if (kind) same_query_pool(*(D*)ob, *(D*)rb);
-            else same_base_pool<AtQuery>((B*)ob, (B*)rb, 0x002770D8);
+            else same_base_pool<AtSegmentHitList>((B*)ob, (B*)rb, 0x002770D8);
             g_log[0].n = g_log[1].n = 0;
         }
         *(void**)(uintptr_t)0x002C7F64 = &g_heap_token;
@@ -909,10 +909,10 @@ static void run_pools() {
         AtEmitterDatabase::SetHeap(&h);
         eq("database's heap", (uintptr_t) * (void**)(uintptr_t)0x002C6414, (uintptr_t)AtEmitterDatabase::s_heap);
         at<FnSetHeap>(0x000552A0)(&h);
-        AtQuery::SetHeap(&h);
-        eq("query's heap", (uintptr_t) * (void**)(uintptr_t)0x002C7F58, (uintptr_t)AtQuery::s_heap);
+        AtSegmentHitList::SetHeap(&h);
+        eq("query's heap", (uintptr_t) * (void**)(uintptr_t)0x002C7F58, (uintptr_t)AtSegmentHitList::s_heap);
         at<FnSetHeap>(0x000552A0)(&g_heap_token);
-        AtQuery::SetHeap(&g_heap_token);
+        AtSegmentHitList::SetHeap(&g_heap_token);
         at<FnSetHeap>(0x0003F580)(&g_heap_token);
         AtEmitterDatabase::SetHeap(&g_heap_token);
     }
@@ -922,18 +922,18 @@ static void run_pools() {
 static void run_queries() {
     g_fill = 0xCD;
     for (int kind = 0; kind < 2; kind++) {
-        const size_t size = kind ? sizeof(AtSegmentQuery) : sizeof(AtQuery);
+        const size_t size = kind ? sizeof(AtSegmentQuery) : sizeof(AtSegmentHitList);
         const uint32_t vftable = kind ? 0x002770F4 : 0x00276F28;
         const uint32_t ctor = kind ? 0x00057B90 : 0x000555A0;
         const uint32_t clear = kind ? 0x00057BB0 : 0x000555B0;
         const uint32_t dtor = kind ? 0x00057BF0 : 0x000555F0;
         const uint32_t deleting = kind ? 0x00047FC0 : 0x00057440;
         const uint32_t reserve = kind ? 0x00057AA0 : 0x000553A0;
-        const auto make_o = [&]() { void* p = std::malloc(size); std::memset(p, 0x33, size); eq("query's ctor returns this", (uintptr_t)at<FnRet>(ctor)(p, nullptr), (uintptr_t)p); return (AtQuery*)p; };
-        const auto make_r = [&]() -> AtQuery* { void* p = std::malloc(size); std::memset(p, 0x33, size); if (kind) return new (p) AtSegmentQuery; return new (p) AtQuery; };
+        const auto make_o = [&]() { void* p = std::malloc(size); std::memset(p, 0x33, size); eq("query's ctor returns this", (uintptr_t)at<FnRet>(ctor)(p, nullptr), (uintptr_t)p); return (AtSegmentHitList*)p; };
+        const auto make_r = [&]() -> AtSegmentHitList* { void* p = std::malloc(size); std::memset(p, 0x33, size); if (kind) return new (p) AtSegmentQuery; return new (p) AtSegmentHitList; };
         g_context = kind ? "segment query" : "query";
-        AtQuery* o = make_o();
-        AtQuery* r = make_r();
+        AtSegmentHitList* o = make_o();
+        AtSegmentHitList* r = make_r();
         // No storage yet.
         same_query("made", o, r, size, vftable, nullptr, nullptr, nullptr, nullptr);
         // Reset, of everything but its word at +0x7C.
@@ -944,12 +944,12 @@ static void run_queries() {
         same_query("reset", o, r, size, vftable, nullptr, nullptr, nullptr, nullptr);
         // Owned storage is freed; each block held or not.
         for (int held = 0; held < 8; held++) {
-            const auto give = [&](AtQuery* q) {
+            const auto give = [&](AtSegmentHitList* q) {
                 q->m_flags = 0;
-                q->m_count = 1;
-                q->m_storage80 = (held & 1) ? std::malloc(4) : nullptr;
-                q->m_storage84 = (held & 2) ? std::malloc(4) : nullptr;
-                if (kind) ((AtSegmentQuery*)q)->m_storage90 = (held & 4) ? std::malloc(4) : nullptr;
+                q->m_capacity = 1;
+                q->m_keys = (held & 1) ? std::malloc(4) : nullptr;
+                q->m_hits = (held & 2) ? std::malloc(4) : nullptr;
+                if (kind) ((AtSegmentQuery*)q)->m_records = (AtSegmentHit*)((held & 4) ? std::malloc(4) : nullptr);
                 if (kind) ((AtSegmentQuery*)q)->m_unknown94 = 0x66;
             };
             give(o);
@@ -958,15 +958,15 @@ static void run_queries() {
             { On on(1); r->Clear(); }
             compare_logs("cleared");
             same_query("cleared", o, r, size, vftable, nullptr, nullptr, nullptr, nullptr);
-            if (kind) eq("third cleared", ((AtSegmentQuery*)o)->m_storage90 != nullptr, ((AtSegmentQuery*)r)->m_storage90 != nullptr);
+            if (kind) eq("third cleared", ((AtSegmentQuery*)o)->m_records != nullptr, ((AtSegmentQuery*)r)->m_records != nullptr);
             // Not owned: left.
             char a[8], b[8], c[8];
-            const auto lend = [&](AtQuery* q) {
-                q->m_flags = AtQuery::kStorageNotOwned;
-                q->m_count = 1;
-                q->m_storage80 = a;
-                q->m_storage84 = b;
-                if (kind) ((AtSegmentQuery*)q)->m_storage90 = c;
+            const auto lend = [&](AtSegmentHitList* q) {
+                q->m_flags = AtSegmentHitList::kNotOwned;
+                q->m_capacity = 1;
+                q->m_keys = a;
+                q->m_hits = b;
+                if (kind) ((AtSegmentQuery*)q)->m_records = (AtSegmentHit*)c;
             };
             lend(o);
             lend(r);
@@ -974,22 +974,22 @@ static void run_queries() {
             { On on(1); r->Clear(); }
             compare_logs("cleared, not owned");
             same_query("cleared, not owned", o, r, size, vftable, nullptr, nullptr, nullptr, nullptr);
-            if (kind) eq("third cleared, not owned", ((AtSegmentQuery*)o)->m_storage90 != nullptr, ((AtSegmentQuery*)r)->m_storage90 != nullptr);
+            if (kind) eq("third cleared, not owned", ((AtSegmentQuery*)o)->m_records != nullptr, ((AtSegmentQuery*)r)->m_records != nullptr);
             // Attach: nothing to clear, then something, by the slot, with owned storage.
             char d[8], e[8];
             { On on(0); at<FnAttach3>(0x00055360)(o, nullptr, 4, d, e); }
-            { On on(1); r->AtQuery::Attach(4, d, e); }
+            { On on(1); r->AtSegmentHitList::SetStorage(4, d, e); }
             compare_logs("attached");
             same_query("attached", o, r, size, vftable, d, e, d, e);
             give(o);
             give(r);
             { On on(0); at<FnAttach3>(0x00055360)(o, nullptr, 6, d, e); }
-            { On on(1); r->AtQuery::Attach(6, d, e); }
+            { On on(1); r->AtSegmentHitList::SetStorage(6, d, e); }
             compare_logs("attached over");
             same_query("attached over", o, r, size, vftable, d, e, d, e);
             if (kind) {
                 { On on(0); at<FnAttach4>(0x00057A70)(o, nullptr, 2, d, e, c); }
-                { On on(1); ((AtSegmentQuery*)r)->Attach(2, d, e, c); }
+                { On on(1); ((AtSegmentQuery*)r)->SetStorage(2, d, e, c); }
                 compare_logs("attached with a third");
                 same_query("attached with a third", o, r, size, vftable, d, e, d, e);
             }
@@ -1001,26 +1001,26 @@ static void run_queries() {
         for (const unsigned count : {0u, 3u, 5u}) {
             g_context = (kind ? "segment query reserve " : "query reserve ") + std::to_string(count);
             { On on(0); at<FnCount>(reserve)(o, nullptr, count); }
-            { On on(1); r->Reserve(count); }
+            { On on(1); r->Allocate(count); }
             compare_logs("reserved");
-            eq("first block cleared", std::memcmp(o->m_storage80, r->m_storage80, count * 8), 0);
-            eq("second block as the heap left it", std::memcmp(o->m_storage84, r->m_storage84, count * 0x2C), 0);
-            eq("count", o->m_count, r->m_count);
+            eq("first block cleared", std::memcmp(o->m_keys, r->m_keys, count * 8), 0);
+            eq("second block as the heap left it", std::memcmp(o->m_hits, r->m_hits, count * 0x2C), 0);
+            eq("count", o->m_capacity, r->m_capacity);
             eq("flags", o->m_flags, r->m_flags);
-            if (kind) eq("third", ((AtSegmentQuery*)o)->m_storage90 != nullptr, ((AtSegmentQuery*)r)->m_storage90 != nullptr);
-            if (kind) eq("third as the heap left it", std::memcmp(((AtSegmentQuery*)o)->m_storage90, ((AtSegmentQuery*)r)->m_storage90, count * 0x10), 0);
+            if (kind) eq("third", ((AtSegmentQuery*)o)->m_records != nullptr, ((AtSegmentQuery*)r)->m_records != nullptr);
+            if (kind) eq("third as the heap left it", std::memcmp(((AtSegmentQuery*)o)->m_records, ((AtSegmentQuery*)r)->m_records, count * 0x10), 0);
         }
         { On on(0); at<Fn0>(clear)(o, nullptr); }
         { On on(1); r->Clear(); }
         g_log[0].n = g_log[1].n = 0;
         g_context = kind ? "segment query reserve, no heap" : "query reserve, no heap";
         *(void**)(uintptr_t)0x002C7F58 = nullptr;
-        AtQuery::s_heap = nullptr;
+        AtSegmentHitList::s_heap = nullptr;
         { On on(0); at<FnCount>(reserve)(o, nullptr, 2); }
-        { On on(1); r->Reserve(2); }
+        { On on(1); r->Allocate(2); }
         compare_logs("no heap");
         *(void**)(uintptr_t)0x002C7F58 = &g_heap_token;
-        AtQuery::s_heap = &g_heap_token;
+        AtSegmentHitList::s_heap = &g_heap_token;
         { On on(0); at<Fn0>(clear)(o, nullptr); }
         { On on(1); r->Clear(); }
         g_log[0].n = g_log[1].n = 0;
@@ -1029,25 +1029,25 @@ static void run_queries() {
         {
             // With a count of nothing, a clear of nothing, so the null is not written to.
             { On on(0); at<FnCount>(reserve)(o, nullptr, 0); }
-            { On on(1); r->Reserve(0); }
+            { On on(1); r->Allocate(0); }
             compare_logs("no room");
         }
         g_fail_alloc = false;
         same_query("no room", o, r, size, vftable, nullptr, nullptr, nullptr, nullptr);
         // Destroyed, holding and not.
         for (int held = 0; held < 2; held++) {
-            const auto give = [&](AtQuery* q) {
-                q->m_flags = held ? 0 : (unsigned)AtQuery::kStorageNotOwned;
-                q->m_storage80 = std::malloc(4);
-                q->m_storage84 = std::malloc(4);
-                if (kind) ((AtSegmentQuery*)q)->m_storage90 = std::malloc(4);
+            const auto give = [&](AtSegmentHitList* q) {
+                q->m_flags = held ? 0 : (unsigned)AtSegmentHitList::kNotOwned;
+                q->m_keys = std::malloc(4);
+                q->m_hits = std::malloc(4);
+                if (kind) ((AtSegmentQuery*)q)->m_records = (AtSegmentHit*)std::malloc(4);
             };
             give(o);
             give(r);
             { On on(0); at<Fn0>(dtor)(o, nullptr); }
-            { On on(1); if (kind) ((AtSegmentQuery*)r)->~AtSegmentQuery(); else r->~AtQuery(); }
+            { On on(1); if (kind) ((AtSegmentQuery*)r)->~AtSegmentQuery(); else r->~AtSegmentHitList(); }
             compare_logs("query destroyed");
-            same_query("query destroyed", o, r, sizeof(AtQuery), 0x00276F28, nullptr, nullptr, nullptr, nullptr);
+            same_query("query destroyed", o, r, sizeof(AtSegmentHitList), 0x00276F28, nullptr, nullptr, nullptr, nullptr);
             std::free(o);
             std::free(r);
             o = make_o();
@@ -1055,7 +1055,7 @@ static void run_queries() {
         }
         // The scalar forms of the deleting destructor. The vector form is reached through a pool.
         { On on(0); eq("deleting returns this", (uintptr_t)at<FnDel>(deleting)(o, nullptr, 0), (uintptr_t)o); }
-        { On on(1); if (kind) ((AtSegmentQuery*)r)->~AtSegmentQuery(); else r->~AtQuery(); }
+        { On on(1); if (kind) ((AtSegmentQuery*)r)->~AtSegmentQuery(); else r->~AtSegmentHitList(); }
         compare_logs("scalar, no free");
         std::free(o);
         std::free(r);
@@ -1231,7 +1231,7 @@ int main(int argc, char** argv) {
     AtMatAssignment::s_heap = &g_heap_token;
     AtEmitterDatabase::s_heap = &g_heap_token;
     AtQueryPool::s_heap = &g_heap_token;
-    AtQuery::s_heap = &g_heap_token;
+    AtSegmentHitList::s_heap = &g_heap_token;
 
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.
     g_context = "keywords";

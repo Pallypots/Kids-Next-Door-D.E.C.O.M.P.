@@ -64,9 +64,9 @@ public:
 
 class Drawer : public AtSceneParticleDrawer {
 public:
-    AtSceneParticleEmitter* m_emitter = nullptr;
+    AtEmitter* m_emitter = nullptr;
     void Slot0() override {}
-    void Start(AtNameTableOwner* owner, AtSceneParticleEmitter* emitter) override { m_owner = owner; m_emitter = emitter; }
+    void Start(AtNameTableOwner* owner, AtEmitter* emitter) override { m_owner = owner; m_emitter = emitter; }
 };
 
 class DrawerMaker : public AtSceneParticleDrawerMaker {
@@ -151,20 +151,21 @@ int main() {
     device.m_matAssignmentSpaces.Init(4);
     device.m_matAnimationSpaces.Init(4);
 
-    AtSceneParticleEmitter plain = {};
+    alignas(16) static unsigned char room[2][sizeof(AtEmitter)];  // Zeroed, unconstructed: only what a test sets.
+    AtEmitter& plain = *(AtEmitter*)room[0];
     plain.m_blurCount = 0;
     plain.m_maxParticles = 3;
-    plain.m_localSphere.center.x = 1.0f;
-    plain.m_localSphere.radius = 300.0f;
-    AtSceneParticleEmitter blurred = {};
+    plain.m_boundingSphere.center.x = 1.0f;
+    plain.m_boundingSphere.radius = 300.0f;
+    AtEmitter& blurred = *(AtEmitter*)room[1];
     blurred.m_blurCount = 2;
     blurred.m_blurStep = 0.5f;
     blurred.m_maxParticles = 1;
-    blurred.m_blurColor.x = 10.0f;
-    blurred.m_blurColorLinear.y = 4.0f;
-    blurred.m_blurColorQuadratic.z = 8.0f;
-    blurred.m_blurColorQuadratic.w = 1.0f;
-    blurred.m_localSphere.radius = 7.0f;
+    blurred.m_blur.x = 10.0f;
+    blurred.m_blurLinear.y = 4.0f;
+    blurred.m_blurQuadratic.z = 8.0f;
+    blurred.m_blurQuadratic.w = 1.0f;
+    blurred.m_boundingSphere.radius = 7.0f;
     GmNameMap emitters, spaced;
     emitters.Init(8);
     spaced.Init(8);

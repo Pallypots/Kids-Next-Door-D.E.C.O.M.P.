@@ -65,10 +65,7 @@ AtSceneNode* AtNameTableOwner::FindActor(const char* name, const char* ns) {
     if (node == 0) {
         return 0;
     }
-    if (node->m_class < 1 || node->m_class > 13) {
-        AtFatal("Atlas Scene: Error trying to cast a node to an illegal type", 0, 0, 0);
-    }
-    return node;
+    return AtSceneActor::AsActor(node);
 }
 
 void* AtNameTableOwner::FindCellTable(const char* name, const char* ns) {

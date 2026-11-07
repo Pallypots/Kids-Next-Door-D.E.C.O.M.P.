@@ -452,14 +452,14 @@ static AtCoordSysDatabase* make_database(int side, const std::string& name, cons
 }
 
 // What a particle system finds: a stand-in for what an .ASE file says, for each name, of a shape that follows from the name. A name space's is another stand-in, so that which table it came from shows.
-static AtSceneParticleEmitter* g_emitters[2];
+static AtEmitter* g_emitters[2];
 static unsigned g_emitter_count;
 static const unsigned kEmitterRoom = 0x240;
 
-static void make_emitter(AtSceneParticleEmitter* e, uint32_t h) {
+static void make_emitter(AtEmitter* e, uint32_t h) {
     std::memset(e, 0xAB, kEmitterRoom);
     const auto real = [&](int i) { return (float)((h >> (i & 15)) % 101 + (uint32_t)i) * 0.37f - 7.3f; };
-    AtQuaternion* const colors[3] = {&e->m_blurColor, &e->m_blurColorLinear, &e->m_blurColorQuadratic};
+    AtQuaternion* const colors[3] = {&e->m_blur, &e->m_blurLinear, &e->m_blurQuadratic};
     for (int c = 0; c < 3; c++) {
         colors[c]->x = real(c * 4);
         colors[c]->y = real(c * 4 + 1);
@@ -467,13 +467,13 @@ static void make_emitter(AtSceneParticleEmitter* e, uint32_t h) {
         colors[c]->w = real(c * 4 + 3);
     }
     e->m_blurCount = h % 5;
-    e->m_blurTime = real(12);
+    e->m_blurLength = real(12);
     e->m_blurStep = (float)(h % 89 + 1) * 0.0173f;
     e->m_maxParticles = (h >> 5) % 7;
-    e->m_localSphere.center.x = real(13);
-    e->m_localSphere.center.y = real(14);
-    e->m_localSphere.center.z = real(15);
-    e->m_localSphere.radius = real(5);
+    e->m_boundingSphere.center.x = real(13);
+    e->m_boundingSphere.center.y = real(14);
+    e->m_boundingSphere.center.z = real(15);
+    e->m_boundingSphere.radius = real(5);
 }
 
 static unsigned emitter_id(int side, const void* e) { return (unsigned)(((const char*)e - (const char*)g_emitters[side]) / kEmitterRoom); }
@@ -485,7 +485,7 @@ public:
     unsigned id;
     TestDrawer(int s, unsigned i) : side(s), id(i) { m_owner = nullptr; }
     void Slot0() override {}
-    void Start(AtNameTableOwner* owner, AtSceneParticleEmitter* emitter) override {
+    void Start(AtNameTableOwner* owner, AtEmitter* emitter) override {
         note(side, 'E', emitter_id(side, emitter));
         note(side, 'e', owner == g_own[side]);
         m_owner = owner;
@@ -563,13 +563,13 @@ struct Env {
             };
             // Each name space's emitters and the plain table's are different ones.
             g_emitter_count = ((unsigned)names.size() + 1) * ((unsigned)spaces.size() + 1);
-            g_emitters[side] = (AtSceneParticleEmitter*)std::malloc((size_t)g_emitter_count * kEmitterRoom);
+            g_emitters[side] = (AtEmitter*)std::malloc((size_t)g_emitter_count * kEmitterRoom);
             unsigned emitters_given = 0;
             const auto emitters = [&](uint32_t salt) {
                 GmNameMap* m = new GmNameMap;
                 m->Init((unsigned)names.size() + 1);
                 for (const std::string& n : names) {
-                    AtSceneParticleEmitter* e = (AtSceneParticleEmitter*)((char*)g_emitters[side] + (size_t)emitters_given++ * kEmitterRoom);
+                    AtEmitter* e = (AtEmitter*)((char*)g_emitters[side] + (size_t)emitters_given++ * kEmitterRoom);
                     make_emitter(e, hash_of(n) ^ salt);
                     m->Insert(n.c_str(), e);
                 }

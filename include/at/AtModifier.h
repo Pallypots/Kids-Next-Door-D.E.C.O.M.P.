@@ -10,6 +10,7 @@
 #include "at/AtNameTableOwner.h"
 #include "at/AtQuaternion.h"
 #include "at/AtScene.h"
+#include "at/AtSceneActor.h"
 
 // The kinds, which are also the slot of a modifier state.
 enum AtModifierKind { kAtModifierLight, kAtModifierAmbient, kAtModifierPerspective, kAtModifierContextConstant, kAtModifierGroup, kAtModifierBlock };
@@ -66,22 +67,7 @@ public:
     AtVector3 m_direction;     // +0x18 (1, 0, 0) to begin with
     AtVector3 m_position;      // +0x24
     int m_unknown30;           // +0x30
-    // Five words at +0x34, of a class whose code is at 0x0005B710-0x0005BAB2 and held elsewhere: the animation a light follows. See BindAnimation in the source.
-    unsigned int m_animationFlags;  // +0x34
-    int m_animationPosition;   // +0x38
-    int m_animationLength;     // +0x3C the animation's +4
-    class AtLightAnimationListener* m_animationListener;  // +0x40 null in everything seen here
-    void* m_animation;         // +0x44
-
-private:
-    void BindAnimation(void* animation);
-};
-
-// Slot 1 is called when a light's animation is bound, if there is one of these. Nothing here makes one.
-class AtLightAnimationListener {
-public:
-    virtual void Slot0() = 0;
-    virtual void OnBound(unsigned int* animation) = 0;  // slot 1
+    AtSceneMatPlayback m_playback;  // +0x34 the animation it follows; its constructor, 0x0005BAA0, is called here. Its Clear never is.
 };
 
 // Vftable 0x00276D78. Words: Color.

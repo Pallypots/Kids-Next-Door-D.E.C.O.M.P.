@@ -26,6 +26,9 @@ struct AtMatrixTable {
     void (*TransformPoint)(const AtMatrix* m, const AtVector3* from, AtVector3* to);   // 0x002C6250
     void (*SetUniformScale)(AtMatrix* m, float scale);                                 // 0x002C611C
     void (*Read)(AtMatrix* m, AtIoTokenizer* tokenizer);                               // 0x002C6264
+    void (*GetPosition)(const AtMatrix* m, AtVector3* position);                       // 0x002C61F8
+    void (*GetAxes)(const AtMatrix* m, AtVector3* x, AtVector3* y, AtVector3* z);      // 0x002C61FC
+    void (*TransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);  // 0x002C625C
 };
 extern AtMatrixTable g_atMatrix;
 

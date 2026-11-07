@@ -300,65 +300,65 @@ evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in
 va = 0x000552A0
 size = 10
 symbol = "?SetHeap@AtSegmentHitList@@SAXPAX@Z"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x00055340
 size = 19
 symbol = "?CountOne@AtSegmentHitList@@UAEXXZ"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x00055360
 size = 55
 symbol = "?SetStorage@AtSegmentHitList@@UAEXIPAX0@Z"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x000553A0
 size = 233
 symbol = "?Allocate@AtSegmentHitList@@UAEXI@Z"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x00055490
 size = 131
 symbol = "?Reset@AtSegmentHitList@@QAEXXZ"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x000555A0
 size = 14
 symbol = "??0AtSegmentHitList@@QAE@XZ"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x000555B0
 size = 55
 symbol = "?Clear@AtSegmentHitList@@UAEXXZ"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x000555F0
 size = 61
 symbol = "??1AtSegmentHitList@@UAE@XZ"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x00055750
@@ -379,10 +379,10 @@ evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in
 [[function]]
 va = 0x00057440
 size = 87
-symbol = "??_GAtSegmentHitList@@UAEPAXI@Z"
-source = "src/at/AtBoundingGeometry.cpp"
+symbol = "??_EAtSegmentHitList@@UAEPAXI@Z"
+source = "src/at/AtSegmentQuery.cpp"
 subsystem = "at/asb"
-evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
 
 [[function]]
 va = 0x00058CB0
@@ -522,7 +522,7 @@ source = "src/at/AtBoundingGeometry.cpp"
 va = 0x00276F28
 slots = 5
 symbol = "??_7AtSegmentHitList@@6B@"
-source = "src/at/AtBoundingGeometry.cpp"
+source = "src/at/AtSegmentQuery.cpp"
 
 [symbols]
 "?s_heap@AtBoundingGeometryDatabase@@2PAXA" = 0x002C6428

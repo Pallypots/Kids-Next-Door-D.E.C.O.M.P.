@@ -6,139 +6,161 @@ void AtPushHeap(void* heap);
 void AtPopHeap();
 void AtFatal(const char* message, int file, int line, int unused);
 
-void* AtQuery::s_heap;
+void* AtSegmentHitList::s_heap;
 void* AtQueryPool::s_heap;
 
-void AtQuery::Reset() {
-    m_listA[0] = 0;
-    m_listA[1] = 0;
-    m_listA[2] = 0;
-    m_listB[0] = 0;
-    m_listB[1] = 0;
-    m_listB[2] = 0;
-    m_headA = m_listA;
-    m_headB = m_listB;
-    m_listC[0] = 0;
-    m_listC[1] = 0;
-    m_listC[2] = 0;
-    m_listD[0] = 0;
-    m_listD[1] = 0;
-    m_listD[2] = 0;
-    for (int i = 0; i < 6; i++) {
-        m_unknown28[i] = 0;
-    }
-    m_headC = m_listC;
-    m_headD = m_listD;
-    for (int i = 0; i < 4; i++) {
-        m_unknown60[i] = 0;
-    }
-    m_flags = 0;
-    m_unknown70 = 0;
-    m_unknown74 = 0;
-    m_count = 0;
-    m_storage80 = 0;
-    m_storage84 = 0;
-    m_unknown88 = 0;
-    m_unknown8C = 0;
-}
-
-AtQuery::AtQuery() {
+AtSegmentHitList::AtSegmentHitList() {
     Reset();
 }
 
-void AtQuery::SetHeap(void* heap) {
+AtSegmentHitList::~AtSegmentHitList() {
+    if ((m_flags & kNotOwned) == 0) {
+        if (m_hits != 0) {
+            operator delete(m_hits);
+        }
+        if (m_keys != 0) {
+            operator delete(m_keys);
+        }
+    }
+    Reset();
+}
+
+void AtSegmentHitList::SetHeap(void* heap) {
     s_heap = heap;
 }
 
-void AtQuery::Reserve(unsigned int count) {
-    if (m_count > 0) {
-        Clear();
-    }
-    m_count = count;
-    if (s_heap == 0) {
-        AtRaise(-2, 0, 0, 0);
-    }
-    AtPushHeap(s_heap);
-    m_storage80 = operator new(m_count * 8);
-    AtPopHeap();
-    if (m_storage80 == 0) {
-        AtRaise(-4, 0, 0, 0);
-    }
-    unsigned char* bytes = (unsigned char*)m_storage80;
-    for (unsigned int i = 0; i < m_count * 8; i++) {
-        bytes[i] = 0;
-    }
-    if (s_heap == 0) {
-        AtRaise(-2, 0, 0, 0);
-    }
-    AtPushHeap(s_heap);
-    m_storage84 = operator new(m_count * 0x2C);
-    AtPopHeap();
-    if (m_storage84 == 0) {
-        AtRaise(-4, 0, 0, 0);
-    }
+void AtSegmentHitList::Reset() {
+    m_vectors0[0].x = 0.0f;
+    m_vectors0[0].y = 0.0f;
+    m_vectors0[0].z = 0.0f;
+    m_vectors0[1].x = 0.0f;
+    m_vectors0[1].y = 0.0f;
+    m_vectors0[1].z = 0.0f;
+    m_first0 = &m_vectors0[0];
+    m_second0 = &m_vectors0[1];
+    m_vectors2[0].x = 0.0f;
+    m_vectors2[0].y = 0.0f;
+    m_vectors2[0].z = 0.0f;
+    m_vectors2[1].x = 0.0f;
+    m_vectors2[1].y = 0.0f;
+    m_vectors2[1].z = 0.0f;
+    m_vectors1[0].x = 0.0f;
+    m_vectors1[0].y = 0.0f;
+    m_vectors1[0].z = 0.0f;
+    m_vectors1[1].x = 0.0f;
+    m_vectors1[1].y = 0.0f;
+    m_vectors1[1].z = 0.0f;
+    m_first2 = &m_vectors2[0];
+    m_second2 = &m_vectors2[1];
+    m_unknown60[0] = 0;
+    m_unknown60[1] = 0;
+    m_unknown60[2] = 0;
+    m_unknown60[3] = 0;
+    m_flags = 0;
+    m_unknown60[4] = 0;
+    m_unknown60[5] = 0;
+    m_capacity = 0;
+    m_keys = 0;
+    m_hits = 0;
+    m_count = 0;
+    m_unknown8C = 0;
 }
 
-void AtQuery::Attach(unsigned int count, void* storage80, void* storage84) {
-    if (m_count > 0) {
-        Clear();
-    }
-    m_storage84 = storage84;
-    m_count = count;
-    m_storage80 = storage80;
-    m_flags |= kStorageNotOwned;
-}
-
-void AtQuery::Clear() {
-    if ((m_flags & kStorageNotOwned) == 0) {
-        if (m_storage84 != 0) {
-            operator delete(m_storage84);
+void AtSegmentHitList::Clear() {
+    if ((m_flags & kNotOwned) == 0) {
+        if (m_hits != 0) {
+            operator delete(m_hits);
         }
-        if (m_storage80 != 0) {
-            operator delete(m_storage80);
+        if (m_keys != 0) {
+            operator delete(m_keys);
         }
     }
     Reset();
 }
 
-AtQuery::~AtQuery() {
-    AtQuery::Clear();
+void AtSegmentHitList::CountOne() {
+    if (m_count < m_capacity) {
+        m_count++;
+    }
 }
 
-AtSegmentQuery::AtSegmentQuery() {
-    m_storage90 = 0;
-    m_unknown94 = 0;
+void AtSegmentHitList::SetStorage(unsigned int capacity, void* keys, void* hits) {
+    if (m_capacity != 0) {
+        Clear();
+    }
+    m_hits = hits;
+    m_capacity = capacity;
+    m_keys = keys;
+    m_flags |= kNotOwned;
 }
 
-void AtSegmentQuery::Reserve(unsigned int count) {
-    AtQuery::Reserve(count);
+void AtSegmentHitList::Allocate(unsigned int capacity) {
+    if (m_capacity != 0) {
+        Clear();
+    }
+    m_capacity = capacity;
     if (s_heap == 0) {
         AtRaise(-2, 0, 0, 0);
     }
     AtPushHeap(s_heap);
-    m_storage90 = operator new(count * 0x10);
+    m_keys = operator new(m_capacity * kKeySize);
     AtPopHeap();
-    if (m_storage90 == 0) {
+    if (m_keys == 0) {
+        AtRaise(-4, 0, 0, 0);
+    }
+    unsigned char* keyBytes = (unsigned char*)m_keys;
+    for (unsigned int i = 0; i < m_capacity * kKeySize; i++) {
+        keyBytes[i] = 0;
+    }
+    if (s_heap == 0) {
+        AtRaise(-2, 0, 0, 0);
+    }
+    AtPushHeap(s_heap);
+    m_hits = operator new(m_capacity * kHitSize);
+    AtPopHeap();
+    if (m_hits == 0) {
         AtRaise(-4, 0, 0, 0);
     }
 }
 
-void AtSegmentQuery::Attach(unsigned int count, void* storage80, void* storage84, void* storage90) {
-    AtQuery::Attach(count, storage80, storage84);
-    m_storage90 = storage90;
+AtSegmentQuery::AtSegmentQuery() {
+    m_records = 0;
+    m_unknown94 = 0;
+}
+
+void AtSegmentQuery::Allocate(unsigned int capacity) {
+    AtSegmentHitList::Allocate(capacity);
+    if (s_heap == 0) {
+        AtRaise(-2, 0, 0, 0);
+    }
+    AtPushHeap(s_heap);
+    m_records = (AtSegmentHit*)operator new(capacity * sizeof(AtSegmentHit));
+    AtPopHeap();
+    if (m_records == 0) {
+        AtRaise(-4, 0, 0, 0);
+    }
+}
+
+void AtSegmentQuery::SetStorage(unsigned int capacity, void* keys, void* hits, void* records) {
+    AtSegmentHitList::SetStorage(capacity, keys, hits);
+    m_records = (AtSegmentHit*)records;
 }
 
 void AtSegmentQuery::Clear() {
-    if ((m_flags & kStorageNotOwned) == 0 && m_storage90 != 0) {
-        operator delete(m_storage90);
+    if ((m_flags & kNotOwned) == 0 && m_records != 0) {
+        operator delete(m_records);
     }
-    AtQuery::Clear();
-    m_storage90 = 0;
+    AtSegmentHitList::Clear();
+    m_records = 0;
     m_unknown94 = 0;
 }
 
 AtSegmentQuery::~AtSegmentQuery() {
     AtSegmentQuery::Clear();
+}
+
+void AtSegmentQuery::CountOne() {
+    AtFatal("AtSegmentQuery::CountOne (0x00057B10) is not recovered", 0, 0, 0);
 }
 
 void AtQueryPool::SetHeap(void* heap) {
@@ -161,14 +183,14 @@ void AtQueryPool::Allocate() {
         AtRaise(-2, 0, 0, 0);
     }
     AtPushHeap(s_heap);
-    m_queries = new AtQuery[m_count];
+    m_queries = new AtSegmentHitList[m_count];
     AtPopHeap();
     if (m_queries == 0) {
         AtRaise(-4, 0, 0, 0);
     }
     unsigned int entry = 0;
     for (unsigned int i = 0; i < m_count; i++) {
-        m_queries[i].Attach(m_perQuery, m_entries8 + entry * 8, m_entries2C + entry * 0x2C);
+        m_queries[i].SetStorage(m_perQuery, m_entries8 + entry * 8, m_entries2C + entry * 0x2C);
         entry += m_perQuery;
     }
 }
@@ -267,14 +289,14 @@ void AtSegmentQueryPool::Allocate() {
         AtRaise(-2, 0, 0, 0);
     }
     AtPushHeap(s_heap);
-    m_entries10 = (unsigned char*)operator new(m_perQuery * m_count * 0x10);
+    m_entries10 = (unsigned char*)operator new(m_perQuery * m_count * sizeof(AtSegmentHit));
     AtPopHeap();
     if (m_entries10 == 0) {
         AtRaise(-4, 0, 0, 0);
     }
     unsigned int entry = 0;
     for (unsigned int i = 0; i < m_count; i++) {
-        m_segmentQueries[i].Attach(m_perQuery, m_entries8 + entry * 8, m_entries2C + entry * 0x2C, m_entries10 + entry * 0x10);
+        m_segmentQueries[i].SetStorage(m_perQuery, m_entries8 + entry * 8, m_entries2C + entry * 0x2C, m_entries10 + entry * sizeof(AtSegmentHit));
         entry += m_perQuery;
     }
 }

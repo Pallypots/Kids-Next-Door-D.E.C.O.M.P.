@@ -21,7 +21,7 @@ class AtScenePlayback {
 public:
     enum Flags { kWasRewound = 0x1, kStarted = 0x2, kPlaying = 0x4, kHasTranslationScale = 0x400 };
 
-    AtScenePlayback() : m_flags(0), m_time(0), m_rate(0), m_listener(0) {}
+    AtScenePlayback();                 // 0x0017AED0
     void Rewind();                     // 0x0005B710 flags to 1, whatever they were; time to 0
 
     unsigned int m_flags;              // +0x00
@@ -46,11 +46,12 @@ struct AtSceneAnimation {
     unsigned short m_frames;           // +0x36
 };
 
-// 0x14 bytes.
+// 0x14 bytes. Also what a light modifier follows; "Mat" is from the first user found, and what is played may be a light's animation.
 class AtSceneMatPlayback : public AtScenePlayback {
 public:
     AtSceneMatPlayback();                              // 0x0005BAA0
-    ~AtSceneMatPlayback();                             // 0x0005FF90
+    // 0x0005FF90. Called by the channel's destructor and no other. A destructor of this class it cannot be: a light holds one at +0x34, and neither its constructor's unwinding nor its destructor calls this.
+    void Clear();
     void SetAnimation(AtSceneMatAnimation* animation);  // 0x0005BAC0
 
     AtSceneMatAnimation* m_animation;  // +0x10

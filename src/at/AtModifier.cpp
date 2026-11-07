@@ -108,11 +108,6 @@ void AtModifier::Slot5(void*) {}
 // ---- lights ------------------------------------------------------------------------------------------------------
 
 AtLightModifier::AtLightModifier() {
-    m_animationFlags = 0;
-    m_animationPosition = 0;
-    m_animationLength = 0;
-    m_animationListener = 0;
-    m_animation = 0;
     m_light = 0;
     m_unknown30 = 0;
     m_type = kDirectional;
@@ -125,14 +120,6 @@ AtLightModifier::AtLightModifier() {
 }
 
 AtLightModifier::~AtLightModifier() {}
-
-// 0x0005BAC0 and 0x0005B710, held with the rest of the animation's class. On this object's five words. The animation's +4 is a length, by where its own code uses it: inferred.
-void AtLightModifier::BindAnimation(void* animation) {
-    m_animation = animation;
-    m_animationLength = ((int*)animation)[1];
-    m_animationFlags = 1;
-    m_animationPosition = 0;
-}
 
 void AtLightModifier::Read(AtSceneDevice* device, AtIoTokenizer* tokenizer) {
     m_kind = kAtModifierLight;
@@ -160,12 +147,12 @@ void AtLightModifier::Read(AtSceneDevice* device, AtIoTokenizer* tokenizer) {
             if (animation == 0) {
                 tokenizer->Error(kAtProblemNotFound);
             } else {
-                BindAnimation(animation);
-                m_animationFlags |= 2;
-                if (m_animationListener != 0) {
-                    m_animationListener->OnBound(&m_animationFlags);
+                m_playback.SetAnimation((AtSceneMatAnimation*)animation);
+                m_playback.m_flags |= AtScenePlayback::kStarted;
+                if (m_playback.m_listener != 0) {
+                    m_playback.m_listener->OnStarted(&m_playback);
                 }
-                m_animationFlags |= 4;
+                m_playback.m_flags |= AtScenePlayback::kPlaying;
             }
             break;
         }
