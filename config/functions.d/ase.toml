@@ -1,0 +1,433 @@
+# Particle emitters, .ASE, and the pool of queries an emitter may hold. Names inferred; see include/at/AtEmitter.h and include/at/AtSegmentQuery.h. Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x00021EC0
+size = 69
+symbol = "?Normalize@AtVector2@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x0002E880
+size = 84
+symbol = "??_GAtEmitterDatabase@@UAEPAXI@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x0003F580
+size = 10
+symbol = "?SetHeap@AtEmitterDatabase@@SAXPAX@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x0003F590
+size = 26
+symbol = "??0AtEmitterDatabase@@QAE@XZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x0003F5B0
+size = 428
+symbol = "?Read@AtEmitterDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x0003F760
+size = 154
+symbol = "?Load@AtEmitterDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x0003F800
+size = 67
+symbol = "?Clear@AtEmitterDatabase@@UAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x0003F850
+size = 136
+symbol = "??1AtEmitterDatabase@@UAE@XZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00040030
+size = 50
+symbol = "?AddEmitters@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00047DE0
+size = 29
+symbol = "??0AtSegmentQueryPool@@QAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00047E00
+size = 79
+symbol = "??1AtSegmentQueryPool@@UAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00047E50
+size = 357
+symbol = "?Allocate@AtSegmentQueryPool@@UAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00047FC0
+size = 87
+symbol = "??_EAtSegmentQuery@@UAEPAXI@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00048020
+size = 77
+symbol = "?Free@AtSegmentQueryPool@@UAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000481D0
+size = 30
+symbol = "??_GAtSegmentQueryPool@@UAEPAXI@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00050790
+size = 148
+symbol = "?SetCrossNormalized@AtVector3@@QAEXABV1@0@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00050830
+size = 598
+symbol = "?CurveFromBlurKeys@AtEmitter@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00050A90
+size = 185
+symbol = "?CurveFromSizeKeys@AtEmitter@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00050B50
+size = 283
+symbol = "?CurveFromRectKeys@AtEmitter@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00050C70
+size = 540
+symbol = "?CurveFromColorKeys@AtEmitter@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00050E90
+size = 91
+symbol = "?SetEventChance@AtEmitter@@QAEXM@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00050EF0
+size = 46
+symbol = "?SetConeScaleAxes@AtEmitter@@QAEXABVAtVector3@@@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00050F20
+size = 447
+symbol = "?Reset@AtEmitter@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x000510E0
+size = 134
+symbol = "?CountStreams@AtEmitter@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00051170
+size = 282
+symbol = "?MakeConeMatrix@AtEmitter@@QAEXXZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00051290
+size = 97
+symbol = "??0AtEmitter@@QAE@XZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00051300
+size = 114
+symbol = "??1AtEmitter@@QAE@XZ"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x00051380
+size = 3405
+symbol = "?Read@AtEmitter@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtEmitter.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtEmitter.h"
+
+[[function]]
+va = 0x000552A0
+size = 10
+symbol = "?SetHeap@AtQuery@@SAXPAX@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00055360
+size = 55
+symbol = "?Attach@AtQuery@@UAEXIPAX0@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000553A0
+size = 233
+symbol = "?Reserve@AtQuery@@UAEXI@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00055490
+size = 131
+symbol = "?Reset@AtQuery@@QAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000555A0
+size = 14
+symbol = "??0AtQuery@@QAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000555B0
+size = 55
+symbol = "?Clear@AtQuery@@UAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000555F0
+size = 61
+symbol = "??1AtQuery@@UAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057330
+size = 10
+symbol = "?SetHeap@AtQueryPool@@SAXPAX@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057340
+size = 252
+symbol = "?Allocate@AtQueryPool@@UAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057440
+size = 87
+symbol = "??_EAtQuery@@UAEPAXI@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000574A0
+size = 54
+symbol = "?Free@AtQueryPool@@UAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000578A0
+size = 62
+symbol = "??0AtQueryPool@@QAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x000578E0
+size = 84
+symbol = "?Release@AtQueryPool@@QAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057940
+size = 11
+symbol = "??1AtQueryPool@@UAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057950
+size = 237
+symbol = "?Init@AtQueryPool@@QAEXII@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057A40
+size = 36
+symbol = "??_GAtQueryPool@@UAEPAXI@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057A70
+size = 39
+symbol = "?Attach@AtSegmentQuery@@QAEXIPAX00@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057AA0
+size = 104
+symbol = "?Reserve@AtSegmentQuery@@UAEXI@Z"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057B90
+size = 32
+symbol = "??0AtSegmentQuery@@QAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057BB0
+size = 57
+symbol = "?Clear@AtSegmentQuery@@UAEXXZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[function]]
+va = 0x00057BF0
+size = 126
+symbol = "??1AtSegmentQuery@@UAE@XZ"
+source = "src/at/AtSegmentQuery.cpp"
+subsystem = "at/ase"
+evidence = "tests/oracle/oracle_ase.cpp; address noted beside the declaration in include/at/AtSegmentQuery.h"
+
+[[vtable]]
+va = 0x0027602C
+slots = 2
+symbol = "??_7AtEmitterDatabase@@6B@"
+source = "src/at/AtEmitter.cpp"
+
+[[vtable]]
+va = 0x002764D4
+slots = 5
+symbol = "??_7AtSegmentQueryPool@@6B@"
+source = "src/at/AtSegmentQuery.cpp"
+
+[[vtable]]
+va = 0x002770D8
+slots = 5
+symbol = "??_7AtQueryPool@@6B@"
+source = "src/at/AtSegmentQuery.cpp"
+
+[[vtable]]
+va = 0x00276F28
+slots = 4
+symbol = "??_7AtQuery@@6B@"
+source = "src/at/AtSegmentQuery.cpp"
+
+[[vtable]]
+va = 0x002770F4
+slots = 4
+symbol = "??_7AtSegmentQuery@@6B@"
+source = "src/at/AtSegmentQuery.cpp"
+
+[symbols]
+"?TakeNext@AtQueryPool@@UAEPAXXZ" = 0x000574F0
+"?Update@AtQueryPool@@UAEXPAX@Z" = 0x00057800
+"?TakeNext@AtSegmentQueryPool@@UAEPAXXZ" = 0x00048070
+"?Update@AtSegmentQueryPool@@UAEXPAX@Z" = 0x00048D10
+"?s_keywords@AtEmitterDatabase@@2QBUAtIoKeyword@@B" = 0x002B1F20
+"?s_heap@AtEmitterDatabase@@2PAXA" = 0x002C6414
+"?s_heap@AtQueryPool@@2PAXA" = 0x002C7F64
+"?s_heap@AtQuery@@2PAXA" = 0x002C7F58
