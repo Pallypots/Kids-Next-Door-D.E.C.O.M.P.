@@ -4,9 +4,10 @@
 //
 // Cases: every .ASN file listed in index.txt, loaded through the file code on both sides; text written for each word and error path; and coordinate systems, nodes and modifier sets driven directly.
 //
-// The classes of node that are not recovered are doubles on both sides: the base node with a reader that takes the words those classes own and goes on to the base for the rest. On the original's side the double is its
-// base class's code with the constructors redirected and a vftable of the harness's, so its array handling, its eh iterators and its vector deleters still run. So those words are consumed and not compared; everything the base
-// class, the scene and the coordinate systems do with a file is. The matrix table, the graphics device and the owner's maps are the harness's.
+// ModelActor and JointedModelActor are the real thing on both sides, and every word of them is compared, down through their channels, blends and copied databases. The classes of node still not recovered are doubles on both sides: the
+// real actor base (the real node for SoundNode) with a reader that takes the few words those classes own and goes on to the base for the rest. On the original's side the double is its base class's code with the constructors redirected
+// and a vftable of the harness's, so its array handling, its eh iterators and its vector deleters still run. So those words (Mesh and Emitter on such a class, WorldAdditive*) are consumed and not compared. The matrix table, the graphics
+// device and the tables it and the owner hold are the harness's: what they would hold comes from other files, and is here a stand-in for each name in the file.
 #define NOMINMAX
 #include <windows.h>
 
@@ -24,6 +25,7 @@
 
 #include "at/AtIoTokenizer.h"
 #include "at/AtScene.h"
+#include "at/AtSceneActor.h"
 #include "at/AtText.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
@@ -35,11 +37,11 @@ static std::string g_context;
 
 static void eq(const char* what, long long o, long long r) {
     g_checks++;
-    if (o != r && g_failures++ < 25) std::printf("DIFF %s: %s: original 0x%llX, recovered 0x%llX\n", g_context.substr(0, 120).c_str(), what, o, r);
+    if (o != r && g_failures++ < 25) std::printf("DIFF %s: %s: original 0x%llX, recovered 0x%llX\n", g_context.substr(0, 400).c_str(), what, o, r);
 }
 static void eqs(const char* what, const char* o, const char* r) {
     g_checks++;
-    if (std::strcmp(o, r) != 0 && g_failures++ < 25) std::printf("DIFF %s: %s: original [%.300s], recovered [%.300s]\n", g_context.substr(0, 120).c_str(), what, o, r);
+    if (std::strcmp(o, r) != 0 && g_failures++ < 25) std::printf("DIFF %s: %s: original [%.300s], recovered [%.300s]\n", g_context.substr(0, 400).c_str(), what, o, r);
 }
 
 template <class F> static F at(uint32_t va) { return (F)(uintptr_t)va; }
@@ -234,9 +236,9 @@ public:
     void Slot12() override {} void Slot13() override {} void Slot14() override {} void Slot15() override {} void Slot16() override {}
     AtMatrixDevice* MatrixDevice() override { note(side, 'd'); return &g_matdev[side]; }
 };
-static TestDevice g_device[2];
+static TestDevice* g_device[2];
 
-// ---- the classes not recovered ---------------------------------------------------------------------------------------------
+// ---- the classes ------------------------------------------------------------------------------------------------------------
 static const unsigned kSizes[kAtActorKinds] = {0xA0, 0xCC, 0xFC, 0xB8, 0x13C, 0xA8, 0xAC, 0xB0, 0x70};
 static const uint16_t kClasses[kAtActorKinds] = {2, 3, 8, 9, 10, 11, 12, 13, 15};
 static const uint32_t kOriginalCtor[kAtActorKinds] = {0x0004B0B0, 0x0004B680, 0x0004D1D0, 0x0004E4A0, 0x0004EBE0, 0x0004D520, 0x0004E300, 0x0004DB60, 0x0004EF90};
@@ -247,141 +249,97 @@ typedef void(__fastcall* Fn0)(void*, void*);
 typedef int(__fastcall* FnI)(void*, void*);
 typedef void*(__fastcall* FnDel)(void*, void*, unsigned);
 
-// The sound node is 0x70 bytes, so it has none of the fields past that, and keeps the base's slots.
+// The sound node is 0x70 bytes and built on the plain node, so it has none of the actor's fields, and keeps the base's slots.
 static const uint16_t kSoundClass = 15;
 static void*& raw(void* p, unsigned off) { return *(void**)((char*)p + off); }
 static void* raw(const void* p, unsigned off) { return *(void* const*)((const char*)p + off); }
 
-// Every name in the file, as joints of any jointed actor. The real class fills this from CoordSysDatabase, which is not recovered.
+// A jointed actor the harness makes to attach to in other files: every name in the file as a joint.
 static GmNameMap* g_joints[2];
 
-// What an actor does with a word of its own: takes its arguments. True if it was one. Both sides run this.
-static void take_channel(AtIoTokenizer* t, int side) {
-    char name[8];
-    const int n = t->ExpectCount();
-    for (int i = 0; i < n; i++) {
-        t->Next();
-        t->ExpectLeftCurly();
-        int w = t->Next();
-        while (w != AtIoTokenizer::kRightCurly && w != AtIoTokenizer::kEnd) {
-            note(side, 'w', w);
-            switch (w) {
-            case 69: case 110: case 129: t->ExpectName(name); t->ExpectName(name); t->ExpectInt(); break;
-            case 71: case 72: t->ExpectReal(); break;
-            case 80: t->ExpectInt(); break;
-            default: break;
-            }
-            w = t->Next();
-        }
-    }
-    t->ExpectRightCurly();
-}
-static bool actor_word(void* self, AtIoTokenizer* t, int token, int side) {
+// What a class not recovered does with a word of its own: takes its arguments. True if it was one. Both sides run this.
+static bool actor_word(AtIoTokenizer* t, int token, int side) {
     char name[8];
     switch (token) {
     case 113: case 82: t->ExpectName(name); t->ExpectName(name); break;  // Mesh, Emitter
-    case 66: case 67: case 130: case 131: t->ExpectName(name); break;    // the coordinate system databases
-    case 105: case 106: case 115: break;                                 // DrawingEnable, DrawingDisable, ModifierReceiver
     case 145: case 146: t->ExpectReal(); t->ExpectReal(); t->ExpectReal(); break;
-    case 68: case 133: case 109: take_channel(t, side); break;
-    case 111: {                                                          // Scale reaches the scale coordinate system, if there is one
-        AtVector3 v;
-        v.x = t->ExpectReal(); v.y = t->ExpectReal(); v.z = t->ExpectReal();
-        void* cs = ((AtSceneNode*)self)->m_class == kSoundClass ? nullptr : raw(self, 0x80);
-        if (cs) {
-            if (side == 0) at<void(__fastcall*)(void*, void*, const AtVector3*)>(0x00032B30)(cs, nullptr, &v);
-            else ((AtScaleCoordSys*)cs)->SetScale(&v);
-        }
-        break;
-    }
     default: return false;
     }
     note(side, 'b', token);
     return true;
 }
 
-// The original's side. Slots 0, 4, 5 and 6 are its own code for actors, 0x00055B80, 0x00055BD0, 0x00055BE0, 0x00055C00, which touch only +0x34, +0x80 and +0x90.
+// The original's side. All slots but this and the deleter are its own code for an actor, or for a node on the sound node.
 static void __fastcall o_body(void* self, void*, void* owner, AtIoTokenizer* t, int token) {
-    if (actor_word(self, t, token, 0)) return;
-    at<void(__fastcall*)(void*, void*, void*, void*, int)>(0x0004AA10)(self, nullptr, owner, t, token);
+    if (actor_word(t, token, 0)) return;
+    at<void(__fastcall*)(void*, void*, void*, void*, int)>(((AtSceneNode*)self)->m_class == kSoundClass ? 0x0004AA10 : 0x00056500)(self, nullptr, owner, t, token);
 }
-static const void* g_actor_table[kAtActorKinds][32];
+static const void* g_actor_table[kAtActorKinds][44];
 
 template <int K> static void* __fastcall o_ctor(void* self, void*) {
-    at<Fn0>(0x0004A740)(self, nullptr);
+    at<Fn0>(K == kAtActorSound ? 0x0004A740 : 0x00055DB0)(self, nullptr);
     *(const void***)self = g_actor_table[K];
     *(uint16_t*)((char*)self + 8) = kClasses[K];
-    if (K != kAtActorSound) {
-        raw(self, 0x80) = nullptr;
-        raw(self, 0x90) = nullptr;
-    }
-    if (kSizes[K] > 0xA0) raw(self, 0xA0) = K == kAtActorJointedModel ? g_joints[0] : nullptr;
+    if (kSizes[K] > 0xA0) raw(self, 0xA0) = nullptr;
     return self;
 }
 template <int K> static void install_kind() {
     const void** table = g_actor_table[K];
-    for (int i = 0; i < 32; i++) table[i] = *(const void**)(uintptr_t)(0x002765A0 + i * 4);
+    for (int i = 0; i < 44; i++) table[i] = *(const void**)(uintptr_t)((K == kAtActorSound ? 0x002765A0 : 0x00276FA8) + i * 4);
     table[1] = (const void*)o_body;
-    if (K != kAtActorSound) {
-        table[0] = (const void*)(uintptr_t)0x00055B80;
-        table[4] = (const void*)(uintptr_t)0x00055BD0;
-        table[5] = (const void*)(uintptr_t)0x00055BE0;
-        table[6] = (const void*)(uintptr_t)0x00055C00;
-    }
     table[7] = (const void*)(uintptr_t)kOriginalDeleter[K];
     redirect(kOriginalCtor[K], (const void*)o_ctor<K>);
-    if (kOriginalDtor[K]) redirect(kOriginalDtor[K], (const void*)(uintptr_t)0x0004AFD0);
+    if (kOriginalDtor[K]) redirect(kOriginalDtor[K], (const void*)(uintptr_t)0x000564B0);
 }
 
-// The recovered side's double.
-class TestActor : public AtSceneNode {
+// The recovered side's doubles.
+class TestActor : public AtSceneActor {
 public:
-    void ReadHeader(AtScene* scene, AtIoTokenizer* t, int token) override {
-        if (token == kAtWordScaleCoordSys && m_class != kSoundClass) {
-            if (raw(this, 0x80)) t->Error(kAtProblemWrongUse);
-            raw(this, 0x80) = scene->NextScale(t);
-        } else {
-            AtSceneNode::ReadHeader(scene, t, token);
-        }
-    }
     void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
-        if (actor_word(this, t, token, 1)) return;
+        if (actor_word(t, token, 1)) return;
+        AtSceneActor::ReadBody(owner, t, token);
+    }
+    void Slot34() override {}
+    void Slot38() override {}
+    void Slot39() override {}
+};
+class TestSound : public AtSceneNode {
+public:
+    void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
+        if (actor_word(t, token, 1)) return;
         AtSceneNode::ReadBody(owner, t, token);
-    }
-    AtCoordSys* CoordSys() override {
-        if (m_class == kSoundClass) return m_coordSys;
-        return m_coordSys ? m_coordSys : (AtCoordSys*)raw(this, 0x80);
-    }
-    AtCoordSys* ParentCoordSys() override {
-        if (m_class == kSoundClass) return m_coordSys;
-        if (raw(this, 0x90)) return ((AtSceneNode*)raw(this, 0x90))->ParentCoordSys();
-        return raw(this, 0x80) ? (AtCoordSys*)raw(this, 0x80) : m_coordSys;
-    }
-    void FinishHeader() override {
-        if (m_class == kSoundClass) return;
-        AtCoordSys* scale = (AtCoordSys*)raw(this, 0x80);
-        if (scale && m_coordSys) m_coordSys->Attach(scale);
     }
 };
 
-unsigned int AtSceneActorsSize(int kind) { return kSizes[kind]; }
-void AtSceneActorsConstruct(int kind, void* first, unsigned int count) {
+unsigned int AtSceneUnrecoveredActorsSize(int kind) { return kSizes[kind]; }
+void AtSceneUnrecoveredActorsConstruct(int kind, void* first, unsigned int count) {
     for (unsigned i = 0; i < count; i++) {
         char* p = (char*)first + i * kSizes[kind];
-        new (p) TestActor;
+        if (kind == kAtActorSound) new (p) TestSound;
+        else new (p) TestActor;
         *(uint16_t*)(p + 8) = kClasses[kind];
-        if (kind != kAtActorSound) {
-            raw(p, 0x80) = nullptr;
-            raw(p, 0x90) = nullptr;
-        }
-        if (kSizes[kind] > 0xA0) raw(p, 0xA0) = kind == kAtActorJointedModel ? g_joints[1] : nullptr;
+        if (kSizes[kind] > 0xA0) raw(p, 0xA0) = nullptr;
     }
 }
-void AtSceneActorsDestroy(int kind, void* first, unsigned int count) {
-    for (unsigned i = count; i > 0; i--) ((TestActor*)((char*)first + (i - 1) * kSizes[kind]))->~TestActor();
+void AtSceneUnrecoveredActorsDestroy(int kind, void* first, unsigned int count) {
+    for (unsigned i = count; i > 0; i--) {
+        char* p = (char*)first + (i - 1) * kSizes[kind];
+        if (kind == kAtActorSound) ((TestSound*)p)->~TestSound();
+        else ((TestActor*)p)->~TestActor();
+    }
 }
-AtCoordSys* AtSceneActorSharedCoordSys(const AtSceneNode* actor) { return (AtCoordSys*)raw(actor, 0x90); }
-GmNameMap* AtSceneActorJoints(const AtSceneNode* actor) { return (GmNameMap*)raw(actor, 0xA0); }
+
+// DataLink: no real file has it, and what it looks in is not recovered, on either side. Its arguments are logged.
+static void* data_link(int side, const char* path, const char* ns) {
+    // By hand: a long std::string would allocate, on the recovered side only, while logging is on.
+    uint32_t h = 0;
+    for (const char* c = path; *c; c++) h = h * 31 + (unsigned char)*c;
+    for (unsigned i = 0; i < 8 && ns[i]; i++) h = h * 31 + (unsigned char)ns[i];
+    note(side, 'K', h);
+    return path[0] == 'X' ? nullptr : (void*)(uintptr_t)(h | 0x1000);
+}
+static void* __fastcall o_data_link(void*, void*, const char* path, const char* ns) { return data_link(0, path, ns); }
+void* AtSceneFindDataLink(AtNameTableOwner*, const char* path, const char* ns) { return data_link(1, path, ns); }
 
 // ---- what the owners find ----------------------------------------------------------------------------------------------------
 static void* value_of(const std::string& name, uint32_t salt) {
@@ -418,21 +376,91 @@ static char* make_actor(int side, int kind) {
     return p;
 }
 
+// What is in the device's tables comes from other files. A stand-in for each name in the file, the same on both sides. The names say what is awkward: X is not there at all, Y is in a first table and not in the second a word looks in, and Z
+// is an animation of no frames and no rate. A name of that one letter alone is not awkward: one real file has X, Y and Z.
+static std::vector<AtCoordSysDatabase*> g_dbs[2];
+static AtSceneMatAnimation* g_mat_anims[2];
+static AtSceneAnimation* g_anims[2];
+static unsigned g_anim_count;
+
+static uint32_t hash_of(const std::string& name) {
+    uint32_t h = 0x811C9DC5;
+    for (const char c : name) h = (h ^ (unsigned char)c) * 16777619;
+    return h ^ (h >> 13);
+}
+
+// A database of a shape that depends on the name, with names in it, a tree and matrices that show.
+static AtCoordSysDatabase* make_database(int side, const std::string& name, const std::set<std::string>& all) {
+    const uint32_t h = hash_of(name);
+    const bool empty = h % 11 == 0;
+    const unsigned rot = empty ? 0 : 1 + (h >> 3) % 4;
+    const unsigned scaled = empty ? 0 : (h >> 6) % 4;
+    const unsigned extra = (h >> 9) % 3;
+    unsigned given = 0;
+    AtCoordSysDatabase* db = (AtCoordSysDatabase*)std::malloc(sizeof(AtCoordSysDatabase));
+    std::memset(db, 0xCD, sizeof(AtCoordSysDatabase));
+    if (side == 0) {
+        at<Fn0>(0x000268F0)(db, nullptr);
+        at<void(__fastcall*)(void*, void*, void*, unsigned, unsigned, unsigned)>(0x00026920)(db, nullptr, &g_matdev[0], rot, scaled, extra);
+    } else {
+        new (db) AtCoordSysDatabase;
+        db->Allocate(&g_matdev[1], rot, scaled, extra);
+    }
+    for (unsigned i = 0; i < rot + scaled; i++) {
+        AtCoordSys* e = i < rot ? (AtCoordSys*)&db->m_rotTrans[i] : (AtCoordSys*)&db->m_scaled[i - rot];
+        mix((Mat*)e->m_local, 'd', h, i, 1);
+        if (i > 0) {
+            // Parents of both kinds, and some with none.
+            // The last of three scales is always under the second, so that which scale a parent is shows.
+            const unsigned parent = scaled == 3 && i == rot + 2 ? rot + 1 : (h >> (i * 2)) % (i + 1);
+            if (parent < i) {
+                AtCoordSys* p = parent < rot ? (AtCoordSys*)&db->m_rotTrans[parent] : (AtCoordSys*)&db->m_scaled[parent - rot];
+                p->Attach(e);
+            }
+        }
+        if (((h >> (i + 12)) & 1) && given < extra) {
+            given++;
+            AtMatrix* m = (AtMatrix*)&g_mats[side][g_mat_used[side]++];
+            mix((Mat*)m, 'e', h, i, 2);
+            e->m_unknown10 = m;
+        }
+    }
+    if (rot + scaled > 0) {
+        const unsigned which = (h >> 20) % (rot + scaled + 1);
+        if (which < rot) db->m_unknown2C = &db->m_rotTrans[which];
+        else if (which < rot + scaled) db->m_unknown2C = &db->m_scaled[which - rot];
+        else db->m_unknown2C = nullptr;
+        // Each name to one element, so that some have none and some are named twice.
+        for (const std::string& n : all) {
+            const uint32_t k = hash_of(n + name);
+            if (k & 1) continue;
+            const unsigned i = (k >> 1) % (rot + scaled);
+            db->Insert(n.c_str(), i < rot ? (AtCoordSys*)&db->m_rotTrans[i] : (AtCoordSys*)&db->m_scaled[i - rot]);
+        }
+    }
+    return db;
+}
+
 struct Env {
     std::vector<GmNameMap*> maps[2];
     GmNameMap joints[2];
     explicit Env(const std::set<std::string>& names, const std::set<std::string>& spaces) {
         const bool was = g_recording;
         g_recording = false;
+        void* const refused = g_refuse_heap;
+        g_refuse_heap = nullptr;
+        const bool failing = g_fail_alloc;
+        g_fail_alloc = false;
         for (int side = 0; side < 2; side++) {
             g_mat_used[side] = 0;
-            g_device[side].side = side;
+            g_device[side] = new TestDevice;
+            g_device[side]->side = side;
             g_matdev[side].side = side;
             g_pool[side].side = side;
             g_own[side] = new AtNameTableOwner;
             AtNameTableOwner& w = *g_own[side];
             w.m_unknown08 = 0; w.m_loader = 0; w.m_unknown10 = 0; w.m_unknown14 = 0;
-            w.m_device = &g_device[side];
+            w.m_device = g_device[side];
             const unsigned pool = (unsigned)spaces.size() + 8;
             w.m_nodeSpaces.Init(pool);
             w.m_modifierSpaces.Init(pool);
@@ -472,7 +500,69 @@ struct Env {
                 w.m_modifierSpaces.Add(s.c_str(), fill(3));
                 w.m_geometrySpaces.Add(s.c_str(), fill(4));
             }
+
+            TestDevice& d = *g_device[side];
+            d.m_meshSpaces.Init(pool);
+            d.m_matAssignmentSpaces.Init(pool);
+            d.m_matAnimationSpaces.Init(pool);
+            d.m_meshes.Add(fill(5));
+            d.m_matAssignments.Add(fill(7));
+            d.m_mirrorDatabases.Add(fill(10));
+            g_anim_count = (unsigned)names.size() * 2 + 1;
+            g_mat_anims[side] = (AtSceneMatAnimation*)std::calloc(g_anim_count, sizeof(AtSceneMatAnimation));
+            g_anims[side] = (AtSceneAnimation*)std::calloc(g_anim_count, sizeof(AtSceneAnimation));
+            std::memset(g_mat_anims[side], 0xAB, g_anim_count * sizeof(AtSceneMatAnimation));
+            std::memset(g_anims[side], 0xAB, g_anim_count * sizeof(AtSceneAnimation));
+            unsigned n = 0;
+            GmNameMap* mat_plain = new GmNameMap;
+            GmNameMap* mat_spaced = new GmNameMap;
+            GmNameMap* anims = new GmNameMap;
+            GmNameMap* weights = new GmNameMap;
+            GmNameMap* anim_tables = new GmNameMap;
+            GmNameMap* weight_tables = new GmNameMap;
+            GmNameMap* databases = new GmNameMap;
+            for (GmNameMap* m : {mat_plain, mat_spaced, anims, weights, anim_tables, weight_tables, databases}) {
+                m->Init((unsigned)names.size() + 1);
+                maps[side].push_back(m);
+            }
+            g_dbs[side].clear();
+            for (const std::string& name : names) {
+                const uint32_t h = hash_of(name);
+                const bool none = name[0] == 'Z' && name.size() > 1;
+                const auto one_mat = [&](GmNameMap* m, uint32_t salt) {
+                    AtSceneMatAnimation& a = g_mat_anims[side][n++];
+                    a.m_rate = none ? 0.0f : (float)((h ^ salt) % 90 + 1) * 0.5f;
+                    a.m_frames = none ? 0 : (h ^ salt) % 37 + 1;
+                    m->Insert(name.c_str(), &a);
+                };
+                one_mat(mat_plain, 0);
+                one_mat(mat_spaced, 0x55);
+                AtSceneAnimation& a = g_anims[side][n / 2];
+                a.m_rate = none ? 0.0f : (float)(h % 90 + 1) * 0.25f;
+                a.m_frames = none ? 0 : (unsigned short)(h % 53 + 1);
+                if (name[0] != 'Y' || name.size() == 1) {
+                    anims->Insert(name.c_str(), &a);
+                    weights->Insert(name.c_str(), value_of(name, 11));
+                }
+                anim_tables->Insert(name.c_str(), anims);
+                weight_tables->Insert(name.c_str(), weights);
+                AtCoordSysDatabase* db = make_database(side, name, names);
+                g_dbs[side].push_back(db);
+                databases->Insert(name.c_str(), db);
+            }
+            d.m_matAnimations.Add(mat_plain);
+            d.m_animationDatabases.Add(anim_tables);
+            d.m_weightDatabases.Add(weight_tables);
+            d.m_coordSysDatabases.Add(databases);
+            for (const std::string& s : spaces) {
+                d.m_meshSpaces.Add(s.c_str(), fill(6));
+                d.m_matAssignmentSpaces.Add(s.c_str(), fill(8));
+            }
+            // One name space's animations are enough: a lookup caches the last one, and that is GmNameSpaceDb's, tested elsewhere.
+            d.m_matAnimationSpaces.Add("Space", mat_spaced);
         }
+        g_refuse_heap = refused;
+        g_fail_alloc = failing;
         g_recording = was;
     }
     ~Env() {
@@ -503,7 +593,7 @@ static void gather(const std::vector<unsigned char>& d, std::set<std::string>& n
             std::string s((const char*)d.data() + i + 1, e - i - 1);
             if (s.size() > 8) s.resize(8);
             const bool after_word = i >= 11 && !std::memcmp(d.data() + i - 10, "NameSpace", 9);
-            if (!s.empty() && s[0] != 'X') {
+            if (!s.empty() && (s[0] != 'X' || s.size() == 1)) {
                 names.insert(s);
                 if (after_word || last_was_string) spaces.insert(s);
             }
@@ -530,6 +620,7 @@ static uint64_t canon(int side, const void* p) {
     return (uintptr_t)p;
 }
 static uint64_t canon_known(int side, const void* p) {
+    if (!p) return 0;  // Null is known. Found by mutants: it used to compare equal to a pointer to nowhere known.
     const uint64_t c = canon(side, p);
     return c == (uintptr_t)p ? 0xBAD : c;
 }
@@ -543,13 +634,14 @@ static void same_cs(const AtCoordSys* o, const AtCoordSys* r, unsigned size) {
     const uint32_t ov = dword(o, 0);
     const void* rv = *(void* const*)r;
     eq("cs class", ov == 0x00273100 ? 1 : ov == 0x00274B08 ? 2 : ov == 0x00274AE8 ? 3 : 0, rv == g_rot_table ? 1 : rv == g_scale_table ? 2 : 3);
-    same_ptr("cs parent", o->m_parent, r->m_parent);
-    same_ptr("cs sibling", o->m_nextSibling, r->m_nextSibling);
-    same_ptr("cs child", o->m_firstChild, r->m_firstChild);
-    eq("cs +10", o->m_unknown10, r->m_unknown10);
+    // Known or not on both sides: a database copied twice leaves the first behind, attached, in memory no one holds.
+    eq("cs parent", canon_known(0, o->m_parent), canon_known(1, r->m_parent));
+    eq("cs sibling", canon_known(0, o->m_nextSibling), canon_known(1, r->m_nextSibling));
+    eq("cs child", canon_known(0, o->m_firstChild), canon_known(1, r->m_firstChild));
+    same_ptr("cs +10", o->m_unknown10, r->m_unknown10);
     same_ptr("cs local", o->m_local, r->m_local);
     same_ptr("cs world", o->m_world, r->m_world);
-    eq("cs +1C", o->m_unknown1C, r->m_unknown1C);
+    same_ptr("cs +1C", o->m_unknown1C, r->m_unknown1C);
     eq("cs +20", o->m_unknown20, r->m_unknown20);
     eq("cs dirty", o->m_dirty, r->m_dirty);
     for (unsigned off = 0x28; off < size; off += 4) eq("cs scale", dword(o, off), dword(r, off));
@@ -562,6 +654,8 @@ static void same_node(const void* o, const void* r, unsigned size) {
             eq("node's owner", raw(o, off) == g_own[0], raw(r, off) == g_own[1]);
             break;
         case 0x34: case 0x38: case 0x44: case 0x48: case 0x4C: case 0x50: case 0x54: case 0x58: case 0x5C: case 0x80: case 0xA0: case 0x90:
+        // Of the actors: what they own is compared by what it holds, in same_actor, and what they share by which it is.
+        case 0x7C: case 0x8C: case 0xA8: case 0xAC: case 0xB0: case 0xB4: case 0xC8:
             // Unknown when past the end of an array, or left behind when a node was attached twice: both sides hold such a pointer, and neither reads it here.
             eq("node pointer", canon_known(0, raw(o, off)), canon_known(1, raw(r, off)));
             break;
@@ -604,8 +698,39 @@ static void compare_side_effects(const char* what) {
 struct ActorField { unsigned count, array; };
 static const ActorField kActorFields[kAtActorKinds] = {{0x74, 0xC0}, {0x78, 0xC4}, {0x8C, 0xD8}, {0x90, 0xDC}, {0x94, 0xE0}, {0x98, 0xE4}, {0x9C, 0xE8}, {0xA0, 0xEC}, {0xA4, 0xF0}};
 
+static bool is_actor_kind(int k) { return k != kAtActorSound; }
+
+static AtSceneActor* actor_at(const AtScene* s, int k, unsigned i) { return (AtSceneActor*)((char*)raw(s, kActorFields[k].array) + i * kSizes[k]); }
+
+static void register_database(int side, const AtCoordSysDatabase* db, uint32_t id) {
+    add_range(side, db, sizeof(AtCoordSysDatabase), id);
+    add_range(side, db->m_rotTrans, (size_t)db->m_rotTransCount * sizeof(AtRotTransCoordSys), id + 1);
+    add_range(side, db->m_scaled, (size_t)db->m_scaledCount * sizeof(AtScaleCoordSys), id + 2);
+}
+
+// Each actor's own copies of a database, if it has them.
+static void register_copies(int side, const AtScene* s) {
+    uint32_t id = 0x10000;
+    for (int k = 0; k < kAtActorKinds; k++) {
+        if (!is_actor_kind(k) || !raw(s, kActorFields[k].array)) continue;
+        for (unsigned i = 0; i < dword(s, kActorFields[k].count); i++) {
+            const AtSceneActor* a = actor_at(s, k, i);
+            if (a->m_animations && a->m_animations->m_database && (a->m_flags & AtSceneActor::kOwnsAnimDatabase)) register_database(side, a->m_animations->m_database, id);
+            id += 3;
+            if (k == kAtActorJointedModel) {
+                const AtSceneJointedModelActor* j = (const AtSceneJointedModelActor*)a;
+                if (j->m_joints.m_database && (j->m_flags & AtSceneJointedModelActor::kOwnsJointDatabase)) register_database(side, j->m_joints.m_database, id);
+                id += 3;
+            }
+        }
+    }
+}
+
 static void register_scene(int side, const AtScene* s) {
     g_ranges[side].clear();
+    add_range(side, g_mat_anims[side], (size_t)g_anim_count * sizeof(AtSceneMatAnimation), 30);
+    add_range(side, g_anims[side], (size_t)g_anim_count * sizeof(AtSceneAnimation), 31);
+    for (size_t i = 0; i < g_dbs[side].size(); i++) register_database(side, g_dbs[side][i], 0x1000 + (uint32_t)i * 3);
     add_range(side, g_fake_jointed[side], kSizes[kAtActorJointedModel], 1);
     add_range(side, g_fake_plain[side], kSizes[kAtActorModel], 2);
     add_range(side, g_fake_cs[side], sizeof(AtRotTransCoordSys), 3);
@@ -617,9 +742,85 @@ static void register_scene(int side, const AtScene* s) {
     add_range(side, s->m_nodes, (size_t)s->m_nodeCount * 0x6C, 8);
     add_range(side, s->m_modifierNodes, (size_t)s->m_modifierNodeCount * 0x70, 9);
     for (int k = 0; k < kAtActorKinds; k++) add_range(side, raw(s, kActorFields[k].array), (size_t)dword(s, kActorFields[k].count) * kSizes[k], 10 + k);
+    register_copies(side, s);
 }
 
-static unsigned g_nodes_seen, g_files, g_actors_seen;
+static unsigned long long g_actor_words;
+
+// A word that may be a pointer: the same place on both sides, or the same value when it is a stand-in made from a name.
+static void same_word(const char* what, const void* o, const void* r, unsigned off) {
+    g_actor_words++;
+    same_ptr(what, raw(o, off), raw(r, off));
+}
+
+static void same_database(const char* what, const AtCoordSysDatabase* o, const AtCoordSysDatabase* r) {
+    if (!o || !r) { eq(what, o != nullptr, r != nullptr); return; }
+    same_map(o, r);
+    eq("copy's device", o->m_device == &g_matdev[0], r->m_device == &g_matdev[1]);
+    eq("copy's pool", o->m_pool == &g_pool[0], r->m_pool == &g_pool[1]);
+    eq("copy's rot count", o->m_rotTransCount, r->m_rotTransCount);
+    eq("copy's scale count", o->m_scaledCount, r->m_scaledCount);
+    eq("copy's rot array", o->m_rotTrans != nullptr, r->m_rotTrans != nullptr);
+    eq("copy's scale array", o->m_scaled != nullptr, r->m_scaled != nullptr);
+    same_ptr("copy's root", o->m_unknown2C, r->m_unknown2C);
+    eq("copy's extra", o->m_extra, r->m_extra);
+    eq("copy's next matrix", o->m_nextMatrix, r->m_nextMatrix);
+    if (o->m_rotTrans && r->m_rotTrans && o->m_rotTransCount == r->m_rotTransCount) {
+        for (unsigned i = 0; i < o->m_rotTransCount; i++) same_cs(&o->m_rotTrans[i], &r->m_rotTrans[i], sizeof(AtRotTransCoordSys));
+        eq("copy's rot array's count", dword(o->m_rotTrans, (unsigned)-4), dword(r->m_rotTrans, (unsigned)-4));
+    }
+    if (o->m_scaled && r->m_scaled && o->m_scaledCount == r->m_scaledCount) {
+        for (unsigned i = 0; i < o->m_scaledCount; i++) same_cs(&o->m_scaled[i], &r->m_scaled[i], sizeof(AtScaleCoordSys));
+        eq("copy's scale array's count", dword(o->m_scaled, (unsigned)-4), dword(r->m_scaled, (unsigned)-4));
+    }
+}
+
+static void same_anim_set(const AtSceneAnimSet* o, const AtSceneAnimSet* r) {
+    same_ptr("set's database", o->m_database, r->m_database);
+    eq("set's channels", o->m_channelCount, r->m_channelCount);
+    eq("set's channel array", o->m_channels != nullptr, r->m_channels != nullptr);
+    eq("set's +24", o->m_unknown24, r->m_unknown24);
+    const AtSceneAnimBlend& x = o->m_blend;
+    const AtSceneAnimBlend& y = r->m_blend;
+    eq("blend's rot count", x.m_rotTransCount, y.m_rotTransCount);
+    eq("blend's scale count", x.m_scaleCount, y.m_scaleCount);
+    eq("blend's +14", x.m_unknown14, y.m_unknown14);
+    eq("blend's rotations", x.m_rotations != nullptr, y.m_rotations != nullptr);
+    eq("blend's translations", x.m_translations != nullptr, y.m_translations != nullptr);
+    eq("blend's scales", x.m_scales != nullptr, y.m_scales != nullptr);
+    if (x.m_rotTransCount == y.m_rotTransCount) {
+        if (x.m_rotations && y.m_rotations) eq("blend's rotation words", std::memcmp(x.m_rotations, y.m_rotations, x.m_rotTransCount * sizeof(AtSceneAnimBlend::Rotation)), 0);
+        if (x.m_translations && y.m_translations) eq("blend's translation words", std::memcmp(x.m_translations, y.m_translations, x.m_rotTransCount * sizeof(AtSceneAnimBlend::Vector)), 0);
+    }
+    if (x.m_scaleCount == y.m_scaleCount && x.m_scales && y.m_scales) eq("blend's scale words", std::memcmp(x.m_scales, y.m_scales, x.m_scaleCount * sizeof(AtSceneAnimBlend::Vector)), 0);
+    if (o->m_channels && r->m_channels && o->m_channelCount == r->m_channelCount) {
+        for (unsigned i = 0; i < o->m_channelCount; i++) {
+            for (unsigned off = 0; off < sizeof(AtSceneAnimChannel); off += 4) same_word("animation channel", &o->m_channels[i], &r->m_channels[i], off);
+        }
+    }
+}
+
+// Past what same_node sees as words: what an actor owns.
+static void same_actor(int k, const AtSceneActor* o, const AtSceneActor* r) {
+    if (o->m_matChannels && r->m_matChannels && o->m_matChannelCount == r->m_matChannelCount) {
+        for (unsigned i = 0; i < o->m_matChannelCount; i++) {
+            for (unsigned off = 0; off < sizeof(AtSceneMatChannel); off += 4) same_word("material channel", &o->m_matChannels[i], &r->m_matChannels[i], off);
+        }
+    }
+    if (o->m_animations && r->m_animations) {
+        same_anim_set(o->m_animations, r->m_animations);
+        if ((o->m_flags & AtSceneActor::kOwnsAnimDatabase) && (r->m_flags & AtSceneActor::kOwnsAnimDatabase)) same_database("animation database", o->m_animations->m_database, r->m_animations->m_database);
+    }
+    if (k == kAtActorJointedModel) {
+        const AtSceneJointedModelActor* x = (const AtSceneJointedModelActor*)o;
+        const AtSceneJointedModelActor* y = (const AtSceneJointedModelActor*)r;
+        same_anim_set(&x->m_joints, &y->m_joints);
+        if ((x->m_flags & AtSceneJointedModelActor::kOwnsJointDatabase) && (y->m_flags & AtSceneJointedModelActor::kOwnsJointDatabase)) same_database("joint database", x->m_joints.m_database, y->m_joints.m_database);
+    }
+}
+
+static unsigned g_nodes_seen, g_files, g_actors_seen, g_files_clean, g_real_actors, g_double_actors;
+static bool g_last_load_clean, g_last_load_doubles;
 
 static void same_scene(const char* what, const AtScene* o, const AtScene* r) {
     g_recording = false;
@@ -639,7 +840,7 @@ static void same_scene(const char* what, const AtScene* o, const AtScene* r) {
     eq("scale count", a.m_scaledCount, b.m_scaledCount);
     eq("rot array", a.m_rotTrans != nullptr, b.m_rotTrans != nullptr);
     eq("scale array", a.m_scaled != nullptr, b.m_scaled != nullptr);
-    eq("database +2C", a.m_unknown2C, b.m_unknown2C);
+    same_ptr("database +2C", a.m_unknown2C, b.m_unknown2C);
     eq("extra", a.m_extra, b.m_extra);
     eq("next matrix", a.m_nextMatrix, b.m_nextMatrix);
     for (unsigned off = 0x4C; off < 0xF4; off += 4) {
@@ -673,7 +874,21 @@ static void same_scene(const char* what, const AtScene* o, const AtScene* r) {
     if (o->m_nodeCount == r->m_nodeCount) nodes(o->m_nodes, r->m_nodes, o->m_nodeCount, 0x6C);
     if (o->m_modifierNodeCount == r->m_modifierNodeCount) nodes(o->m_modifierNodes, r->m_modifierNodes, o->m_modifierNodeCount, 0x70);
     for (int k = 0; k < kAtActorKinds; k++) {
-        if (dword(o, kActorFields[k].count) == dword(r, kActorFields[k].count)) nodes(raw(o, kActorFields[k].array), raw(r, kActorFields[k].array), dword(o, kActorFields[k].count), kSizes[k]);
+        if (dword(o, kActorFields[k].count) == dword(r, kActorFields[k].count)) {
+            nodes(raw(o, kActorFields[k].array), raw(r, kActorFields[k].array), dword(o, kActorFields[k].count), kSizes[k]);
+            if (is_actor_kind(k) && raw(o, kActorFields[k].array) && raw(r, kActorFields[k].array)) {
+                for (unsigned i = 0; i < dword(o, kActorFields[k].count); i++) same_actor(k, actor_at(o, k, i), actor_at(r, k, i));
+            }
+        }
+    }
+    // The databases other files would have made: a jointed actor attaches their roots to itself.
+    if (g_dbs[0].size() == g_dbs[1].size()) {
+        for (size_t i = 0; i < g_dbs[0].size(); i++) {
+            const AtCoordSysDatabase* x = g_dbs[0][i];
+            const AtCoordSysDatabase* y = g_dbs[1][i];
+            for (unsigned e = 0; e < x->m_rotTransCount; e++) same_cs(&x->m_rotTrans[e], &y->m_rotTrans[e], sizeof(AtRotTransCoordSys));
+            for (unsigned e = 0; e < x->m_scaledCount; e++) same_cs(&x->m_scaled[e], &y->m_scaled[e], sizeof(AtScaleCoordSys));
+        }
     }
     compare_side_effects(what);
 }
@@ -737,8 +952,16 @@ static void run_text(const std::vector<unsigned char>& data, const std::string& 
         g_hash[0] = g_hash[1] = 0;
         return;
     }
+    // The file's name is logged on opening. Anything more was a report.
+    g_last_load_clean = !std::strcmp(g_message[1], "ART\\THING.ASN|");
     same_scene("load", o, r);
-    for (int k = 0; k < kAtActorKinds; k++) g_actors_seen += dword(r, kActorFields[k].count);
+    g_last_load_doubles = false;
+    for (int k = 0; k < kAtActorKinds; k++) {
+        const unsigned count = dword(r, kActorFields[k].count);
+        g_actors_seen += count;
+        if (k == kAtActorModel || k == kAtActorJointedModel) g_real_actors += count;
+        else if (count) { g_double_actors += count; g_last_load_doubles = true; }
+    }
     // Over what is there.
     oc = guarded([&] { load_o(o); });
     g_recording = false;
@@ -853,6 +1076,14 @@ static void run_written() {
          }) {
         run_text(bytes(t), t, 0xCD, false);
     }
+    // Attaching to a real jointed actor's own joints, in databases of several shapes: what is attached is told it moved.
+    for (int i = 0; i < 12; i++) {
+        const std::string db = "Db" + std::to_string(i);
+        for (const std::string& word : {std::string("AttachNodeToThisJoint \"Target\" \"\" \"Joint\""), std::string("CollisionEnable")}) {
+            const std::string t = one("JointedModelActor", "RotTransCoordSys", "CoordSysDatabase \"" + db + "\"\n" + word);
+            run_text(bytes(t), t, 0xCD, true);
+        }
+    }
     // The modifier node's words.
     for (const char* b : {"Modifier \"Mod\" \"\"", "Modifier \"Mod\" \"Space\"", "Modifier \"XGone\" \"\"", "Modifier \"Mod\" \"XNone\"", "ModificationEnable", "ModificationDisable", "ModificationEnable\nModificationDisable", "ModificationEnable\nPosition 1 2 3"}) {
         const std::string t = one("ModifierNode", "RotTransCoordSys", b);
@@ -876,6 +1107,15 @@ static void set_heaps(void* scene, void* node, void* db) {
     AtSceneNode::s_heap = node;
     *(void**)(uintptr_t)0x002C6344 = db;
     AtCoordSysDatabase::s_heap = db;
+}
+static int g_heap_actor, g_heap_set, g_heap_blend;
+static void set_actor_heaps(void* actor, void* set, void* blend) {
+    *(void**)(uintptr_t)0x002C7F5C = actor;
+    AtSceneActor::s_heap = actor;
+    *(void**)(uintptr_t)0x002C9C0C = set;
+    AtSceneAnimSet::s_heap = set;
+    *(void**)(uintptr_t)0x002C63D8 = blend;
+    AtSceneAnimBlend::s_heap = blend;
 }
 
 static void run_shortages() {
@@ -1027,7 +1267,7 @@ static void run_coordsys(unsigned seed, unsigned ops) {
                 break;
             case 16:
                 // Everything a reset clears, made to show, including the fields only a reset writes.
-                if (n % 40 == 0) { s[i]->m_unknown10 = 5; s[i]->m_unknown1C = 6; s[i]->m_unknown20 = 7; s[i]->Reset(); }
+                if (n % 40 == 0) { s[i]->m_unknown10 = (AtMatrix*)(uintptr_t)5; s[i]->m_unknown1C = (AtMatrix*)(uintptr_t)6; s[i]->m_unknown20 = 7; s[i]->Reset(); }
                 break;
             }
         }
@@ -1277,7 +1517,7 @@ static void run_database() {
         eq("pool", o->m_pool == &g_pool[0], r->m_pool == &g_pool[1]);
         eq("rot count", o->m_rotTransCount, r->m_rotTransCount);
         eq("scale count", o->m_scaledCount, r->m_scaledCount);
-        eq("+2C", o->m_unknown2C, r->m_unknown2C);
+        same_ptr("+2C", o->m_unknown2C, r->m_unknown2C);
         eq("extra", o->m_extra, r->m_extra);
         eq("next", o->m_nextMatrix, r->m_nextMatrix);
         eq("rot", o->m_rotTrans != nullptr, r->m_rotTrans != nullptr);
@@ -1720,7 +1960,7 @@ struct Reader {
 class SpyParent : public AtCoordSys {
 public:
     int side = 0;
-    void Detach(AtCoordSys* child) override { note(side, 'z', (uint32_t)(child->m_unknown10)); }
+    void Detach(AtCoordSys* child) override { note(side, 'z', (uint32_t)(uintptr_t)(child->m_unknown10)); }
 };
 
 static void run_alone() {
@@ -1813,6 +2053,39 @@ static void run_alone() {
         compare_side_effects("finish");
     }
 
+    // The sphere asks through the slot, not of its own field. No real class has that slot of its own and this reader, now the actors have theirs, so a spy on each side.
+    {
+        static AtCoordSys* spy_cs[2];
+        struct Spy {
+            static AtCoordSys* __fastcall Original(void*, void*) { return spy_cs[0]; }
+        };
+        class SpyNode : public AtSceneNode {
+        public:
+            AtCoordSys* ParentCoordSys() override { return spy_cs[1]; }
+        };
+        static const void* table[32];
+        for (int i = 0; i < 32; i++) table[i] = *(const void**)(uintptr_t)(0x002765A0 + i * 4);
+        table[5] = (const void*)Spy::Original;
+        spy_cs[0] = make_cs(0);
+        spy_cs[1] = make_cs(1);
+        mix((Mat*)spy_cs[0]->m_world, 'y', 1, 2, 3);
+        mix((Mat*)spy_cs[1]->m_world, 'y', 1, 2, 3);
+        AtCoordSys* own[2] = {make_cs(0), make_cs(1)};
+        char* a = make(0, 0);
+        *(const void***)a = table;
+        SpyNode* b = new SpyNode;
+        for (int side = 0; side < 2; side++) {
+            AtSceneNode* x = side ? (AtSceneNode*)b : (AtSceneNode*)a;
+            x->m_sphere.center.x = 1.5f; x->m_sphere.center.y = 2.5f; x->m_sphere.center.z = 3.5f; x->m_sphere.radius = 4.5f;
+            x->m_coordSys = own[side];
+        }
+        { On on(0); at<Fn0>(0x00049F30)(a, nullptr); }
+        { On on(1); ((AtSceneNode*)b)->FinishBody(); }
+        g_recording = false;
+        for (unsigned i = 0; i < 3; i++) eq("sphere through the slot", bits((&((AtSceneNode*)a)->m_worldSphere.center.x)[i]), bits((&b->m_worldSphere.center.x)[i]));
+        compare_side_effects("finish, through the slot");
+    }
+
     // One word by itself: nothing after BoundingSphere to hide what it wrote.
     {
         char* a[1] = {make(0, 0)};
@@ -1897,8 +2170,8 @@ static void run_alone() {
         spy[1].side = 1;
         for (AtCoordSysDatabase* d : {o, r}) {
             const int side = d == r ? 1 : 0;
-            d->m_rotTrans[0].m_unknown10 = 1;
-            d->m_scaled[0].m_unknown10 = 2;
+            d->m_rotTrans[0].m_unknown10 = (AtMatrix*)(uintptr_t)1;
+            d->m_scaled[0].m_unknown10 = (AtMatrix*)(uintptr_t)2;
             d->m_rotTrans[0].m_parent = &spy[side];
             d->m_scaled[0].m_parent = &spy[side];
         }
@@ -1994,7 +2267,19 @@ static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
     return EXCEPTION_CONTINUE_SEARCH;
 }
 
-int main(int argc, char** argv) {
+static void run_scene_tests() {
+    run_small(); std::printf("run_small done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    run_owner(); std::printf("run_owner done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    run_database(); std::printf("run_database done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    run_alone(); std::printf("run_alone done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    run_nodes(); std::printf("run_nodes done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    for (unsigned seed = 1; seed <= 20; seed++) run_coordsys(seed, 2000);
+    std::printf("run_coordsys done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    run_written(); std::printf("run_written done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    run_shortages(); std::printf("run_shortages done: %llu comparisons, %d differences\n", g_checks, g_failures);
+}
+
+static int oracle_main(int argc, char** argv, void (*tests)()) {
     AddVectoredExceptionHandler(0, on_crash);
     setvbuf(stdout, nullptr, _IONBF, 0);
     const char* entries = nullptr;
@@ -2013,7 +2298,9 @@ int main(int argc, char** argv) {
     redirect(0x00011070, (const void*)o_fatal2);
     redirect(0x00011170, (const void*)o_raise);
     at<void(__cdecl*)()>(0x00125BC7)();
-    install_kind<0>(); install_kind<1>(); install_kind<2>(); install_kind<3>(); install_kind<4>(); install_kind<5>(); install_kind<6>(); install_kind<7>(); install_kind<8>();
+    // Kinds 0 and 1 are the real classes.
+    install_kind<2>(); install_kind<3>(); install_kind<4>(); install_kind<5>(); install_kind<6>(); install_kind<7>(); install_kind<8>();
+    redirect(0x0005F130, (const void*)o_data_link);
     set_tables();
     if (entries && !arm_entries(entries)) return 2;
 
@@ -2036,18 +2323,11 @@ int main(int argc, char** argv) {
     GmNameMap::s_heap = &g_heap_file;
     GmNameSpaceDb::s_heap = &g_heap_file;
     set_heaps(&g_heap_scene, &g_heap_node, &g_heap_db);
+    set_actor_heaps(&g_heap_actor, &g_heap_set, &g_heap_blend);
 
     g_heap_pad = 0x1000;
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.
-    run_small(); std::printf("run_small done: %llu comparisons, %d differences\n", g_checks, g_failures);
-    run_owner(); std::printf("run_owner done: %llu comparisons, %d differences\n", g_checks, g_failures);
-    run_database(); std::printf("run_database done: %llu comparisons, %d differences\n", g_checks, g_failures);
-    run_alone(); std::printf("run_alone done: %llu comparisons, %d differences\n", g_checks, g_failures);
-    run_nodes(); std::printf("run_nodes done: %llu comparisons, %d differences\n", g_checks, g_failures);
-    for (unsigned seed = 1; seed <= 20; seed++) run_coordsys(seed, 2000);
-    std::printf("run_coordsys done: %llu comparisons, %d differences\n", g_checks, g_failures);
-    run_written(); std::printf("run_written done: %llu comparisons, %d differences\n", g_checks, g_failures);
-    run_shortages(); std::printf("run_shortages done: %llu comparisons, %d differences\n", g_checks, g_failures);
+    tests();
 
     std::string dir = pos[1];
     FILE* index = nullptr;
@@ -2065,9 +2345,15 @@ int main(int argc, char** argv) {
         std::fclose(f);
         run_text(data, line, 0xCD, false);
         g_files++;
+        if (g_last_load_clean && !g_last_load_doubles) g_files_clean++;
     }
     std::fclose(index);
     report_entries();
+    std::printf("real classes: %u files of %u held no double and reported nothing; %u model and jointed actors, %llu words of what they own compared; %u actors of classes still doubles\n", g_files_clean, g_files, g_real_actors, g_actor_words, g_double_actors);
     std::printf("%s: %u files, %u nodes seen, %u actors; %llu comparisons, %d differences\n", g_failures ? "DIFFERENT" : "NO DIFFERENCE OBSERVED", g_files, g_nodes_seen, g_actors_seen, g_checks, g_failures);
     return g_failures ? 1 : 0;
 }
+
+#ifndef ORACLE_ACTOR
+int main(int argc, char** argv) { return oracle_main(argc, argv, run_scene_tests); }
+#endif

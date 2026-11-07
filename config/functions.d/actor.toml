@@ -1,0 +1,528 @@
+# The actor base, ModelActor and JointedModelActor of a scene. See include/at/AtSceneActor.h. Sizes are from the disassembly.
+
+[[function]]
+va = 0x00026E50
+size = 924
+symbol = "?CopyFrom@AtCoordSysDatabase@@QAEXPAVAtMatrixDevice@@PAV1@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called by 0x00056260 and 0x0004B6E0; the same shape as 0x00026920, element by element from the source"
+
+[[function]]
+va = 0x000320A0
+size = 22
+symbol = "??0AtSceneAnimBlend@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "clears six words; called for +0x0C of a set"
+
+[[function]]
+va = 0x00032860
+size = 171
+symbol = "?CopyFromDatabase@AtCoordSys@@QAEXPAVAtCoordSysDatabase@@0PBV1@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "the parent found by address in the source, by index in the copy"
+
+[[function]]
+va = 0x00032C50
+size = 27
+symbol = "?CopyFromDatabase@AtScaleCoordSys@@QAEXPAVAtCoordSysDatabase@@0I@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "index by 0x34 in +0x28 of the source, then 0x00032860"
+
+[[function]]
+va = 0x000332F0
+size = 32
+symbol = "?CopyFromDatabase@AtRotTransCoordSys@@QAEXPAVAtCoordSysDatabase@@0I@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "index by 0x28 in +0x24 of the source, then 0x00032860"
+
+[[function]]
+va = 0x00033C70
+size = 10
+symbol = "?SetHeap@AtSceneAnimBlend@@SAXPAX@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "writes 0x002C63D8, the heap of 0x00034310"
+
+[[function]]
+va = 0x00033C80
+size = 94
+symbol = "?Reset@AtSceneAnimBlend@@QAEXXZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "clears the first word of each element"
+
+[[function]]
+va = 0x00033CE0
+size = 73
+symbol = "?Clear@AtSceneAnimBlend@@QAEXXZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "frees the three arrays of 0x00034310"
+
+[[function]]
+va = 0x00034310
+size = 493
+symbol = "?Allocate@AtSceneAnimBlend@@QAEXPBVAtCoordSysDatabase@@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "three arrays: 0x14 and 0x10 for each of the database +0x1C, 0x10 for each of +0x20"
+
+[[function]]
+va = 0x0003B850
+size = 87
+symbol = "??_GAtSceneModelActor@@UAEPAXI@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable 0x00276620 slot 7; size 0xA0"
+
+[[function]]
+va = 0x0003B8B0
+size = 87
+symbol = "??_GAtSceneJointedModelActor@@UAEPAXI@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable 0x002766D0 slot 7; size 0xCC"
+
+[[function]]
+va = 0x00049900
+size = 24
+symbol = "?AddChild@AtSceneNode@@QAEXPAV1@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/actor"
+evidence = "called by 0x0004BB44; the same lines as inside 0x0004A210"
+
+[[function]]
+va = 0x0004AFE0
+size = 5
+symbol = "?Read@AtSceneModelActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 10; a jump to 0x00055C20"
+
+[[function]]
+va = 0x0004B0A0
+size = 13
+symbol = "?SetMesh@AtSceneModelActor@@UAEXPAX@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 43; stores +0x98"
+
+[[function]]
+va = 0x0004B0B0
+size = 38
+symbol = "??0AtSceneModelActor@@QAE@XZ"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "writes vftable 0x00276620 and class 2; calls 0x00055DB0"
+
+[[function]]
+va = 0x0004B0E0
+size = 24
+symbol = "?Clear@AtSceneModelActor@@UAEXXZ"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 11; calls 0x00055E00, clears +0x98 and +0x9C"
+
+[[function]]
+va = 0x0004B100
+size = 197
+symbol = "?ReadBody@AtSceneModelActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 1; word 113, Mesh, and the physics words; the rest to 0x00056500"
+
+[[function]]
+va = 0x0004B5E0
+size = 99
+symbol = "??1AtSceneModelActor@@UAE@XZ"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "writes vftable 0x00276620; calls 0x00055E00 and 0x000564B0"
+
+[[function]]
+va = 0x0004B650
+size = 42
+symbol = "?Read@AtSceneJointedModelActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 10; calls 0x0004AFE0, then 0x00059A80 on +0xA0"
+
+[[function]]
+va = 0x0004B680
+size = 93
+symbol = "??0AtSceneJointedModelActor@@QAE@XZ"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "writes vftable 0x002766D0 and class 3; +0xA0 through 0x00059AB0"
+
+[[function]]
+va = 0x0004B6E0
+size = 219
+symbol = "?CopyJointDatabase@AtSceneJointedModelActor@@QAEPAVAtCoordSysDatabase@@PAV2@@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "word 67; sets bit 0x40000, makes 0x38 bytes through 0x000268F0, calls 0x00026E50, attaches its +0x2C"
+
+[[function]]
+va = 0x0004B7C0
+size = 86
+symbol = "?Clear@AtSceneJointedModelActor@@UAEXXZ"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 11"
+
+[[function]]
+va = 0x0004B9E0
+size = 539
+symbol = "?ReadBody@AtSceneJointedModelActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 1; words 66, 67, 68, 119, 120, 121, 168 to 170, and a check on 93 and 94"
+
+[[function]]
+va = 0x0004C040
+size = 95
+symbol = "??1AtSceneJointedModelActor@@UAE@XZ"
+source = "src/at/AtSceneModelActor.cpp"
+subsystem = "at/actor"
+evidence = "writes vftable 0x002766D0; calls 0x0004B7C0, 0x0005A2C0, 0x0004B5E0"
+
+[[function]]
+va = 0x00055930
+size = 64
+symbol = "?AsActor@AtSceneActor@@SAPAV1@PAVAtSceneNode@@@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "the original messages name the cast; accepts classes 1 to 13"
+
+[[function]]
+va = 0x00055B70
+size = 10
+symbol = "?SetHeap@AtSceneActor@@SAXPAX@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "writes 0x002C7F5C, the heap every actor allocation pushes; called at 0x000C71A0 beside the other heap setters"
+
+[[function]]
+va = 0x00055B80
+size = 79
+symbol = "?ReadHeader@AtSceneActor@@UAEXPAVAtScene@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 0; word 59, ScaleCoordSys"
+
+[[function]]
+va = 0x00055BD0
+size = 14
+symbol = "?CoordSys@AtSceneActor@@UAEPAVAtCoordSys@@XZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 4"
+
+[[function]]
+va = 0x00055BE0
+size = 31
+symbol = "?ParentCoordSys@AtSceneActor@@UAEPAVAtCoordSys@@XZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 5"
+
+[[function]]
+va = 0x00055C00
+size = 26
+symbol = "?FinishHeader@AtSceneActor@@UAEXXZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 6; attaches +0x80 under +0x34"
+
+[[function]]
+va = 0x00055C20
+size = 46
+symbol = "?Read@AtSceneActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 10; calls 0x000499F0 then 0x00059A80 on +0x8C"
+
+[[function]]
+va = 0x00055C50
+size = 28
+symbol = "?ShareCoordSys@AtSceneActor@@UAEXPAV1@@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 32; releases its own, takes +0x34 of the argument, stores it at +0x90"
+
+[[function]]
+va = 0x00055C70
+size = 12
+symbol = "?StopSharingCoordSys@AtSceneActor@@UAEXXZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 33; clears +0x90 and +0x34"
+
+[[function]]
+va = 0x00055CE0
+size = 169
+symbol = "?EnsureAnimations@AtSceneActor@@QAEPAVAtSceneAnimSet@@XZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "called by 0x00056500 before each animation word; makes 0x28 bytes through 0x00059AB0"
+
+[[function]]
+va = 0x00055DB0
+size = 74
+symbol = "??0AtSceneActor@@QAE@XZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "writes vftable 0x00276FA8 and class 1; calls the node constructor 0x0004A740"
+
+[[function]]
+va = 0x00055E00
+size = 300
+symbol = "?Clear@AtSceneActor@@UAEXXZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 11; frees what the reader made, calls 0x0004AF30"
+
+[[function]]
+va = 0x00056260
+size = 183
+symbol = "?CopyAnimDatabase@AtSceneActor@@QAEPAVAtCoordSysDatabase@@PAV2@@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "word 131; sets bit 0x8000, makes 0x38 bytes through 0x000268F0, calls 0x00026E50"
+
+[[function]]
+va = 0x00056320
+size = 195
+symbol = "?FinishBody@AtSceneActor@@UAEXXZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 2; transforms the sphere, radius by the largest of the scale"
+
+[[function]]
+va = 0x000564B0
+size = 79
+symbol = "??1AtSceneActor@@UAE@XZ"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "writes vftable 0x00276FA8, calls 0x00055E00 and the node destructor 0x0004AFD0"
+
+[[function]]
+va = 0x00056500
+size = 1240
+symbol = "?ReadBody@AtSceneActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable slot 1; jump table over the words of the keyword table 0x002B1990"
+
+[[function]]
+va = 0x00056D80
+size = 30
+symbol = "??_GAtSceneActor@@UAEPAXI@Z"
+source = "src/at/AtSceneActor.cpp"
+subsystem = "at/actor"
+evidence = "vftable 0x00276FA8 slot 7; calls 0x000564B0 then frees"
+
+[[function]]
+va = 0x00059A70
+size = 10
+symbol = "?SetHeap@AtSceneAnimSet@@SAXPAX@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "writes 0x002C9C0C, the heap of 0x00059B30; called at 0x000C71B6"
+
+[[function]]
+va = 0x00059A80
+size = 35
+symbol = "?PrepareBlend@AtSceneAnimSet@@QAEXH@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called with 0 after each read; calls 0x00034310 unless one channel or no database"
+
+[[function]]
+va = 0x00059AB0
+size = 28
+symbol = "??0AtSceneAnimSet@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called for +0xA0 of a jointed actor and for the 0x28 bytes of 0x00055CE0"
+
+[[function]]
+va = 0x00059AD0
+size = 83
+symbol = "?ReadDatabase@AtSceneAnimSet@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "words 66 and 130; looks in the device at +0x30C"
+
+[[function]]
+va = 0x00059B30
+size = 305
+symbol = "?ReadChannels@AtSceneAnimSet@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "words 68 and 133, whose number it takes; 0x3C bytes each, through 0x0005A720 and 0x0005A750"
+
+[[function]]
+va = 0x00059D70
+size = 56
+symbol = "?Clear@AtSceneAnimSet@@QAEXXZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called from the Clear of an actor and of a jointed actor"
+
+[[function]]
+va = 0x0005A2C0
+size = 107
+symbol = "??1AtSceneAnimSet@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called for the same two"
+
+[[function]]
+va = 0x0005A720
+size = 33
+symbol = "??0AtSceneAnimChannel@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called for each of the array of 0x00059B30"
+
+[[function]]
+va = 0x0005A750
+size = 560
+symbol = "?Read@AtSceneAnimChannel@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "words 69 to 72, 99, 100, 124 to 126, 134"
+
+[[function]]
+va = 0x0005B710
+size = 14
+symbol = "?Rewind@AtScenePlayback@@QAEXXZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "flags 1, time 0; called by both SetAnimation"
+
+[[function]]
+va = 0x0005BAA0
+size = 19
+symbol = "??0AtSceneMatPlayback@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "clears four words through 0x0017AED0, and +0x10"
+
+[[function]]
+va = 0x0005BAC0
+size = 21
+symbol = "?SetAnimation@AtSceneMatPlayback@@QAEXPAUAtSceneMatAnimation@@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called by 0x0005EE50 with what word 110 found"
+
+[[function]]
+va = 0x0005EE30
+size = 20
+symbol = "??0AtSceneMatChannel@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "passed to 0x00011000 by word 109, size 0x1C"
+
+[[function]]
+va = 0x0005EE50
+size = 339
+symbol = "?Read@AtSceneMatChannel@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "word 109 with words 72, 80, 110"
+
+[[function]]
+va = 0x0005EFB0
+size = 18
+symbol = "??1AtSceneMatChannel@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called for each of the array by 0x00055E00"
+
+[[function]]
+va = 0x0005FD30
+size = 37
+symbol = "??0AtSceneAnimPlayback@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called by 0x0005A720; four ones as floats from +0x18"
+
+[[function]]
+va = 0x0005FD60
+size = 28
+symbol = "?SetAnimation@AtSceneAnimPlayback@@QAEXPAUAtSceneAnimation@@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "called by 0x0005A750 with what word 69 found"
+
+[[function]]
+va = 0x0005FF90
+size = 17
+symbol = "??1AtSceneMatPlayback@@QAE@XZ"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "clears four words through 0x000B9A90, and +0x10"
+
+[[function]]
+va = 0x00082690
+size = 9
+symbol = "?SetDatabase@AtSceneAnimSet@@QAEXPAVAtCoordSysDatabase@@@Z"
+source = "src/at/AtSceneAnimation.cpp"
+subsystem = "at/actor"
+evidence = "stores its argument at +0, called on the set by words 67, 121, 131, 132. Its other callers, if any, are not looked at"
+
+[[vtable]]
+va = 0x00276FA8
+slots = 43
+symbol = "??_7AtSceneActor@@6B@"
+source = "src/at/AtSceneActor.cpp"
+
+[[vtable]]
+va = 0x00276620
+slots = 44
+symbol = "??_7AtSceneModelActor@@6B@"
+source = "src/at/AtSceneModelActor.cpp"
+
+[[vtable]]
+va = 0x002766D0
+slots = 44
+symbol = "??_7AtSceneJointedModelActor@@6B@"
+source = "src/at/AtSceneModelActor.cpp"
+
+[symbols]
+"?s_heap@AtSceneActor@@2PAXA" = 0x002C7F5C
+"?s_heap@AtSceneAnimSet@@2PAXA" = 0x002C9C0C
+"?s_heap@AtSceneAnimBlend@@2PAXA" = 0x002C63D8
+"__purecall" = 0x00125F25
+"?Slot12@AtSceneActor@@UAEXXZ" = 0x000561B0  # vftable slots from here on: not recovered
+"?Slot16@AtSceneActor@@UAEXXZ" = 0x00055CA0
+"?Slot17@AtSceneActor@@UAEXXZ" = 0x00055CC0
+"?Slot18@AtSceneActor@@UAEXXZ" = 0x00055C80
+"?Slot35@AtSceneActor@@UAEXXZ" = 0x00055F30
+"?Slot36@AtSceneActor@@UAEXXZ" = 0x00056AB0
+"?Slot37@AtSceneActor@@UAEXXZ" = 0x00055FE0
+"?Slot40@AtSceneActor@@UAEXXZ" = 0x00055D90
+"?Slot41@AtSceneActor@@UAEXXZ" = 0x00055D90
+"?Slot42@AtSceneActor@@UAEXXZ" = 0x000447F0
+"?Slot12@AtSceneModelActor@@UAEXXZ" = 0x0004B090
+"?Slot14@AtSceneModelActor@@UAEXXZ" = 0x0004B310
+"?Slot15@AtSceneModelActor@@UAEXXZ" = 0x0004B3E0
+"?Slot34@AtSceneModelActor@@UAEXXZ" = 0x0004B5D0
+"?Slot38@AtSceneModelActor@@UAEXXZ" = 0x0004E5C0
+"?Slot39@AtSceneModelActor@@UAEXXZ" = 0x0004B220
+"?Slot42@AtSceneModelActor@@UAEXXZ" = 0x0004B270
+"?Slot12@AtSceneJointedModelActor@@UAEXXZ" = 0x0004B820
+"?ShareCoordSys@AtSceneJointedModelActor@@UAEXPAVAtSceneActor@@@Z" = 0x0004B940
+"?StopSharingCoordSys@AtSceneJointedModelActor@@UAEXXZ" = 0x0004B990
+"?Slot38@AtSceneJointedModelActor@@UAEXXZ" = 0x0004BDE0
+"?Slot39@AtSceneJointedModelActor@@UAEXXZ" = 0x0004BE70
+"?Slot42@AtSceneJointedModelActor@@UAEXXZ" = 0x0004BEB0
