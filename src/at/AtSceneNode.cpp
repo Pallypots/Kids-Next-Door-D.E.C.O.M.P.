@@ -716,7 +716,7 @@ void* AtNameTableOwner::FindBoundingGeometry(const char* name, const char* ns) {
     return m_geometry.Find(name);
 }
 
-void AtNameTableOwner::AddScene(GmNameMap* scene, const char* ns) {
+void AtNameTableOwner::AddToThird(GmNameMap* scene, const char* ns) {
     if (ns != 0) {
         m_nodeSpaces.Add(ns, scene);
     } else {

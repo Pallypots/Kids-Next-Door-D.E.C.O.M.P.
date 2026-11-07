@@ -215,7 +215,7 @@ void AtAudioEmitterDatabase::Read(AtNameTableOwner* owner, AtIoTokenizer* tokeni
             m_owner = owner;
             m_count = count;
             Init(count);
-            m_owner->AddScene(this, group);  // Through the member: if a count of zero was read before, Init has just cleared it, and this crashes in the original too.
+            m_owner->AddToThird(this, group);  // Through the member: if a count of zero was read before, Init has just cleared it, and this crashes in the original too.
             OnReady();
             for (unsigned int i = 0; i < m_count; i++) {
                 char name[8];

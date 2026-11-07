@@ -288,7 +288,7 @@ void AtScene::Read(AtNameTableOwner* owner, AtIoTokenizer* tokenizer) {
         tokenizer->Error(kAtProblemIsEmpty);
     }
     GmNameMap::Init(names);
-    owner->AddScene(this, ns);
+    owner->AddToThird(this, ns);
     token = tokenizer->Next();
     while (token != AtIoTokenizer::kEnd) {
         switch (token) {

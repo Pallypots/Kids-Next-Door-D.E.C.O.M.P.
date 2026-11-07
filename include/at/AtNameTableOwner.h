@@ -15,7 +15,7 @@ struct AtNameTableOwner {
     void AddToFirst(GmNameMap* map, const char* ns);   // 0x00031A30 a null ns means the plain group; an empty one is a name space with an empty name. Holds sound banks. src/at/AtAudioBank.cpp
     void AddToSecond(GmNameMap* map, const char* ns);  // 0x00031A60 the same. Holds sound segments. src/at/AtAudioBank.cpp
     void AddLensFlares(GmNameMap* map, const char* ns); // 0x00040070 the same as AddToFirst, by test of null only. src/at/AtLensFlare.cpp
-    void AddScene(GmNameMap* scene, const char* ns);   // 0x00031A90 the same. Also called from 0x00025360, on what is not established. src/at/AtSceneNode.cpp
+    void AddToThird(GmNameMap* scene, const char* ns);   // 0x00031A90 the same, into the third table, which holds both scenes and, from 0x00025360, lists of sound emitters; a scene owner first named this AddScene. src/at/AtSceneNode.cpp
     // The original has this inline in 0x00031C50. Here an empty ns does mean the plain group, unlike the add methods.
     void* FindInFirst(const char* name, const char* ns) { return ns != 0 && ns[0] != 0 ? m_firstSpaces.Find(ns, name) : m_first.Find(name); }
     AtSceneNode* FindNode(const char* name, const char* ns);       // 0x00045680 ns may be empty or null

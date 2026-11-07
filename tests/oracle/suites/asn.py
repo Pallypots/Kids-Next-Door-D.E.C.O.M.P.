@@ -308,8 +308,8 @@ NODE = [
     ("FindNode: null space", N, "    if (ns != 0 && ns[0] != 0) {\n        return (AtSceneNode*)m_nodeSpaces.Find(ns, name);", "    if (false) {\n        return (AtSceneNode*)m_nodeSpaces.Find(ns, name);"),
     ("FindGeometry: empty space", N, "    if (ns != 0 && ns[0] != 0) {\n        return m_geometrySpaces.Find(ns, name);", "    if (ns != 0) {\n        return m_geometrySpaces.Find(ns, name);"),
     ("FindGeometry: null space", N, "    if (ns != 0 && ns[0] != 0) {\n        return m_geometrySpaces.Find(ns, name);", "    if (false) {\n        return m_geometrySpaces.Find(ns, name);"),
-    ("AddScene: empty space is a space", N, "    if (ns != 0) {\n        m_nodeSpaces.Add(ns, scene);", "    if (ns != 0 && ns[0] != 0) {\n        m_nodeSpaces.Add(ns, scene);"),
-    ("AddScene: plain", N, "        m_nodes.Add(scene);\n", ""),
+    ("AddToThird: empty space is a space", N, "    if (ns != 0) {\n        m_nodeSpaces.Add(ns, scene);", "    if (ns != 0 && ns[0] != 0) {\n        m_nodeSpaces.Add(ns, scene);"),
+    ("AddToThird: plain", N, "        m_nodes.Add(scene);\n", ""),
 ]
 
 SCENE = [
@@ -383,7 +383,7 @@ SCENE = [
     ("Read: motion, not constructed", S, "            AtConstructEach(block, sizeof(AtSceneMotionState), (int)count, ConstructMotionState);\n", ""),
     ("Read: empty names", S, "    if (names < 1) {\n        tokenizer->Error(kAtProblemIsEmpty);\n    }\n", ""),
     ("Read: map size", S, "    GmNameMap::Init(names);\n", "    GmNameMap::Init(names + 1);\n"),
-    ("Read: not added", S, "    owner->AddScene(this, ns);\n", ""),
+    ("Read: not added", S, "    owner->AddToThird(this, ns);\n", ""),
     ("Read: node twice", S, "            if (m_nodeCount != 0) {\n                tokenizer->Error(kAtProblemWrongUse);\n            }\n", ""),
     ("Read: node, no heap", S, "            m_nodeCount = (unsigned int)tokenizer->ExpectCount();\n            CheckHeap();\n", "            m_nodeCount = (unsigned int)tokenizer->ExpectCount();\n"),
     ("Read: node, no memory", S, "            if (m_nodes == 0) {\n                AtRaise(-4, 0, 0, 0);\n            }\n", ""),

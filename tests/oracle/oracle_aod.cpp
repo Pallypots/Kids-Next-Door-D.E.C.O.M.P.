@@ -338,10 +338,10 @@ static void same_emitter(const AtSoXboxEmitter& x, const AtSoXboxEmitter& y) {
     eq("emitter's parent", x.m_parent != nullptr, y.m_parent != nullptr);
     eq("emitter's sibling", x.m_nextSibling != nullptr, y.m_nextSibling != nullptr);
     eq("emitter's child", x.m_firstChild != nullptr, y.m_firstChild != nullptr);
-    eq("emitter's +10", x.m_unknown10, y.m_unknown10);
+    eq("emitter's +10", (uintptr_t)x.m_drawingLocal, (uintptr_t)y.m_drawingLocal);
     eq("emitter's local", mat_id(0, x.m_local), mat_id(1, y.m_local));
     eq("emitter's world", mat_id(0, x.m_world), mat_id(1, y.m_world));
-    eq("emitter's +1C", x.m_unknown1C, y.m_unknown1C);
+    eq("emitter's +1C", (uintptr_t)x.m_drawingWorld, (uintptr_t)y.m_drawingWorld);
     eq("emitter's +20", x.m_unknown20, y.m_unknown20);
     eq("emitter's dirty", x.m_dirty, y.m_dirty);
     eq("emitter's owner", x.m_owner == g_own[0], y.m_owner == g_own[1]);
@@ -1290,8 +1290,8 @@ static void run_emitter_alone() {
             x->m_unknown54 = 54;
             x->m_local = (shape == 3) ? nullptr : (AtMatrix*)&g_mats[side][1];
             x->m_world = (shape == 5) ? nullptr : (AtMatrix*)&g_mats[side][2];
-            x->m_unknown10 = 10;
-            x->m_unknown1C = 11;
+            x->m_drawingLocal = (AtMatrix*)(uintptr_t)10;
+            x->m_drawingWorld = (AtMatrix*)(uintptr_t)11;
             x->m_unknown20 = 12;
             x->m_dirty = 0x40;
         }

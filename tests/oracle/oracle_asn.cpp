@@ -1467,7 +1467,7 @@ static void run_owner() {
         a.Init(1);
         b.Init(1);
         { On on(0); at<void(__fastcall*)(void*, void*, void*, const char*)>(0x00031A90)(g_own[0], nullptr, &a, ns); }
-        { On on(1); g_own[1]->AddScene(&b, ns); }
+        { On on(1); g_own[1]->AddToThird(&b, ns); }
         eq("added plainly", a.m_group == &g_own[0]->m_nodes, b.m_group == &g_own[1]->m_nodes);
         eq("added", a.m_group != nullptr, b.m_group != nullptr);
         eqs("added to", group_name(a.m_group).c_str(), group_name(b.m_group).c_str());
