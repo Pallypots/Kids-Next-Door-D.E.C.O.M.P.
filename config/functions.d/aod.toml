@@ -1,0 +1,588 @@
+# The .AOD and .AOE files and the Xbox sound classes. Names inferred, except AtSoXboxEmitter and AtSoXboxXactBank. See include/at/AtAudioDatabase.h.
+
+[[function]]
+va = 0x00018A90
+size = 10
+symbol = "?SetHeap@AtAudioDatabase@@SAXPAX@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "stores 0x002C627C, the heap 0x0010E9E0 pushes"
+
+[[function]]
+va = 0x00018AA0
+size = 26
+symbol = "??0AtAudioDatabase@@QAE@XZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x00272194; called by 0x0010E873"
+
+[[function]]
+va = 0x00018AC0
+size = 1374
+symbol = "?Load@AtAudioDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "opens name + AOD; keyword table 0x002B0140; ret 0xC"
+
+[[function]]
+va = 0x00019030
+size = 217
+symbol = "?LoadLists@AtAudioDatabase@@QAEXPAUAtNameTableOwner@@H@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "calls 0x00025A90, 0x00025640, 0x00025450, 0x00018AC0 on slots 6 to 9"
+
+[[function]]
+va = 0x00019110
+size = 18
+symbol = "?Clear@AtAudioDatabase@@UAEXXZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x00272194 slot 5; also in vftables 0x0027629C, 0x002865EC"
+
+[[function]]
+va = 0x00019130
+size = 24
+symbol = "??1AtAudioDatabase@@UAE@XZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "called by 0x0010EB4A, last in that destructor"
+
+[[function]]
+va = 0x00019150
+size = 48
+symbol = "??_GAtAudioDatabase@@UAEPAXI@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x00272194 slot 4"
+
+[[function]]
+va = 0x000252F0
+size = 10
+symbol = "?SetHeap@AtAudioEmitterDatabase@@SAXPAX@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "stores 0x002C6330, the heap 0x0010F1E0 pushes"
+
+[[function]]
+va = 0x00025300
+size = 11
+symbol = "??1AtAudioEmitterDatabase@@UAE@XZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x00272EC4 and jumps to the map's destructor"
+
+[[function]]
+va = 0x00025320
+size = 26
+symbol = "??0AtAudioEmitterDatabase@@QAE@XZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x00272EC4; called by 0x0010F323"
+
+[[function]]
+va = 0x00025340
+size = 30
+symbol = "??_GAtAudioEmitterDatabase@@UAEPAXI@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x00272EC4 slot 0"
+
+[[function]]
+va = 0x00025360
+size = 239
+symbol = "?Read@AtAudioEmitterDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "keyword table 0x002B049C; called by 0x000254B8"
+
+[[function]]
+va = 0x00025450
+size = 154
+symbol = "?Load@AtAudioEmitterDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "opens name + AOE; called from 0x000190C5 on slot 8's result"
+
+[[function]]
+va = 0x000E9F30
+size = 18
+symbol = "??0AtSoXboxBankDatabase@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x00288A74 after 0x00025820; passed to the array iterator by 0x0010E9E0"
+
+[[function]]
+va = 0x000EA230
+size = 5
+symbol = "??1AtSoXboxBankDatabase@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "jumps to 0x000256F0; passed to the array iterator by 0x0010E9E0"
+
+[[function]]
+va = 0x0010E5E0
+size = 184
+symbol = "?AllocateSegmentDatabases@AtSoXboxDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 1"
+
+[[function]]
+va = 0x0010E6A0
+size = 84
+symbol = "??_GAtSoXboxSegmentDatabase@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A470 slot 0; size 0x20"
+
+[[function]]
+va = 0x0010E700
+size = 184
+symbol = "?AllocateEmitterDatabases@AtSoXboxDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 2"
+
+[[function]]
+va = 0x0010E7C0
+size = 84
+symbol = "??_GAtSoXboxEmitterDatabase@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A5B4 slot 0; size 0x20"
+
+[[function]]
+va = 0x0010E820
+size = 25
+symbol = "?BankDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioBankDatabase@@I@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 6"
+
+[[function]]
+va = 0x0010E840
+size = 15
+symbol = "?SegmentDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioSegmentDatabase@@I@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 7"
+
+[[function]]
+va = 0x0010E850
+size = 15
+symbol = "?EmitterDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioEmitterDatabase@@I@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 8"
+
+[[function]]
+va = 0x0010E860
+size = 16
+symbol = "?NestedDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioDatabase@@I@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 9"
+
+[[function]]
+va = 0x0010E870
+size = 32
+symbol = "??0AtSoXboxDatabase@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028A448; called by 0x000E9EE7, the system's slot that the .GOD loader calls"
+
+[[function]]
+va = 0x0010E890
+size = 336
+symbol = "?Clear@AtSoXboxDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 5"
+
+[[function]]
+va = 0x0010E9E0
+size = 195
+symbol = "?AllocateBankDatabases@AtSoXboxDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 0; array of 0x20 with 0x000E9F30"
+
+[[function]]
+va = 0x0010EAB0
+size = 84
+symbol = "??_GAtSoXboxBankDatabase@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x00288A74 slot 0; size 0x20"
+
+[[function]]
+va = 0x0010EB10
+size = 79
+symbol = "??1AtSoXboxDatabase@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "called by 0x0010EC5A"
+
+[[function]]
+va = 0x0010EB60
+size = 186
+symbol = "?AllocateNestedDatabases@AtSoXboxDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 3; array of 0x28"
+
+[[function]]
+va = 0x0010EC20
+size = 84
+symbol = "??_GAtSoXboxDatabase@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A448 slot 4; size 0x28"
+
+[[function]]
+va = 0x0010EC80
+size = 261
+symbol = "?CreateBank@AtSoXboxBankDatabase@@UAEXIABUAtAudioBankDesc@@@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x00288A74 slot 2; makes 0x1FC with 0x00120550"
+
+[[function]]
+va = 0x0010ED90
+size = 11
+symbol = "??1AtSoXboxSegmentDatabase@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028A470 and jumps to 0x00025500"
+
+[[function]]
+va = 0x0010EDA0
+size = 195
+symbol = "?OnReady@AtSoXboxSegmentDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A470 slot 2; array of 0x10 with 0x00120650"
+
+[[function]]
+va = 0x0010EE70
+size = 84
+symbol = "??_GAtSoXboxSegment@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B7D8 slot 0; size 0x10"
+
+[[function]]
+va = 0x0010EED0
+size = 110
+symbol = "?Clear@AtSoXboxSegmentDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A470 slot 1"
+
+[[function]]
+va = 0x0010EF40
+size = 15
+symbol = "?SegmentAt@AtSoXboxSegmentDatabase@@UAEPAVAtAudioSegment@@I@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A470 slot 4"
+
+[[function]]
+va = 0x0010EF50
+size = 25
+symbol = "??0AtSoXboxSegmentDatabase@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028A470; passed to the array iterator by 0x0010E5E0"
+
+[[function]]
+va = 0x0010EF70
+size = 11
+symbol = "??1AtSoXboxEmitter@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028A488 and jumps to 0x0011EB60"
+
+[[function]]
+va = 0x0010EF80
+size = 26
+symbol = "??0AtSoXboxEmitter@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028A488; passed to the array iterator by 0x0010F1E0"
+
+[[function]]
+va = 0x0010EFA0
+size = 198
+symbol = "?InitPlatform@AtSoXboxEmitter@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A488 slot 11; the original's message names AtSoXboxEmitter::vInitPlatformSpecific"
+
+[[function]]
+va = 0x0010F070
+size = 71
+symbol = "?Reset@AtSoXboxEmitter@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A488 slot 3"
+
+[[function]]
+va = 0x0010F160
+size = 11
+symbol = "??1AtSoXboxEmitterDatabase@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028A5B4 and jumps to 0x00025300"
+
+[[function]]
+va = 0x0010F170
+size = 111
+symbol = "?Clear@AtSoXboxEmitterDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A5B4 slot 1"
+
+[[function]]
+va = 0x0010F1E0
+size = 195
+symbol = "?OnReady@AtSoXboxEmitterDatabase@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A5B4 slot 2; array of 0x58 with 0x0010EF80"
+
+[[function]]
+va = 0x0010F2B0
+size = 84
+symbol = "??_GAtSoXboxEmitter@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A488 slot 2; size 0x58"
+
+[[function]]
+va = 0x0010F310
+size = 15
+symbol = "?EmitterAt@AtSoXboxEmitterDatabase@@UAEPAVAtAudioEmitter@@I@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028A5B4 slot 3"
+
+[[function]]
+va = 0x0010F320
+size = 25
+symbol = "??0AtSoXboxEmitterDatabase@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028A5B4; passed to the array iterator by 0x0010E700"
+
+[[function]]
+va = 0x0011EB60
+size = 11
+symbol = "??1AtAudioEmitter@@UAE@XZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028B460 and jumps to 0x00032490"
+
+[[function]]
+va = 0x0011EC50
+size = 30
+symbol = "??_GAtAudioEmitter@@UAEPAXI@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B460 slot 2"
+
+[[function]]
+va = 0x0011EC70
+size = 255
+symbol = "?Read@AtAudioEmitter@@UAEXPAVAtAudioEmitterDatabase@@PAVAtIoTokenizer@@PBD2@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B460 slot 10; called through slot 10 by 0x00025434"
+
+[[function]]
+va = 0x0011ED90
+size = 145
+symbol = "?Init@AtAudioEmitter@@UAEXABUAtAudioEmitterDesc@@@Z"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B460 slot 9"
+
+[[function]]
+va = 0x0011EE30
+size = 81
+symbol = "?Reset@AtAudioEmitter@@UAEXXZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B460 slot 3"
+
+[[function]]
+va = 0x0011F1B0
+size = 44
+symbol = "??0AtAudioEmitter@@QAE@XZ"
+source = "src/at/AtAudioDatabase.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028B460; called by 0x0010EF83"
+
+[[function]]
+va = 0x0011F290
+size = 11
+symbol = "??1AtSoXboxXactBank@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028B4D8 and jumps to 0x00125090"
+
+[[function]]
+va = 0x0011F370
+size = 7
+symbol = "?Unknown16@AtSoXboxXactBank@@UAEHXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B4D8 slot 16"
+
+[[function]]
+va = 0x0011F380
+size = 30
+symbol = "??_GAtSoXboxXactBank@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B4D8 slot 0"
+
+[[function]]
+va = 0x0011F3A0
+size = 185
+symbol = "?ClearFields@AtSoXboxXactBank@@QAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "called by 0x00120139 and 0x0012057A"
+
+[[function]]
+va = 0x0011F460
+size = 65
+symbol = "?OnInit@AtSoXboxXactBank@@UAEXABUAtAudioBankDesc@@@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B4D8 slot 1"
+
+[[function]]
+va = 0x001200D0
+size = 118
+symbol = "?Reset@AtSoXboxXactBank@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B4D8 slot 2"
+
+[[function]]
+va = 0x00120550
+size = 51
+symbol = "??0AtSoXboxXactBank@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028B4D8; called by 0x0010ECFA"
+
+[[function]]
+va = 0x00120650
+size = 18
+symbol = "??0AtSoXboxSegment@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028B7D8; passed to the array iterator by 0x0010EDA0"
+
+[[function]]
+va = 0x00120670
+size = 11
+symbol = "??1AtSoXboxSegment@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028B7D8 and jumps to 0x00031B90"
+
+[[function]]
+va = 0x00120680
+size = 5
+symbol = "?Reset@AtSoXboxSegment@@UAEXXZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028B7D8 slot 2; jumps to 0x00031BA0"
+
+[[function]]
+va = 0x00125070
+size = 18
+symbol = "??0AtSoBank@@QAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028BA40 after 0x00031EC0; called by 0x00120553"
+
+[[function]]
+va = 0x00125090
+size = 11
+symbol = "??1AtSoBank@@UAE@XZ"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "stores vftable 0x0028BA40 and jumps to 0x00031DA0"
+
+[[function]]
+va = 0x001250A0
+size = 30
+symbol = "??_GAtSoBank@@UAEPAXI@Z"
+source = "src/at/AtSoXbox.cpp"
+subsystem = "at/aod"
+evidence = "vftable 0x0028BA40 slot 0"
+
+[[vtable]]
+va = 0x00272194
+slots = 10
+symbol = "??_7AtAudioDatabase@@6B@"
+source = "src/at/AtAudioDatabase.cpp"
+
+[[vtable]]
+va = 0x00272EC4
+slots = 4
+symbol = "??_7AtAudioEmitterDatabase@@6B@"
+source = "src/at/AtAudioDatabase.cpp"
+
+[[vtable]]
+va = 0x00288A74
+slots = 4
+symbol = "??_7AtSoXboxBankDatabase@@6B@"
+source = "src/at/AtSoXbox.cpp"
+
+[[vtable]]
+va = 0x0028A448
+slots = 10
+symbol = "??_7AtSoXboxDatabase@@6B@"
+source = "src/at/AtSoXbox.cpp"
+
+[[vtable]]
+va = 0x0028A470
+slots = 5
+symbol = "??_7AtSoXboxSegmentDatabase@@6B@"
+source = "src/at/AtSoXbox.cpp"
+
+[[vtable]]
+va = 0x0028A5B4
+slots = 4
+symbol = "??_7AtSoXboxEmitterDatabase@@6B@"
+source = "src/at/AtSoXbox.cpp"
+
+[[vtable]]
+va = 0x0028B7D8
+slots = 3
+symbol = "??_7AtSoXboxSegment@@6B@"
+source = "src/at/AtSoXbox.cpp"
+
+[symbols]
+"?Clear@AtAudioEmitterDatabase@@UAEXXZ" = 0x00025310  # vftable 0x00272EC4 slot 1; folded with AtAudioSegmentDatabase::Clear
+"?SetDirectory@AtSoXboxBankDatabase@@UAEXPBD@Z" = 0x000CBF30  # vftable 0x00288A74 slot 3: ret 4, folded with others
+"?Unknown3@AtSoXboxSegmentDatabase@@UAEXPAX@Z" = 0x000CBF30  # vftable 0x0028A470 slot 3: ret 4, folded with others
+"?OnRead@AtSoXboxSegment@@UAEXXZ" = 0x001CC9F0  # vftable 0x0028B7D8 slot 1: ret, folded with others
+"?s_heap@AtAudioDatabase@@2PAXA" = 0x002C627C
+"?s_bankNames@AtAudioDatabase@@2PAPADA" = 0x002C6280
+"?s_segmentNames@AtAudioDatabase@@2PAPADA" = 0x002C6284
+"?s_emitterNames@AtAudioDatabase@@2PAPADA" = 0x002C6288
+"?s_nestedNames@AtAudioDatabase@@2PAPADA" = 0x002C628C
+"?s_heap@AtAudioEmitterDatabase@@2PAXA" = 0x002C6330
+"?s_keywords@AtAudioDatabase@@2QBUAtIoKeyword@@B" = 0x002B0140
+"?s_keywords@AtAudioEmitterDatabase@@2QBUAtIoKeyword@@B" = 0x002B049C
+"?AtSoXboxXactBankLoad@@YAHPAVAtSoXboxXactBank@@@Z" = 0x0011F4B0  # the bank's slot 13, not recovered
+"?AtSoXboxXactBankProcess@@YAXPAVAtSoXboxXactBank@@@Z" = 0x0011F2A0  # the bank's slot 14, not recovered
+"?AtSoXboxXactBankUpdate@@YAXPAVAtSoXboxXactBank@@@Z" = 0x0011FF80  # the bank's slot 15, not recovered

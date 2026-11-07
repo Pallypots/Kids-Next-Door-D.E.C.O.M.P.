@@ -6,6 +6,7 @@
 #include "gm/GmNameMap.h"
 
 class AtAudioBankLoader;  // include/at/AtAudioBank.h
+class AtMatrixDevice;     // include/at/AtCoordSys.h
 class AtSceneDevice;      // include/at/AtScene.h
 class AtSceneNode;        // include/at/AtScene.h
 
@@ -21,7 +22,7 @@ struct AtNameTableOwner {
 
     int m_unknown00;                   // +0x00
     AtSceneDevice* m_device;           // +0x04
-    int m_unknown08;                   // +0x08
+    AtMatrixDevice* m_unknown08;       // +0x08 where emitters take their matrices from. 0x0011ED90, 0x0011EE30.
     AtAudioBankLoader* m_loader;       // +0x0C
     int m_unknown10;                   // +0x10
     int m_unknown14;                   // +0x14
