@@ -3,6 +3,7 @@
 // each caller's offsets fit one layout. A different class from AtMaterialOwner, whose tables sit elsewhere.
 #pragma once
 
+#include "at/AtModifierState.h"
 #include "gm/GmNameMap.h"
 
 class AtAudioBankLoader;  // include/at/AtAudioBank.h
@@ -20,6 +21,9 @@ struct AtNameTableOwner {
     void* FindInFirst(const char* name, const char* ns) { return ns != 0 && ns[0] != 0 ? m_firstSpaces.Find(ns, name) : m_first.Find(name); }
     AtSceneNode* FindNode(const char* name, const char* ns);       // 0x00045680 ns may be empty or null
     void* FindBoundingGeometry(const char* name, const char* ns);  // 0x000499B0 ns may be empty or null
+    AtSceneNode* FindActor(const char* name, const char* ns);      // 0x000456C0 reports a node not of an actor's class, and hands it back. In src/at/AtSpace.cpp
+    void* FindCellTable(const char* name, const char* ns);         // 0x00045710 in src/at/AtSpace.cpp
+    class AtModifier* FindModifier(const char* name, const char* ns);  // 0x000464E0 in src/at/AtSpace.cpp
 
     int m_unknown00;                   // +0x00
     AtSceneDevice* m_device;           // +0x04
@@ -40,6 +44,13 @@ struct AtNameTableOwner {
     GmNameSpaceDb m_lensFlareSpaces;   // +0x15C
     GmNameMapGroup m_geometry;         // +0x180
     GmNameSpaceDb m_geometrySpaces;    // +0x198
+    GmNameMapGroup m_cellTables;       // +0x1BC what a leaf's Cell word finds, a table of cells at its +0x30
+    GmNameSpaceDb m_cellTableSpaces;   // +0x1D4
+    char m_unknown1F8[0x18];
+    AtModifierStack m_modifierStack;   // +0x210
+    char m_unknown21C[0x48];
+    unsigned int m_stackDepth;         // +0x264 how deep a space graph's modifiers may nest
+    unsigned int m_stackSlots;         // +0x268 how many kinds of modifier a state has room for
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
@@ -60,5 +71,10 @@ static_assert(offsetof(AtNameTableOwner, m_lensFlares) == 0x144, "AtNameTableOwn
 static_assert(offsetof(AtNameTableOwner, m_lensFlareSpaces) == 0x15C, "AtNameTableOwner::m_lensFlareSpaces");
 static_assert(offsetof(AtNameTableOwner, m_geometry) == 0x180, "AtNameTableOwner::m_geometry");
 static_assert(offsetof(AtNameTableOwner, m_geometrySpaces) == 0x198, "AtNameTableOwner::m_geometrySpaces");
+static_assert(offsetof(AtNameTableOwner, m_cellTables) == 0x1BC, "AtNameTableOwner::m_cellTables");
+static_assert(offsetof(AtNameTableOwner, m_cellTableSpaces) == 0x1D4, "AtNameTableOwner::m_cellTableSpaces");
+static_assert(offsetof(AtNameTableOwner, m_modifierStack) == 0x210, "AtNameTableOwner::m_modifierStack");
+static_assert(offsetof(AtNameTableOwner, m_stackDepth) == 0x264, "AtNameTableOwner::m_stackDepth");
+static_assert(offsetof(AtNameTableOwner, m_stackSlots) == 0x268, "AtNameTableOwner::m_stackSlots");
 #pragma pop_macro("offsetof")
 #endif

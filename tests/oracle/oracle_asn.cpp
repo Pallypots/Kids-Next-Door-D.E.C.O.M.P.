@@ -26,9 +26,16 @@
 #include "at/AtIoTokenizer.h"
 #include "at/AtScene.h"
 #include "at/AtSceneActor.h"
+#include "at/AtSpaceGraph.h"
 #include "at/AtText.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
+
+// In the place of a leaf, whose lists start at the same offset.
+struct AtSceneDirtyOwner {
+    int m_unknown00[5];
+    AtSceneLinkItem* m_first[4];
+};
 
 static bool g_mutate;
 static int g_failures;
@@ -1581,7 +1588,7 @@ static void run_database() {
 
 // Nodes on their own: copies, starting from a description, membership of modifier sets.
 struct SetWorld {
-    AtSceneModifierSet sets[2];
+    AtSpaceGraph sets[2];
     AtSceneDirtyOwner lists[2];
     AtSceneLink links[8];
     AtSceneLinkItem items[8];
@@ -1596,7 +1603,7 @@ static void build_world(int side, AtSceneNode* node, unsigned seed) {
         AtSceneLink& l = w.links[i];
         AtSceneLinkItem& it = w.items[i];
         it.m_node = node;
-        it.m_list = &w.lists[i % 2];
+        it.m_list = (AtLeafSpace*)&w.lists[i % 2];
         l.m_set = &w.sets[rng() % 2];
         l.m_items = &it;
     }
@@ -1616,7 +1623,7 @@ static void build_world(int side, AtSceneNode* node, unsigned seed) {
         w.items[a].m_nextInList = nullptr;
         w.lists[kind % 2].m_first[kind] = &w.items[a];
     }
-    AtSceneModifierSet::s_itemsInUse = 100;
+    AtSpaceGraph::s_itemsInUse = 100;
     *(int*)(uintptr_t)0x002C63F4 = 100;
 }
 
@@ -1633,7 +1640,7 @@ static void same_world() {
     const uint32_t* a = (const uint32_t*)&g_world[0];
     const uint32_t* b = (const uint32_t*)&g_world[1];
     for (unsigned i = 0; i < sizeof(SetWorld) / 4; i++) eq("set world", world_ptr(0, (const void*)(uintptr_t)a[i]), world_ptr(1, (const void*)(uintptr_t)b[i]));
-    eq("items in use", *(int*)(uintptr_t)0x002C63F4, AtSceneModifierSet::s_itemsInUse);
+    eq("items in use", *(int*)(uintptr_t)0x002C63F4, AtSpaceGraph::s_itemsInUse);
 }
 
 static void run_nodes() {
@@ -1823,7 +1830,7 @@ static void run_nodes() {
                 std::memset(&w, 0, sizeof w);
                 AtSceneNode* x = (AtSceneNode*)n[side];
                 for (unsigned i = 0; i < 8; i++) {
-                    w.items[i].m_list = &w.lists[0];
+                    w.items[i].m_list = (AtLeafSpace*)&w.lists[0];
                     w.items[i].m_node = i % 2 ? (AtSceneNode*)other[side] : x;
                     w.links[i].m_items = &w.items[i];
                     w.links[i].m_set = &w.sets[0];
@@ -1839,7 +1846,7 @@ static void run_nodes() {
                 // Dirty: another node's link first.
                 if (shape == 3) { w.sets[0].m_dirty[kind] = &w.links[1]; w.links[1].m_nextDirty = &w.links[2]; x->m_flags = AtSceneNode::kInDirtyList0 << kind; }
                 if (shape == 4) { w.sets[0].m_dirty[kind] = &w.links[1]; x->m_flags = 0xFFF0; }
-                AtSceneModifierSet::s_itemsInUse = 100;
+                AtSpaceGraph::s_itemsInUse = 100;
                 *(int*)(uintptr_t)0x002C63F4 = 100;
             }
             char* o[2] = {n[0], other[0]};
@@ -2015,7 +2022,7 @@ static void run_alone() {
         std::memset(items, 0, sizeof items);
         for (int side = 0; side < 2; side++) {
             for (int i = 0; i < 3; i++) {
-                items[side][i].m_list = &list[side];
+                items[side][i].m_list = (AtLeafSpace*)&list[side];
                 items[side][i].m_prevInList = i > 0 ? &items[side][i - 1] : nullptr;
                 items[side][i].m_nextInList = i < 2 ? &items[side][i + 1] : nullptr;
             }
@@ -2210,7 +2217,7 @@ static void run_alone() {
         load_o(so);
         load_r(sr);
         same_scene("loaded, to clear", so, sr);
-        static AtSceneModifierSet sets[2];
+        static AtSpaceGraph sets[2];
         static AtSceneDirtyOwner lists[2];
         static AtSceneLink links[2][16];
         static AtSceneLinkItem items[2][16];
@@ -2224,7 +2231,7 @@ static void run_alone() {
             const auto give = [&](void* node) {
                 AtSceneLink& l = links[side][n];
                 AtSceneLinkItem& it = items[side][n];
-                it.m_list = &lists[side];
+                it.m_list = (AtLeafSpace*)&lists[side];
                 it.m_node = (AtSceneNode*)node;
                 l.m_set = &sets[side];
                 l.m_items = &it;

@@ -57,12 +57,16 @@ public:
     char m_unknown04[0xEC];            // +0x04
     GmNameMapGroup m_meshes;           // +0xF0 Mesh
     GmNameSpaceDb m_meshSpaces;        // +0x108
-    char m_unknown12C[0x78];           // +0x12C
+    char m_unknown12C[0x3C];           // +0x12C
+    GmNameMapGroup m_lights;           // +0x168 what a light modifier's Light word finds
+    GmNameSpaceDb m_lightSpaces;       // +0x180
     GmNameMapGroup m_matAssignments;   // +0x1A4 MatAssignment
     GmNameSpaceDb m_matAssignmentSpaces;  // +0x1BC
     GmNameMapGroup m_matAnimations;    // +0x1E0 PlayMatAnimation
     GmNameSpaceDb m_matAnimationSpaces;  // +0x1F8
-    char m_unknown21C[0xF0];           // +0x21C
+    char m_unknown21C[0xB4];           // +0x21C
+    GmNameMapGroup m_lightAnimations;  // +0x2D0 what a light modifier's LightAnimation word finds
+    GmNameSpaceDb m_lightAnimationSpaces;  // +0x2E8
     GmNameMapGroup m_coordSysDatabases;  // +0x30C CoordSysDatabase and those like it
     GmNameMapGroup m_mirrorDatabases;  // +0x324 CoordSysMirrorDatabase
     GmNameMapGroup m_weightDatabases;  // +0x33C Weights, the map to look in; the name after it looks in that
@@ -77,51 +81,34 @@ struct AtSceneSphere {
     float radius;
 };
 
-// One node's membership of a modifier set. Made by code not recovered; released here.
+// One node's membership of a space graph, in one of four kinds: a NodeLink in the file's words. See include/at/AtSpaceGraph.h. Made by the graph; released by it, in src/at/AtSceneNode.cpp.
+class AtSpaceGraph;
+class AtLeafSpace;
 struct AtSceneLinkItem;
 struct AtSceneLink {
-    class AtSceneModifierSet* m_set;   // +0x00 null when free
-    int m_unknown04[4];                // +0x04
-    AtSceneLink* m_next;               // +0x14 among the node's, or among the set's free ones
+    AtSceneLink();                     // 0x00047DC0 clears it
+    AtSpaceGraph* m_set;               // +0x00 null when free
+    AtVector3 m_center;                // +0x04 of the node's sphere when it was placed
+    float m_margin;                    // +0x10 how far it can move and stay in its leaves; squared once placed
+    AtSceneLink* m_next;               // +0x14 among the node's, or among the graph's free ones
     AtSceneLinkItem* m_items;          // +0x18
     AtSceneLink* m_nextDirty;          // +0x1C
 };
 
+// A link's presence in one leaf: a NodeIncidence.
 struct AtSceneLinkItem {
-    int m_unknown00[2];                // +0x00
-    struct AtSceneDirtyOwner* m_list;  // +0x08
+    AtSceneLinkItem();                 // 0x00047DC0 the same code as the link's, folded
+    float m_low;                       // +0x00 the node's extent along the leaf's axis, for kinds 0 and 1
+    float m_high;                      // +0x04
+    AtLeafSpace* m_list;               // +0x08
     AtSceneNode* m_node;               // +0x0C
-    AtSceneLinkItem* m_next;           // +0x10 among a link's, or among the set's free ones
-    int m_unknown14;                   // +0x14
-    AtSceneLinkItem* m_prevInList;     // +0x18
-    AtSceneLinkItem* m_nextInList;     // +0x1C
+    AtSceneLinkItem* m_next;           // +0x10 among a link's, or among the graph's free ones
+    AtSceneLinkItem* m_head;           // +0x14 the link's first
+    AtSceneLinkItem* m_prevInList;     // +0x18 towards the tail of the leaf's list, despite the name it got first
+    AtSceneLinkItem* m_nextInList;     // +0x1C towards the leaf's first
 
     void Unlink(unsigned int kind);    // 0x000467F0
-};
-
-struct AtSceneDirtyOwner {
-    int m_unknown00[5];
-    AtSceneLinkItem* m_first[4];       // +0x14 one list per kind
-};
-
-// A set a node can be a member of, in four kinds. The rest of the class, at 0x00039E90-0x0003AFFF, is not recovered. Its fields are from these functions only.
-class AtSceneModifierSet {
-public:
-    void RemoveDirty(AtSceneNode* node);     // 0x0003A2C0
-    void RemoveLink(AtSceneNode* node);      // 0x00039F00
-    void RemoveAsKind0(AtSceneNode* node);   // 0x0003A370
-    void RemoveAsKind1(AtSceneNode* node);   // 0x0003A310
-    void RemoveAsKind3(AtSceneNode* node);   // 0x0003A340
-
-    int m_unknown00[2];                // +0x00
-    AtSceneLink* m_freeLinks;          // +0x08
-    int m_unknown0C[2];                // +0x0C
-    AtSceneLinkItem* m_freeItems;      // +0x14
-    int m_unknown18[13];               // +0x18
-    unsigned int m_kind;               // +0x4C
-    AtSceneLink* m_dirty[4];           // +0x50
-
-    static int s_itemsInUse;           // 0x002C63F4
+    void AddSecond(AtSceneLinkItem* added);  // 0x000467C0 another item for the same link. In src/at/AtSpace.cpp
 };
 
 // What 0x00049CA0 starts a node from. Its users are not recovered.
@@ -317,13 +304,12 @@ void AtConstructEach(void* first, unsigned int size, int count, void (*construct
 static_assert(offsetof(AtSceneDevice, m_meshes) == 0xF0, "AtSceneDevice::m_meshes");
 static_assert(offsetof(AtSceneDevice, m_matAssignments) == 0x1A4, "AtSceneDevice::m_matAssignments");
 static_assert(offsetof(AtSceneDevice, m_matAnimationSpaces) == 0x1F8, "AtSceneDevice::m_matAnimationSpaces");
+static_assert(offsetof(AtSceneDevice, m_lights) == 0x168, "AtSceneDevice::m_lights");
+static_assert(offsetof(AtSceneDevice, m_lightAnimationSpaces) == 0x2E8, "AtSceneDevice::m_lightAnimationSpaces");
 static_assert(offsetof(AtSceneDevice, m_coordSysDatabases) == 0x30C, "AtSceneDevice::m_coordSysDatabases");
 static_assert(offsetof(AtSceneDevice, m_animationDatabases) == 0x354, "AtSceneDevice::m_animationDatabases");
 static_assert(sizeof(AtSceneLink) == 0x20, "AtSceneLink");
 static_assert(sizeof(AtSceneLinkItem) == 0x20, "AtSceneLinkItem");
-static_assert(offsetof(AtSceneDirtyOwner, m_first) == 0x14, "AtSceneDirtyOwner::m_first");
-static_assert(offsetof(AtSceneModifierSet, m_kind) == 0x4C, "AtSceneModifierSet::m_kind");
-static_assert(offsetof(AtSceneModifierSet, m_dirty) == 0x50, "AtSceneModifierSet::m_dirty");
 static_assert(sizeof(AtSceneMotionState) == 0x30, "AtSceneMotionState");
 static_assert(offsetof(AtSceneNode, m_class) == 0x08, "AtSceneNode::m_class");
 static_assert(offsetof(AtSceneNode, m_owner) == 0x30, "AtSceneNode::m_owner");

@@ -1,0 +1,1099 @@
+# Modifiers (.ASM) and space graphs (.ASG). See include/at/AtModifier.h and include/at/AtSpaceGraph.h. Sizes are from the disassembly.
+
+[[function]]
+va = 0x0003E920
+size = 10
+symbol = "?SetHeap@AtModifierDatabase@@SAXPAX@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "stores 0x002C6410, the heap of the reader's arrays"
+
+[[function]]
+va = 0x0003EA00
+size = 56
+symbol = "??0AtModifierDatabase@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00275CE0; base 0x00024C60; twelve fields cleared"
+
+[[function]]
+va = 0x0002E760
+size = 84
+symbol = "??_GAtModifierDatabase@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00275CE0 slot 0; element size 0x44; the vector deleter is the compiler's"
+
+[[function]]
+va = 0x0003F530
+size = 79
+symbol = "??1AtModifierDatabase@@UAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "calls 0x0003F430 then 0x00025260"
+
+[[function]]
+va = 0x0003F430
+size = 256
+symbol = "?Clear@AtModifierDatabase@@UAEXXZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00275CE0 slot 1"
+
+[[function]]
+va = 0x0003F390
+size = 154
+symbol = "?Load@AtModifierDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "the string ASM at 0x00275CE8; called from 0x0002F005"
+
+[[function]]
+va = 0x0003EBC0
+size = 1914
+symbol = "?Read@AtModifierDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "keyword table 0x002B1D40 of 58 words; six lists by word"
+
+[[function]]
+va = 0x0004F850
+size = 7
+symbol = "??1AtModifier@@UAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "stores vftable 0x00276CE8; reached through 0x0003E990"
+
+[[function]]
+va = 0x0004F8B0
+size = 31
+symbol = "??_GAtModifier@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276CE8 slot 0"
+
+[[function]]
+va = 0x0004F890
+size = 24
+symbol = "??0AtModifier@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276CE8"
+
+[[function]]
+va = 0x0004F8D0
+size = 16
+symbol = "?Reset@AtModifier@@QAEXXZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "the same three stores as the constructor, without the vftable"
+
+[[function]]
+va = 0x0004F8E0
+size = 24
+symbol = "?Apply@AtModifier@@UAEXPAVAtModifierState@@H@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276CE8 slot 1; tests flag 2, calls 0x00053520"
+
+[[function]]
+va = 0x0004F860
+size = 37
+symbol = "?ReadWord@AtModifier@@QAEXPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "word 107, Priority; report 0x1E otherwise"
+
+[[function]]
+va = 0x0004F900
+size = 10
+symbol = "?SetHeap@AtModifier@@SAXPAX@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "stores 0x002C7E1C, read by 0x0004FA30"
+
+[[function]]
+va = 0x00050140
+size = 105
+symbol = "??0AtLightModifier@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D48, passed to the array constructor at 0x0003ED03"
+
+[[function]]
+va = 0x0003EB00
+size = 84
+symbol = "??_GAtLightModifier@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D48 slot 0; element size 0x48"
+
+[[function]]
+va = 0x000501B0
+size = 408
+symbol = "?Read@AtLightModifier@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "words 59 to 64 and 114; called from 0x0003ED94 with the owner's +4"
+
+[[function]]
+va = 0x00050530
+size = 48
+symbol = "?Apply@AtLightModifier@@UAEXPAVAtModifierState@@H@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D48 slot 1; calls 0x0005BA20"
+
+[[function]]
+va = 0x000506B0
+size = 74
+symbol = "??0AtAmbientModifier@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D78"
+
+[[function]]
+va = 0x0003EA40
+size = 84
+symbol = "??_GAtAmbientModifier@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D78 slot 0; element size 0x20"
+
+[[function]]
+va = 0x00050700
+size = 80
+symbol = "?Read@AtAmbientModifier@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "word 87, Color; kind 1"
+
+[[function]]
+va = 0x000505A0
+size = 36
+symbol = "??0AtPerspectiveModifier@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D60; kind 2; 4/3 twice"
+
+[[function]]
+va = 0x0003EAA0
+size = 84
+symbol = "??_GAtPerspectiveModifier@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D60 slot 0; element size 0x18"
+
+[[function]]
+va = 0x000505D0
+size = 79
+symbol = "?Read@AtPerspectiveModifier@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "word 109, FieldOfViewY"
+
+[[function]]
+va = 0x0004F910
+size = 39
+symbol = "??0AtContextConstantModifier@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D00; kind 3"
+
+[[function]]
+va = 0x0003E930
+size = 84
+symbol = "??_GAtContextConstantModifier@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D00 slot 0; element size 0x20"
+
+[[function]]
+va = 0x0004F9B0
+size = 123
+symbol = "??1AtContextConstantModifier@@UAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "frees +0x14 and +0x1C"
+
+[[function]]
+va = 0x0004FA30
+size = 537
+symbol = "?Read@AtContextConstantModifier@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "words 112 and 113, each a list of 0x20-byte records"
+
+[[function]]
+va = 0x0004FD50
+size = 29
+symbol = "??0AtGroupModifier@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D18"
+
+[[function]]
+va = 0x0003E9A0
+size = 84
+symbol = "??_GAtGroupModifier@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D18 slot 0; element size 0x1C"
+
+[[function]]
+va = 0x0004FDB0
+size = 104
+symbol = "??1AtGroupModifier@@UAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "frees +0x18"
+
+[[function]]
+va = 0x0004FE20
+size = 381
+symbol = "?Read@AtGroupModifier@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "word 57, a list of names; finds them in the owner's +0xCC and +0xE4"
+
+[[function]]
+va = 0x0004FD70
+size = 62
+symbol = "?Apply@AtGroupModifier@@UAEXPAVAtModifierState@@H@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D18 slot 1"
+
+[[function]]
+va = 0x0004FC60
+size = 75
+symbol = "?Slot2@AtGroupModifier@@UAEXPAX0000@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D18 slot 2"
+
+[[function]]
+va = 0x0004FCB0
+size = 70
+symbol = "?Slot3@AtGroupModifier@@UAEXPAX000@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D18 slot 3"
+
+[[function]]
+va = 0x0004FD00
+size = 44
+symbol = "?Slot5@AtGroupModifier@@UAEXPAX@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D18 slot 5"
+
+[[function]]
+va = 0x0004FD30
+size = 25
+symbol = "?MemberAt@AtGroupModifier@@QBEPAVAtModifier@@I@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "next to the group's functions; reads +0x10 and +0x18"
+
+[[function]]
+va = 0x0004FC50
+size = 10
+symbol = "?SetHeap@AtGroupModifier@@SAXPAX@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "stores 0x002C7E20, read by 0x0004FE20"
+
+[[function]]
+va = 0x0004FFA0
+size = 25
+symbol = "??0AtBlockModifier@@QAE@XZ"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D30"
+
+[[function]]
+va = 0x0003EB60
+size = 84
+symbol = "??_GAtBlockModifier@@UAEPAXI@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D30 slot 0; element size 0x14"
+
+[[function]]
+va = 0x0004FFC0
+size = 134
+symbol = "?Read@AtBlockModifier@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "word 106, Block, followed by a class's word"
+
+[[function]]
+va = 0x000500A0
+size = 55
+symbol = "?Apply@AtBlockModifier@@UAEXPAVAtModifierState@@H@Z"
+source = "src/at/AtModifier.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276D30 slot 1; clears a slot"
+
+[[function]]
+va = 0x000535A0
+size = 380
+symbol = "?Init@AtModifierState@@QAEXIH@Z"
+source = "src/at/AtModifierState.cpp"
+subsystem = "at/asm"
+evidence = "0x40 bytes to a slot; a second call frees; called from 0x000469EC"
+
+[[function]]
+va = 0x00053720
+size = 244
+symbol = "?Assign@AtModifierState@@QAEXABV1@@Z"
+source = "src/at/AtModifierState.cpp"
+subsystem = "at/asm"
+evidence = "called from 0x00045941; then 0x000534D0"
+
+[[function]]
+va = 0x00046820
+size = 10
+symbol = "?SetHeap@AtModifierStack@@SAXPAX@Z"
+source = "src/at/AtModifierState.cpp"
+subsystem = "at/asm"
+evidence = "stores 0x002C7E04"
+
+[[function]]
+va = 0x00046830
+size = 26
+symbol = "?Push@AtModifierStack@@QAEXXZ"
+source = "src/at/AtModifierState.cpp"
+subsystem = "at/asm"
+evidence = "copies element at +4 to the next; increments +4"
+
+[[function]]
+va = 0x00046850
+size = 4
+symbol = "?Pop@AtModifierStack@@QAEXXZ"
+source = "src/at/AtModifierState.cpp"
+subsystem = "at/asm"
+evidence = "decrements +4"
+
+[[function]]
+va = 0x00046860
+size = 63
+symbol = "?Free@AtModifierStack@@QAEXXZ"
+source = "src/at/AtModifierState.cpp"
+subsystem = "at/asm"
+evidence = "array of 8-byte elements, destroyed by 0x00053570"
+
+[[function]]
+va = 0x000468A0
+size = 384
+symbol = "?Init@AtModifierStack@@QAEXIIH@Z"
+source = "src/at/AtModifierState.cpp"
+subsystem = "at/asm"
+evidence = "called from 0x0003AD9D with the owner's +0x264 and +0x268"
+
+[[function]]
+va = 0x00039AF0
+size = 10
+symbol = "?SetHeap@AtSpaceGraph@@SAXPAX@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "stores 0x002C63FC"
+
+[[function]]
+va = 0x00039B00
+size = 122
+symbol = "?ReadCounts@AtSpaceGraph@@AAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "words 57 to 63, ending at 70, Root"
+
+[[function]]
+va = 0x00039C10
+size = 165
+symbol = "?ReadSpaceReference@AtSpaceGraph@@QAEPAVAtSpace@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "a word and an index; called for Root, and by 0x000571F0"
+
+[[function]]
+va = 0x00039CD0
+size = 425
+symbol = "?ReadSpaces@AtSpaceGraph@@AAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "lists by word; each element's vftable slot 4"
+
+[[function]]
+va = 0x00039E90
+size = 17
+symbol = "?TakeLink@AtSpaceGraph@@QAEPAUAtSceneLink@@XZ"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "pops +8 by the element's +0x14"
+
+[[function]]
+va = 0x00039EB0
+size = 22
+symbol = "?ReturnLink@AtSpaceGraph@@QAEXPAUAtSceneLink@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "pushes on +8"
+
+[[function]]
+va = 0x00039ED0
+size = 41
+symbol = "?TakeItem@AtSpaceGraph@@QAEPAUAtSceneLinkItem@@XZ"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "counts 0x002C63F4, peak 0x002C63F8; pops +0x14"
+
+[[function]]
+va = 0x00039FD0
+size = 87
+symbol = "??0AtSpaceGraph@@QAE@XZ"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "the fields Clear clears; address taken at 0x0002EB8B"
+
+[[function]]
+va = 0x0003A030
+size = 393
+symbol = "?Clear@AtSpaceGraph@@QAEXXZ"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "frees the five lists and two pools"
+
+[[function]]
+va = 0x0003A450
+size = 5
+symbol = "??1AtSpaceGraph@@QAE@XZ"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "jump to 0x0003A030; address taken at 0x0002EB86"
+
+[[function]]
+va = 0x0003A1C0
+size = 40
+symbol = "?AddHookBefore@AtSpaceGraph@@QAEXPAUAtSpaceGraphHook@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "list at +0x44, next at the element's +0xC"
+
+[[function]]
+va = 0x0003A1F0
+size = 75
+symbol = "?RemoveHookBefore@AtSpaceGraph@@QAEXPAUAtSpaceGraphHook@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "list at +0x44"
+
+[[function]]
+va = 0x0003A240
+size = 40
+symbol = "?AddHookAfter@AtSpaceGraph@@QAEXPAUAtSpaceGraphHook@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "list at +0x48"
+
+[[function]]
+va = 0x0003A270
+size = 75
+symbol = "?RemoveHookAfter@AtSpaceGraph@@QAEXPAUAtSpaceGraphHook@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "list at +0x48"
+
+[[function]]
+va = 0x0003A3A0
+size = 109
+symbol = "?MakeLink@AtSpaceGraph@@QAEXPAVAtSceneNode@@PAUAtSceneLink@@PAUAtSceneLinkItem@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "fills a link and an item from a node; called from 0x0003AA4B and 0x0004582B"
+
+[[function]]
+va = 0x0003A410
+size = 60
+symbol = "?Build@AtSpaceGraph@@QAEXPAUAtNameTableOwner@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "the end of 0x0003AC90 by itself"
+
+[[function]]
+va = 0x0003A460
+size = 1174
+symbol = "?Allocate@AtSpaceGraph@@AAEXXZ"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "pools of 0x20 bytes, lists of each class"
+
+[[function]]
+va = 0x0003A9C0
+size = 34
+symbol = "?RemoveAsKind2@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "the same as 0x0003A370 with 2"
+
+[[function]]
+va = 0x0003A9F0
+size = 165
+symbol = "?AddNode@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "slot 9 of the root"
+
+[[function]]
+va = 0x0003AC90
+size = 297
+symbol = "?Read@AtSpaceGraph@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "keyword table 0x002B1800 of 19 words"
+
+[[function]]
+va = 0x0003ADC0
+size = 168
+symbol = "?Load@AtSpaceGraph@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "the string ASG at 0x00275260; called from 0x0002F16B"
+
+[[function]]
+va = 0x0003AE70
+size = 12
+symbol = "?AddAsKind2@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "stores 2 and jumps to 0x0003A9F0"
+
+[[function]]
+va = 0x0003AE80
+size = 34
+symbol = "?AddAsKind1@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "stores 1"
+
+[[function]]
+va = 0x0003AEB0
+size = 34
+symbol = "?AddAsKind3@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "stores 3"
+
+[[function]]
+va = 0x0003AEE0
+size = 34
+symbol = "?AddAsKind0@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSpaceGraph.cpp"
+subsystem = "at/asm"
+evidence = "stores 0"
+
+[[function]]
+va = 0x00047DC0
+size = 28
+symbol = "??0AtSceneLink@@QAE@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asm"
+evidence = "called on each element of both pools at 0x0003A4E4 and 0x0003A569"
+
+[[function]]
+va = 0x00046520
+size = 17
+symbol = "??0AtSpace@@QAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x002763C0"
+
+[[function]]
+va = 0x00046740
+size = 48
+symbol = "??1AtSpace@@UAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "stores vftable 0x002763C0, frees the list at +8"
+
+[[function]]
+va = 0x00046770
+size = 72
+symbol = "??_GAtSpace@@UAEPAXI@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x002763C0 slot 2"
+
+[[function]]
+va = 0x00046410
+size = 13
+symbol = "?InitFrom@AtSpace@@UAEXPBUAtSpaceDesc@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable slot 3 of every space"
+
+[[function]]
+va = 0x000463C0
+size = 66
+symbol = "?Read@AtSpace@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x002763C0 slot 4; calls slot 0 for each word"
+
+[[function]]
+va = 0x00046540
+size = 44
+symbol = "?Clear@AtSpace@@UAEXXZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x002763C0 slot 5"
+
+[[function]]
+va = 0x000464C0
+size = 17
+symbol = "?Slot12@AtSpace@@UAEXPAX@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable slot 12 of every space"
+
+[[function]]
+va = 0x00046570
+size = 318
+symbol = "?ReadCommonWord@AtSpace@@QAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "words 66, 68, 71, 74; called from 0x00045FE9 and 0x00057213"
+
+[[function]]
+va = 0x00046420
+size = 108
+symbol = "?AddPending@AtSpace@@QAEXPAVAtSpaceGraph@@IPAVAtSceneNode@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "16 bytes from 0x002C60B0, at the head of +8"
+
+[[function]]
+va = 0x00046490
+size = 44
+symbol = "?AttachPending@AtSpace@@QAEXXZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "called from 0x0003AD15 for each class but the leaf"
+
+[[function]]
+va = 0x000466E0
+size = 53
+symbol = "?Enter@AtSpace@@QAEXPAUAtNameTableOwner@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "the owner's +0x210; the modifier's slot 1"
+
+[[function]]
+va = 0x00046720
+size = 25
+symbol = "?Leave@AtSpace@@QAEXPAUAtNameTableOwner@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "the owner's +0x210"
+
+[[function]]
+va = 0x00045750
+size = 104
+symbol = "??0AtLeafSpace@@QAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C"
+
+[[function]]
+va = 0x00045D90
+size = 115
+symbol = "??1AtLeafSpace@@UAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "address passed to the array constructor at 0x0003A89A"
+
+[[function]]
+va = 0x00039BA0
+size = 84
+symbol = "??_GAtLeafSpace@@UAEPAXI@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C slot 2; element size 0x2C"
+
+[[function]]
+va = 0x00045E10
+size = 487
+symbol = "?ReadWord@AtLeafSpace@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C slot 0"
+
+[[function]]
+va = 0x00045920
+size = 51
+symbol = "?Build@AtLeafSpace@@UAEXPAUAtNameTableOwner@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C slot 1"
+
+[[function]]
+va = 0x00047830
+size = 5
+symbol = "?Read@AtLeafSpace@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C slot 4; jump to 0x000463C0"
+
+[[function]]
+va = 0x000457C0
+size = 32
+symbol = "?Clear@AtLeafSpace@@UAEXXZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C slot 5"
+
+[[function]]
+va = 0x000457E0
+size = 122
+symbol = "?Attach@AtLeafSpace@@UAEXPAVAtSpaceGraph@@IPAVAtSceneNode@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C slot 8"
+
+[[function]]
+va = 0x00045860
+size = 181
+symbol = "?Insert@AtLeafSpace@@UAEXPAUAtSceneLink@@MPAUAtSceneLinkItem@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027638C slot 9"
+
+[[function]]
+va = 0x00047870
+size = 32
+symbol = "??0AtBinarySpace@@QAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027649C"
+
+[[function]]
+va = 0x0003A900
+size = 84
+symbol = "??_GAtBinarySpace@@UAEPAXI@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027649C slot 2; element size 0x24"
+
+[[function]]
+va = 0x00047840
+size = 34
+symbol = "?ReadWord@AtBinarySpace@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027649C slot 0"
+
+[[function]]
+va = 0x00047890
+size = 24
+symbol = "?Clear@AtBinarySpace@@UAEXXZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027649C slot 5"
+
+[[function]]
+va = 0x000478B0
+size = 283
+symbol = "?Insert@AtBinarySpace@@UAEXPAUAtSceneLink@@MPAUAtSceneLinkItem@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027649C slot 9"
+
+[[function]]
+va = 0x00047DA0
+size = 30
+symbol = "?Plane@AtBinarySpace@@UBEXPAM@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027649C slot 13"
+
+[[function]]
+va = 0x00046ED0
+size = 55
+symbol = "?ReadWord@AtAxisBinarySpace@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "slot 0 of vftables 0x002763F4, 0x0027642C, 0x00276464"
+
+[[function]]
+va = 0x000473A0
+size = 5
+symbol = "?Read@AtAxisBinarySpace@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "slot 4 of the same; jump to 0x000463C0"
+
+[[function]]
+va = 0x00046AD0
+size = 17
+symbol = "?Clear@AtAxisBinarySpace@@UAEXXZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "slot 5 of the same"
+
+[[function]]
+va = 0x0003A960
+size = 84
+symbol = "??_GAtXBinarySpace@@UAEPAXI@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "slot 2 of the same; element size 0x18"
+
+[[function]]
+va = 0x00047430
+size = 25
+symbol = "??0AtXBinarySpace@@QAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276464"
+
+[[function]]
+va = 0x00047450
+size = 264
+symbol = "?Insert@AtXBinarySpace@@UAEXPAUAtSceneLink@@MPAUAtSceneLinkItem@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276464 slot 9; the link's +4"
+
+[[function]]
+va = 0x00047410
+size = 29
+symbol = "?Plane@AtXBinarySpace@@UBEXPAM@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x00276464 slot 13"
+
+[[function]]
+va = 0x00046FA0
+size = 25
+symbol = "??0AtYBinarySpace@@QAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027642C"
+
+[[function]]
+va = 0x00046FC0
+size = 264
+symbol = "?Insert@AtYBinarySpace@@UAEXPAUAtSceneLink@@MPAUAtSceneLinkItem@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027642C slot 9; the link's +8"
+
+[[function]]
+va = 0x00046F70
+size = 35
+symbol = "?Plane@AtYBinarySpace@@UBEXPAM@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x0027642C slot 13"
+
+[[function]]
+va = 0x00046AB0
+size = 25
+symbol = "??0AtZBinarySpace@@QAE@XZ"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x002763F4"
+
+[[function]]
+va = 0x00046AF0
+size = 264
+symbol = "?Insert@AtZBinarySpace@@UAEXPAUAtSceneLink@@MPAUAtSceneLinkItem@@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x002763F4 slot 9; the link's +0xC"
+
+[[function]]
+va = 0x00046A80
+size = 35
+symbol = "?Plane@AtZBinarySpace@@UBEXPAM@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "vftable 0x002763F4 slot 13"
+
+[[function]]
+va = 0x000456C0
+size = 69
+symbol = "?FindActor@AtNameTableOwner@@QAEPAVAtSceneNode@@PBD0@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "0x00045680 then 0x00055930"
+
+[[function]]
+va = 0x00045710
+size = 55
+symbol = "?FindCellTable@AtNameTableOwner@@QAEPAXPBD0@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "the owner's +0x1BC and +0x1D4"
+
+[[function]]
+va = 0x000464E0
+size = 55
+symbol = "?FindModifier@AtNameTableOwner@@QAEPAVAtModifier@@PBD0@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "the owner's +0xCC and +0xE4"
+
+[[function]]
+va = 0x000467C0
+size = 38
+symbol = "?AddSecond@AtSceneLinkItem@@QAEXPAU1@@Z"
+source = "src/at/AtSpace.cpp"
+subsystem = "at/asm"
+evidence = "called from 0x00046B94 and its siblings"
+
+[[vtable]]
+va = 0x00275CE0
+slots = 2
+symbol = "??_7AtModifierDatabase@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x00276CE8
+slots = 6
+symbol = "??_7AtModifier@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x00276D48
+slots = 6
+symbol = "??_7AtLightModifier@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x00276D78
+slots = 6
+symbol = "??_7AtAmbientModifier@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x00276D60
+slots = 6
+symbol = "??_7AtPerspectiveModifier@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x00276D00
+slots = 6
+symbol = "??_7AtContextConstantModifier@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x00276D18
+slots = 6
+symbol = "??_7AtGroupModifier@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x00276D30
+slots = 6
+symbol = "??_7AtBlockModifier@@6B@"
+source = "src/at/AtModifier.cpp"
+
+[[vtable]]
+va = 0x002763C0
+slots = 13
+symbol = "??_7AtSpace@@6B@"
+source = "src/at/AtSpace.cpp"
+
+[[vtable]]
+va = 0x0027638C
+slots = 13
+symbol = "??_7AtLeafSpace@@6B@"
+source = "src/at/AtSpace.cpp"
+
+[[vtable]]
+va = 0x0027649C
+slots = 14
+symbol = "??_7AtBinarySpace@@6B@"
+source = "src/at/AtSpace.cpp"
+
+[[vtable]]
+va = 0x00276464
+slots = 14
+symbol = "??_7AtXBinarySpace@@6B@"
+source = "src/at/AtSpace.cpp"
+
+[[vtable]]
+va = 0x0027642C
+slots = 14
+symbol = "??_7AtYBinarySpace@@6B@"
+source = "src/at/AtSpace.cpp"
+
+[[vtable]]
+va = 0x002763F4
+slots = 14
+symbol = "??_7AtZBinarySpace@@6B@"
+source = "src/at/AtSpace.cpp"
+
+[symbols]
+"?s_heap@AtModifierDatabase@@2PAXA" = 0x002C6410
+"?s_heap@AtModifier@@2PAXA" = 0x002C7E1C
+"?s_heap@AtGroupModifier@@2PAXA" = 0x002C7E20
+"?s_heap@AtSpaceGraph@@2PAXA" = 0x002C63FC
+"?s_itemsPeak@AtSpaceGraph@@2HA" = 0x002C63F8
+"?s_heap@AtModifierStack@@2PAXA" = 0x002C7E04
+"?s_heap@AtModifierState@@2PAXA" = 0x002C7EB8
+"?s_keywords@AtModifierDatabase@@2QBUAtIoKeyword@@B" = 0x002B1D40
+"?s_keywords@AtSpaceGraph@@2QBUAtIoKeyword@@B" = 0x002B1800
+"?Slot2@AtModifier@@UAEXPAX0000@Z" = 0x000E7850  # vftable slot: empty, folded
+"?Slot3@AtModifier@@UAEXPAX000@Z" = 0x000FCD40  # vftable slot: empty, folded
+"?Slot4@AtModifier@@UAEXPAX@Z" = 0x000CBF30  # vftable slot: empty, folded
+"?Slot5@AtModifier@@UAEXPAX@Z" = 0x000CBF30  # vftable slot: empty, folded
+"??1AtLightModifier@@UAE@XZ" = 0x0003E990  # vftable slot: jump to the base's
+"?Slot2@AtLightModifier@@UAEXPAX0000@Z" = 0x000503A0  # vftable slot: not recovered
+"?Slot3@AtLightModifier@@UAEXPAX000@Z" = 0x000504E0  # vftable slot: not recovered
+"?Slot4@AtLightModifier@@UAEXPAX@Z" = 0x00050510  # vftable slot: not recovered
+"?Slot5@AtLightModifier@@UAEXPAX@Z" = 0x00050560  # vftable slot: not recovered
+"??1AtAmbientModifier@@UAE@XZ" = 0x0003E990  # vftable slot: jump to the base's
+"?Slot2@AtAmbientModifier@@UAEXPAX0000@Z" = 0x00050750  # vftable slot: not recovered
+"??1AtPerspectiveModifier@@UAE@XZ" = 0x0003E990  # vftable slot: jump to the base's
+"?Slot2@AtPerspectiveModifier@@UAEXPAX0000@Z" = 0x00050620  # vftable slot: not recovered
+"?Slot3@AtPerspectiveModifier@@UAEXPAX000@Z" = 0x00050670  # vftable slot: not recovered
+"?Slot2@AtContextConstantModifier@@UAEXPAX0000@Z" = 0x0004F940  # vftable slot: not recovered
+"??1AtBlockModifier@@UAE@XZ" = 0x0003E990  # vftable slot: jump to the base's
+"?Slot6@AtLeafSpace@@UAEXXZ" = 0x00046310  # vftable slot: not recovered
+"?Slot7@AtLeafSpace@@UAEXXZ" = 0x00045960  # vftable slot: not recovered
+"?Slot10@AtLeafSpace@@UAEXXZ" = 0x00045C30  # vftable slot: not recovered
+"?Slot11@AtLeafSpace@@UAEXXZ" = 0x00045CA0  # vftable slot: not recovered
+"?Read@AtBinarySpace@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@@Z" = 0x00047830  # vftable slot: folded with the leaf's
+"?Slot6@AtBinarySpace@@UAEXXZ" = 0x000479D0  # vftable slot: not recovered
+"?Slot7@AtBinarySpace@@UAEXXZ" = 0x00047AC0  # vftable slot: not recovered
+"?Slot10@AtBinarySpace@@UAEXXZ" = 0x00047BA0  # vftable slot: not recovered
+"?Slot11@AtBinarySpace@@UAEXXZ" = 0x00047D30  # vftable slot: not recovered
+"?Clear@AtBinarySpaceBase@@UAEXXZ" = 0x00057310  # vftable slot: seam: in a range held elsewhere
+"?ReadWord@AtBinarySpaceBase@@UAEXPAUAtNameTableOwner@@PAVAtSpaceGraph@@PAVAtIoTokenizer@@H@Z" = 0x000571F0  # vftable slot: seam: in a range held elsewhere
+"?Build@AtBinarySpaceBase@@UAEXPAUAtNameTableOwner@@@Z" = 0x00057290  # vftable slot: seam: in a range held elsewhere
+"?Attach@AtBinarySpaceBase@@UAEXPAVAtSpaceGraph@@IPAVAtSceneNode@@@Z" = 0x00057250  # vftable slot: seam: in a range held elsewhere
+"?Slot6@AtXBinarySpace@@UAEXXZ" = 0x00047560  # vftable slot: not recovered
+"?Slot7@AtXBinarySpace@@UAEXXZ" = 0x00047620  # vftable slot: not recovered
+"?Slot10@AtXBinarySpace@@UAEXXZ" = 0x000476D0  # vftable slot: not recovered
+"?Slot11@AtXBinarySpace@@UAEXXZ" = 0x000473B0  # vftable slot: not recovered
+"?Slot6@AtYBinarySpace@@UAEXXZ" = 0x000470D0  # vftable slot: not recovered
+"?Slot7@AtYBinarySpace@@UAEXXZ" = 0x00047190  # vftable slot: not recovered
+"?Slot10@AtYBinarySpace@@UAEXXZ" = 0x00047240  # vftable slot: not recovered
+"?Slot11@AtYBinarySpace@@UAEXXZ" = 0x00046F10  # vftable slot: not recovered
+"??_GAtYBinarySpace@@UAEPAXI@Z" = 0x0003A960  # vftable slot: folded with the X space's
+"?Slot6@AtZBinarySpace@@UAEXXZ" = 0x00046C00  # vftable slot: not recovered
+"?Slot7@AtZBinarySpace@@UAEXXZ" = 0x00046CC0  # vftable slot: not recovered
+"?Slot10@AtZBinarySpace@@UAEXXZ" = 0x00046D70  # vftable slot: not recovered
+"?Slot11@AtZBinarySpace@@UAEXXZ" = 0x00046A20  # vftable slot: not recovered
+"??_GAtZBinarySpace@@UAEPAXI@Z" = 0x0003A960  # vftable slot: folded with the X space's
+"??0AtSceneLinkItem@@QAE@XZ" = 0x00047DC0  # the same code as the link's, folded
+"?CopyFrom@AtModifierState@@QAEXABV1@@Z" = 0x000534D0  # seam: in a range held elsewhere
+"?Set@AtModifierState@@QAEXPAVAtModifier@@@Z" = 0x00053520  # seam: in a range held elsewhere
+"??1AtModifierState@@QAE@XZ" = 0x00053570  # seam: in a range held elsewhere
+"?SetHeap@AtModifierState@@SAXPAX@Z" = 0x00053480  # seam: in a range held elsewhere
+"??0AtModifierSlot@@QAE@XZ" = 0x0005B900  # seam: in a range held elsewhere
+"?Insert@AtModifierSlot@@QAEXPAVAtModifier@@H@Z" = 0x0005BA20  # seam: in a range held elsewhere
+"??0AtModifierState@@QAE@XZ" = 0x00018810  # the same code as AtIoFileRef's, folded

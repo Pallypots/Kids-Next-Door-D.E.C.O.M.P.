@@ -1,5 +1,6 @@
 // The actor base, and the arrays of the classes that are recovered. See include/at/AtSceneActor.h.
 #include "at/AtSceneActor.h"
+#include "at/AtSpaceGraph.h"
 
 #include "AtSceneArray.h"
 
@@ -45,7 +46,7 @@ void* FindMatAssignment(AtSceneDevice* device, const char* name, const char* ns)
     return device->m_matAssignments.Find(name);
 }
 
-void RemoveAsKind2(AtSceneModifierSet* set, AtSceneNode* node) {
+void RemoveAsKind2(AtSpaceGraph* set, AtSceneNode* node) {
     set->m_kind = 2;
     set->RemoveDirty(node);
     set->RemoveLink(node);

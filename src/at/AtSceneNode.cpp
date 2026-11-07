@@ -2,6 +2,7 @@
 #include "at/AtScene.h"
 
 #include "at/AtSceneActor.h"
+#include "at/AtSpaceGraph.h"
 
 #include "AtSceneArray.h"
 
@@ -11,7 +12,7 @@ void AtPopHeap();
 void AtFatal(const char* message, int a, int b, int c);
 
 void* AtSceneNode::s_heap;
-int AtSceneModifierSet::s_itemsInUse;
+int AtSpaceGraph::s_itemsInUse;
 
 namespace {
 
@@ -33,7 +34,29 @@ const unsigned short kClassModifierNode = 14;
 
 }  // namespace
 
-// ---- modifier sets ------------------------------------------------------------------------------------------------------
+// ---- space graphs ------------------------------------------------------------------------------------------------------
+
+AtSceneLink::AtSceneLink() {
+    m_set = 0;
+    m_center.x = 0;
+    m_center.y = 0;
+    m_center.z = 0;
+    m_margin = 0;
+    m_next = 0;
+    m_items = 0;
+    m_nextDirty = 0;
+}
+
+AtSceneLinkItem::AtSceneLinkItem() {
+    m_low = 0;
+    m_high = 0;
+    m_list = 0;
+    m_node = 0;
+    m_next = 0;
+    m_head = 0;
+    m_prevInList = 0;
+    m_nextInList = 0;
+}
 
 void AtSceneLinkItem::Unlink(unsigned int kind) {
     if (m_prevInList != 0) {
@@ -46,7 +69,7 @@ void AtSceneLinkItem::Unlink(unsigned int kind) {
     }
 }
 
-void AtSceneModifierSet::RemoveDirty(AtSceneNode* node) {
+void AtSpaceGraph::RemoveDirty(AtSceneNode* node) {
     AtSceneLink** at = &m_dirty[m_kind];
     while (*at != 0) {
         AtSceneLink* link = *at;
@@ -59,7 +82,7 @@ void AtSceneModifierSet::RemoveDirty(AtSceneNode* node) {
     }
 }
 
-void AtSceneModifierSet::RemoveLink(AtSceneNode* node) {
+void AtSpaceGraph::RemoveLink(AtSceneNode* node) {
     AtSceneLink** at = &node->m_links[m_kind];
     AtSceneLink* link = *at;
     while (link != 0 && link->m_set != this) {
@@ -84,19 +107,19 @@ void AtSceneModifierSet::RemoveLink(AtSceneNode* node) {
     m_freeLinks = link;
 }
 
-void AtSceneModifierSet::RemoveAsKind0(AtSceneNode* node) {
+void AtSpaceGraph::RemoveAsKind0(AtSceneNode* node) {
     m_kind = 0;
     RemoveDirty(node);
     RemoveLink(node);
 }
 
-void AtSceneModifierSet::RemoveAsKind1(AtSceneNode* node) {
+void AtSpaceGraph::RemoveAsKind1(AtSceneNode* node) {
     m_kind = 1;
     RemoveDirty(node);
     RemoveLink(node);
 }
 
-void AtSceneModifierSet::RemoveAsKind3(AtSceneNode* node) {
+void AtSpaceGraph::RemoveAsKind3(AtSceneNode* node) {
     m_kind = 3;
     RemoveDirty(node);
     RemoveLink(node);

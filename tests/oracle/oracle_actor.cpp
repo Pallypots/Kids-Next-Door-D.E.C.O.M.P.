@@ -341,7 +341,7 @@ static void run_actor_direct() {
         { On on(1); ((AtSceneModelActor*)sr)->SetMesh((void*)(uintptr_t)0x77); }
         same_node(so, sr, 0xA0);
 
-        static AtSceneModifierSet sets[2];
+        static AtSpaceGraph sets[2];
         static AtSceneDirtyOwner lists[2];
         static AtSceneLink links[2];
         static AtSceneLinkItem items[2];
@@ -359,7 +359,7 @@ static void run_actor_direct() {
             ((AtSceneNode*)a)->m_links[2] = &links[side];
             ((AtSceneNode*)a)->m_flags = AtSceneNode::kInDirtyList2;
         }
-        const int before = AtSceneModifierSet::s_itemsInUse;
+        const int before = AtSpaceGraph::s_itemsInUse;
         *(int*)(uintptr_t)0x002C63F4 = before;
         { On on(0); ((AtSceneActor*)so)->Clear(); }
         { On on(1); ((AtSceneActor*)sr)->Clear(); }
