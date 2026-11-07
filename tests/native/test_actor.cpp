@@ -105,7 +105,7 @@ struct World {
             d->Allocate(&device.m_matrices, 2, 1, 1);
             d->m_rotTrans[0].Attach(&d->m_rotTrans[1]);
             d->m_rotTrans[1].Attach(&d->m_scaled[0]);
-            d->m_unknown2C = &d->m_rotTrans[0];
+            d->m_root = &d->m_rotTrans[0];
             for (const std::string& n : names) d->Insert(n.c_str(), &d->m_rotTrans[1]);
         };
         for (GmNameMap* m : {&modifiers, &geometry, &meshes, &matAssignments, &matAnimations, &mirrors, &inner, &animations, &weights, &databases, &nodes}) m->Init(size);
@@ -268,7 +268,7 @@ int main(int argc, char** argv) {
         CHECK(copy->m_scaledCount == 1);
         CHECK(copy->m_rotTrans[1].m_parent == &copy->m_rotTrans[0]);
         CHECK(copy->m_scaled[0].m_parent == &copy->m_rotTrans[1]);
-        CHECK(copy->m_unknown2C == &copy->m_rotTrans[0]);
+        CHECK(copy->m_root == &copy->m_rotTrans[0]);
         // One name an element in a copy, whichever the source's table comes to first.
         char nameInSource[9] = {};
         world.database["Crate"]->GetNameOf(&world.database["Crate"]->m_rotTrans[1], nameInSource);
@@ -306,7 +306,7 @@ int main(int argc, char** argv) {
         CHECK(rig->m_joints.m_blend.m_rotTransCount == 2);       // Two channels: room to blend.
         CHECK(rig->m_joints.m_blend.m_scaleCount == 1);
         CHECK(rig->m_joints.m_blend.m_rotations[1].value[0] == 0.0f);
-        CHECK(rig->m_joints.m_database->m_unknown2C->m_parent == rig->m_coordSys);
+        CHECK(rig->m_joints.m_database->m_root->m_parent == rig->m_coordSys);
         AtSceneAnimChannel* first = &rig->m_joints.m_channels[0];
         CHECK(first->m_time == 3.0f);
         CHECK(first->m_weightMultiplier == 0.5f);
@@ -337,7 +337,7 @@ int main(int argc, char** argv) {
         AtSceneJointedModelActor* a = (AtSceneJointedModelActor*)scene.Find("A");
         AtSceneJointedModelActor* b = (AtSceneJointedModelActor*)scene.Find("B");
         CHECK(a->m_joints.m_database == world.database["A"]);
-        CHECK(world.database["A"]->m_unknown2C->m_parent == a->m_coordSys);
+        CHECK(world.database["A"]->m_root->m_parent == a->m_coordSys);
         CHECK(b->m_joints.m_database == world.database["A"]);
         CHECK(b->m_jointsFrom == a);
         CHECK(b->m_coordSys == nullptr);

@@ -18,31 +18,10 @@ public:
 
 class Item : public AtTextureItem {
 public:
-    Item() {
-        m_flags = 0;
-        m_levels = 0;
-    }
-    void Slot0() override {}
-    void Slot1() override {}
-    void Slot3() override {}
-    void Slot4() override {}
-    void Slot5() override {}
-    void Slot6() override {}
-    void Slot7() override {}
-    void Slot8() override {}
-    void Slot9() override {}
-    void Slot10() override {}
     void Slot11() override {}
-    // Only what these tests need of the base's reader: its braces, and the words the database cares about.
-    void Read(AtTextureDatabase*, const char*, AtIoTokenizer* tokenizer) override {
+    void Read(AtTextureDatabase* database, const char* name, AtIoTokenizer* tokenizer) override {
         m_read++;
-        m_flags = 0;
-        m_levels = 1;
-        tokenizer->ExpectLeftCurly();
-        for (int token = tokenizer->Next(); token != AtIoTokenizer::kRightCurly && token != AtIoTokenizer::kEnd; token = tokenizer->Next()) {
-            if (token == 0x55) m_flags |= kDemandLoad;
-            if (token == 0x42) m_levels = (unsigned char)tokenizer->ExpectInt();
-        }
+        AtTextureBase::Read(database, name, tokenizer);
     }
     void OnLoaded(AtMaterialOwner*) override { m_loaded++; }
     int m_read = 0;

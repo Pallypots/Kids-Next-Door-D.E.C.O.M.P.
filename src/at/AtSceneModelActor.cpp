@@ -133,8 +133,8 @@ AtCoordSysDatabase* AtSceneJointedModelActor::CopyJointDatabase(AtCoordSysDataba
         AtRaise(-4, 0, 0, 0);
     }
     copy->CopyFrom(m_owner->m_device->MatrixDevice(), from);
-    if (copy->m_unknown2C != 0 && ParentCoordSys() != 0) {
-        ParentCoordSys()->Attach(copy->m_unknown2C);
+    if (copy->m_root != 0 && ParentCoordSys() != 0) {
+        ParentCoordSys()->Attach(copy->m_root);
     }
     return copy;
 }
@@ -146,8 +146,8 @@ void AtSceneJointedModelActor::ReadBody(AtNameTableOwner* owner, AtIoTokenizer* 
     case kAtWordCoordSysDatabase: {
         m_joints.ReadDatabase(owner, tokenizer);
         AtCoordSysDatabase* database = m_joints.m_database;
-        if (database->m_unknown2C != 0 && ParentCoordSys() != 0) {
-            ParentCoordSys()->Attach(database->m_unknown2C);
+        if (database->m_root != 0 && ParentCoordSys() != 0) {
+            ParentCoordSys()->Attach(database->m_root);
         }
         break;
     }

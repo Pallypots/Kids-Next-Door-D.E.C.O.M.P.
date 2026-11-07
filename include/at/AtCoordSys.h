@@ -1,13 +1,15 @@
-// Coordinate systems: a tree of transforms, each with a local and a world matrix, and the table of them that a scene or a joint set owns. Original address clusters 0x00026820-0x00026BFF, 0x000271F0-0x0002732F,
-// 0x00032270-0x000329FF and 0x00032A80-0x00032C4F. All names are inferred, from the words of the .ASN format that fill them (RotTransCoordSys, ScaleCoordSys) and from what each does.
+// Coordinate systems: a tree of transforms, each with a local and a world matrix, and the table of them that a scene or a skeleton (.AKC) owns. Original address clusters 0x00026820-0x00026E49, 0x000271F0-0x0002732F,
+// 0x00032270-0x000329FF and 0x00032A80-0x00032DEA. All names are inferred, from the words of the .ASN format that fill them (RotTransCoordSys, ScaleCoordSys) and from what each does.
 //
 // Matrices are not read here. The original reaches its matrix functions through a table of pointers in memory, set up by the graphics layer at 0x000EC670, which is not recovered; so a matrix is opaque, and what each pointer does is
-// inferred from its arguments only. They stop with a diagnostic until something sets them.
+// inferred from its arguments only. They stop with a diagnostic until something sets them. The exception is Read, whose function is recovered and is the table's from the start.
 #pragma once
 
 #include "at/AtQuaternion.h"
 #include "gm/GmNameMap.h"
 
+class AtIoTokenizer;
+struct AtIoKeyword;
 struct AtMatrix;
 
 // The table at 0x002C60C8-0x002C625C, those members of it this code uses. All cdecl.
@@ -22,8 +24,12 @@ struct AtMatrixTable {
     void (*Multiply)(AtMatrix* m, const AtMatrix* by);                                 // 0x002C6228
     void (*SetProduct)(AtMatrix* to, const AtMatrix* a, const AtMatrix* b);            // 0x002C6234
     void (*TransformPoint)(const AtMatrix* m, const AtVector3* from, AtVector3* to);   // 0x002C6250
+    void (*SetUniformScale)(AtMatrix* m, float scale);                                 // 0x002C611C
+    void (*Read)(AtMatrix* m, AtIoTokenizer* tokenizer);                               // 0x002C6264
 };
 extern AtMatrixTable g_atMatrix;
+
+void AtMatrixRead(AtMatrix* m, AtIoTokenizer* tokenizer);  // 0x00117080 sixteen reals, in the order of the sixteen floats a matrix is. In the table's slot Read.
 
 // A block of matrices the device keeps. Only the slots used here are known.
 class AtMatrixPool {
@@ -31,7 +37,7 @@ public:
     virtual void Slot0() = 0;
     virtual void Reserve(unsigned int count) = 0;   // slot 1
     virtual void Clear() = 0;                       // slot 2
-    virtual void Slot3() = 0;
+    virtual unsigned int Count() = 0;               // slot 3 what was reserved
     virtual AtMatrix* At(unsigned int index) = 0;   // slot 4
 };
 
@@ -47,6 +53,8 @@ public:
 };
 
 // Vftable 0x00274AE8.
+class AtCoordSysDatabase;
+
 class AtCoordSys {
 public:
     enum Dirty { kWorld = 0x01, kAllLocal = 0x2B, kScaled = 0x10, kInverse = 0x20 };
@@ -70,14 +78,17 @@ public:
     void SetRotation(const AtQuaternion* rotation);  // 0x000272E0
     void SetPosition(const AtVector3* position);     // 0x00027310
     void SetLookAt(const AtVector3* direction, const AtVector3* up);  // 0x00049960
+    // 0x000324E0 for a file's word that either kind takes: Parent, or LocalDrawingTransform. Anything else is reported. The parent must have come earlier in the file; if it has not, the report is followed by
+    // a call through null, as it is not in the game, where a report does not return.
+    void ReadWord(AtIoTokenizer* tokenizer, AtCoordSysDatabase* database, int token);
 
     AtCoordSys* m_parent;       // +0x04
     AtCoordSys* m_nextSibling;  // +0x08
     AtCoordSys* m_firstChild;   // +0x0C
-    AtMatrix* m_unknown10;      // +0x10 a matrix a copy of a database copies, if there is one
+    AtMatrix* m_drawingLocal;   // +0x10 the word LocalDrawingTransform's matrix; 0 if the file gave none. Multiplied by the world matrix at 0x00032940, and the result kept in m_drawingWorld.
     AtMatrix* m_local;          // +0x14
     AtMatrix* m_world;          // +0x18
-    AtMatrix* m_unknown1C;      // +0x1C a matrix a copy of a database gives it to go with +0x10
+    AtMatrix* m_drawingWorld;   // +0x1C
     int m_unknown20;            // +0x20 -1 when reset; not used here
     unsigned int m_dirty;       // +0x24
 };
@@ -88,6 +99,7 @@ public:
     AtRotTransCoordSys();                      // 0x00026830
     ~AtRotTransCoordSys() override;            // slot 2, 0x00026B50 deleting, for arrays too; 0x00026850 complete
     void CopyFromDatabase(class AtCoordSysDatabase* database, class AtCoordSysDatabase* from, unsigned int index);  // 0x000332F0
+    void Read(AtIoTokenizer* tokenizer, AtCoordSysDatabase* database);  // 0x00032D40 its name, named at once in the database, then a left curly through its right curly
 };
 
 // Vftable 0x00274B08. A transform whose scale reaches what is attached to it.
@@ -103,11 +115,12 @@ public:
 
     void SetScale(const AtVector3* scale);     // 0x00032B30
     void CopyFromDatabase(class AtCoordSysDatabase* database, class AtCoordSysDatabase* from, unsigned int index);  // 0x00032C50
+    void Read(AtIoTokenizer* tokenizer, AtCoordSysDatabase* database);  // 0x00032C70 as the rotation's, with its own words
 
     AtVector3 m_scale;          // +0x28
 };
 
-// Vftable 0x00273120. The arrays of a file's coordinate systems, and the matrices for them. Shared with .AKC files.
+// Vftable 0x00273120. The arrays of a file's coordinate systems, and the matrices for them. Filled by Load from an .AKC file: see the worklog for the format. A scene fills its own from an .ASN file.
 class AtCoordSysDatabase : public GmNameMap {
 public:
     AtCoordSysDatabase();                      // 0x000268F0
@@ -116,6 +129,10 @@ public:
 
     // 0x00026920. Room in the name map for rotTrans + scaled, and matrices for those and for `extra` more, which are taken by what calls this.
     void Allocate(AtMatrixDevice* device, unsigned int rotTrans, unsigned int scaled, unsigned int extra);
+    void Load(AtMatrixDevice* device, const char* name, int unused);  // 0x00026DB0 name + ".AKC"
+    // 0x00026C10. Errors go to the tokenizer, and reading goes on. An entry past the count given is reported, and then read over what lies after the array.
+    void Read(AtMatrixDevice* device, AtIoTokenizer* tokenizer);
+    AtMatrix* NextMatrix();                    // 0x000268C0 the next of the pool's, or null when there are no more
 
     void CopyFrom(AtMatrixDevice* device, AtCoordSysDatabase* from);  // 0x00026E50 the same shape and names, with matrices of its own. src/at/AtSceneAnimation.cpp
 
@@ -127,10 +144,12 @@ public:
     unsigned int m_scaledCount;   // +0x20
     AtRotTransCoordSys* m_rotTrans;  // +0x24
     AtScaleCoordSys* m_scaled;    // +0x28
-    AtCoordSys* m_unknown2C;      // +0x2C what a jointed actor's coordinate system takes under it
+    AtCoordSys* m_root;           // +0x2C the last entry read with no parent, by Read; a scene's never sets it. What a jointed actor's coordinate system takes under it
     unsigned int m_extra;         // +0x30
     unsigned int m_nextMatrix;    // +0x34
 
+    enum { kKeywordCount = 9 };
+    static const AtIoKeyword s_keywords[kKeywordCount];  // 0x002B05F8
     static void* s_heap;          // 0x002C6344
 
 private:

@@ -4,36 +4,7 @@
 #pragma once
 
 #include "at/AtMaterial.h"
-
-class AtTextureDatabase;
-
-// One texture as this file's reader sees it. Base class at vftable 0x00274A04, not recovered: only the two slots and the two fields used here are declared. The other slots are placeholders, slot 0
-// being a deleting destructor in the original.
-class AtTextureItem {
-public:
-    enum Flags { kDemandLoad = 0x400 };
-
-    virtual void Slot0() = 0;
-    virtual void Slot1() = 0;
-    // Slot 2, 0x000312D0 in the base class. Reads the item's body, a left curly through its right curly. name is the eight bytes given in the file, not always terminated.
-    virtual void Read(AtTextureDatabase* database, const char* name, AtIoTokenizer* tokenizer) = 0;
-    virtual void Slot3() = 0;
-    virtual void Slot4() = 0;
-    virtual void Slot5() = 0;
-    virtual void Slot6() = 0;
-    virtual void Slot7() = 0;
-    virtual void Slot8() = 0;
-    virtual void Slot9() = 0;
-    virtual void Slot10() = 0;
-    virtual void Slot11() = 0;
-    virtual void OnLoaded(AtMaterialOwner* owner) = 0;  // slot 12, 0x000FCAD0 in the concrete 2D texture
-
-    char m_unknown04[0x14];
-    unsigned short m_flags;     // +0x18
-    char m_unknown1A[3];
-    unsigned char m_levels;     // +0x1D the word MipMap's value, and 1 at the start of the base's Read; 0 from new, which is what marks an item unused
-    char m_unknown1E[0x0A];
-};
+#include "at/AtTextureItem.h"
 
 // Vftable 0x00272574.
 class AtTextureDatabase : public GmNameMap {
@@ -88,9 +59,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(AtTextureItem, m_flags) == 0x18, "AtTextureItem::m_flags");
-static_assert(offsetof(AtTextureItem, m_levels) == 0x1D, "AtTextureItem::m_levels");
-static_assert(sizeof(AtTextureItem) == 0x28, "AtTextureItem");
 static_assert(offsetof(AtTextureDatabase, m_surface2DCount) == 0x14, "AtTextureDatabase::m_surface2DCount");
 static_assert(offsetof(AtTextureDatabase, m_fileSystem) == 0x28, "AtTextureDatabase::m_fileSystem");
 static_assert(offsetof(AtTextureDatabase, m_more) == 0x30, "AtTextureDatabase::m_more");

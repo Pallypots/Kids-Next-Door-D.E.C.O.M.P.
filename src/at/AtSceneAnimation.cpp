@@ -431,12 +431,12 @@ void AtCoordSysDatabase::TakeMatricesFor(AtCoordSys* mine, AtCoordSysDatabase* f
 
 void AtCoordSysDatabase::TakeDrawingMatricesFor(AtCoordSys* mine, const AtCoordSys* source) {
     m_nextMatrix += 2;
-    if (source->m_unknown10 != 0) {
+    if (source->m_drawingLocal != 0) {
         AtMatrix* first = m_pool->At(m_nextMatrix++);
-        g_atMatrix.Copy(first, source->m_unknown10);
+        g_atMatrix.Copy(first, source->m_drawingLocal);
         AtMatrix* second = m_pool->At(m_nextMatrix++);
-        mine->m_unknown10 = first;
-        mine->m_unknown1C = second;
+        mine->m_drawingLocal = first;
+        mine->m_drawingWorld = second;
     }
 }
 
@@ -474,8 +474,8 @@ void AtCoordSysDatabase::CopyFrom(AtMatrixDevice* device, AtCoordSysDatabase* fr
         const AtRotTransCoordSys* source = &from->m_rotTrans[i];
         TakeMatricesFor(&m_rotTrans[i], from, source);
         m_rotTrans[i].CopyFromDatabase(this, from, i);
-        if (source == from->m_unknown2C) {
-            m_unknown2C = &m_rotTrans[i];
+        if (source == from->m_root) {
+            m_root = &m_rotTrans[i];
         }
         TakeDrawingMatricesFor(&m_rotTrans[i], source);
     }
@@ -483,8 +483,8 @@ void AtCoordSysDatabase::CopyFrom(AtMatrixDevice* device, AtCoordSysDatabase* fr
         const AtScaleCoordSys* source = &from->m_scaled[i];
         TakeMatricesFor(&m_scaled[i], from, source);
         m_scaled[i].CopyFromDatabase(this, from, i);
-        if (source == from->m_unknown2C) {
-            m_unknown2C = &m_scaled[i];
+        if (source == from->m_root) {
+            m_root = &m_scaled[i];
         }
         TakeDrawingMatricesFor(&m_scaled[i], source);
     }
