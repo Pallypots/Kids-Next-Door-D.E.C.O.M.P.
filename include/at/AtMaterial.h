@@ -12,10 +12,43 @@ struct AtColor {
 };
 
 class AtMaterialDatabase;  // include/at/AtMaterialDatabase.h
+class AtMatrixDevice;      // include/at/AtCoordSys.h
+void AtFatal(const char* message, int file, int line, int unused);
 
 // What materials load for, known here by the tables they use: for each of textures, materials and shaders, a group with no name space and a database of name spaces.
 // Most of it is not recovered. Its constructor and vftable are not known either; these members' own constructors stand in.
 struct AtMaterialOwner {
+    // Its vftable is not recovered, and what fills these is not known. 0x0001A68C calls slot 17; no other slot is known. Doubles override it. It stops if nothing has.
+    virtual void Slot0() {}
+    virtual void Slot1() {}
+    virtual void Slot2() {}
+    virtual void Slot3() {}
+    virtual void Slot4() {}
+    virtual void Slot5() {}
+    virtual void Slot6() {}
+    virtual void Slot7() {}
+    virtual void Slot8() {}
+    virtual void Slot9() {}
+    virtual void Slot10() {}
+    virtual void Slot11() {}
+    virtual void Slot12() {}
+    virtual void Slot13() {}
+    virtual void Slot14() {}
+    virtual void Slot15() {}
+    virtual void Slot16() {}
+    virtual AtMatrixDevice* MatrixDevice() { AtFatal("AtMaterialOwner: slot 17, the matrix device, is not recovered", 0, 0, 0); return 0; }  // slot 17
+
+    // src/at/AtDatabaseLoader.cpp.
+    void AddMeshes(GmNameMap* map, const char* ns);          // 0x00025F30 ns may be empty or null
+    void AddLightAnimations(GmNameMap* map, const char* ns); // 0x00025FB0 ns may be empty or null
+    void AddMorphAnimations(GmNameMap* map, const char* ns); // 0x00026070 ns may be empty or null
+    void AddCoordSystems(GmNameMap* map);    // 0x00026130
+    void AddMirrors(GmNameMap* map);         // 0x00026140
+    void AddWeights(GmNameMap* map);         // 0x00026150
+    void AddAnimations(GmNameMap* map);      // 0x00026160
+    void AddVertexProcesses(GmNameMap* map); // 0x00026170
+    void AddPixelProcesses(GmNameMap* map);  // 0x00026180
+
     void* FindShader(const char* name, const char* ns);     // 0x000383A0 ns may be empty or null
     void AddMaterials(GmNameMap* map, const char* ns);      // 0x00025EB0 ns may be empty or null
     void AddTextures(GmNameMap* map, const char* ns);       // 0x00025E70 ns may be empty or null; src/at/AtTextureDatabase.cpp
@@ -28,28 +61,37 @@ struct AtMaterialOwner {
     void AddFonts(GmNameMap* map, const char* ns);          // 0x000260B0 ns may be empty or null
     void AddImages(GmNameMap* map, const char* ns);         // 0x000260F0 ns may be empty or null
 
-    char m_unknown00[0x30];
+    char m_unknown04[0x2C];
     signed char m_noTextures;          // +0x30 negative: a material loaded for it keeps no shader or textures
-    char m_unknown31[0x0B];
+    char m_unknown31[0x07];
+    class AtAnimationDevice* m_animationDevice;  // +0x38 include/at/AtAnimationDatabase.h
     GmNameMapGroup m_textures;         // +0x3C
     GmNameSpaceDb m_textureSpaces;     // +0x54
     GmNameMapGroup m_materials;        // +0x78
     GmNameSpaceDb m_materialSpaces;    // +0x90
     GmNameMapGroup m_shaders;          // +0xB4
     GmNameSpaceDb m_shaderSpaces;      // +0xCC
-    char m_unknownF0[0x168 - 0xF0];
+    GmNameMapGroup m_meshes;           // +0xF0
+    GmNameSpaceDb m_meshSpaces;        // +0x108
+    char m_unknown12C[0x168 - 0x12C];
     GmNameMapGroup m_lights;               // +0x168
     GmNameSpaceDb m_lightSpaces;           // +0x180
     GmNameMapGroup m_matAssignments;       // +0x1A4
     GmNameSpaceDb m_matAssignmentSpaces;   // +0x1BC
     GmNameMapGroup m_matAnimations;        // +0x1E0
     GmNameSpaceDb m_matAnimationSpaces;    // +0x1F8
-    char m_unknown21C[0x258 - 0x21C];
+    GmNameMapGroup m_morphAnimations;      // +0x21C
+    GmNameSpaceDb m_morphAnimationSpaces;  // +0x234
     GmNameMapGroup m_fonts;                // +0x258
     GmNameSpaceDb m_fontSpaces;            // +0x270
     GmNameMapGroup m_images;               // +0x294
     GmNameSpaceDb m_imageSpaces;           // +0x2AC
-    char m_unknown2D0[0x36C - 0x2D0];
+    GmNameMapGroup m_lightAnimations;      // +0x2D0
+    GmNameSpaceDb m_lightAnimationSpaces;  // +0x2E8
+    GmNameMapGroup m_coordSystems;         // +0x30C
+    GmNameMapGroup m_mirrors;              // +0x324
+    GmNameMapGroup m_weights;              // +0x33C
+    GmNameMapGroup m_animations;           // +0x354
     GmNameMapGroup m_vertexProcesses;  // +0x36C searched by name by a shader; what fills it is not recovered
     GmNameMapGroup m_pixelProcesses;   // +0x384 searched by name by a shader; what fills it is not recovered
 };
@@ -166,6 +208,17 @@ static_assert(offsetof(AtMaterialOwner, m_fonts) == 0x258, "AtMaterialOwner::m_f
 static_assert(offsetof(AtMaterialOwner, m_fontSpaces) == 0x270, "AtMaterialOwner::m_fontSpaces");
 static_assert(offsetof(AtMaterialOwner, m_images) == 0x294, "AtMaterialOwner::m_images");
 static_assert(offsetof(AtMaterialOwner, m_imageSpaces) == 0x2AC, "AtMaterialOwner::m_imageSpaces");
+static_assert(offsetof(AtMaterialOwner, m_animationDevice) == 0x38, "AtMaterialOwner::m_animationDevice");
+static_assert(offsetof(AtMaterialOwner, m_meshes) == 0xF0, "AtMaterialOwner::m_meshes");
+static_assert(offsetof(AtMaterialOwner, m_meshSpaces) == 0x108, "AtMaterialOwner::m_meshSpaces");
+static_assert(offsetof(AtMaterialOwner, m_morphAnimations) == 0x21C, "AtMaterialOwner::m_morphAnimations");
+static_assert(offsetof(AtMaterialOwner, m_morphAnimationSpaces) == 0x234, "AtMaterialOwner::m_morphAnimationSpaces");
+static_assert(offsetof(AtMaterialOwner, m_lightAnimations) == 0x2D0, "AtMaterialOwner::m_lightAnimations");
+static_assert(offsetof(AtMaterialOwner, m_lightAnimationSpaces) == 0x2E8, "AtMaterialOwner::m_lightAnimationSpaces");
+static_assert(offsetof(AtMaterialOwner, m_coordSystems) == 0x30C, "AtMaterialOwner::m_coordSystems");
+static_assert(offsetof(AtMaterialOwner, m_mirrors) == 0x324, "AtMaterialOwner::m_mirrors");
+static_assert(offsetof(AtMaterialOwner, m_weights) == 0x33C, "AtMaterialOwner::m_weights");
+static_assert(offsetof(AtMaterialOwner, m_animations) == 0x354, "AtMaterialOwner::m_animations");
 static_assert(offsetof(AtMaterialOwner, m_vertexProcesses) == 0x36C, "AtMaterialOwner::m_vertexProcesses");
 static_assert(offsetof(AtMaterialOwner, m_pixelProcesses) == 0x384, "AtMaterialOwner::m_pixelProcesses");
 #pragma pop_macro("offsetof")

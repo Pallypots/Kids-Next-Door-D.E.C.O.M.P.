@@ -1,0 +1,521 @@
+# The .AGD lists and the readers they reach. See include/at/AtDatabaseLoader.h, AtMeshDatabase.h, AtAnimationDatabase.h and docs/worklog/2026-11-06-agd.md.
+
+[[function]]
+va = 0x000196E0
+size = 10
+symbol = "?SetHeap@AtDatabaseLoader@@SAXPAX@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000196F0
+size = 53
+symbol = "?AtFreeNameList@@YAXPAPADI@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00019730
+size = 148
+symbol = "?AtLeafName@@YAXPBDPAD@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000197D0
+size = 227
+symbol = "?AtJoinPrefix@@YAXPAD0PBD@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000198C0
+size = 536
+symbol = "?FreeNames@AtDatabaseLoader@@QAEXXZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00019AE0
+size = 264
+symbol = "?Reset@AtDatabaseLoader@@AAEXXZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00019BF0
+size = 215
+symbol = "?MakeCoordSystems@AtDatabaseLoader@@AAEXXZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00019FB0
+size = 188
+symbol = "?MakeMatAssignments@AtDatabaseLoader@@AAEXXZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001A0D0
+size = 188
+symbol = "?MakeMatAnimations@AtDatabaseLoader@@AAEXXZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001A440
+size = 110
+symbol = "??0AtDatabaseLoader@@QAE@XZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001A4B0
+size = 1620
+symbol = "?LoadDatabases@AtDatabaseLoader@@QAEXPAUAtMaterialOwner@@HPBDH@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001AB10
+size = 397
+symbol = "?Unload@AtDatabaseLoader@@UAEXXZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001ACA0
+size = 160
+symbol = "?MakeAnimations@AtDatabaseLoader@@AAEXXZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001AD40
+size = 126
+symbol = "??1AtDatabaseLoader@@UAE@XZ"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001ADC0
+size = 4448
+symbol = "?Load@AtDatabaseLoader@@QAEXPAUAtMaterialOwner@@PBDH1H@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00025F30
+size = 55
+symbol = "?AddMeshes@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00025FB0
+size = 55
+symbol = "?AddLightAnimations@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026070
+size = 55
+symbol = "?AddMorphAnimations@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026130
+size = 11
+symbol = "?AddCoordSystems@AtMaterialOwner@@QAEXPAVGmNameMap@@@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026140
+size = 11
+symbol = "?AddMirrors@AtMaterialOwner@@QAEXPAVGmNameMap@@@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026150
+size = 11
+symbol = "?AddWeights@AtMaterialOwner@@QAEXPAVGmNameMap@@@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026160
+size = 11
+symbol = "?AddAnimations@AtMaterialOwner@@QAEXPAVGmNameMap@@@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026170
+size = 11
+symbol = "?AddVertexProcesses@AtMaterialOwner@@QAEXPAVGmNameMap@@@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026180
+size = 11
+symbol = "?AddPixelProcesses@AtMaterialOwner@@QAEXPAVGmNameMap@@@Z"
+source = "src/at/AtDatabaseLoader.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A520
+size = 10
+symbol = "?SetHeap@AtAnimationDatabase@@SAXPAX@Z"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A530
+size = 231
+symbol = "?ReadComponents@AtAnimationDatabase@@QAEXPAVAtIoTokenizer@@PAPAUAtAnimationComponent@@PAI@Z"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A620
+size = 328
+symbol = "?ReadAnimations@AtAnimationDatabase@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A770
+size = 62
+symbol = "??0AtAnimationDatabase@@QAE@XZ"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A7B0
+size = 239
+symbol = "?Read@AtAnimationDatabase@@QAEXPAVAtAnimationDevice@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A8E0
+size = 207
+symbol = "?Load@AtAnimationDatabase@@QAEXPAVAtAnimationDevice@@PBDH@Z"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A9B0
+size = 198
+symbol = "?Clear@AtAnimationDatabase@@UAEXXZ"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AA80
+size = 79
+symbol = "??1AtAnimationDatabase@@UAE@XZ"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AD60
+size = 106
+symbol = "?Finish@AtMeshDatabase@@QAEXXZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002ADD0
+size = 32
+symbol = "??0AtMeshDatabase@@QAE@XZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AE10
+size = 458
+symbol = "?Read@AtMeshDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AFE0
+size = 248
+symbol = "?Load@AtMeshDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B150
+size = 24
+symbol = "?Clear@AtMeshDatabase@@UAEXXZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B430
+size = 25
+symbol = "??0AtPixelProcessDatabase@@QAE@XZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B450
+size = 240
+symbol = "?Read@AtPixelProcessDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B540
+size = 188
+symbol = "?Load@AtPixelProcessDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B600
+size = 12
+symbol = "?Clear@AtPixelProcessDatabase@@UAEXXZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B610
+size = 80
+symbol = "??1AtPixelProcessDatabase@@UAE@XZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B690
+size = 25
+symbol = "??0AtVertexProcessDatabase@@QAE@XZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B6B0
+size = 240
+symbol = "?Read@AtVertexProcessDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B7A0
+size = 188
+symbol = "?Load@AtVertexProcessDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B860
+size = 8
+symbol = "?Clear@AtVertexProcessDatabase@@UAEXXZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002B870
+size = 18
+symbol = "??1AtVertexProcessDatabase@@UAE@XZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00035B20
+size = 93
+symbol = "?Reset@AtAnimation@@QAEXXZ"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00036210
+size = 22
+symbol = "??0AtAnimation@@QAE@XZ"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00036230
+size = 5
+symbol = "??1AtAnimation@@QAE@XZ"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00036240
+size = 374
+symbol = "?Read@AtAnimation@@QAEXPAVAtAnimationDatabase@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000364D0
+size = 146
+symbol = "?ReadKeys@AtAnimationKeys@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtAnimationDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00037220
+size = 275
+symbol = "?Finish@AtMesh@@QAEXXZ"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000373C0
+size = 291
+symbol = "?Read@AtIndexArray@@QAEXPAVAtIoTokenizer@@I@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00043B70
+size = 108
+symbol = "?AtMathTriangleNormal@@YAXPBUAtMathTriangle@@PAM@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00043BE0
+size = 190
+symbol = "?AtMathTriangleSetAxis@@YAXPAUAtMathTriangle@@@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00044820
+size = 190
+symbol = "?ReadIndices@AtIndexArray@@QAEXPAVAtIoTokenizer@@I@Z"
+source = "src/at/AtMeshDatabase.cpp"
+subsystem = "at/agd"
+evidence = "tests/oracle/oracle_agd.cpp; address noted beside the declaration"
+
+[[vtable]]
+va = 0x00272370
+slots = 23
+symbol = "??_7AtDatabaseLoader@@6B@"
+source = "src/at/AtDatabaseLoader.cpp"
+
+[[vtable]]
+va = 0x00273590
+slots = 4
+symbol = "??_7AtAnimationDatabase@@6B@"
+source = "src/at/AtAnimationDatabase.cpp"
+
+[[vtable]]
+va = 0x00273908
+slots = 12
+symbol = "??_7AtMeshDatabase@@6B@"
+source = "src/at/AtMeshDatabase.cpp"
+
+[[vtable]]
+va = 0x00274508
+slots = 4
+symbol = "??_7AtVertexProcessDatabase@@6B@"
+source = "src/at/AtMeshDatabase.cpp"
+
+[[vtable]]
+va = 0x00273E7C
+slots = 4
+symbol = "??_7AtPixelProcessDatabase@@6B@"
+source = "src/at/AtMeshDatabase.cpp"
+
+[symbols]
+"?s_heap@AtDatabaseLoader@@2PAXA" = 0x002C62DC
+"?s_heap@AtAnimationDatabase@@2PAXA" = 0x002C6374
+"?s_keywords@AtDatabaseLoader@@2QBUAtIoKeyword@@B" = 0x002B0190
+"?s_keywords@AtMeshDatabase@@2QBUAtIoKeyword@@B" = 0x002B0AA0
+"?s_keywords@AtVertexProcessDatabase@@2QBUAtIoKeyword@@B" = 0x002B0F58
+"?s_keywords@AtPixelProcessDatabase@@2QBUAtIoKeyword@@B" = 0x002B0E90
+"?s_keywords@AtAnimationDatabase@@2QBUAtIoKeyword@@B" = 0x002B0990
+"??_GAtDatabaseLoader@@UAEPAXI@Z" = 0x0001BF70
+"??_GAtAnimationDatabase@@UAEPAXI@Z" = 0x0002AAD0
+"??_GAtMeshDatabase@@UAEPAXI@Z" = 0x0002ADF0
+"??_GAtVertexProcessDatabase@@UAEPAXI@Z" = 0x0002B890
+"??_GAtPixelProcessDatabase@@UAEPAXI@Z" = 0x0002B660
+"?s_textureNames@AtDatabaseLoader@@2PAPADA" = 0x002C62BC
+"?s_shaderNames@AtDatabaseLoader@@2PAPADA" = 0x002C62A4
+"?s_materialNames@AtDatabaseLoader@@2PAPADA" = 0x002C629C
+"?s_meshNames@AtDatabaseLoader@@2PAPADA" = 0x002C6298
+"?s_lightNames@AtDatabaseLoader@@2PAPADA" = 0x002C62C4
+"?s_coordSystemNames@AtDatabaseLoader@@2PAPADA" = 0x002C62AC
+"?s_mirrorNames@AtDatabaseLoader@@2PAPADA" = 0x002C62D4
+"?s_weightsNames@AtDatabaseLoader@@2PAPADA" = 0x002C62B8
+"?s_animationNames@AtDatabaseLoader@@2PAPADA" = 0x002C62C0
+"?s_matAssignmentNames@AtDatabaseLoader@@2PAPADA" = 0x002C62C8
+"?s_matAnimationNames@AtDatabaseLoader@@2PAPADA" = 0x002C62D0
+"?s_morphAnimationNames@AtDatabaseLoader@@2PAPADA" = 0x002C62B0
+"?s_lightAnimationNames@AtDatabaseLoader@@2PAPADA" = 0x002C62B4
+"?s_fontNames@AtDatabaseLoader@@2PAPADA" = 0x002C62CC
+"?s_imageNames@AtDatabaseLoader@@2PAPADA" = 0x002C62A8
+"?s_vertexProcessNames@AtDatabaseLoader@@2PAPADA" = 0x002C62D8
+"?s_pixelProcessNames@AtDatabaseLoader@@2PAPADA" = 0x002C62A0
+"?Slot3@AtMeshDatabase@@UAEXH@Z" = 0x000CBF30
+"?HasBinaryForm@AtMeshDatabase@@UAEHXZ" = 0x000AB720
+"?LoadBinaryForm@AtMeshDatabase@@UAEXPAUAtMaterialOwner@@PBD@Z" = 0x000447F0
