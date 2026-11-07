@@ -18,6 +18,7 @@ public:
     void Rotate(AtVector3* vector) const;                           // 0x00033B00 (v * q) * conjugate(q)
     void SetAxisAngle(const AtVector3& axis, float angle);          // 0x00033B90
     void Read(AtIoTokenizer* tokenizer);                            // 0x00033BC0 in src/at/AtCoordSys.cpp
+    void SetIdentity();                                             // 0x00035820 in src/at/AtSceneParticle.cpp. (0, 0, 0, 1)
 
     float x;   // +0x00
     float y;   // +0x04

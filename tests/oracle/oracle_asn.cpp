@@ -4,7 +4,8 @@
 //
 // Cases: every .ASN file listed in index.txt, loaded through the file code on both sides; text written for each word and error path; and coordinate systems, nodes and modifier sets driven directly.
 //
-// ModelActor and JointedModelActor are the real thing on both sides, and every word of them is compared, down through their channels, blends and copied databases. The classes of node still not recovered are doubles on both sides: the
+// ModelActor, JointedModelActor and ParticleSystemActor are the real thing on both sides, and every word of them is compared, down through their channels, blends, copied databases and layers. The emitters a particle system finds and the drawers
+// it makes are stand-ins, the same on both sides: what real ones hold comes from .ASE files. The classes of node still not recovered are doubles on both sides: the
 // real actor base (the real node for SoundNode) with a reader that takes the few words those classes own and goes on to the base for the rest. On the original's side the double is its base class's code with the constructors redirected
 // and a vftable of the harness's, so its array handling, its eh iterators and its vector deleters still run. So those words (Mesh and Emitter on such a class, WorldAdditive*) are consumed and not compared. The matrix table, the graphics
 // device and the tables it and the owner hold are the harness's: what they would hold comes from other files, and is here a stand-in for each name in the file.
@@ -24,8 +25,10 @@
 #include <vector>
 
 #include "at/AtIoTokenizer.h"
+#include "at/AtRandom.h"
 #include "at/AtScene.h"
 #include "at/AtSceneActor.h"
+#include "at/AtSceneParticle.h"
 #include "at/AtText.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
@@ -441,6 +444,61 @@ static AtCoordSysDatabase* make_database(int side, const std::string& name, cons
     return db;
 }
 
+// What a particle system finds: a stand-in for what an .ASE file says, for each name, of a shape that follows from the name. A name space's is another stand-in, so that which table it came from shows.
+static AtSceneParticleEmitter* g_emitters[2];
+static unsigned g_emitter_count;
+static const unsigned kEmitterRoom = 0x240;
+
+static void make_emitter(AtSceneParticleEmitter* e, uint32_t h) {
+    std::memset(e, 0xAB, kEmitterRoom);
+    const auto real = [&](int i) { return (float)((h >> (i & 15)) % 101 + (uint32_t)i) * 0.37f - 7.3f; };
+    AtQuaternion* const colors[3] = {&e->m_blurColor, &e->m_blurColorLinear, &e->m_blurColorQuadratic};
+    for (int c = 0; c < 3; c++) {
+        colors[c]->x = real(c * 4);
+        colors[c]->y = real(c * 4 + 1);
+        colors[c]->z = real(c * 4 + 2);
+        colors[c]->w = real(c * 4 + 3);
+    }
+    e->m_blurCount = h % 5;
+    e->m_blurTime = real(12);
+    e->m_blurStep = (float)(h % 89 + 1) * 0.0173f;
+    e->m_maxParticles = (h >> 5) % 7;
+    e->m_localSphere.center.x = real(13);
+    e->m_localSphere.center.y = real(14);
+    e->m_localSphere.center.z = real(15);
+    e->m_localSphere.radius = real(5);
+}
+
+static unsigned emitter_id(int side, const void* e) { return (unsigned)(((const char*)e - (const char*)g_emitters[side]) / kEmitterRoom); }
+
+static unsigned g_drawers_made[2];
+class TestDrawer : public AtSceneParticleDrawer {
+public:
+    int side;
+    unsigned id;
+    TestDrawer(int s, unsigned i) : side(s), id(i) { m_owner = nullptr; }
+    void Slot0() override {}
+    void Start(AtNameTableOwner* owner, AtSceneParticleEmitter* emitter) override {
+        note(side, 'E', emitter_id(side, emitter));
+        note(side, 'e', owner == g_own[side]);
+        m_owner = owner;
+    }
+};
+class TestDrawerMaker : public AtSceneParticleDrawerMaker {
+public:
+    int side = 0;
+    AtSceneParticleDrawer* New() override {
+        const unsigned id = g_drawers_made[side]++;
+        note(side, 'M', id);
+        return new (std::malloc(sizeof(TestDrawer))) TestDrawer(side, id);
+    }
+    void Release(AtSceneParticleDrawer* drawer) override {
+        note(side, 'm', ((TestDrawer*)drawer)->id);
+        std::free(drawer);
+    }
+};
+static TestDrawerMaker g_drawer_maker[2];
+
 struct Env {
     std::vector<GmNameMap*> maps[2];
     GmNameMap joints[2];
@@ -461,7 +519,11 @@ struct Env {
             AtNameTableOwner& w = *g_own[side];
             w.m_unknown08 = 0; w.m_loader = 0; w.m_unknown10 = 0; w.m_unknown14 = 0;
             w.m_device = g_device[side];
+            g_drawer_maker[side].side = side;
+            g_drawers_made[side] = 0;
+            w.m_particleDrawers = &g_drawer_maker[side];
             const unsigned pool = (unsigned)spaces.size() + 8;
+            w.m_emitterSpaces.Init(pool);
             w.m_nodeSpaces.Init(pool);
             w.m_modifierSpaces.Init(pool);
             w.m_geometrySpaces.Init(pool);
@@ -492,6 +554,26 @@ struct Env {
                 maps[side].push_back(m);
                 return m;
             };
+            // Each name space's emitters and the plain table's are different ones.
+            g_emitter_count = ((unsigned)names.size() + 1) * ((unsigned)spaces.size() + 1);
+            g_emitters[side] = (AtSceneParticleEmitter*)std::malloc((size_t)g_emitter_count * kEmitterRoom);
+            unsigned emitters_given = 0;
+            const auto emitters = [&](uint32_t salt) {
+                GmNameMap* m = new GmNameMap;
+                m->Init((unsigned)names.size() + 1);
+                for (const std::string& n : names) {
+                    AtSceneParticleEmitter* e = (AtSceneParticleEmitter*)((char*)g_emitters[side] + (size_t)emitters_given++ * kEmitterRoom);
+                    make_emitter(e, hash_of(n) ^ salt);
+                    m->Insert(n.c_str(), e);
+                }
+                maps[side].push_back(m);
+                return m;
+            };
+            w.m_emitters.Add(emitters(0));
+            {
+                uint32_t salt = 0;
+                for (const std::string& s : spaces) w.m_emitterSpaces.Add(s.c_str(), emitters(salt += 0x9E3779B1));
+            }
             w.m_nodes.Add(nodes());
             w.m_modifiers.Add(fill(1));
             w.m_geometry.Add(fill(2));
@@ -653,6 +735,11 @@ static void same_node(const void* o, const void* r, unsigned size) {
         case 0x30:
             eq("node's owner", raw(o, off) == g_own[0], raw(r, off) == g_own[1]);
             break;
+        case 0x98:
+            // A particle system's emitter is a place of each side's. For other classes, a mesh is a stand-in made from a name, not an address, and it might fall in such a place on one side.
+            if (((const AtSceneNode*)o)->m_class == kClasses[kAtActorParticleSystem] && ((const AtSceneNode*)r)->m_class == kClasses[kAtActorParticleSystem]) eq("emitter", canon(0, raw(o, off)), canon(1, raw(r, off)));
+            else eq("node", dword(o, off), dword(r, off));
+            break;
         case 0x34: case 0x38: case 0x44: case 0x48: case 0x4C: case 0x50: case 0x54: case 0x58: case 0x5C: case 0x80: case 0xA0: case 0x90:
         // Of the actors: what they own is compared by what it holds, in same_actor, and what they share by which it is.
         case 0x7C: case 0x8C: case 0xA8: case 0xAC: case 0xB0: case 0xB4: case 0xC8:
@@ -728,6 +815,7 @@ static void register_copies(int side, const AtScene* s) {
 
 static void register_scene(int side, const AtScene* s) {
     g_ranges[side].clear();
+    add_range(side, g_emitters[side], (size_t)g_emitter_count * kEmitterRoom, 41);
     add_range(side, g_mat_anims[side], (size_t)g_anim_count * sizeof(AtSceneMatAnimation), 30);
     add_range(side, g_anims[side], (size_t)g_anim_count * sizeof(AtSceneAnimation), 31);
     for (size_t i = 0; i < g_dbs[side].size(); i++) register_database(side, g_dbs[side][i], 0x1000 + (uint32_t)i * 3);
@@ -800,8 +888,33 @@ static void same_anim_set(const AtSceneAnimSet* o, const AtSceneAnimSet* r) {
     }
 }
 
+static void same_layer(const AtSceneParticleLayer* o, const AtSceneParticleLayer* r) {
+    eq("layer has a drawer", o->m_drawer != nullptr, r->m_drawer != nullptr);
+    if (o->m_drawer && r->m_drawer) {
+        eq("layer's drawer", ((TestDrawer*)o->m_drawer)->id, ((TestDrawer*)r->m_drawer)->id);
+        eq("layer's drawer's owner", o->m_drawer->m_owner == g_own[0], r->m_drawer->m_owner == g_own[1]);
+    }
+    eq("layer's emitter", canon_known(0, o->m_emitter), canon_known(1, r->m_emitter));
+    eq("layer has particles", o->m_particles != nullptr, r->m_particles != nullptr);
+    for (unsigned off = 0x0C; off < sizeof(AtSceneParticleLayer); off += 4) eq("layer's word", dword(o, off), dword(r, off));
+    if (o->m_particles && r->m_particles && o->m_count == r->m_count) eq("layer's particles", std::memcmp(o->m_particles, r->m_particles, (size_t)o->m_count * sizeof(AtSceneParticle)), 0);
+}
+
+static void same_particle_system(const AtSceneParticleSystemActor* o, const AtSceneParticleSystemActor* r) {
+    // Past same_node, which takes the words of other classes for pointers at some of these offsets.
+    for (unsigned off = 0x9C; off < sizeof(AtSceneParticleSystemActor); off += 4) {
+        if (off != 0xAC) eq("particle system's word", dword(o, off), dword(r, off));
+    }
+    eq("particle system has layers", o->m_layers != nullptr, r->m_layers != nullptr);
+    if (o->m_layers && r->m_layers && o->m_layerCount == r->m_layerCount) {
+        eq("layers' count", dword(o->m_layers, (unsigned)-4), dword(r->m_layers, (unsigned)-4));
+        for (unsigned i = 0; i < o->m_layerCount; i++) same_layer(&o->m_layers[i], &r->m_layers[i]);
+    }
+}
+
 // Past what same_node sees as words: what an actor owns.
 static void same_actor(int k, const AtSceneActor* o, const AtSceneActor* r) {
+    if (k == kAtActorParticleSystem) same_particle_system((const AtSceneParticleSystemActor*)o, (const AtSceneParticleSystemActor*)r);
     if (o->m_matChannels && r->m_matChannels && o->m_matChannelCount == r->m_matChannelCount) {
         for (unsigned i = 0; i < o->m_matChannelCount; i++) {
             for (unsigned off = 0; off < sizeof(AtSceneMatChannel); off += 4) same_word("material channel", &o->m_matChannels[i], &r->m_matChannels[i], off);
@@ -849,6 +962,7 @@ static void same_scene(const char* what, const AtScene* o, const AtScene* r) {
         else eq("scene's count", dword(o, off), dword(r, off));
     }
     eq("scene's owner", o->m_owner == g_own[0], r->m_owner == g_own[1]);
+    eq("random cursor", *(uint32_t*)(uintptr_t)0x002C60C0, g_atRandomCursor);
     if (a.m_rotTrans && b.m_rotTrans && a.m_rotTransCount == b.m_rotTransCount) {
         for (unsigned i = 0; i < a.m_rotTransCount; i++) same_cs(&a.m_rotTrans[i], &b.m_rotTrans[i], sizeof(AtRotTransCoordSys));
         eq("rot array's count", dword(a.m_rotTrans, (unsigned)-4), dword(b.m_rotTrans, (unsigned)-4));
@@ -959,7 +1073,7 @@ static void run_text(const std::vector<unsigned char>& data, const std::string& 
     for (int k = 0; k < kAtActorKinds; k++) {
         const unsigned count = dword(r, kActorFields[k].count);
         g_actors_seen += count;
-        if (k == kAtActorModel || k == kAtActorJointedModel) g_real_actors += count;
+        if (k == kAtActorModel || k == kAtActorJointedModel || k == kAtActorParticleSystem) g_real_actors += count;
         else if (count) { g_double_actors += count; g_last_load_doubles = true; }
     }
     // Over what is there.
@@ -983,7 +1097,9 @@ static const char kHead[] = "RotTransCoordSys[6]\nScaleCoordSys[2]\nMotionState[
 
 // One node with these lines inside it.
 static std::string one(const std::string& cls, const std::string& header, const std::string& body) {
-    return std::string(kHead) + cls + "[1]\n{\n " + cls + " \"Self\" " + header + "\n {\n" + body + "\n }\n}\n";
+    // A real particle system cannot do without an emitter. oracle_particle.cpp has the cases without one.
+    const std::string needs = cls == "ParticleSystemActor" ? "Emitter \"Self\" \"\"\n" : "";
+    return std::string(kHead) + cls + "[1]\n{\n " + cls + " \"Self\" " + header + "\n {\n" + needs + body + "\n }\n}\n";
 }
 
 static void run_written() {
@@ -1020,7 +1136,8 @@ static void run_written() {
         for (const char* word : kArrays) {
             const std::string w = word;
             if (w == "PhysicsJointedModelActor") continue;
-            all += w + "[2]\n{\n " + w + " \"" + w.substr(0, 3) + "1\" RotTransCoordSys\n {\n Position 1 2 3\n }\n " + w + " \"" + w.substr(0, 3) + "2\" RotTransCoordSys\n {\n }\n}\n";
+            const std::string needs = w == "ParticleSystemActor" ? "Emitter \"Par\" \"\"\n" : "";
+            all += w + "[2]\n{\n " + w + " \"" + w.substr(0, 3) + "1\" RotTransCoordSys\n {\n" + needs + " Position 1 2 3\n }\n " + w + " \"" + w.substr(0, 3) + "2\" RotTransCoordSys\n {\n" + needs + " }\n}\n";
         }
         run_text(bytes(all), "every class, in a file", 0xCD, false);
     }
@@ -1116,6 +1233,13 @@ static void set_actor_heaps(void* actor, void* set, void* blend) {
     AtSceneAnimSet::s_heap = set;
     *(void**)(uintptr_t)0x002C63D8 = blend;
     AtSceneAnimBlend::s_heap = blend;
+}
+static int g_heap_particle, g_heap_layer;
+static void set_particle_heaps(void* system, void* layer) {
+    *(void**)(uintptr_t)0x002C7E10 = system;
+    AtSceneParticleSystemActor::s_heap = system;
+    *(void**)(uintptr_t)0x002C9C10 = layer;
+    AtSceneParticleLayer::s_heap = layer;
 }
 
 static void run_shortages() {
@@ -2200,7 +2324,8 @@ static void run_alone() {
         for (const char* word : kArrays) {
             const std::string w = word;
             if (w == "PhysicsJointedModelActor") continue;
-            text += w + "[1]\n{\n " + w + " \"" + w.substr(0, 4) + "\"\n {\n }\n}\n";
+            const std::string needs = w == "ParticleSystemActor" ? "Emitter \"Base\" \"\"\n" : "";
+            text += w + "[1]\n{\n " + w + " \"" + w.substr(0, 4) + "\"\n {\n" + needs + " }\n}\n";
         }
         const std::vector<unsigned char> data = bytes(text);
         g_fs->files[0].data = g_fs->files[1].data = data.data();
@@ -2298,8 +2423,8 @@ static int oracle_main(int argc, char** argv, void (*tests)()) {
     redirect(0x00011070, (const void*)o_fatal2);
     redirect(0x00011170, (const void*)o_raise);
     at<void(__cdecl*)()>(0x00125BC7)();
-    // Kinds 0 and 1 are the real classes.
-    install_kind<2>(); install_kind<3>(); install_kind<4>(); install_kind<5>(); install_kind<6>(); install_kind<7>(); install_kind<8>();
+    // Kinds 0, 1 and 2 are the real classes.
+    install_kind<3>(); install_kind<4>(); install_kind<5>(); install_kind<6>(); install_kind<7>(); install_kind<8>();
     redirect(0x0005F130, (const void*)o_data_link);
     set_tables();
     if (entries && !arm_entries(entries)) return 2;
@@ -2324,6 +2449,7 @@ static int oracle_main(int argc, char** argv, void (*tests)()) {
     GmNameSpaceDb::s_heap = &g_heap_file;
     set_heaps(&g_heap_scene, &g_heap_node, &g_heap_db);
     set_actor_heaps(&g_heap_actor, &g_heap_set, &g_heap_blend);
+    set_particle_heaps(&g_heap_particle, &g_heap_layer);
 
     g_heap_pad = 0x1000;
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.

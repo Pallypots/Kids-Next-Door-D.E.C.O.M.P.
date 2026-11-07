@@ -176,7 +176,7 @@ int main() {
              "}\n"
              "ModifierNode[1]\n{\n ModifierNode \"Mover\" \n {\n  Modifier \"Mod\" \"\"\n  ModificationEnable\n }\n}\n"
              "ModelActor[1]\n{\n ModelActor \"Thing\" RotTransCoordSys\n {\n  Mesh \"Thing\" \"\"\n  LineSegIntersectEnable\n }\n}\n"
-             "ParticleSystemActor[1]\n{\n ParticleSystemActor \"Puff\"\n {\n  Mesh \"Puff\" \"\"\n  CollisionEnable\n }\n}\n");
+             "LodGroupActor[1]\n{\n LodGroupActor \"Puff\"\n {\n  Mesh \"Puff\" \"\"\n  CollisionEnable\n }\n}\n");
         CHECK(scene.m_nodeCount == 2);
         CHECK(scene.m_modifierNodeCount == 1);
         CHECK(scene.m_modelCount == 1);

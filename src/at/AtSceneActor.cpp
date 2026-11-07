@@ -1,6 +1,8 @@
 // The actor base, and the arrays of the classes that are recovered. See include/at/AtSceneActor.h.
 #include "at/AtSceneActor.h"
 
+#include "at/AtSceneParticle.h"
+
 #include "AtSceneArray.h"
 
 void AtRaise(int code, int a, int b, int c);
@@ -64,6 +66,8 @@ unsigned int AtSceneActorsSize(int kind) {
         return sizeof(AtSceneModelActor);
     case kAtActorJointedModel:
         return sizeof(AtSceneJointedModelActor);
+    case kAtActorParticleSystem:
+        return sizeof(AtSceneParticleSystemActor);
     default:
         return AtSceneUnrecoveredActorsSize(kind);
     }
@@ -79,6 +83,11 @@ void AtSceneActorsConstruct(int kind, void* first, unsigned int count) {
     case kAtActorJointedModel:
         for (unsigned int i = 0; i < count; i++) {
             new ((AtSceneJointedModelActor*)first + i, AtPlacement()) AtSceneJointedModelActor;
+        }
+        break;
+    case kAtActorParticleSystem:
+        for (unsigned int i = 0; i < count; i++) {
+            new ((AtSceneParticleSystemActor*)first + i, AtPlacement()) AtSceneParticleSystemActor;
         }
         break;
     default:
@@ -97,6 +106,11 @@ void AtSceneActorsDestroy(int kind, void* first, unsigned int count) {
     case kAtActorJointedModel:
         for (unsigned int i = count; i > 0; i--) {
             ((AtSceneJointedModelActor*)first)[i - 1].~AtSceneJointedModelActor();
+        }
+        break;
+    case kAtActorParticleSystem:
+        for (unsigned int i = count; i > 0; i--) {
+            ((AtSceneParticleSystemActor*)first)[i - 1].~AtSceneParticleSystemActor();
         }
         break;
     default:
