@@ -276,3 +276,126 @@ void AtInputRouter::Allocate(void* device, unsigned int buttons, unsigned int ax
     AllocateButtonLinks(buttons);
     AllocateAxisLinks(axes);
 }
+
+int AtInputLinkList::Add(AtInputLink* link) {
+    if (m_count == m_capacity) {
+        return 0;
+    }
+    m_items[m_count] = link;
+    m_count++;
+    return 1;
+}
+
+AtInputLink* AtInputRouter::FindButtonLink(AtInputController* controller, int physical, int state, int abstractId) {
+    for (unsigned int i = 0; i < m_boundButtons.m_count; i++) {
+        AtInputLink* link = m_boundButtons.m_items[i];
+        if (link->m_controller == controller && link->m_id == physical && link->m_state == state && link->m_abstract == abstractId) {
+            return link;
+        }
+    }
+    return 0;
+}
+
+AtInputLink* AtInputRouter::FindAxisLink(AtInputController* controller, int physical, int abstractId) {
+    for (unsigned int i = 0; i < m_boundAxes.m_count; i++) {
+        AtInputLink* link = m_boundAxes.m_items[i];
+        if (link->m_controller == controller && link->m_id == physical && link->m_abstract == abstractId) {
+            return link;
+        }
+    }
+    return 0;
+}
+
+void AtInputRouter::BindButtonTo(AtInputController* controller, int physical, int state, int abstractId) {
+    if (FindButtonLink(controller, physical, state, abstractId) != 0) {
+        return;
+    }
+    AtInputLink* link = m_freeFirst;
+    if (link != 0) {
+        m_freeFirst = link->m_next;
+        if (m_freeFirst != 0) {
+            m_freeFirst->m_prev = 0;
+        } else {
+            m_freeLast = 0;
+        }
+    }
+    link->m_controller = controller;
+    link->m_id = physical;
+    link->m_state = state;
+    link->m_abstract = abstractId;
+    link->m_owner = this;
+    if (controller->BindButton(link)) {
+        m_boundButtons.Add(link);
+    } else {
+        PushFree(this, link);
+    }
+}
+
+void AtInputRouter::BindAxisTo(AtInputController* controller, int physical, int, int abstractId) {
+    if (FindAxisLink(controller, physical, abstractId) != 0) {
+        return;
+    }
+    AtInputLink* link = m_freeFirst;
+    if (link != 0) {
+        m_freeFirst = link->m_next;
+        if (m_freeFirst != 0) {
+            m_freeFirst->m_prev = 0;
+        } else {
+            m_freeLast = 0;
+        }
+    }
+    link->m_controller = controller;
+    link->m_id = physical;
+    link->m_abstract = abstractId;
+    link->m_owner = this;
+    if (controller->BindAxis(link)) {
+        m_boundAxes.Add(link);
+    } else {
+        PushFree(this, link);
+    }
+}
+
+int AtInputRouter::BindAll(int physical, int state, int abstractId) {
+    AtInputDevice* device = (AtInputDevice*)m_device;
+    (this->*m_bindFunction)(device->First(), physical, state, abstractId);
+    (this->*m_bindFunction)(device->Second(), physical, state, abstractId);
+    for (unsigned int i = 0; i < device->m_numberedCount; i++) {
+        (this->*m_bindFunction)(device->Numbered(i), physical, state, abstractId);
+    }
+    for (unsigned int i = 0; i < device->ConnectedCount(); i++) {
+        (this->*m_bindFunction)(device->Connected(i), physical, state, abstractId);
+    }
+    return 1;
+}
+
+int AtInputRouter::BindButton(AtInputController* controller, int physical, int state, int abstractId) {
+    if (controller == 0) {
+        m_bindFunction = &AtInputRouter::BindButtonTo;
+        return BindAll(physical, state, abstractId);
+    }
+    BindButtonTo(controller, physical, state, abstractId);
+    return 1;
+}
+
+int AtInputRouter::BindAxis(AtInputController* controller, int physical, int abstractId) {
+    if (controller == 0) {
+        m_bindFunction = &AtInputRouter::BindAxisTo;
+        return BindAll(physical, 0, abstractId);
+    }
+    BindAxisTo(controller, physical, 0, abstractId);
+    return 1;
+}
+
+AtInputPhysicalController* AtInputDevice::Connected(unsigned int index) {
+    const unsigned int count = PhysicalCount();
+    for (unsigned int i = 0; i < count; i++) {
+        AtInputPhysicalController* physical = Physical(i);
+        if (physical->m_started != 0 && physical->m_acquired != 0) {
+            if (index == 0) {
+                return physical;
+            }
+            index--;
+        }
+    }
+    return 0;
+}

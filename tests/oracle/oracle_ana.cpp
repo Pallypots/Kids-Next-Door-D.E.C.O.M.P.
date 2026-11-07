@@ -80,9 +80,9 @@ static void same_links(const AtInputRouter* o, const AtInputRouter* r, const AtI
         eq("link's next", link_index(o, a[i].m_next), link_index(r, b[i].m_next));
         eq("link's prev", link_index(o, a[i].m_prev), link_index(r, b[i].m_prev));
         eq("link's id", a[i].m_id, b[i].m_id);
-        eq("link's 0C", a[i].m_unknown0C, b[i].m_unknown0C);
-        eq("link's 10", a[i].m_unknown10, b[i].m_unknown10);
-        eq("link's 18", a[i].m_unknown18, b[i].m_unknown18);
+        eq("link's 0C", a[i].m_state, b[i].m_state);
+        eq("link's 10", a[i].m_abstract, b[i].m_abstract);
+        eq("link's 18", (uintptr_t)a[i].m_owner, (uintptr_t)b[i].m_owner);
     }
 }
 
@@ -96,7 +96,7 @@ static void same_list(const AtInputRouter* o, const AtInputRouter* r, const AtIn
 
 static void same_router(const AtInputRouter* o, const AtInputRouter* r) {
     eq("router's device", (uintptr_t)o->m_device, (uintptr_t)r->m_device);
-    eq("router's function", (uintptr_t)o->m_bindFunction, (uintptr_t)r->m_bindFunction);
+    eq("router's function", *(uintptr_t*)&o->m_bindFunction, *(uintptr_t*)&r->m_bindFunction);
     eq("router's chain", o->m_passOnTo != nullptr, r->m_passOnTo != nullptr);
     eq("router's count", o->m_linkCount, r->m_linkCount);
     eq("router's 44", o->m_unknown44, r->m_unknown44);
@@ -466,7 +466,7 @@ public:
 };
 
 struct Fake {
-    AtInputController c;
+    AtAbstractController c;
     AtInputController::Input buttons[4], axes[4];
     AtInputController::Chain buttonChains[4], axisChains[4];
     Fake() {
@@ -539,7 +539,7 @@ static void bound_routers(AtInputRouter*& a, AtInputRouter*& b, Fake& x, Fake& y
     a = (AtInputRouter*)g_router_o;
     b = (AtInputRouter*)g_router_r;
     eq("router's vftable", *(uint32_t*)a, 0x002785FC);
-    a->m_bindFunction = b->m_bindFunction = &g_device_token;  // For Allocate's release to clear.
+    *(void**)&a->m_bindFunction = *(void**)&b->m_bindFunction = &g_device_token;  // For Allocate's release to clear.
     { On on(0); at<FnRouterAlloc>(0x00079350)(a, nullptr, &g_device_token, 8, 6); }
     { On on(1); b->Allocate(&g_device_token, 8, 6); }
     same_router(a, b);
@@ -590,7 +590,7 @@ static void run_router() {
         AtInputRouter* a;
         AtInputRouter* b;
         bound_routers(a, b, x, y);
-        a->m_bindFunction = b->m_bindFunction = &g_device_token;
+        *(void**)&a->m_bindFunction = *(void**)&b->m_bindFunction = &g_device_token;
         { On on(0); at<Fn0>(0x000792A0)(a, nullptr); }
         { On on(1); b->Release(); }
         same_router(a, b);
