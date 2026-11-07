@@ -1,0 +1,754 @@
+# The AGN family of loaders. See include/at/AtMatAssignment.h, AtMatAnimation.h, AtImageDatabase.h, AtLight.h, AtLensFlare.h.
+
+[[function]]
+va = 0x00025F70
+size = 55
+symbol = "?AddLights@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtMaterialOwnerLists.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00025FF0
+size = 55
+symbol = "?AddMatAssignments@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtMaterialOwnerLists.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00026030
+size = 55
+symbol = "?AddMatAnimations@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtMaterialOwnerLists.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000260B0
+size = 55
+symbol = "?AddFonts@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtMaterialOwnerLists.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000260F0
+size = 55
+symbol = "?AddImages@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtMaterialOwnerLists.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027EF0
+size = 52
+symbol = "?FindMaterial@AtMaterialOwner@@QAEPAXPBD0@Z"
+source = "src/at/AtMaterialOwnerLists.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00040070
+size = 50
+symbol = "?AddLensFlares@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00053570
+size = 34
+symbol = "??1AtMatAssignment@@QAE@XZ"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000347C0
+size = 258
+symbol = "?ReadWithNameSpaces@AtMatAssignment@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000348D0
+size = 242
+symbol = "?Read@AtMatAssignment@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@PBD@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000349D0
+size = 168
+symbol = "?Copy@AtMatAssignment@@QAEXABU1@@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034710
+size = 10
+symbol = "?SetHeap@AtMatAssignment@@SAXPAX@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027B60
+size = 10
+symbol = "?SetHeap@AtMatAssignmentDatabase@@SAXPAX@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027B70
+size = 442
+symbol = "?Read@AtMatAssignmentDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027D30
+size = 26
+symbol = "??0AtMatAssignmentDatabase@@QAE@XZ"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027D50
+size = 184
+symbol = "?Load@AtMatAssignmentDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027E10
+size = 64
+symbol = "?Clear@AtMatAssignmentDatabase@@UAEXXZ"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027E50
+size = 133
+symbol = "??1AtMatAssignmentDatabase@@UAE@XZ"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001A070
+size = 84
+symbol = "??_GAtMatAssignmentDatabase@@UAEPAXI@Z"
+source = "src/at/AtMatAssignment.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034F70
+size = 20
+symbol = "??0AtGrKeySet@@QAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00035070
+size = 42
+symbol = "??1AtGrKeySet@@QAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00035040
+size = 35
+symbol = "?Clear@AtGrKeySet@@UAEXXZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034F40
+size = 33
+symbol = "?SetExternalName@AtGrKeySet@@UAEXPBD@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034F90
+size = 124
+symbol = "?Read@AtGrKeySet@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00035010
+size = 40
+symbol = "?Reserve@AtGrKeySet@@QAEXI@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034F30
+size = 10
+symbol = "?SetHeap@AtGrFrameNumberSet@@SAXPAX@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034CE0
+size = 25
+symbol = "??0AtGrFrameNumberSet@@QAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034ED0
+size = 86
+symbol = "??1AtGrFrameNumberSet@@QAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034C30
+size = 90
+symbol = "?Allocate@AtGrFrameNumberSet@@UAEXI@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034C90
+size = 11
+symbol = "?Free@AtGrFrameNumberSet@@UAEXXZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034CA0
+size = 46
+symbol = "?ReadEntries@AtGrFrameNumberSet@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034D00
+size = 17
+symbol = "?Clear@AtGrFrameNumberSet@@UAEXXZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034D20
+size = 271
+symbol = "?Interpolate@AtGrFrameNumberSet@@UAEXIIMHPAH0PAM@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034E30
+size = 118
+symbol = "?Find@AtGrFrameNumberSet@@UAEHIIMH@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034EB0
+size = 26
+symbol = "?Load@AtGrFrameNumberSet@@UAEXXZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034CD0
+size = 14
+symbol = "?At@AtGrFrameNumberSet@@UAEGI@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034A80
+size = 29
+symbol = "??0AtMatAnimation@@QAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034AE0
+size = 27
+symbol = "??1AtMatAnimation@@QAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034AA0
+size = 61
+symbol = "?Apply@AtMatAnimation@@QAEXPAUAtMatAssignment@@IM@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00034B00
+size = 280
+symbol = "?Read@AtMatAnimation@@QAEXPAUAtMaterialOwner@@PAVAtMatAnimationDatabase@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027EE0
+size = 10
+symbol = "?SetHeap@AtMatAnimationDatabase@@SAXPAX@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027F30
+size = 86
+symbol = "??0AtMatAnimationDatabase@@QAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00027F90
+size = 739
+symbol = "?Read@AtMatAnimationDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00028280
+size = 91
+symbol = "?Clear@AtMatAnimationDatabase@@UAEXXZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000282E0
+size = 92
+symbol = "??1AtMatAnimationDatabase@@UAE@XZ"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00028340
+size = 154
+symbol = "?Load@AtMatAnimationDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0001A190
+size = 84
+symbol = "??_GAtMatAnimationDatabase@@UAEPAXI@Z"
+source = "src/at/AtMatAnimation.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029B90
+size = 10
+symbol = "?SetHeap@AtImageDatabase@@SAXPAX@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029BA0
+size = 83
+symbol = "??0AtImageDatabase@@QAE@XZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029C00
+size = 433
+symbol = "?Read@AtImageDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029DC0
+size = 316
+symbol = "?Load@AtImageDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029F00
+size = 57
+symbol = "?Clear@AtImageDatabase@@UAEXXZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029F40
+size = 25
+symbol = "?PopDirectory@AtImageDatabase@@QAEXXZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029F60
+size = 133
+symbol = "??1AtImageDatabase@@UAE@XZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00029FF0
+size = 30
+symbol = "??_GAtImageDatabase@@UAEPAXI@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A010
+size = 10
+symbol = "?SetHeap@AtFontDatabase@@SAXPAX@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A020
+size = 83
+symbol = "??0AtFontDatabase@@QAE@XZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A080
+size = 520
+symbol = "?Read@AtFontDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A290
+size = 316
+symbol = "?Load@AtFontDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A3D0
+size = 56
+symbol = "?Allocate@AtFontDatabase@@QAEXPAUAtMaterialOwner@@IPBD@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A410
+size = 56
+symbol = "?Clear@AtFontDatabase@@UAEXXZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A450
+size = 24
+symbol = "?PushDirectory@AtFontDatabase@@QAEXXZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A470
+size = 133
+symbol = "??1AtFontDatabase@@UAE@XZ"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002A500
+size = 30
+symbol = "??_GAtFontDatabase@@UAEPAXI@Z"
+source = "src/at/AtImageDatabase.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AB00
+size = 25
+symbol = "??0AtLightDatabase@@QAE@XZ"
+source = "src/at/AtLight.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AB20
+size = 232
+symbol = "?Read@AtLightDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtLight.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AC10
+size = 154
+symbol = "?Load@AtLightDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtLight.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002ACB0
+size = 17
+symbol = "?Clear@AtLightDatabase@@UAEXXZ"
+source = "src/at/AtLight.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002ACD0
+size = 86
+symbol = "??1AtLightDatabase@@UAE@XZ"
+source = "src/at/AtLight.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002AD30
+size = 30
+symbol = "??_GAtLightDatabase@@UAEPAXI@Z"
+source = "src/at/AtLight.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000368C0
+size = 196
+symbol = "?Read@AtLight@@QAEXPAUAtMaterialOwner@@PAVAtLightDatabase@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtLight.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00035800
+size = 17
+symbol = "?SetWhite@AtLensColor@@QAEXXZ"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0003F8E0
+size = 10
+symbol = "?SetHeap@AtLensFlareDatabase@@SAXPAX@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0003F8F0
+size = 26
+symbol = "??0AtLensFlareDatabase@@QAE@XZ"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0003F910
+size = 420
+symbol = "?Read@AtLensFlareDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0003FAC0
+size = 154
+symbol = "?Load@AtLensFlareDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0003FB60
+size = 64
+symbol = "?Clear@AtLensFlareDatabase@@UAEXXZ"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0003FBA0
+size = 133
+symbol = "??1AtLensFlareDatabase@@UAE@XZ"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x0002E9A0
+size = 84
+symbol = "??_GAtLensFlareDatabase@@UAEPAXI@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00052190
+size = 10
+symbol = "?SetHeap@AtLensFlare@@SAXPAX@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000521A0
+size = 129
+symbol = "??0AtLensFlare@@QAE@XZ"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00052230
+size = 154
+symbol = "?ReadSquare@AtLensFlare@@QAEXPAUAtLensFlareSquare@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x000522E0
+size = 99
+symbol = "?Reset@AtLensFlare@@QAEXXZ"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00052920
+size = 74
+symbol = "??1AtLensFlare@@QAE@XZ"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[function]]
+va = 0x00052970
+size = 474
+symbol = "?Read@AtLensFlare@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtLensFlare.cpp"
+subsystem = "at/agn"
+evidence = "tests/oracle/oracle_agn.cpp; address noted beside the declaration"
+
+[[vtable]]
+va = 0x0027319C
+slots = 2
+symbol = "??_7AtMatAssignmentDatabase@@6B@"
+source = "src/at/AtMatAssignment.cpp"
+
+[[vtable]]
+va = 0x002731F8
+slots = 2
+symbol = "??_7AtMatAnimationDatabase@@6B@"
+source = "src/at/AtMatAnimation.cpp"
+
+[[vtable]]
+va = 0x00274BD4
+slots = 9
+symbol = "??_7AtGrKeySet@@6B@"
+source = "src/at/AtMatAnimation.cpp"
+
+[[vtable]]
+va = 0x00274B68
+slots = 9
+symbol = "??_7AtGrFrameNumberSet@@6B@"
+source = "src/at/AtMatAnimation.cpp"
+
+[[vtable]]
+va = 0x002733E0
+slots = 6
+symbol = "??_7AtImageDatabase@@6B@"
+source = "src/at/AtImageDatabase.cpp"
+
+[[vtable]]
+va = 0x0027344C
+slots = 8
+symbol = "??_7AtFontDatabase@@6B@"
+source = "src/at/AtImageDatabase.cpp"
+
+[[vtable]]
+va = 0x00273610
+slots = 4
+symbol = "??_7AtLightDatabase@@6B@"
+source = "src/at/AtLight.cpp"
+
+[[vtable]]
+va = 0x002760BC
+slots = 2
+symbol = "??_7AtLensFlareDatabase@@6B@"
+source = "src/at/AtLensFlare.cpp"
+
+[symbols]
+"?s_heap@AtMatAssignment@@2PAXA" = 0x002C63E0
+"?s_heap@AtMatAssignmentDatabase@@2PAXA" = 0x002C6350
+"?s_keywords@AtMatAssignmentDatabase@@2QBUAtIoKeyword@@B" = 0x002B06B0
+"?s_heap@AtGrFrameNumberSet@@2PAXA" = 0x002C63E4
+"?s_heap@AtMatAnimationDatabase@@2PAXA" = 0x002C6354
+"?s_keywords@AtMatAnimationDatabase@@2QBUAtIoKeyword@@B" = 0x002B06D8
+"?s_heap@AtImageDatabase@@2PAXA" = 0x002C6364
+"?s_demandLoadCount@AtImageDatabase@@2IA" = 0x002C6360
+"?s_keywords@AtImageDatabase@@2QBUAtIoKeyword@@B" = 0x002B0838
+"?s_heap@AtFontDatabase@@2PAXA" = 0x002C6370
+"?s_demandLoadCount@AtFontDatabase@@2IA" = 0x002C636C
+"?s_keywords@AtFontDatabase@@2QBUAtIoKeyword@@B" = 0x002B08E0
+"?s_keywords@AtLightDatabase@@2QBUAtIoKeyword@@B" = 0x002B0A48
+"?s_heap@AtLensFlare@@2PAXA" = 0x002C7E24
+"?s_heap@AtLensFlareDatabase@@2PAXA" = 0x002C6418
+"?s_keywords@AtLensFlareDatabase@@2QBUAtIoKeyword@@B" = 0x002B20A8
+"?Slot5@AtImageDatabase@@UAEHXZ" = 0x000AB720
+"?Slot4@AtFontDatabase@@UAEHXZ" = 0x000AB720
+"?Slot7@AtFontDatabase@@UAEHXZ" = 0x000AB720
+"?Slot5@AtFontDatabase@@UAEXHH@Z" = 0x000447F0
+"??_C@_0EE@BGCJADLE@AtGrFrameNumberSet?3?3vLoad?5?9?5fra@" = 0x00274B90
+"??_C@_0CI@HHAIJFOG@Atlas?5Graphics?5?9?53D?5fonts?5not?5s@" = 0x0027346C
+"_floor" = 0x001266CB
