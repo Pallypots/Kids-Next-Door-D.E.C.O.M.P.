@@ -1,0 +1,164 @@
+# The sound notes (.GON): the reader, the sound manager's sixty banks, and the manifest's item. Names inferred; see include/gm/GmSoundNotes.h and include/gm/GmAudioData.h. Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x00136740
+size = 90
+symbol = "??1GmSoundNoteBank@@QAE@XZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmSoundNotes.h"
+
+[[function]]
+va = 0x00136930
+size = 47
+symbol = "?AllocateNoteBank@GmAudioData@@QAEPAVGmSoundNoteBank@@XZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136960
+size = 45
+symbol = "?ReleaseNoteBank@GmAudioData@@QAEXPAVGmSoundNoteBank@@@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136990
+size = 127
+symbol = "?FreeNotes@GmAudioData@@QAEXPAVGmSoundNoteBank@@@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136CC0
+size = 99
+symbol = "??0GmSoundNoteBank@@QAE@XZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmSoundNotes.h"
+
+[[function]]
+va = 0x00136D30
+size = 18
+symbol = "??0GmSoundChoice@@QAE@XZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmSoundNotes.h"
+
+[[function]]
+va = 0x00136D50
+size = 71
+symbol = "??0GmSoundNote@@QAE@XZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmSoundNotes.h"
+
+[[function]]
+va = 0x00137D20
+size = 185
+symbol = "?FindSegment@GmAudioData@@QAEPAVAtAudioSegment@@PBD@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00137DE0
+size = 205
+symbol = "?GetSegmentName@GmAudioData@@QAEXPBVAtAudioSegment@@PAD@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00137EB0
+size = 77
+symbol = "?FindNote@GmAudioData@@QAEPAUGmSoundNote@@PBD0@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00137F00
+size = 77
+symbol = "?FindNoteByTrigger@GmAudioData@@QAEPAUGmSoundNote@@PBD0@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00139090
+size = 1166
+symbol = "?LoadNotes@GmAudioData@@QAEXPAVGmSoundNoteBank@@PBD@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp, on all 49 real files; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00139550
+size = 188
+symbol = "?RegisterNotes@GmAudioData@@QAEXPAVGmSoundNoteBank@@@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x001424C0
+size = 87
+symbol = "??_GGmSoundNoteItem@@UAEPAXI@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "vftable 0x002950AC slot 2, for arrays too (flags 2 and 3 in tests/oracle/oracle_gon.cpp)"
+
+[[function]]
+va = 0x001B3540
+size = 50
+symbol = "?Configure@GmSoundNoteItem@@QAEXPBURequest@1@@Z"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmSoundNotes.h"
+
+[[function]]
+va = 0x001B3580
+size = 72
+symbol = "?Unknown0@GmSoundNoteItem@@UAEXXZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "vftable 0x002950AC slot 0; tests/oracle/oracle_gon.cpp"
+
+[[function]]
+va = 0x001B35D0
+size = 107
+symbol = "?Run@GmSoundNoteItem@@UAEXXZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "vftable 0x002950AC slot 1; tests/oracle/oracle_gon.cpp"
+
+[[function]]
+va = 0x001B3640
+size = 49
+symbol = "??0GmSoundNoteItem@@QAE@XZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmSoundNotes.h"
+
+[[function]]
+va = 0x001B3680
+size = 78
+symbol = "??1GmSoundNoteItem@@UAE@XZ"
+source = "src/gm/GmSoundNotes.cpp"
+subsystem = "gm/gon"
+evidence = "tests/oracle/oracle_gon.cpp; address noted beside the declaration in include/gm/GmSoundNotes.h"
+
+[[vtable]]
+va = 0x002950AC
+slots = 3
+symbol = "??_7GmSoundNoteItem@@6B@"
+source = "src/gm/GmSoundNotes.cpp"
+
+[symbols]
+"?s_instance@GmAudioData@@2PAV1@A" = 0x003B354C
+"?s_soundOwner@GmAudioData@@2PAUAtNameTableOwner@@A" = 0x003B3558
+"?AtFormat@@YAHPADPBDZZ" = 0x00125559  # the C library's sprintf

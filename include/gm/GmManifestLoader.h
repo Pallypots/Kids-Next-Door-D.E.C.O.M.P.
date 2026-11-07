@@ -14,7 +14,8 @@ public:
     virtual void Unknown0() = 0;
     virtual void Run() = 0;              // slot 1
 
-    char m_unknown04[0x84];
+    char m_extension[4];                 // +0x04 filled by the concrete item: 0x001B3540
+    char m_path[0x80];                   // +0x08 without its extension; the size is what is left before the link
     GmManifestItem* m_next;              // +0x88
 };
 
