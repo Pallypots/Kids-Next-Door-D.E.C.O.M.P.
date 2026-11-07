@@ -3,8 +3,8 @@
 //   oracle_agt <default.xbe> <tokenizer cases dir> [--entries FILE] [--mutate]
 //
 // Cases: every .AGT file listed in index.txt, loaded through the file code on both sides, with the owner knowing none, all, some of the names, or knowing them only in one of its two tables; and text
-// written here. What an item does is the graphics layer's, so a test item stands for it on both sides: it reads its body from the side's own tokenizer and logs every token, the words DemandLoad and
-// MipMap being the only ones it acts on. Slots 2 to 13 of the database are the harness's too, and log.
+// written here. An item is the real base class on each side, its reader the original's 0x000312D0 and the recovered one, and every field of every item is compared, so the words of the body are. The concrete
+// classes and what an item does with the device are the graphics layer's: a test item stands for them, adding only logging around the reader and its slot 12. Slots 2 to 13 of the database are the harness's too, and log.
 #define NOMINMAX
 #include <windows.h>
 
@@ -14,6 +14,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <limits>
 #include <new>
 #include <set>
 #include <string>
@@ -21,6 +22,7 @@
 
 #include "at/AtIoTokenizer.h"
 #include "at/AtTextureDatabase.h"
+#include "at/AtVector3.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
 
@@ -40,16 +42,27 @@ static void eqs(const char* what, const char* o, const char* r) {
 
 template <class F> static F at(uint32_t va) { return (F)(uintptr_t)va; }
 
+#define AtFatal AtFatalInDoubles
 #include "oracle_doubles.h"
+#undef AtFatal
+
+// A file ending inside an item makes both sides report the end for ever, since the report comes back here and not in the game. So after this many reports in one load, a deliberate crash ends it, at the
+// same report on both sides, and the guard around the load catches it.
+static int g_reports;
+static void count_report() {
+    if (g_expect_crash && ++g_reports > 40) *(volatile int*)nullptr = 0;
+}
+void AtFatal(const char* m, int a, int b, int c) { AtFatalInDoubles(m, a, b, c); count_report(); }
+static void __cdecl o_fatal2(const char* m, int a, int b, int c) { o_fatal(m, a, b, c); count_report(); }
 
 static MemFs* g_fs;
 static AtIoContext g_ctx;
 static AtIoFileSystem* g_ctx_stack[4];
 static int g_heap_token;
 static bool g_fail_in_item;   // Heap requests fail from the moment an item is read: what is left to ask for then is Load's copy of the path.
-static unsigned g_items, g_demand, g_surfaces;
+static unsigned g_items, g_demand, g_surfaces, g_sources[8], g_with_levels, g_platform;
 
-enum { kPool = 2048, kDbs = 5, kKinds = 3, kWordDemandLoad = 0x55, kWordMipMap = 0x42, kWordNamesItself = 0x4E };
+enum { kPool = 2048, kDbs = 5, kKinds = 3 };
 
 static unsigned char g_pool[2][kDbs][kKinds][kPool][0x40];
 static void* g_db[2][kDbs];
@@ -63,18 +76,7 @@ static int which(int side, const void* self) {
 class TestItem : public AtTextureItem {
 public:
     int side, kind, index;
-    void Slot0() override {}
-    void Slot1() override {}
-    void Slot3() override {}
-    void Slot4() override {}
-    void Slot5() override {}
-    void Slot6() override {}
-    void Slot7() override {}
-    void Slot8() override {}
-    void Slot9() override {}
-    void Slot10() override {}
-    void Slot11() override {}
-    void Read(AtTextureDatabase* database, const char* name, AtIoTokenizer* tokenizer) override {
+    void Before(AtTextureDatabase* database, const char* name) {
         Log& log = g_log[side];
         log.add('I', (kind << 16) | index);
         log.add('i', which(side, database));
@@ -83,26 +85,21 @@ public:
         log.add('t', g_fs->m_path.m_top);
         if (const char* current = g_fs->m_path.Current()) record_message(current, side);
         if (g_fail_in_item) g_fail_alloc = true;
-        m_flags = 0;
-        m_levels = 1;
-        int token = tokenizer->Next();
-        log.add('b', token);
-        if (token != AtIoTokenizer::kLeftCurly) return;
-        for (int depth = 1; depth > 0;) {
-            token = tokenizer->Next();
-            log.add('b', token);
-            if (token == AtIoTokenizer::kEnd) return;
-            if (token == AtIoTokenizer::kLeftCurly) depth++;
-            if (token == AtIoTokenizer::kRightCurly) depth--;
-            if (token == kWordDemandLoad) m_flags |= kDemandLoad;
-            // On no real file. The item names itself while it reads: the reader must look the name up after the item has read, so it finds it, and does not insert it twice.
-            if (token == kWordNamesItself) database->Insert(name, this);
-            if (token == kWordMipMap) {
-                token = tokenizer->Next();
-                log.add('b', token);
-                m_levels = (unsigned char)tokenizer->m_int;
-            }
-        }
+    }
+    // The word Tm2Source, on no real file, makes the item name itself as it reads: the database must look the name up after the item has read, so it finds it, and does not insert it twice.
+    void After(AtTextureDatabase* database, const char* name) {
+        if ((m_usage & kSourceMask) == kSourceTm2) database->Insert(name, this);
+    }
+    void Slot11() override {}
+    void Read(AtTextureDatabase* database, const char* name, AtIoTokenizer* tokenizer) override {
+        Before(database, name);
+        AtTextureBase::Read(database, name, tokenizer);
+        After(database, name);
+    }
+    // Logged, to show the reader goes by the slot. Every concrete class's slot 7 is the base's, so this shows only in a class that has its own.
+    void SetLightDirection(const AtVector3* direction) override {
+        g_log[side].add('W');
+        AtTextureBase::SetLightDirection(direction);
     }
     void OnLoaded(AtMaterialOwner* owner) override {
         g_log[side].add('L', (kind << 16) | index);
@@ -111,19 +108,52 @@ public:
 };
 static_assert(sizeof(TestItem) <= 0x40, "TestItem");
 
+// The same on the original's side: its own slots, but for those that are the concrete class's. Its slot 7 goes by this table to its own 0x000311F0, logged.
+static void __fastcall o_item_light(void* s, void*, const AtVector3* direction) {
+    g_log[0].add('W');
+    at<void(__fastcall*)(void*, void*, const AtVector3*)>(0x000311F0)(s, nullptr, direction);
+}
+typedef void(__fastcall* FnItemRead)(void*, void*, void*, const char*, void*);
+static void __fastcall o_item_read(TestItem* s, void*, AtTextureDatabase* database, const char* name, AtIoTokenizer* tokenizer) {
+    s->Before(database, name);
+    at<FnItemRead>(0x000312D0)(s, nullptr, database, name, tokenizer);
+    s->After(database, name);
+}
+static void __fastcall o_item_loaded(TestItem* s, void*, AtMaterialOwner* owner) {
+    g_log[0].add('L', (s->kind << 16) | s->index);
+    g_log[0].add('l', owner == g_own[0]);
+}
+static const void* const g_item_table[13] = {(const void*)(uintptr_t)0x00031530, (const void*)(uintptr_t)0x00030FF0, (const void*)o_item_read, (const void*)(uintptr_t)0x00031100, (const void*)(uintptr_t)0x000310C0,
+                                             (const void*)(uintptr_t)0x00031260, (const void*)(uintptr_t)0x00031050, (const void*)o_item_light, (const void*)(uintptr_t)0x000AB720, (const void*)(uintptr_t)0x000AB720,
+                                             (const void*)(uintptr_t)0x00031060, nullptr, (const void*)o_item_loaded};
+
+typedef void(__fastcall* Fn0)(void*, void*);
+
+// A new item in filled memory, by its own side's constructor.
+static TestItem* new_item(int side, void* p, unsigned char fill) {
+    std::memset(p, fill, 0x40);
+    TestItem* t;
+    if (side == 0) {
+        void* back = at<void*(__fastcall*)(void*, void*)>(0x00031070)(p, nullptr);
+        eq("constructor returns this", (uintptr_t)back, (uintptr_t)p);
+        eq("the original's item vftable", *(uint32_t*)p, 0x00274A04);
+        *(const void* const**)p = g_item_table;
+        t = (TestItem*)p;
+    } else {
+        t = new (p) TestItem;
+    }
+    t->side = side;
+    return t;
+}
+
 static TestItem* item(int side, const void* self, int kind, unsigned i) { return (TestItem*)g_pool[side][which(side, self)][kind][std::min(i, (unsigned)kPool - 1)]; }
 
 static void make_items(int side, const void* self, int kind, unsigned count) {
     if (count > kPool) eq("more items than the pool holds", count, 0);
     for (unsigned i = 0; i < std::min(count, (unsigned)kPool); i++) {
-        void* p = item(side, self, kind, i);
-        std::memset(p, 0xCD, 0x40);
-        TestItem* t = new (p) TestItem;
-        t->side = side;
+        TestItem* t = new_item(side, item(side, self, kind, i), 0xCD);
         t->kind = kind;
         t->index = i;
-        t->m_flags = 0;
-        t->m_levels = 0;
     }
 }
 
@@ -182,7 +212,6 @@ static AtTextureItem* __fastcall o_ac(Db* s, void*, unsigned i) { return do_at(0
 static const void* g_db_table[14] = {(const void*)(uintptr_t)0x0002ADF0, (const void*)(uintptr_t)0x0001C6B0, (const void*)o_ready, (const void*)o_s2, (const void*)o_s3, (const void*)o_t2, (const void*)o_t3,
                                      (const void*)o_tc, (const void*)o_more, (const void*)o_sa2, (const void*)o_sa3, (const void*)o_a2, (const void*)o_a3, (const void*)o_ac};
 
-typedef void(__fastcall* Fn0)(void*, void*);
 typedef void(__fastcall* FnLoad)(void*, void*, void*, const char*, int);
 typedef void(__fastcall* FnRead)(void*, void*, void*, void*);
 typedef void(__fastcall* FnAlloc)(void*, void*, void*, unsigned, unsigned, unsigned, unsigned, unsigned, const char*);
@@ -212,6 +241,23 @@ static std::string group_name(GmNameMapGroup* g) {
     return std::string(g->m_name, strnlen(g->m_name, 8));
 }
 
+// Every byte the base class has, the two pointers by what they lead to.
+static void same_item(const AtTextureBase* a, const AtTextureBase* b) {
+    eq("item's name", std::memcmp(a->m_name, b->m_name, 8), 0);
+    eq("item's transparent colour", *(const uint32_t*)a->m_transparent, *(const uint32_t*)b->m_transparent);
+    eq("item's light direction", *(const uint32_t*)a->m_lightDirection, *(const uint32_t*)b->m_lightDirection);
+    eq("item's usage", a->m_usage, b->m_usage);
+    eq("item's flags", a->m_flags, b->m_flags);
+    eq("item's +1A", *(const uint16_t*)a->m_unknown1A, *(const uint16_t*)b->m_unknown1A);
+    eq("item's stage", a->m_textureStage, b->m_textureStage);
+    eq("item's levels", a->m_levels, b->m_levels);
+    eq("item's levels asked", a->m_levelsAsked, b->m_levelsAsked);
+    eq("item's +1F", a->m_unknown1F, b->m_unknown1F);
+    eq("item's source", a->m_progSource != nullptr, b->m_progSource != nullptr);
+    if (a->m_progSource && b->m_progSource) eq("item's source's bytes", std::memcmp(a->m_progSource, b->m_progSource, sizeof(AtProgTextureSource)), 0);
+    eq("item's database", which(0, a->m_database) * (a->m_database != nullptr) + (a->m_database != nullptr), which(1, b->m_database) * (b->m_database != nullptr) + (b->m_database != nullptr));
+}
+
 // The items compared whatever the counts say now, as many as were ever asked for.
 static void same_items(int slot, const Db* o, const Db* r) {
     const unsigned counts[kKinds] = {o->m_texture2DCount, o->m_texture3DCount, o->m_cubeMapCount};
@@ -219,8 +265,7 @@ static void same_items(int slot, const Db* o, const Db* r) {
         for (unsigned i = 0; i < std::min(counts[kind], (unsigned)kPool); i++) {
             const TestItem* a = (const TestItem*)g_pool[0][slot][kind][i];
             const TestItem* b = (const TestItem*)g_pool[1][slot][kind][i];
-            eq("item's flags", a->m_flags, b->m_flags);
-            eq("item's levels", a->m_levels, b->m_levels);
+            same_item(a, b);
         }
     }
 }
@@ -341,12 +386,14 @@ struct LoadArg { Db* o; TestDb* r; };
 
 // A load on each side, either of which may crash: the report does not stop here, as the game's does, and a list may be missing. Crashing must agree, and so must everything up to it.
 static void load_both(LoadArg a, const char* what, int slot = 0) {
+    g_reports = 0;
     const bool oc = guarded([&] { On on(0); at<FnLoad>(0x0001C7B0)(a.o, nullptr, g_own[0], "MODEL\\THING", 77); });
     g_recording = false;
     g_side = 0;
     g_fail_alloc = false;
     const int otop = g_fs->m_path.m_top;
     reset_path();
+    g_reports = 0;
     const bool rc = guarded([&] { On on(1); a.r->Load(g_own[1], "MODEL\\THING", 77); });
     g_recording = false;
     g_side = 0;
@@ -394,6 +441,15 @@ static void run_text(const std::vector<unsigned char>& data, const std::string& 
         g_items += r->m_texture2DCount + r->m_texture3DCount + r->m_cubeMapCount;
         g_surfaces += r->m_surface2DCount + r->m_surface3DCount;
         g_demand += AtTextureDatabase::s_demandLoadCount;
+        const unsigned counts[kKinds] = {r->m_texture2DCount, r->m_texture3DCount, r->m_cubeMapCount};
+        for (int kind = 0; kind < kKinds; kind++) {
+            for (unsigned i = 0; i < std::min(counts[kind], (unsigned)kPool); i++) {
+                const TestItem* t = (const TestItem*)g_pool[1][0][kind][i];
+                g_sources[(t->m_usage & AtTextureBase::kSourceMask) >> 9]++;
+                g_with_levels += t->m_levels > 1;
+                g_platform += (t->m_flags & AtTextureBase::kPlatformSource) != 0;
+            }
+        }
     }
     // Over what is there.
     load_both(a, "load again");
@@ -430,7 +486,7 @@ static void run_written() {
         "Surface2D[1]\nTexture[1]\nTexture2D[1]\n{\n Texture2D \"A\"\n {\n DemandLoad\n }\n}\n",
         // A name given twice: known the second time, through the database itself.
         "Surface2D[3]\nTexture[3]\nTexture2D[3]\n{\n Texture2D \"XA\"\n {\n }\n Texture2D \"XA\"\n {\n DemandLoad\n }\n Texture2D \"XB\"\n {\n }\n}\n",
-        // An item that names itself as it reads: see TestItem::Read.
+        // An item that names itself as it reads: see TestItem::After.
         "Surface2D[2]\nTexture[2]\nTexture2D[2]\n{\n Texture2D \"XA\"\n {\n Tm2Source\n }\n Texture2D \"XB\"\n {\n }\n}\n",
         // Never known to the owner, some of them.
         "Surface2D[3]\nTexture[3]\nTexture2D[3]\n{\n Texture2D \"XA\"\n {\n }\n Texture2D \"B\"\n {\n }\n Texture2D \"XC\"\n {\n DemandLoad\n }\n}\n",
@@ -522,7 +578,7 @@ public:
 // One text through a tokenizer of the harness's, not reading through the file code at all.
 class DirectTokenizer : public AtIoTextTokenizer {
 public:
-    void Error(int code) override { g_log[g_side].add('E', code); }
+    void Error(int code) override { g_log[g_side].add('E', code); count_report(); }
 };
 struct Direct {
     MemoryStream stream;
@@ -543,9 +599,11 @@ struct Direct {
 
 static void read_direct(Db* o, TestDb* r, const char* text, const char* what) {
     Direct da(text), db(text);
+    g_reports = 0;
     const bool oc = guarded([&] { On on(0); at<FnRead>(0x0001BFE0)(o, nullptr, g_own[0], &da.tokenizer); });
     g_recording = false;
     g_side = 0;
+    g_reports = 0;
     const bool rc = guarded([&] { On on(1); r->Read(g_own[1], &db.tokenizer); });
     g_recording = false;
     g_side = 0;
@@ -892,6 +950,251 @@ static void run_failures() {
     }
 }
 
+// ---- the item by itself ----------------------------------------------------------------------------------------------------
+
+static unsigned char g_lone[2][0x40];
+static AtTextureDatabase* const kSomeDatabase = (AtTextureDatabase*)(uintptr_t)0x12340;
+
+static TestItem* lone(int side, unsigned char fill) {
+    TestItem* t = new_item(side, g_lone[side], fill);
+    t->kind = 0;
+    t->index = 0;
+    return t;
+}
+
+// Everything set, and not to what a reader would set it to, so that what it leaves alone shows.
+static void set_all(TestItem* t, unsigned char byte) {
+    std::memset(t->m_name, byte, 8);
+    std::memset(t->m_transparent, byte + 1, 4);
+    std::memset(t->m_lightDirection, byte + 2, 4);
+    t->m_usage = 0x01010101u * (unsigned char)(byte + 3) | 0xF00;
+    t->m_flags = (unsigned short)(0x0101 * (unsigned char)(byte + 4));
+    t->m_textureStage = (unsigned char)(byte + 5);
+    t->m_levels = (unsigned char)(byte + 6);
+    t->m_levelsAsked = (unsigned char)(byte + 7);
+    t->m_unknown1F = (unsigned char)(byte + 8);
+    t->m_progSource = nullptr;
+    t->m_database = kSomeDatabase;
+}
+
+static void same_lone(const char* what, const TestItem* a, const TestItem* b) {
+    g_recording = false;
+    same_item(a, b);
+    eq("item's database itself", (uintptr_t)a->m_database, (uintptr_t)b->m_database);
+    compare_logs(what);
+}
+
+static void read_item(const std::string& body, const char* name, bool used, unsigned char fill) {
+    g_context = "item [" + body + "]";
+    Direct da(body.c_str()), db(body.c_str());
+    da.tokenizer.SetKeywords(AtTextureDatabase::s_keywords, AtTextureDatabase::kKeywordCount, nullptr);
+    db.tokenizer.SetKeywords(AtTextureDatabase::s_keywords, AtTextureDatabase::kKeywordCount, nullptr);
+    TestItem* a = lone(0, fill);
+    TestItem* b = lone(1, fill);
+    if (used) {
+        set_all(a, 0x51);
+        set_all(b, 0x51);
+    }
+    g_reports = 0;
+    const bool oc = guarded([&] { On on(0); at<FnItemRead>(0x000312D0)(a, nullptr, kSomeDatabase, name, &da.tokenizer); });
+    g_recording = false;
+    g_side = 0;
+    g_reports = 0;
+    const bool rc = guarded([&] { On on(1); b->AtTextureBase::Read(kSomeDatabase, name, &db.tokenizer); });
+    g_recording = false;
+    g_side = 0;
+    g_fail_alloc = false;
+    eq("crashed", oc, rc);
+    eq("position after", da.stream.m_cur - da.stream.m_base, db.stream.m_cur - db.stream.m_base);
+    same_lone("read an item", a, b);
+    if (a->m_progSource) std::free(a->m_progSource);
+    if (b->m_progSource) std::free(b->m_progSource);
+}
+
+static void run_item_words() {
+    static const char* const words[] = {
+        "BmpSource", "TgaSource", "DDSSource", "Tm2Source", "TplSource", "PntSource", "PlatformSource", "ProgSource 128 64 32 1 16711680 65280 255 -16777216",
+        "MipMap 1", "MipMap 2", "MipMap 0", "MipMap 255", "MipMap 256", "MipMap 257", "MipMap -1", "MipMap 1.5", "MipMap \"a\"", "MipMap",
+        "AutoGenMipLevels", "RenderTarget", "DepthStencil", "FrequentModify", "InfrequentModify", "FlipVertically", "MpegMacroBlocks",
+        "TextureStage 0", "TextureStage 3", "TextureStage 256", "TextureStage 511", "TextureStage -1", "TextureStage", "LightDirection 0.0 0.0 1.0", "LightDirection 1.5 -2.5 0.25", "LightDirection 0.0 0.0 0.0", "LightDirection 1.0",
+        "TransparentColor 1 2 3", "TransparentColor 0 0 0", "TransparentColor 255 256 -1", "TransparentColor 1 2", "TransparentColor 1.5 2.5 3.5",
+        "DiffuseLightMap", "FrontBufferSource", "BackBufferSource", "DemandLoad",
+        // Not the item's, and nothing's.
+        "NameSpace", "Surface2D", "Surface3D", "Texture", "Texture2D", "Texture3D", "CubeMapTexture", "5", "1.5", "\"a\"", "{", "[", "]", "Nonsense",
+    };
+    for (const bool used : {false, true}) {
+        for (const unsigned char fill : {(unsigned char)0xCD, (unsigned char)0x33}) {
+            g_fill = fill;
+            for (const char* w : words) read_item(std::string("{\n") + w + "\n}\n", "NameIs8c", used, fill);
+            // Each word after each source: a source is a field, set whole, and the others are bits beside it.
+            for (const char* first : {"BmpSource", "TgaSource", "DDSSource", "Tm2Source", "TplSource", "PntSource", "PlatformSource", "ProgSource 1 2 3 4 5 6 7 8", "RenderTarget", "DemandLoad", "MipMap 7"}) {
+                for (const char* second : words) read_item(std::string("{\n") + first + "\n" + second + "\n}\n", "Other", used, fill);
+            }
+        }
+    }
+    g_fill = 0xCD;
+    // Everything at once, and the frame of the body.
+    std::string all = "{\n";
+    for (const char* w : words) if (std::strcmp(w, "{") && std::strcmp(w, "[") && std::strcmp(w, "]")) all += std::string(w) + "\n";
+    read_item(all + "}\n", "All", true, 0xCD);
+    for (const char* text : {"", "{\n", "}\n", "\n}\n", "DemandLoad\n}\n", "{\n DemandLoad\n", "{\n MipMap 3\n", "5\n}\n", "{\n}\n DemandLoad\n"}) read_item(text, "Frame", true, 0xCD);
+    // The name: as given, whatever follows a terminator, and none.
+    read_item("{\n}\n", "LongerThanEight", true, 0xCD);
+    read_item("{\n}\n", "", true, 0xCD);
+    read_item("{\n}\n", nullptr, true, 0xCD);
+    // ProgSource with nothing to give it: no heap, and no memory. Each raise is followed by what comes next, as it is not in the game.
+    const char* const prog = "{\n ProgSource 128 64 32 1 16711680 65280 255 -16777216\n}\n";
+    *(void**)(uintptr_t)0x002C60B0 = nullptr;
+    AtIoTokenFile::s_heap = nullptr;
+    read_item(prog, "NoHeap", true, 0xCD);
+    *(void**)(uintptr_t)0x002C60B0 = &g_heap_token;
+    AtIoTokenFile::s_heap = &g_heap_token;
+    g_fail_alloc = true;
+    read_item(prog, "NoMemory", true, 0xCD);
+    g_fail_alloc = false;
+    // Two of them: the first is lost.
+    read_item("{\n ProgSource 1 2 3 4 5 6 7 8\n ProgSource 9 10 11 12 13 14 15 16\n}\n", "Twice", true, 0xCD);
+    // By itself.
+    g_context = "ProgSource by itself";
+    for (const char* text : {"128 64 32 1 16711680 65280 255 -16777216", "1 2", "", "\"a\" 2 3 4 5 6 7 8"}) {
+        Direct da(text), db(text);
+        da.tokenizer.SetKeywords(AtTextureDatabase::s_keywords, AtTextureDatabase::kKeywordCount, nullptr);
+        db.tokenizer.SetKeywords(AtTextureDatabase::s_keywords, AtTextureDatabase::kKeywordCount, nullptr);
+        TestItem* a = lone(0, 0xCD);
+        TestItem* b = lone(1, 0xCD);
+        { On on(0); at<void(__fastcall*)(void*, void*, void*)>(0x00031120)(a, nullptr, &da.tokenizer); }
+        { On on(1); b->ReadProgSource(&db.tokenizer); }
+        same_lone("ProgSource", a, b);
+        std::free(a->m_progSource);
+        std::free(b->m_progSource);
+    }
+}
+
+static void run_item_slots() {
+    g_context = "item slots";
+    g_fill = 0xCD;
+    // Constructed: every byte, including those it leaves.
+    for (const unsigned char fill : {(unsigned char)0xCD, (unsigned char)0x33}) {
+        TestItem* a = lone(0, fill);
+        TestItem* b = lone(1, fill);
+        eq("constructed", std::memcmp(g_lone[0] + 4, g_lone[1] + 4, 0x24), 0);
+        same_lone("constructed", a, b);
+        // Reset, and the complete destructor and the deleting one without deleting: each from everything set, every byte after.
+        set_all(a, 0x61);
+        set_all(b, 0x61);
+        { On on(0); at<Fn0>(0x000310C0)(a, nullptr); }
+        { On on(1); b->AtTextureBase::Reset(); }
+        same_lone("reset", a, b);
+        eq("reset's bytes", std::memcmp(g_lone[0] + 4, g_lone[1] + 4, 0x24), 0);
+        set_all(a, 0x61);
+        set_all(b, 0x61);
+        { On on(0); at<Fn0>(0x00031290)(a, nullptr); }
+        eq("complete destructor's vftable", *(uint32_t*)a, 0x00274A04);
+        { On on(1); b->AtTextureBase::~AtTextureBase(); }
+        eq("complete destructor's bytes", std::memcmp(g_lone[0] + 4, g_lone[1] + 4, 0x24), 0);
+        g_recording = false;
+        compare_logs("complete destructor");
+        a = lone(0, fill);
+        b = lone(1, fill);
+        set_all(a, 0x61);
+        set_all(b, 0x61);
+        { On on(0); eq("deleting destructor returns this", (uintptr_t)at<void*(__fastcall*)(void*, void*, unsigned)>(0x00031530)(a, nullptr, 0), (uintptr_t)a); }
+        eq("deleting destructor's vftable", *(uint32_t*)a, 0x00274A04);
+        { On on(1); b->AtTextureBase::~AtTextureBase(); }
+        eq("deleting destructor's bytes", std::memcmp(g_lone[0] + 4, g_lone[1] + 4, 0x24), 0);
+        g_recording = false;
+        compare_logs("deleting destructor, not deleting");
+    }
+    // Deleting.
+    {
+        void* p = std::malloc(0x28);
+        at<void*(__fastcall*)(void*, void*)>(0x00031070)(p, nullptr);
+        { On on(0); eq("deleting returns this", (uintptr_t)at<void*(__fastcall*)(void*, void*, unsigned)>(0x00031530)(p, nullptr, 1) == (uintptr_t)p, 1); }
+        AtTextureBase* q = new AtTextureBase;
+        { On on(1); delete q; }
+        compare_logs("deleting");
+    }
+    // Describe.
+    typedef void(__fastcall* FnDescribe)(void*, void*, void*, const char*, unsigned, int, unsigned, int);
+    for (const char* name : {"A", "LongerThanEight", "", (const char*)nullptr}) {
+        for (const unsigned usage : {0u, 0xFFFFFFFFu, 0x205u}) {
+            for (const int autoGen : {0, 1, 2, 0x100}) {
+                for (const unsigned levels : {0u, 1u, 2u, 255u, 256u, 257u}) {
+                    for (const int stage : {0, 1, 255, 256}) {
+                        for (const bool used : {false, true}) {
+                            TestItem* a = lone(0, 0xCD);
+                            TestItem* b = lone(1, 0xCD);
+                            if (used) { set_all(a, 0x41); set_all(b, 0x41); }
+                            { On on(0); at<FnDescribe>(0x00030FF0)(a, nullptr, kSomeDatabase, name, usage, autoGen, levels, stage); }
+                            { On on(1); b->AtTextureBase::Describe(kSomeDatabase, name, usage, autoGen, levels, stage); }
+                            same_lone("describe", a, b);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // The small ones, over values of the flags and usage.
+    for (const unsigned flags : {0u, 8u, 0x800u, 0x7F7u, 0x808u, 0xF7FFu, 0xFFFFu}) {
+        TestItem* a = lone(0, 0xCD);
+        TestItem* b = lone(1, 0xCD);
+        a->m_flags = b->m_flags = (unsigned short)flags;
+        { On on(0); at<Fn0>(0x00031100)(a, nullptr); }
+        { On on(1); b->AtTextureBase::ClearPending(); }
+        same_lone("clear pending", a, b);
+        a->m_flags = b->m_flags = (unsigned short)flags;
+        { On on(0); at<Fn0>(0x00031050)(a, nullptr); }
+        { On on(1); b->AtTextureBase::ClearTransparentColor(); }
+        same_lone("clear transparent colour", a, b);
+        static const unsigned char rgba[4] = {0x11, 0x22, 0x33, 0x44};
+        a->m_flags = b->m_flags = (unsigned short)flags;
+        { On on(0); at<void(__fastcall*)(void*, void*, const unsigned char*)>(0x00031260)(a, nullptr, rgba); }
+        { On on(1); b->AtTextureBase::SetTransparentColor(rgba); }
+        same_lone("set transparent colour", a, b);
+    }
+    for (const unsigned usage : {0u, 1u, 2u, 0x10u, 0x20u, 0x31u, 0xCEu, 0xFFFFFFFFu}) {
+        TestItem* a = lone(0, 0xCD);
+        TestItem* b = lone(1, 0xCD);
+        a->m_usage = b->m_usage = usage;
+        { On on(0); at<void(__fastcall*)(void*, void*, int)>(0x00031060)(a, nullptr, 5); }
+        { On on(1); b->AtTextureBase::ClearModifyUsage(5); }
+        same_lone("clear modify usage", a, b);
+    }
+    {
+        TestItem* b = lone(1, 0xCD);
+        eq("slot 8", at<int(__fastcall*)(void*, void*)>(0x000AB720)(b, nullptr), b->AtTextureBase::Unknown8());
+        eq("slot 9", at<int(__fastcall*)(void*, void*)>(0x000AB720)(b, nullptr), b->AtTextureBase::Unknown9());
+    }
+    // The light direction: axes, off the axes, what normalizing does nothing for, and a walk over the rest.
+    typedef void(__fastcall* FnLight)(void*, void*, const AtVector3*);
+    const float nan = std::numeric_limits<float>::quiet_NaN();
+    const float inf = std::numeric_limits<float>::infinity();
+    std::vector<AtVector3> dirs;
+    const float some[][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}, {-1, 0, 0}, {0, -1, 0}, {0, 0, -1}, {1, 1, 1}, {-1, -1, -1}, {0.3f, 0.4f, 0.5f}, {0, 0, 0}, {1e30f, 0, 0}, {1e-30f, 1e-30f, 0}, {nan, 0, 0}, {inf, 0, 0}, {0, -inf, 0}, {3, -4, 0}};
+    for (const auto& s : some) { AtVector3 v; v.x = s[0]; v.y = s[1]; v.z = s[2]; dirs.push_back(v); }
+    uint32_t seed = 12345;
+    const auto next = [&seed] { seed = seed * 1664525u + 1013904223u; return (float)((int)(seed >> 8) - (1 << 23)) / (float)(1 << 23); };
+    for (int i = 0; i < 3000; i++) { AtVector3 v; v.x = next(); v.y = next(); v.z = next(); dirs.push_back(v); }
+    for (const AtVector3& v : dirs) {
+        TestItem* a = lone(0, 0xCD);
+        TestItem* b = lone(1, 0xCD);
+        { On on(0); at<FnLight>(0x000311F0)(a, nullptr, &v); }
+        { On on(1); b->AtTextureBase::SetLightDirection(&v); }
+        same_lone("light direction", a, b);
+    }
+    // Freeing the source: the pointer stays, and nothing but that is touched.
+    for (const bool has : {false, true}) {
+        TestItem* a = lone(0, 0xCD);
+        TestItem* b = lone(1, 0xCD);
+        a->m_progSource = has ? (AtProgTextureSource*)std::malloc(sizeof(AtProgTextureSource)) : nullptr;
+        b->m_progSource = has ? (AtProgTextureSource*)std::malloc(sizeof(AtProgTextureSource)) : nullptr;
+        { On on(0); at<Fn0>(0x00031040)(a, nullptr); }
+        { On on(1); b->AtTextureBase::FreeProgSource(); }
+        compare_logs("free source");
+        eq("source pointer stays", a->m_progSource != nullptr, b->m_progSource != nullptr);
+    }
+}
+
 static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
     const DWORD c = e->ExceptionRecord->ExceptionCode;
     if (c == EXCEPTION_ACCESS_VIOLATION || c == EXCEPTION_ILLEGAL_INSTRUCTION || c == EXCEPTION_INT_DIVIDE_BY_ZERO) {
@@ -921,7 +1224,7 @@ int main(int argc, char** argv) {
     redirect(0x00011210, (const void*)o_delete);
     redirect(0x00011240, (const void*)o_push);
     redirect(0x00011260, (const void*)o_pop);
-    redirect(0x00011070, (const void*)o_fatal);
+    redirect(0x00011070, (const void*)o_fatal2);
     redirect(0x00011170, (const void*)o_raise);
     at<void(__cdecl*)()>(0x00125BC7)();
     if (entries && !arm_entries(entries)) return 2;
@@ -949,6 +1252,8 @@ int main(int argc, char** argv) {
     run_chain();
     run_failures();
     run_written();
+    run_item_slots();
+    run_item_words();
 
     g_items = g_surfaces = g_demand = 0;
     std::string dir = pos[1];
@@ -974,6 +1279,7 @@ int main(int argc, char** argv) {
     }
     std::fclose(index);
     report_entries();
+    std::printf("real items: source bmp %u, tga %u, dds %u (of which platform %u), tm2 %u, tpl %u, pnt %u, prog %u; with levels above one %u\n", g_sources[0], g_sources[1], g_sources[2], g_platform, g_sources[3], g_sources[4], g_sources[5], g_sources[6], g_with_levels);
     std::printf("%s: %u files, %u textures, %u surfaces, %u on demand; %llu comparisons, %d differences\n", g_failures ? "DIFFERENT" : "NO DIFFERENCE OBSERVED", g_files, g_items, g_surfaces, g_demand, g_checks, g_failures);
     return g_failures ? 1 : 0;
 }

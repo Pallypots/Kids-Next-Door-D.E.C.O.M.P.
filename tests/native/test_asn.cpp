@@ -64,7 +64,7 @@ public:
     void Slot0() override {}
     void Reserve(unsigned int count) override { m_mats.assign(count, Mat()); }
     void Clear() override { m_cleared++; }
-    void Slot3() override {}
+    unsigned int Count() override { return (unsigned int)m_mats.size(); }
     AtMatrix* At(unsigned int index) override { return (AtMatrix*)&m_mats.at(index); }
 };
 

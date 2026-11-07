@@ -201,7 +201,7 @@ public:
         g_mat_used[side] = std::min(g_mat_used[side] + n, (unsigned)kMats);
     }
     void Clear() override { note(side, 'K', capacity); }
-    void Slot3() override {}
+    unsigned Count() override { return capacity; }
     AtMatrix* At(unsigned i) override {
         note(side, 'A', i);
         if (i >= capacity || base + i >= kMats) return (AtMatrix*)&g_spare[side];
@@ -546,10 +546,10 @@ static void same_cs(const AtCoordSys* o, const AtCoordSys* r, unsigned size) {
     same_ptr("cs parent", o->m_parent, r->m_parent);
     same_ptr("cs sibling", o->m_nextSibling, r->m_nextSibling);
     same_ptr("cs child", o->m_firstChild, r->m_firstChild);
-    eq("cs +10", o->m_unknown10, r->m_unknown10);
+    eq("cs +10", (uintptr_t)o->m_drawingLocal, (uintptr_t)r->m_drawingLocal);
     same_ptr("cs local", o->m_local, r->m_local);
     same_ptr("cs world", o->m_world, r->m_world);
-    eq("cs +1C", o->m_unknown1C, r->m_unknown1C);
+    eq("cs +1C", (uintptr_t)o->m_drawingWorld, (uintptr_t)r->m_drawingWorld);
     eq("cs +20", o->m_unknown20, r->m_unknown20);
     eq("cs dirty", o->m_dirty, r->m_dirty);
     for (unsigned off = 0x28; off < size; off += 4) eq("cs scale", dword(o, off), dword(r, off));
@@ -639,7 +639,7 @@ static void same_scene(const char* what, const AtScene* o, const AtScene* r) {
     eq("scale count", a.m_scaledCount, b.m_scaledCount);
     eq("rot array", a.m_rotTrans != nullptr, b.m_rotTrans != nullptr);
     eq("scale array", a.m_scaled != nullptr, b.m_scaled != nullptr);
-    eq("database +2C", a.m_unknown2C, b.m_unknown2C);
+    eq("database +2C", (uintptr_t)a.m_root, (uintptr_t)b.m_root);
     eq("extra", a.m_extra, b.m_extra);
     eq("next matrix", a.m_nextMatrix, b.m_nextMatrix);
     for (unsigned off = 0x4C; off < 0xF4; off += 4) {
@@ -1027,7 +1027,7 @@ static void run_coordsys(unsigned seed, unsigned ops) {
                 break;
             case 16:
                 // Everything a reset clears, made to show, including the fields only a reset writes.
-                if (n % 40 == 0) { s[i]->m_unknown10 = 5; s[i]->m_unknown1C = 6; s[i]->m_unknown20 = 7; s[i]->Reset(); }
+                if (n % 40 == 0) { s[i]->m_drawingLocal = (AtMatrix*)5; s[i]->m_drawingWorld = (AtMatrix*)6; s[i]->m_unknown20 = 7; s[i]->Reset(); }
                 break;
             }
         }
@@ -1277,7 +1277,7 @@ static void run_database() {
         eq("pool", o->m_pool == &g_pool[0], r->m_pool == &g_pool[1]);
         eq("rot count", o->m_rotTransCount, r->m_rotTransCount);
         eq("scale count", o->m_scaledCount, r->m_scaledCount);
-        eq("+2C", o->m_unknown2C, r->m_unknown2C);
+        eq("+2C", (uintptr_t)o->m_root, (uintptr_t)r->m_root);
         eq("extra", o->m_extra, r->m_extra);
         eq("next", o->m_nextMatrix, r->m_nextMatrix);
         eq("rot", o->m_rotTrans != nullptr, r->m_rotTrans != nullptr);
@@ -1720,7 +1720,7 @@ struct Reader {
 class SpyParent : public AtCoordSys {
 public:
     int side = 0;
-    void Detach(AtCoordSys* child) override { note(side, 'z', (uint32_t)(child->m_unknown10)); }
+    void Detach(AtCoordSys* child) override { note(side, 'z', (uint32_t)(uintptr_t)(child->m_drawingLocal)); }
 };
 
 static void run_alone() {
@@ -1897,8 +1897,8 @@ static void run_alone() {
         spy[1].side = 1;
         for (AtCoordSysDatabase* d : {o, r}) {
             const int side = d == r ? 1 : 0;
-            d->m_rotTrans[0].m_unknown10 = 1;
-            d->m_scaled[0].m_unknown10 = 2;
+            d->m_rotTrans[0].m_drawingLocal = (AtMatrix*)1;
+            d->m_scaled[0].m_drawingLocal = (AtMatrix*)2;
             d->m_rotTrans[0].m_parent = &spy[side];
             d->m_scaled[0].m_parent = &spy[side];
         }

@@ -24,10 +24,11 @@ void NoInverse(AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0
 void NoMultiply(AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
 void NoProduct(AtMatrix*, const AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
 void NoTransform(const AtMatrix*, const AtVector3*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
+void NoUniformScale(AtMatrix*, float) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
 
 }  // namespace
 
-AtMatrixTable g_atMatrix = {NoCopy, NoIdentity, NoTranslation, NoRotation, NoLookAt, NoScale, NoInverse, NoMultiply, NoProduct, NoTransform};
+AtMatrixTable g_atMatrix = {NoCopy, NoIdentity, NoTranslation, NoRotation, NoLookAt, NoScale, NoInverse, NoMultiply, NoProduct, NoTransform, NoUniformScale, AtMatrixRead};
 
 void AtQuaternion::Read(AtIoTokenizer* tokenizer) {
     x = tokenizer->ExpectReal();
@@ -42,8 +43,8 @@ AtCoordSys::AtCoordSys() {
     m_parent = 0;
     m_nextSibling = 0;
     m_firstChild = 0;
-    m_unknown10 = 0;
-    m_unknown1C = 0;
+    m_drawingLocal = 0;
+    m_drawingWorld = 0;
     m_local = 0;
     m_world = 0;
     m_dirty = 0;
@@ -78,8 +79,8 @@ void AtCoordSys::Reset() {
     m_parent = 0;
     m_nextSibling = 0;
     m_firstChild = 0;
-    m_unknown10 = 0;
-    m_unknown1C = 0;
+    m_drawingLocal = 0;
+    m_drawingWorld = 0;
     m_local = 0;
     m_world = 0;
     m_dirty = 0;
@@ -276,7 +277,7 @@ AtCoordSysDatabase::AtCoordSysDatabase() {
     m_scaledCount = 0;
     m_rotTrans = 0;
     m_scaled = 0;
-    m_unknown2C = 0;
+    m_root = 0;
     m_extra = 0;
     m_nextMatrix = 0;
 }
@@ -303,7 +304,7 @@ void AtCoordSysDatabase::Clear() {
     m_scaledCount = 0;
     m_rotTrans = 0;
     m_scaled = 0;
-    m_unknown2C = 0;
+    m_root = 0;
     m_extra = 0;
     m_nextMatrix = 0;
 }

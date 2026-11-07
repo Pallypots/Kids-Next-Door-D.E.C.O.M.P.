@@ -1,0 +1,172 @@
+# Skeletons, .AKC files: see include/at/AtCoordSys.h. And the base class of every texture, whose reader the .AGT files reach, see include/at/AtTextureItem.h: compared by the agt suite, so its subsystem is that one.
+
+[[function]]
+va = 0x000268C0
+size = 42
+symbol = "?NextMatrix@AtCoordSysDatabase@@QAEPAUAtMatrix@@XZ"
+source = "src/at/AtCoordSysFile.cpp"
+subsystem = "at/akc"
+evidence = "tests/oracle/oracle_akc.cpp; called only by 0x000324E0"
+
+[[function]]
+va = 0x00026C10
+size = 411
+symbol = "?Read@AtCoordSysDatabase@@QAEXPAVAtMatrixDevice@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtCoordSysFile.cpp"
+subsystem = "at/akc"
+evidence = "tests/oracle/oracle_akc.cpp; keyword table 0x002B05F8"
+
+[[function]]
+va = 0x00026DB0
+size = 154
+symbol = "?Load@AtCoordSysDatabase@@QAEXPAVAtMatrixDevice@@PBDH@Z"
+source = "src/at/AtCoordSysFile.cpp"
+subsystem = "at/akc"
+evidence = "tests/oracle/oracle_akc.cpp; the string AKC at 0x00273128; called at 0x0001A692 for each skeleton the owner holds"
+
+[[function]]
+va = 0x000324E0
+size = 179
+symbol = "?ReadWord@AtCoordSys@@QAEXPAVAtIoTokenizer@@PAVAtCoordSysDatabase@@H@Z"
+source = "src/at/AtCoordSysFile.cpp"
+subsystem = "at/akc"
+evidence = "tests/oracle/oracle_akc.cpp; the words Parent and LocalDrawingTransform"
+
+[[function]]
+va = 0x00032C70
+size = 208
+symbol = "?Read@AtScaleCoordSys@@QAEXPAVAtIoTokenizer@@PAVAtCoordSysDatabase@@@Z"
+source = "src/at/AtCoordSysFile.cpp"
+subsystem = "at/akc"
+evidence = "tests/oracle/oracle_akc.cpp; the words UniformScale and Scale"
+
+[[function]]
+va = 0x00032D40
+size = 173
+symbol = "?Read@AtRotTransCoordSys@@QAEXPAVAtIoTokenizer@@PAVAtCoordSysDatabase@@@Z"
+source = "src/at/AtCoordSysFile.cpp"
+subsystem = "at/akc"
+evidence = "tests/oracle/oracle_akc.cpp; the words Orientation and Position"
+
+[[function]]
+va = 0x00117080
+size = 172
+symbol = "?AtMatrixRead@@YAXPAUAtMatrix@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtCoordSysFile.cpp"
+subsystem = "at/akc"
+evidence = "tests/oracle/oracle_akc.cpp; the table's slot at 0x002C6264, set at 0x000EC5BD"
+
+[[function]]
+va = 0x00030FF0
+size = 77
+symbol = "?Describe@AtTextureBase@@UAEXPAVAtTextureDatabase@@PBDIHIH@Z"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 1 of the vftable at 0x00274A04"
+
+[[function]]
+va = 0x00031040
+size = 11
+symbol = "?FreeProgSource@AtTextureBase@@QAEXXZ"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; frees +0x20; called at 0x000FCB56"
+
+[[function]]
+va = 0x00031050
+size = 5
+symbol = "?ClearTransparentColor@AtTextureBase@@UAEXXZ"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 6"
+
+[[function]]
+va = 0x00031060
+size = 7
+symbol = "?ClearModifyUsage@AtTextureBase@@UAEXH@Z"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 10"
+
+[[function]]
+va = 0x00031070
+size = 66
+symbol = "??0AtTextureBase@@QAE@XZ"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; writes the vftable 0x00274A04, returns this"
+
+[[function]]
+va = 0x000310C0
+size = 58
+symbol = "?Reset@AtTextureBase@@UAEXXZ"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 4"
+
+[[function]]
+va = 0x00031100
+size = 21
+symbol = "?ClearPending@AtTextureBase@@UAEXXZ"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 3"
+
+[[function]]
+va = 0x00031120
+size = 201
+symbol = "?ReadProgSource@AtTextureBase@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; called only by 0x000312D0, on the word ProgSource"
+
+[[function]]
+va = 0x000311F0
+size = 99
+symbol = "?SetLightDirection@AtTextureBase@@UAEXPBVAtVector3@@@Z"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 7"
+
+[[function]]
+va = 0x00031260
+size = 34
+symbol = "?SetTransparentColor@AtTextureBase@@UAEXPBE@Z"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 5"
+
+[[function]]
+va = 0x00031290
+size = 64
+symbol = "??1AtTextureBase@@UAE@XZ"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; writes the vftable 0x00274A04, returns nothing; the concrete classes' destructors end by jumping here"
+
+[[function]]
+va = 0x000312D0
+size = 501
+symbol = "?Read@AtTextureBase@@UAEXPAVAtTextureDatabase@@PBDPAVAtIoTokenizer@@@Z"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 2; the concrete classes' readers call it first; jump table at 0x000314C8"
+
+[[function]]
+va = 0x00031530
+size = 88
+symbol = "??_GAtTextureBase@@UAEPAXI@Z"
+source = "src/at/AtTextureItem.cpp"
+subsystem = "at/agt"
+evidence = "tests/oracle/oracle_agt.cpp; slot 0"
+
+[[vtable]]
+va = 0x00274A04
+slots = 11
+symbol = "??_7AtTextureBase@@6B@"
+source = "src/at/AtTextureItem.cpp"
+
+[symbols]
+"?s_keywords@AtCoordSysDatabase@@2QBUAtIoKeyword@@B" = 0x002B05F8
+"?Unknown8@AtTextureBase@@UAEHXZ" = 0x000AB720  # vftable slot: returns 0, folded
+"?Unknown9@AtTextureBase@@UAEHXZ" = 0x000AB720  # as above
