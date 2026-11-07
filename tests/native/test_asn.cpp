@@ -8,6 +8,7 @@
 
 #include "at/AtIoTokenizer.h"
 #include "at/AtScene.h"
+#include "at/AtSceneActor.h"
 
 static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
@@ -19,7 +20,7 @@ public:
     int Refill() override { return 0; }
 };
 
-// The classes not recovered, here a base node that takes Mesh and nothing else of its own.
+// A class not recovered, here a base node that takes Mesh and nothing else of its own.
 class Actor : public AtSceneNode {
 public:
     void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
@@ -33,7 +34,6 @@ public:
         AtSceneNode::ReadBody(owner, t, token);
     }
     int m_meshes = 0;
-    GmNameMap* m_joints = nullptr;
 };
 
 struct Mat { float position[3]; float rotation[4]; int identity; };
@@ -112,17 +112,16 @@ int g_actorsMade;
 
 }  // namespace
 
-unsigned int AtSceneActorsSize(int) { return sizeof(Actor); }
-void AtSceneActorsConstruct(int, void* first, unsigned int count) {
+unsigned int AtSceneUnrecoveredActorsSize(int) { return sizeof(Actor); }
+void AtSceneUnrecoveredActorsConstruct(int, void* first, unsigned int count) {
     for (unsigned int i = 0; i < count; i++) new ((Actor*)first + i) Actor;
     g_actorsMade += (int)count;
 }
-void AtSceneActorsDestroy(int, void* first, unsigned int count) {
+void AtSceneUnrecoveredActorsDestroy(int, void* first, unsigned int count) {
     for (unsigned int i = count; i > 0; i--) ((Actor*)first + i - 1)->~Actor();
     g_actorsMade -= (int)count;
 }
-AtCoordSys* AtSceneActorSharedCoordSys(const AtSceneNode*) { return nullptr; }
-GmNameMap* AtSceneActorJoints(const AtSceneNode* actor) { return static_cast<const Actor*>(actor)->m_joints; }
+void* AtSceneFindDataLink(AtNameTableOwner*, const char*, const char*) { return nullptr; }
 
 int main() {
     g_atMatrix.Copy = Copy;
@@ -159,17 +158,25 @@ int main() {
     int modifier = 0;
     modifiers.Insert("Mod", &modifier);
     owner.m_modifiers.Add(&modifiers);
+    GmNameMap meshes;
+    meshes.Init(2);
+    int mesh = 0;
+    meshes.Insert("Thing", &mesh);
+    device.m_meshes.Add(&meshes);
+    device.m_meshSpaces.Init(2);
+    AtSceneActor::SetHeap(&g_heap);
 
     {
         AtScene scene;
         read(scene, owner,
-             "RotTransCoordSys[3]\nMotionState[1]\nNode[4]\n"
+             "RotTransCoordSys[3]\nMotionState[1]\nNode[5]\n"
              "Node[2]\n{\n"
              " Node \"Base\" RotTransCoordSys\n {\n  Position 1.0 2.0 3.0\n  Quaternion 0.0 0.0 0.0 1.0\n  BoundingSphere 4.0 5.0 6.0 2.5\n  CollisionEnable\n  ActiveDistance 3.0\n }\n"
              " Node \"Child\" RotTransCoordSys MotionState\n {\n  AttachBase \"Base\" \"\"\n  LinearVelocity 7.0 8.0 9.0\n  AngularVelocity 1.0 1.5 2.0\n  BoundingGeometry \"Geo\" \"\"\n  BoundingSphere 0.0 0.0 0.0 1.0\n }\n"
              "}\n"
              "ModifierNode[1]\n{\n ModifierNode \"Mover\" \n {\n  Modifier \"Mod\" \"\"\n  ModificationEnable\n }\n}\n"
-             "ModelActor[1]\n{\n ModelActor \"Thing\" RotTransCoordSys\n {\n  Mesh \"Thing\" \"\"\n  LineSegIntersectEnable\n }\n}\n");
+             "ModelActor[1]\n{\n ModelActor \"Thing\" RotTransCoordSys\n {\n  Mesh \"Thing\" \"\"\n  LineSegIntersectEnable\n }\n}\n"
+             "ParticleSystemActor[1]\n{\n ParticleSystemActor \"Puff\"\n {\n  Mesh \"Puff\" \"\"\n  CollisionEnable\n }\n}\n");
         CHECK(scene.m_nodeCount == 2);
         CHECK(scene.m_modifierNodeCount == 1);
         CHECK(scene.m_modelCount == 1);
@@ -208,10 +215,15 @@ int main() {
         CHECK(mover->m_modifier == &modifier);
         CHECK(mover->m_flags & AtSceneNode::kModificationEnabled);
 
-        Actor* thing = (Actor*)scene.Find("Thing");
+        AtSceneModelActor* thing = (AtSceneModelActor*)scene.Find("Thing");
         CHECK(thing != nullptr);
-        CHECK(thing->m_meshes == 1);
+        CHECK(thing->m_class == 2);
+        CHECK(thing->m_mesh == &mesh);
         CHECK(thing->m_flags & AtSceneNode::kLineSegIntersect);
+        Actor* puff = (Actor*)scene.Find("Puff");
+        CHECK(puff != nullptr);
+        CHECK(puff->m_meshes == 1);
+        CHECK(puff->m_flags & AtSceneNode::kCollision);
 
         // A copy owns a coordinate system and motion state of its own, and gives them back.
         {

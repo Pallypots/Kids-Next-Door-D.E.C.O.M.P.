@@ -1,6 +1,8 @@
 // The base node and the modifier node of a scene. See include/at/AtScene.h.
 #include "at/AtScene.h"
 
+#include "at/AtSceneActor.h"
+
 #include "AtSceneArray.h"
 
 void AtRaise(int code, int a, int b, int c);
@@ -211,6 +213,14 @@ void AtSceneNode::RemoveChild(AtSceneNode* child) {
     }
 }
 
+void AtSceneNode::AddChild(AtSceneNode* child) {
+    if (child->m_parent != this) {
+        child->m_parent = this;
+        child->m_nextChild = m_firstChild;
+        m_firstChild = child;
+    }
+}
+
 void AtSceneNode::Clear() {
     if (m_links[1] != 0) {
         m_links[1]->m_set->RemoveAsKind1(this);
@@ -329,7 +339,7 @@ void AtSceneNode::AttachToJoint(AtSceneNode* parent, const char* joint) {
     if (mine == 0) {
         return;
     }
-    AtCoordSys* theirs = (AtCoordSys*)AtSceneActorJoints(parent)->Find(joint);
+    AtCoordSys* theirs = (AtCoordSys*)static_cast<AtSceneJointedModelActor*>(parent)->m_joints.m_database->Find(joint);
     if (theirs == 0) {
         return;
     }
@@ -563,7 +573,7 @@ void AtSceneNode::CopyFrom(AtNameTableOwner* owner, const AtSceneNode* from) {
     m_boundingGeometry = from->m_boundingGeometry;
     if (from->m_coordSys != 0) {
         const bool isActor = from->m_class >= kClassFirstActor && from->m_class <= kClassLastActor;
-        if (!isActor || AtSceneActorSharedCoordSys(from) == 0) {
+        if (!isActor || static_cast<const AtSceneActor*>(from)->m_sharedFrom == 0) {
             if (s_heap == 0) {
                 AtRaise(-2, 0, 0, 0);
             }

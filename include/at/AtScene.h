@@ -2,8 +2,8 @@
 // own messages, which call this "Atlas Scene": position, rotation, bounding sphere and collision for each node; meshes, animation channels, particles and so on for the classes built on it. Scene names are inferred; keyword names are
 // the original's. Original address clusters 0x0003BB60-0x0003CDFF, 0x0003D6F0-0x0003D91F, 0x0003E8C0-0x0003E91F, 0x00049800-0x0004AFDF, 0x0004F370-0x0004F4AF.
 //
-// Only the base node and the modifier node are recovered. Every other class of node (AtSceneActorKind) is not: their code is about meshes, particles and joints, and reaches the graphics layer. Those arrays are made through the three
-// AtSceneActors functions below, which src/at/AtSceneActorsHost.cpp answers with a diagnostic, so a scene that has any stops there. A test may supply them.
+// The base node and the modifier node are here; ModelActor and JointedModelActor are in at/AtSceneActor.h. Every other class of node (AtSceneActorKind) is not recovered. All those arrays are made through the three AtSceneActors functions
+// below. For a class not recovered, src/at/AtSceneActorsHost.cpp answers with a diagnostic, so a scene that has any stops there. A test may supply them.
 #pragma once
 
 #include "at/AtNameTableOwner.h"
@@ -15,18 +15,24 @@ class AtSceneNode;
 
 // Words in the keyword table. Only those this code tests for.
 enum AtSceneWord {
-    kAtWordNode = 57, kAtWordRotTransCoordSys = 58, kAtWordScaleCoordSys = 59, kAtWordMotionState = 60, kAtWordModifierNode = 61, kAtWordModifier = 62, kAtWordModelActor = 64, kAtWordJointedModelActor = 65,
-    kAtWordParticleSystemActor = 81, kAtWordGroupActor = 84, kAtWordSwitchGroupActor = 86, kAtWordLodGroupActor = 88, kAtWordBoundingSphere = 90, kAtWordActiveDistance = 91, kAtWordAttach = 93, kAtWordAttachBase = 94,
+    kAtWordNode = 57, kAtWordRotTransCoordSys = 58, kAtWordScaleCoordSys = 59, kAtWordMotionState = 60, kAtWordModifierNode = 61, kAtWordModifier = 62, kAtWordModelActor = 64, kAtWordJointedModelActor = 65, kAtWordCoordSysDatabase = 66,
+    kAtWordCopyCoordSysDatabase = 67, kAtWordAnimationChannel = 68, kAtWordPlayAnimation = 69, kAtWordWeights = 70, kAtWordWeightMultiplier = 71, kAtWordPlaybackRate = 72, kAtWordMatAssignmentOffset = 80,
+    kAtWordParticleSystemActor = 81, kAtWordGroupActor = 84, kAtWordSwitchGroupActor = 86, kAtWordLodGroupActor = 88, kAtWordBoundingSphere = 90, kAtWordActiveDistance = 91, kAtWordMatAssignment = 92, kAtWordAttach = 93, kAtWordAttachBase = 94,
     kAtWordPosition = 95, kAtWordOrthoNormalize = 96, kAtWordQuaternion = 97, kAtWordLookAt = 98, kAtWordLinearVelocity = 99, kAtWordAngularVelocity = 100, kAtWordCollisionEnable = 101, kAtWordCollisionDisable = 102,
-    kAtWordModificationEnable = 103, kAtWordModificationDisable = 104, kAtWordNameSpace = 114, kAtWordBoundingGeometry = 116, kAtWordLineSegIntersectEnable = 117, kAtWordLineSegIntersectDisable = 118, kAtWordLensFlareActor = 135,
+    kAtWordModificationEnable = 103, kAtWordModificationDisable = 104, kAtWordDrawingEnable = 105, kAtWordDrawingDisable = 106, kAtWordMatAnimationChannel = 109, kAtWordPlayMatAnimation = 110, kAtWordScale = 111, kAtWordDataLink = 112, kAtWordMesh = 113,
+    kAtWordNameSpace = 114, kAtWordModifierReceiver = 115, kAtWordBoundingGeometry = 116, kAtWordLineSegIntersectEnable = 117, kAtWordLineSegIntersectDisable = 118, kAtWordAnimateAtDrawEnable = 119, kAtWordAnimateAtDrawDisable = 120,
+    kAtWordShareCoordSysDatabase = 121, kAtWordCoordSysMirrorDatabase = 124, kAtWordCoordSysMirroringEnable = 125, kAtWordCoordSysMirroringDisable = 126, kAtWordProjectionReceiver = 127, kAtWordTextureCoordSysDatabase = 130,
+    kAtWordCopyTextureCoordSysDatabase = 131, kAtWordShareTextureCoordSysDatabase = 132, kAtWordTextureCoordAnimationChannel = 133, kAtWordScaleTranslations = 134, kAtWordLensFlareActor = 135,
     kAtWordEnableBoundingGeometryDraw = 139, kAtWordEnableNodeBoundingSphereDraw = 140, kAtWordDisableBoundingGeometryDraw = 141, kAtWordDisableNodeBoundingSphereDraw = 142, kAtWordBoundingGeometryMatAssignment = 143,
-    kAtWordBoundingSphereMatAssignment = 144, kAtWordWaterActor = 147, kAtWordSoundNode = 148, kAtWordAttachNodeToThisJoint = 149, kAtWordAttachNodeToThisBase = 150, kAtWordPhysicsJointedModelActor = 166
+    kAtWordBoundingSphereMatAssignment = 144, kAtWordWaterActor = 147, kAtWordSoundNode = 148, kAtWordAttachNodeToThisJoint = 149, kAtWordAttachNodeToThisBase = 150, kAtWordPhysicsActor = 163, kAtWordPhysicsActorInstance = 164, kAtWordPhysicsJointedModelActor = 166, kAtWordPhysicsEntitiesFile = 168, kAtWordAnimationSkeletonFile = 169,
+    kAtWordRigidBodySkeletonFile = 170, kAtWordInitWithHavokPosition = 171, kAtWordInitWithHavokOrientation = 172
 };
 
 // Codes passed to the tokenizer's Error; the meanings are inferred from where they are used.
 enum AtSceneProblem { kAtProblemIsEmpty = 0x23, kAtProblemNotFound = 0x25, kAtProblemWrongUse = 0x27 };
 
-// The graphics device, at +4 in the owner. Only its slot 17 is used here.
+// The graphics device, at +4 in the owner. Only its slot 17 and these tables are used here. Tables come in threes of a group and a database of name spaces, 0x3C bytes, as in AtMaterialOwner, which this may well be: its tables fit the gaps here.
+// That is not established, so they stay two names. What fills these tables is not recovered. What each holds is inferred from the word that looks in it.
 class AtSceneDevice {
 public:
     virtual void Slot0() = 0;
@@ -47,6 +53,20 @@ public:
     virtual void Slot15() = 0;
     virtual void Slot16() = 0;
     virtual AtMatrixDevice* MatrixDevice() = 0;  // slot 17
+
+    char m_unknown04[0xEC];            // +0x04
+    GmNameMapGroup m_meshes;           // +0xF0 Mesh
+    GmNameSpaceDb m_meshSpaces;        // +0x108
+    char m_unknown12C[0x78];           // +0x12C
+    GmNameMapGroup m_matAssignments;   // +0x1A4 MatAssignment
+    GmNameSpaceDb m_matAssignmentSpaces;  // +0x1BC
+    GmNameMapGroup m_matAnimations;    // +0x1E0 PlayMatAnimation
+    GmNameSpaceDb m_matAnimationSpaces;  // +0x1F8
+    char m_unknown21C[0xF0];           // +0x21C
+    GmNameMapGroup m_coordSysDatabases;  // +0x30C CoordSysDatabase and those like it
+    GmNameMapGroup m_mirrorDatabases;  // +0x324 CoordSysMirrorDatabase
+    GmNameMapGroup m_weightDatabases;  // +0x33C Weights, the map to look in; the name after it looks in that
+    GmNameMapGroup m_animationDatabases;  // +0x354 PlayAnimation, likewise
 };
 
 // A bounding sphere.
@@ -170,6 +190,7 @@ public:
     void Reset();                                  // 0x00049F80 not the class word, and not +0x68
     void ReleaseCoordSys();                        // 0x00049FE0
     void RemoveChild(AtSceneNode* child);          // 0x00049920
+    void AddChild(AtSceneNode* child);             // 0x00049900 nothing if it is already this one's. It stays in any other's list
     void AttachBase(AtSceneNode* parent);          // 0x0004A210
     void AttachToJoint(AtSceneNode* parent, const char* joint);  // 0x0004A310 parent is a jointed actor; nothing happens unless it has that joint
 
@@ -210,7 +231,7 @@ public:
     void* m_modifier;                  // +0x6C
 };
 
-// The classes not recovered, in the order of the scene's fields. Sizes on the Xbox, for the record, are in AtScene.cpp.
+// The classes with an array in a scene, in the order of the scene's fields.
 enum AtSceneActorKind {
     kAtActorModel, kAtActorJointedModel, kAtActorParticleSystem, kAtActorWater, kAtActorLensFlare, kAtActorGroup, kAtActorSwitchGroup, kAtActorLodGroup, kAtActorSound, kAtActorKinds
 };
@@ -218,8 +239,10 @@ enum AtSceneActorKind {
 unsigned int AtSceneActorsSize(int kind);                                         // the size of one
 void AtSceneActorsConstruct(int kind, void* first, unsigned int count);           // given room for count
 void AtSceneActorsDestroy(int kind, void* first, unsigned int count);             // last first; not the memory
-AtCoordSys* AtSceneActorSharedCoordSys(const AtSceneNode* actor);                 // +0x90 in an actor of classes 1 to 13, which a copy then does without a coordinate system of its own
-GmNameMap* AtSceneActorJoints(const AtSceneNode* actor);                          // +0xA0 in a jointed actor, a map of coordinate systems by joint
+unsigned int AtSceneUnrecoveredActorsSize(int kind);                              // The same three, for the classes not recovered. src/at/AtSceneActorsHost.cpp
+void AtSceneUnrecoveredActorsConstruct(int kind, void* first, unsigned int count);
+void AtSceneUnrecoveredActorsDestroy(int kind, void* first, unsigned int count);
+void* AtSceneFindDataLink(AtNameTableOwner* owner, const char* path, const char* ns);  // 0x0005F130 on the owner's +0x10, whose class is not recovered. No real scene file uses the word
 
 // Vftable 0x00275A44. A name map of nodes.
 class AtScene : public GmNameMap {
@@ -291,6 +314,11 @@ void AtConstructEach(void* first, unsigned int size, int count, void (*construct
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
+static_assert(offsetof(AtSceneDevice, m_meshes) == 0xF0, "AtSceneDevice::m_meshes");
+static_assert(offsetof(AtSceneDevice, m_matAssignments) == 0x1A4, "AtSceneDevice::m_matAssignments");
+static_assert(offsetof(AtSceneDevice, m_matAnimationSpaces) == 0x1F8, "AtSceneDevice::m_matAnimationSpaces");
+static_assert(offsetof(AtSceneDevice, m_coordSysDatabases) == 0x30C, "AtSceneDevice::m_coordSysDatabases");
+static_assert(offsetof(AtSceneDevice, m_animationDatabases) == 0x354, "AtSceneDevice::m_animationDatabases");
 static_assert(sizeof(AtSceneLink) == 0x20, "AtSceneLink");
 static_assert(sizeof(AtSceneLinkItem) == 0x20, "AtSceneLinkItem");
 static_assert(offsetof(AtSceneDirtyOwner, m_first) == 0x14, "AtSceneDirtyOwner::m_first");

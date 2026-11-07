@@ -66,6 +66,7 @@ public:
     int UpdateWorld();                         // 0x000325A0 parents first; kWorld if it was done, otherwise 0
     void Transform(const AtVector3* from, AtVector3* to);  // 0x00032780 local to world
     void CopyLocal(const AtCoordSys* from);    // 0x00032910
+    void CopyFromDatabase(class AtCoordSysDatabase* database, class AtCoordSysDatabase* from, const AtCoordSys* source);  // 0x00032860 what source is under in from, this goes under the same place in database. src/at/AtSceneAnimation.cpp
     void SetRotation(const AtQuaternion* rotation);  // 0x000272E0
     void SetPosition(const AtVector3* position);     // 0x00027310
     void SetLookAt(const AtVector3* direction, const AtVector3* up);  // 0x00049960
@@ -73,10 +74,10 @@ public:
     AtCoordSys* m_parent;       // +0x04
     AtCoordSys* m_nextSibling;  // +0x08
     AtCoordSys* m_firstChild;   // +0x0C
-    int m_unknown10;            // +0x10 only ever cleared here
+    AtMatrix* m_unknown10;      // +0x10 a matrix a copy of a database copies, if there is one
     AtMatrix* m_local;          // +0x14
     AtMatrix* m_world;          // +0x18
-    int m_unknown1C;            // +0x1C only ever cleared here
+    AtMatrix* m_unknown1C;      // +0x1C a matrix a copy of a database gives it to go with +0x10
     int m_unknown20;            // +0x20 -1 when reset; not used here
     unsigned int m_dirty;       // +0x24
 };
@@ -86,6 +87,7 @@ class AtRotTransCoordSys : public AtCoordSys {
 public:
     AtRotTransCoordSys();                      // 0x00026830
     ~AtRotTransCoordSys() override;            // slot 2, 0x00026B50 deleting, for arrays too; 0x00026850 complete
+    void CopyFromDatabase(class AtCoordSysDatabase* database, class AtCoordSysDatabase* from, unsigned int index);  // 0x000332F0
 };
 
 // Vftable 0x00274B08. A transform whose scale reaches what is attached to it.
@@ -100,6 +102,7 @@ public:
     int UpdateInverse() override;              // slot 6, 0x00032B70
 
     void SetScale(const AtVector3* scale);     // 0x00032B30
+    void CopyFromDatabase(class AtCoordSysDatabase* database, class AtCoordSysDatabase* from, unsigned int index);  // 0x00032C50
 
     AtVector3 m_scale;          // +0x28
 };
@@ -114,6 +117,8 @@ public:
     // 0x00026920. Room in the name map for rotTrans + scaled, and matrices for those and for `extra` more, which are taken by what calls this.
     void Allocate(AtMatrixDevice* device, unsigned int rotTrans, unsigned int scaled, unsigned int extra);
 
+    void CopyFrom(AtMatrixDevice* device, AtCoordSysDatabase* from);  // 0x00026E50 the same shape and names, with matrices of its own. src/at/AtSceneAnimation.cpp
+
     static void SetHeap(void* heap);           // 0x00026820
 
     AtMatrixDevice* m_device;     // +0x14
@@ -122,11 +127,15 @@ public:
     unsigned int m_scaledCount;   // +0x20
     AtRotTransCoordSys* m_rotTrans;  // +0x24
     AtScaleCoordSys* m_scaled;    // +0x28
-    int m_unknown2C;              // +0x2C only ever cleared here
+    AtCoordSys* m_unknown2C;      // +0x2C what a jointed actor's coordinate system takes under it
     unsigned int m_extra;         // +0x30
     unsigned int m_nextMatrix;    // +0x34
 
     static void* s_heap;          // 0x002C6344
+
+private:
+    void TakeMatricesFor(AtCoordSys* mine, AtCoordSysDatabase* from, const AtCoordSys* source);
+    void TakeDrawingMatricesFor(AtCoordSys* mine, const AtCoordSys* source);
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
