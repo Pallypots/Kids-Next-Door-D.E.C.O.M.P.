@@ -562,6 +562,19 @@ void AtInputMapper::Read(AtInputOwner* owner, AtIoTokenizer* tokenizer) {
     m_router.Allocate(m_device, m_buttonMapCapacity, m_axisMapCapacity);
 }
 
+void AtInputMapper::Bind(AtInputController* controller, AtAbstractController* target) {
+    m_router.UnbindAll();
+    for (unsigned int i = 0; i < m_buttonMapsUsed; i++) {
+        const AtInputButtonMap& map = m_buttonMaps[i];
+        m_router.BindButton(controller, map.m_physical, map.m_state, map.m_abstract);
+    }
+    for (unsigned int i = 0; i < m_axisMapsUsed; i++) {
+        const AtInputAxisMap& map = m_axisMaps[i];
+        m_router.BindAxis(controller, map.m_physical, map.m_abstract);
+    }
+    m_router.m_passOnTo = &target->m_queue;
+}
+
 // ---- the owner --------------------------------------------------------------------------------------------------------
 
 void AtInputOwner::AddMappers(GmNameMap* map, const char* ns) {

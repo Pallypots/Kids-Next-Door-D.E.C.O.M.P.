@@ -1,80 +1,22 @@
 // What turns a physical input into an abstract one: .ANM files, "AbstractMapper" by the file's own word, and what is set up from them. Original address cluster 0x00072B70-0x00073BEF and 0x00078940-0x000793AF.
-// The keyword names are the original's, from its tables at 0x002B2878 and 0x002B2C10; other names are inferred. .ANA, the controllers these map onto, is not recovered: AtInputController below is only what unbinding needs.
+// The keyword names are the original's, from its tables at 0x002B2878 and 0x002B2C10; other names are inferred. The controllers these map onto, .ANA, are in AtInputController.h.
 #pragma once
 
+#include "at/AtInputController.h"
 #include "at/AtIoTokenizer.h"
 #include "gm/GmNameMap.h"
 
-class AtInputController;
-
-// One binding from a physical input to a controller, 0x1C bytes, in a chain of the controller's while bound and on the router's free list otherwise. Binding is not recovered (0x00078EF0, 0x00078FA0).
-struct AtInputLink {
-    AtInputLink* m_next;            // +0x00
-    AtInputLink* m_prev;            // +0x04
-    int m_id;                       // +0x08 the abstract id, as a controller knows it
-    int m_unknown0C;                // +0x0C
-    int m_unknown10;                // +0x10
-    AtInputController* m_controller;  // +0x14
-    int m_unknown18;                // +0x18
-};
-
-// The controller, as far as links go. Vftable 0x002786C0, 0x120 bytes, otherwise not recovered: it stands here for the fields these two methods read, and is not to be constructed. Where this says
-// "button" it is what the original's first chains hold, every input the controller has; "axis" the second, axes and POVs.
-class AtInputController {
-public:
-    struct Input {
-        int m_id;
-        int m_unknown04;
-    };
-    struct Chain {
-        AtInputLink* m_first;
-        AtInputLink* m_last;
-    };
-
-    int UnbindButton(AtInputLink* link);  // 0x00077870 1 if the link's id is among the first inputs
-    int UnbindAxis(AtInputLink* link);    // 0x000779A0 the same, among the second
-
-    char m_unknown00[0x50];
-    Input* m_buttonInputs;          // +0x50
-    Input* m_axisInputs;            // +0x54
-    char m_unknown58[0x98 - 0x58];
-    Chain* m_buttonChains;          // +0x98
-    Chain* m_axisChains;            // +0x9C
-    char m_unknownA0[0xAC - 0xA0];
-    unsigned int m_buttonInputCount;  // +0xAC
-    unsigned int m_axisInputCount;  // +0xB0
-};
-
-// Vftable 0x002785F8. Room for a fixed number of links, in order.
-class AtInputLinkList {
-public:
-    AtInputLinkList();              // 0x000789F0
-    virtual ~AtInputLinkList();     // slot 0; 0x00078B00 deleting, 0x00078A10 complete
-
-    void Clear();                   // 0x00078950
-    void Allocate(unsigned int capacity);  // 0x00078A40 what it had is freed; cleared; s_heap
-    int Remove(AtInputLink* link);  // 0x00078980 1 if it was there. Reads the first entry whatever the count, so with no room at all it crashes.
-
-    static void SetHeap(void* heap);  // 0x00078940
-
-    AtInputLink** m_items;          // +0x04
-    unsigned int m_capacity;        // +0x08
-    unsigned int m_count;           // +0x0C
-
-    static void* s_heap;            // 0x00301B00
-};
-
-// Vftable 0x002785FC. A pool of links for one mapper, and the links now bound. What is not its own it passes along a chain, which nothing recovered here sets.
-class AtInputRouter {
+// Vftable 0x002785FC. A pool of links for one mapper, and the links now bound. What is not its own it passes along, to the queue of the controller a mapper is bound to.
+class AtInputRouter : public AtInputReceiver {
 public:
     AtInputRouter();                // 0x00078BD0
     ~AtInputRouter();               // 0x000792F0
 
-    virtual void Slot0(void* a);    // slot 0, 0x00078B60 passed on
-    virtual void Slot1(void* a);    // slot 1, 0x00078B70 passed on
-    virtual void Slot2(void* a);    // slot 2, 0x00078B90 passed on
-    virtual void Slot3(void* a, void* b);  // slot 3, 0x00078BB0 passed on
-    virtual void Unbind(AtInputController* controller, int id);  // slot 4, 0x000791B0 every link it holds for the pair; ids with bit 30 in the second list too; then passed on
+    void Slot0(void* a) override;   // slot 0, 0x00078B60 passed on
+    void Slot1(void* a) override;   // slot 1, 0x00078B70 passed on
+    void Slot2(void* a) override;   // slot 2, 0x00078B90 passed on
+    void Slot3(void* a, void* b) override;  // slot 3, 0x00078BB0 passed on
+    void Unbind(AtInputController* controller, int id) override;  // slot 4, 0x000791B0 every link it holds for the pair; ids with bit 30 in the second list too; then passed on
 
     void AllocateButtonLinks(unsigned int count);  // 0x00078C40
     void AllocateAxisLinks(unsigned int count);    // 0x00078D00
@@ -82,11 +24,20 @@ public:
     void Release();                 // 0x000792A0 keeps the free list's two pointers, which then point at what it freed
     void Allocate(void* device, unsigned int buttons, unsigned int axes);  // 0x00079350
 
+    // A null controller means every controller of the device: the two it names, those it numbers, those connected. A controller without the id takes no link.
+    int BindButton(AtInputController* controller, int physical, int state, int abstractId);  // 0x00079120 always 1
+    int BindAxis(AtInputController* controller, int physical, int abstractId);  // 0x00079170 always 1
+    int BindAll(int physical, int state, int abstractId);  // 0x00079040 always 1
+    void BindButtonTo(AtInputController* controller, int physical, int state, int abstractId);  // 0x00078EF0 nothing if it is bound already. With no free link, crashes.
+    void BindAxisTo(AtInputController* controller, int physical, int unused, int abstractId);  // 0x00078FA0 the same
+    AtInputLink* FindButtonLink(AtInputController* controller, int physical, int state, int abstractId);  // 0x00078E50
+    AtInputLink* FindAxisLink(AtInputController* controller, int physical, int abstractId);  // 0x00078EA0
+
     static void SetHeap(void* heap);  // 0x00078B50
 
-    void* m_bindFunction;           // +0x04 set while binding; not recovered
+    void (AtInputRouter::*m_bindFunction)(AtInputController*, int, int, int);  // +0x04 what BindAll does to each controller; left set
     void* m_device;                 // +0x08
-    AtInputRouter* m_passOnTo;      // +0x0C
+    AtInputReceiver* m_passOnTo;    // +0x0C
     AtInputLink* m_buttonLinks;     // +0x10
     AtInputLink* m_axisLinks;       // +0x14
     AtInputLink* m_freeFirst;       // +0x18
@@ -131,6 +82,7 @@ public:
     void Allocate(const Sizes& sizes);  // 0x00073100 both lists cleared, none used
     void CopyFrom(const AtInputMapper& from);  // 0x00073220 takes the other's doubled capacity and doubles it again
     void Read(AtInputOwner* owner, AtIoTokenizer* tokenizer);  // 0x000732A0
+    void Bind(AtInputController* controller, AtAbstractController* target);  // 0x00073010 from each map to the controller, or to all if null; out to the target's queue
 
     static void SetHeap(void* heap);  // 0x00072B70
 
@@ -146,10 +98,10 @@ public:
     static void* s_heap;            // 0x002CF14C
 };
 
-// The holder of the input databases. Only the tables the mappers use are known; its constructor and the rest are not recovered, and these members' own constructors stand in. It is the class of 0x0006CEE0,
-// whose other tables at +0x08 and +0x38 are for .ANA.
+// The holder of the input databases. Only these tables are known; its constructor and the rest are not recovered, and these members' own constructors stand in. It is the class of 0x0006CEE0.
 struct AtInputOwner {
     void AddMappers(GmNameMap* map, const char* ns);  // 0x00073BC0 a null ns means the plain group; an empty one is a name space with an empty name
+    void AddControllers(GmNameMap* map, const char* ns);  // 0x00073B90 the same
 
     int m_unknown00;                // +0x00
     void* m_device;                 // +0x04
@@ -186,11 +138,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(sizeof(AtInputLink) == 0x1C, "AtInputLink");
-static_assert(offsetof(AtInputController, m_buttonInputs) == 0x50, "AtInputController::m_buttonInputs");
-static_assert(offsetof(AtInputController, m_buttonChains) == 0x98, "AtInputController::m_buttonChains");
-static_assert(offsetof(AtInputController, m_axisInputCount) == 0xB0, "AtInputController::m_axisInputCount");
-static_assert(sizeof(AtInputLinkList) == 0x10, "AtInputLinkList");
 static_assert(offsetof(AtInputRouter, m_boundButtons) == 0x20, "AtInputRouter::m_boundButtons");
 static_assert(offsetof(AtInputRouter, m_linkCount) == 0x40, "AtInputRouter::m_linkCount");
 static_assert(sizeof(AtInputRouter) == 0x48, "AtInputRouter");
