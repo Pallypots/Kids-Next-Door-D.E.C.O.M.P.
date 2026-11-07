@@ -12,6 +12,7 @@ A mutant is one small edit to a copy of the recovered source. "Detected" means t
 crashed; a mutant that survives means the oracle cannot see that behaviour, which fails this run.
 """
 import argparse
+import concurrent.futures
 import hashlib
 import json
 import os
@@ -20,6 +21,7 @@ import shutil
 import subprocess
 import sys
 import time
+import threading
 import tomllib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -1542,20 +1544,63 @@ def exe(build_dir, target):
     return os.path.join(build_dir, CONFIG, target + ".exe")
 
 
-def write_variant(src, mutant):
-    """Write every source file with a fresh timestamp. A copy that kept old timestamps would leave the previous mutant's
-    object file in place, and the build system would silently reuse it."""
-    shutil.rmtree(MUTANT_SRC, ignore_errors=True)
-    os.makedirs(MUTANT_SRC)
-    for leaf in sorted(os.listdir(src)):
-        with open(os.path.join(src, leaf), encoding="utf-8") as f:
-            text = f.read()
-        if mutant and leaf == mutant[1]:
-            if text.count(mutant[2]) != 1:
-                raise SystemExit("mutant %r: text occurs %d times, expected 1" % (mutant[0], text.count(mutant[2])))
-            text = text.replace(mutant[2], mutant[3])
-        with open(os.path.join(MUTANT_SRC, leaf), "w", encoding="utf-8") as f:
-            f.write(text)
+def write_source(src, dest, leaf, mutant=None):
+    """Writing gives the file a fresh timestamp, so the build system recompiles it."""
+    with open(os.path.join(src, leaf), encoding="utf-8") as f:
+        text = f.read()
+    if mutant:
+        if text.count(mutant[2]) != 1:
+            raise SystemExit("mutant %r: text occurs %d times, expected 1" % (mutant[0], text.count(mutant[2])))
+        text = text.replace(mutant[2], mutant[3])
+    with open(os.path.join(dest, leaf), "w", encoding="utf-8") as f:
+        f.write(text)
+
+
+class MutantWorker:
+    """One private copy of the sources and one build tree. Moving from one mutant to the next rewrites only the file the last
+    one changed and the file this one changes. build() refuses a build that did not recompile the mutated file, because a
+    reused object would be judged as if it were the mutant."""
+
+    def __init__(self, index, suite, cfg):
+        self.suite, self.cfg = suite, cfg
+        self.src = os.path.join(ROOT, "src", cfg["src"])
+        self.dest = "%s-%d" % (MUTANT_SRC, index)
+        self.build_dir = "%s-%d" % (MUTANT_BUILD, index)
+        self.previous = None
+
+    def start(self):
+        shutil.rmtree(self.dest, ignore_errors=True)
+        shutil.rmtree(self.build_dir, ignore_errors=True)
+        os.makedirs(self.dest)
+        for leaf in sorted(os.listdir(self.src)):
+            write_source(self.src, self.dest, leaf)
+        var = ["-D%s=%s" % (self.cfg["var"], self.dest.replace("\\", "/"))]
+        ok, log = configure_and_build(self.build_dir, self.cfg["target"], var)
+        if not ok:
+            raise SystemExit("positive control does not compile:\n" + log)
+        return run_mutant(self.suite, self.build_dir)
+
+    def build(self, mutant):
+        if self.previous and self.previous != mutant[1]:
+            write_source(self.src, self.dest, self.previous)
+        write_source(self.src, self.dest, mutant[1], mutant)
+        self.previous = mutant[1]
+        target = self.cfg["target"]
+        # An output or debug file can be held for a moment, by a scanner or a parallel build. Only those errors are retried.
+        for _ in range(6):
+            r = run(["cmake", "--build", self.build_dir, "--config", CONFIG, "--target", target])
+            log = r.stdout + r.stderr
+            if r.returncode == 0 or not re.search(r"LNK1104|LNK1201|C1041|C1090", log):
+                break
+            time.sleep(2)
+        if r.returncode:
+            raise SystemExit("mutant %r does not compile:\n%s" % (mutant[0], log))
+        if mutant[1].endswith(".cpp") and mutant[1] not in log:
+            raise SystemExit("mutant %r: the build did not recompile %s" % (mutant[0], mutant[1]))
+
+    def stop(self):
+        shutil.rmtree(self.build_dir, ignore_errors=True)  # The cached source directory belongs to this suite.
+        shutil.rmtree(self.dest, ignore_errors=True)
 
 
 def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
@@ -1577,10 +1622,16 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
     return cmd
 
 
+QUICK_READY = set()
+
+
 def quick_cases():
     """A few cases, so most mutants are decided in a second. A mutant that survives them gets the full set before it counts as
     surviving, so this changes the run time and never the verdict."""
     quick = os.path.join(ROOT, "build", "oracle-jam-quick")
+    if quick in QUICK_READY:
+        return quick
+    QUICK_READY.add(quick)
     shutil.rmtree(quick, ignore_errors=True)
     os.makedirs(quick)
     for leaf in os.listdir(CASES):
@@ -1589,23 +1640,23 @@ def quick_cases():
     return quick
 
 
-def run_mutant(suite):
+def run_mutant(suite, build_dir):
     def attempt(cmd, seconds):
         try:
             return run(cmd, timeout=seconds).returncode
         except subprocess.TimeoutExpired:
             return "timeout"
     if suite == "jam":
-        cmd = [exe(MUTANT_BUILD, "oracle_jam"), XBE, quick_cases()]
+        cmd = [exe(build_dir, "oracle_jam"), XBE, quick_cases()]
         code = attempt(cmd, 60)
         if code != 0:
             return code
     if suite == "tok":
-        code = attempt(command(suite, MUTANT_BUILD) + ["--limit", "40"], 120)
+        code = attempt(command(suite, build_dir) + ["--limit", "40"], 120)
         if code != 0:
             return code
-        return attempt(command(suite, MUTANT_BUILD), 600)
-    return attempt(command(suite, MUTANT_BUILD), 180)
+        return attempt(command(suite, build_dir), 600)
+    return attempt(command(suite, build_dir), 180)
 
 
 def check_mutants(cfg):
@@ -1658,31 +1709,46 @@ def run_suite(suite, a, funcs):
     good &= r.returncode == 1
 
     if not a.no_mutants:
-        src = os.path.join(ROOT, "src", cfg["src"])
-        var = ["-D%s=%s" % (cfg["var"], MUTANT_SRC.replace("\\", "/"))]
         survived = []
-        write_variant(src, None)
-        ok, log = configure_and_build(MUTANT_BUILD, target, var)
-        if not ok:
-            raise SystemExit("positive control does not compile:\n" + log)
-        code = run_mutant(suite)
-        print("  %-46s %s" % ("(unmodified copy: positive control)", "passes" if code == 0 else "FAILS: %s" % code))
-        report["mutant_positive_control_exit"] = code
-        if code != 0:
-            # Every mutant would then look detected, whatever it does. No count from such a run means anything.
-            raise SystemExit("positive control failed (exit %s): mutant results would be meaningless" % code)
-        for mutant in cfg["mutants"]:
-            write_variant(src, mutant)
-            ok, log = configure_and_build(MUTANT_BUILD, target, var)
-            # The output file can be held for a moment after the last run, by a scanner or the like. Only that error is retried: anything else stops the run.
-            for _ in range(5):
-                if ok or "LNK1104" not in log:
-                    break
-                time.sleep(2)
-                ok, log = configure_and_build(MUTANT_BUILD, target, var)
-            if not ok:
-                raise SystemExit("mutant %r does not compile:\n%s" % (mutant[0], log))
-            code = run_mutant(suite)
+        quick_cases()  # Made once, before any worker can want it.
+        jobs = max(1, min(a.jobs, len(cfg["mutants"])))
+        workers = [MutantWorker(i, suite, cfg) for i in range(jobs)]
+        # Every tree has to pass unmodified, or every mutant built in it would look detected, whatever it does.
+        with concurrent.futures.ThreadPoolExecutor(jobs) as pool:
+            codes = list(pool.map(lambda w: w.start(), workers))
+        print("  %-46s %s" % ("(unmodified copy: positive control)", "passes" if not any(codes) else "FAILS: %s" % codes))
+        report["mutant_positive_control_exit"] = next((c for c in codes if c), 0)
+        if any(codes):
+            raise SystemExit("positive control failed (exit %s): mutant results would be meaningless" % codes)
+        pending = list(enumerate(cfg["mutants"]))
+        pending.reverse()
+        results = {}
+        lock = threading.Lock()
+        stop = threading.Event()
+
+        def work(worker):
+            while not stop.is_set():
+                with lock:
+                    if not pending:
+                        return
+                    i, mutant = pending.pop()
+                try:
+                    worker.build(mutant)
+                    results[i] = run_mutant(suite, worker.build_dir)
+                except BaseException:
+                    stop.set()
+                    raise
+
+        with concurrent.futures.ThreadPoolExecutor(jobs) as pool:
+            for f in [pool.submit(work, w) for w in workers]:
+                f.result()
+        # A busy machine can run a slow test out of time. A hang counts as detection, so a hang has to be shown on an idle one.
+        for i, code in sorted(results.items()):
+            if code == "timeout" and jobs > 1:
+                workers[0].build(cfg["mutants"][i])
+                results[i] = run_mutant(suite, workers[0].build_dir)
+        for i, mutant in enumerate(cfg["mutants"]):
+            code = results[i]
             verdict = ("detected (difference)" if code == 1 else "survived" if code == 0
                        else "detected (crash/hang: %s)" % code)
             print("  %-46s %s" % (mutant[0], verdict))
@@ -1691,7 +1757,8 @@ def run_suite(suite, a, funcs):
                 survived.append(mutant[0])
         print("mutants detected: %d / %d" % (len(cfg["mutants"]) - len(survived), len(cfg["mutants"])))
         good &= not survived
-        shutil.rmtree(MUTANT_BUILD, ignore_errors=True)  # The cached source directory belongs to this suite.
+        for worker in workers:
+            worker.stop()
     return good, report
 
 
@@ -1700,6 +1767,7 @@ def main(argv):
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
+    ap.add_argument("--jobs", type=int, default=max(1, min(6, (os.cpu_count() or 2) - 1)), help="mutants built and run at once")
     ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
