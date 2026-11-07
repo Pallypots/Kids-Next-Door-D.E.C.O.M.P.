@@ -1,0 +1,283 @@
+# The shader loader. Names inferred; see include/at/AtShader.h and include/at/AtShaderDatabase.h. Recorded sizes are the inventory's.
+[[function]]
+va = 0x0002B1B0
+size = 10
+symbol = "?SetHeap@AtShaderDatabase@@SAXPAX@Z"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShaderDatabase.h"
+
+[[function]]
+va = 0x0002B1C0
+size = 25
+symbol = "??0AtShaderDatabase@@QAE@XZ"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShaderDatabase.h"
+
+[[function]]
+va = 0x0002B1E0
+size = 241
+symbol = "?Read@AtShaderDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x0002B2E0
+size = 154
+symbol = "?Load@AtShaderDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x0002B380
+size = 23
+symbol = "?Clear@AtShaderDatabase@@UAEXXZ"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShaderDatabase.h"
+
+[[function]]
+va = 0x0002B3A0
+size = 93
+symbol = "??1AtShaderDatabase@@UAE@XZ"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShaderDatabase.h"
+
+[[function]]
+va = 0x0002B400
+size = 30
+symbol = "??_GAtShaderDatabase@@UAEPAXI@Z"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShaderDatabase.h"
+
+[[function]]
+va = 0x00025EF0
+size = 55
+symbol = "?AddShaders@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtShaderDatabase.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00037520
+size = 10
+symbol = "?SetHeap@AtShader@@SAXPAX@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00037530
+size = 19
+symbol = "??1AtProgShaderComponent@@QAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00037550
+size = 8
+symbol = "??1AtStagedShaderComponent@@QAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00037560
+size = 52
+symbol = "??0AtShader@@QAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x000375A0
+size = 217
+symbol = "?Clear@AtShader@@UAEXXZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00037680
+size = 101
+symbol = "?NoteProgTransforms@AtShader@@QAEXXZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x000376F0
+size = 60
+symbol = "?NoteStagedTransforms@AtShader@@QAEXXZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00037730
+size = 11
+symbol = "??1AtShader@@UAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00037740
+size = 653
+symbol = "?Read@AtShader@@QAEXPAUAtMaterialOwner@@PAVAtShaderDatabase@@PAVAtIoTokenizer@@PBD@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x000379D0
+size = 36
+symbol = "??_GAtShader@@UAEPAXI@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044940
+size = 37
+symbol = "??0AtTextureStage@@QAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044970
+size = 933
+symbol = "?Read@AtTextureStage@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@PBD@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044DB0
+size = 35
+symbol = "?Reset@AtTextureStage@@QAEXXZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044DE0
+size = 26
+symbol = "?Clear@AtStagedShaderComponent@@QAEXXZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044E00
+size = 98
+symbol = "?ReadModulateOp@AtStagedShaderComponent@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044E80
+size = 80
+symbol = "?ReadAlphaSource@AtStagedShaderComponent@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044EE0
+size = 33
+symbol = "??0AtStagedShaderComponent@@QAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00044F10
+size = 165
+symbol = "?Read@AtStagedShaderComponent@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@IPBD@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00045020
+size = 10
+symbol = "?SetHeap@AtProgShaderComponent@@SAXPAX@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00045030
+size = 59
+symbol = "??0AtProgShaderComponent@@QAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00045070
+size = 670
+symbol = "?Read@AtProgShaderComponent@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@PBD@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00045370
+size = 50
+symbol = "?Clear@AtProgShaderComponent@@QAEXXZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x000453B0
+size = 107
+symbol = "?CountTextures@AtProgShaderComponent@@QBEIXZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00055630
+size = 9
+symbol = "??0AtShaderCombineOp@@QAE@XZ"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[function]]
+va = 0x00055640
+size = 154
+symbol = "?Read@AtShaderCombineOp@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtShader.cpp"
+subsystem = "at/ags"
+evidence = "tests/oracle/oracle_ags.cpp; address noted beside the declaration in include/at/AtShader.h"
+
+[[vtable]]
+va = 0x00273D20
+slots = 4
+symbol = "??_7AtShaderDatabase@@6B@"
+source = "src/at/AtShaderDatabase.cpp"
+
+[[vtable]]
+va = 0x00274D6C
+slots = 2
+symbol = "??_7AtShader@@6B@"
+source = "src/at/AtShader.cpp"
+
+[symbols]
+"??1AtTextureStage@@QAE@XZ" = 0x00044DB0  # calls Reset, and in the original is the same code
+"?s_heap@AtShaderDatabase@@2PAXA" = 0x002C6380  # see include/at/AtShaderDatabase.h
+"?s_keywords@AtShaderDatabase@@2QBUAtIoKeyword@@B" = 0x002B0CC0  # see include/at/AtShaderDatabase.h
+"?s_heap@AtShader@@2PAXA" = 0x002C63EC  # see include/at/AtShader.h
+"?s_heap@AtProgShaderComponent@@2PAXA" = 0x002C7C44  # see include/at/AtShader.h

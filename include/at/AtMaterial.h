@@ -19,6 +19,7 @@ struct AtMaterialOwner {
     void* FindShader(const char* name, const char* ns);     // 0x000383A0 ns may be empty or null
     void AddMaterials(GmNameMap* map, const char* ns);      // 0x00025EB0 ns may be empty or null
     void AddTextures(GmNameMap* map, const char* ns);       // 0x00025E70 ns may be empty or null; src/at/AtTextureDatabase.cpp
+    void AddShaders(GmNameMap* map, const char* ns);        // 0x00025EF0 ns may be empty or null; defined in src/at/AtShaderDatabase.cpp
 
     char m_unknown00[0x30];
     signed char m_noTextures;          // +0x30 negative: a material loaded for it keeps no shader or textures
@@ -29,6 +30,9 @@ struct AtMaterialOwner {
     GmNameSpaceDb m_materialSpaces;    // +0x90
     GmNameMapGroup m_shaders;          // +0xB4
     GmNameSpaceDb m_shaderSpaces;      // +0xCC
+    char m_unknownF0[0x36C - 0xF0];
+    GmNameMapGroup m_vertexProcesses;  // +0x36C searched by name by a shader; what fills it is not recovered
+    GmNameMapGroup m_pixelProcesses;   // +0x384 searched by name by a shader; what fills it is not recovered
 };
 
 // What a material hands on to the device layer. Filled by Describe.
@@ -133,5 +137,7 @@ static_assert(offsetof(AtMaterialOwner, m_materials) == 0x78, "AtMaterialOwner::
 static_assert(offsetof(AtMaterialOwner, m_materialSpaces) == 0x90, "AtMaterialOwner::m_materialSpaces");
 static_assert(offsetof(AtMaterialOwner, m_shaders) == 0xB4, "AtMaterialOwner::m_shaders");
 static_assert(offsetof(AtMaterialOwner, m_shaderSpaces) == 0xCC, "AtMaterialOwner::m_shaderSpaces");
+static_assert(offsetof(AtMaterialOwner, m_vertexProcesses) == 0x36C, "AtMaterialOwner::m_vertexProcesses");
+static_assert(offsetof(AtMaterialOwner, m_pixelProcesses) == 0x384, "AtMaterialOwner::m_pixelProcesses");
 #pragma pop_macro("offsetof")
 #endif
