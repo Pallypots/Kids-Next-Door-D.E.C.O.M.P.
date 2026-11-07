@@ -1,0 +1,757 @@
+# Scenes, .ASN files. See include/at/AtScene.h and include/at/AtCoordSys.h. Sizes are from the disassembly.
+
+[[function]]
+va = 0x00011000
+size = 48
+symbol = "?AtConstructEach@@YAXPAXIHP6AX0@Z@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0003BE2F with size, count and the motion state's constructor; the original takes a thiscall pointer, so the signature differs"
+
+[[function]]
+va = 0x0017AED0
+size = 16
+symbol = "??0AtSceneSphere@@QAE@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called twice by 0x0004A740 on +0x0C and +0x1C"
+
+[[function]]
+va = 0x00019CD0
+size = 84
+symbol = "??_GAtCoordSysDatabase@@UAEPAXI@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00273120 slot 0; calls 0x00027280, size 0x38"
+
+[[function]]
+va = 0x00026820
+size = 10
+symbol = "?SetHeap@AtCoordSysDatabase@@SAXPAX@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores 0x002C6344, the heap 0x00026920 pushes"
+
+[[function]]
+va = 0x00026830
+size = 18
+symbol = "??0AtRotTransCoordSys@@QAE@XZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00273100; passed to the array iterator by 0x00026920"
+
+[[function]]
+va = 0x00026850
+size = 5
+symbol = "??1AtRotTransCoordSys@@UAE@XZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "jumps to 0x00032490; passed to the array iterator by 0x00026920"
+
+[[function]]
+va = 0x000268F0
+size = 47
+symbol = "??0AtCoordSysDatabase@@QAE@XZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00273120; called by 0x0003BC70 on +0x14"
+
+[[function]]
+va = 0x00026920
+size = 560
+symbol = "?Allocate@AtCoordSysDatabase@@QAEXPAVAtMatrixDevice@@III@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0003BDCE with the counts of RotTransCoordSys and ScaleCoordSys"
+
+[[function]]
+va = 0x00026B50
+size = 84
+symbol = "??_GAtRotTransCoordSys@@UAEPAXI@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00273100 slot 2; size 0x28"
+
+[[function]]
+va = 0x00026BB0
+size = 84
+symbol = "??_GAtScaleCoordSys@@UAEPAXI@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274B08 slot 2; size 0x34"
+
+[[function]]
+va = 0x000271F0
+size = 142
+symbol = "?Clear@AtCoordSysDatabase@@UAEXXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00273120 slot 1"
+
+[[function]]
+va = 0x00027280
+size = 79
+symbol = "??1AtCoordSysDatabase@@UAE@XZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00273120; calls 0x000271F0 and 0x00025260"
+
+[[function]]
+va = 0x000272E0
+size = 34
+symbol = "?SetRotation@AtCoordSys@@QAEXPBVAtQuaternion@@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AD1A for Quaternion"
+
+[[function]]
+va = 0x00027310
+size = 34
+symbol = "?SetPosition@AtCoordSys@@QAEXPBVAtVector3@@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004ACA5 for Position"
+
+[[function]]
+va = 0x0002E640
+size = 87
+symbol = "??_GAtScene@@UAEPAXI@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00275A44 slot 0; calls 0x0003E8C0, size 0xF8"
+
+[[function]]
+va = 0x00031A90
+size = 50
+symbol = "?AddScene@AtSceneOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0003BE99 with the scene and its name space"
+
+[[function]]
+va = 0x000322D0
+size = 52
+symbol = "?MarkDirty@AtCoordSys@@QAEXI@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00032AB1 with 0x10; recursive"
+
+[[function]]
+va = 0x00032270
+size = 84
+symbol = "?Reset@AtCoordSys@@UAEXXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 3"
+
+[[function]]
+va = 0x00032330
+size = 33
+symbol = "?Invalidate@AtCoordSys@@UAEXXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 1"
+
+[[function]]
+va = 0x00032360
+size = 7
+symbol = "?ScaleFactor@AtCoordSys@@UAEMXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 0"
+
+[[function]]
+va = 0x00032370
+size = 49
+symbol = "?Attach@AtCoordSys@@UAEXPAV1@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 4"
+
+[[function]]
+va = 0x000323B0
+size = 63
+symbol = "?Detach@AtCoordSys@@UAEXPAV1@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 5"
+
+[[function]]
+va = 0x000323F0
+size = 36
+symbol = "?Visit@AtCoordSys@@UAEXPAX@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 7"
+
+[[function]]
+va = 0x00032460
+size = 42
+symbol = "??0AtCoordSys@@QAE@XZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00274AE8"
+
+[[function]]
+va = 0x00032490
+size = 11
+symbol = "??1AtCoordSys@@UAE@XZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00274AE8; jumps to 0x00032270"
+
+[[function]]
+va = 0x000324A0
+size = 57
+symbol = "?SetMatrices@AtCoordSys@@QAEXPAUAtMatrix@@0@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00026A49 with two matrices of the pool"
+
+[[function]]
+va = 0x000325A0
+size = 111
+symbol = "?UpdateWorld@AtCoordSys@@QAEHXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00032783"
+
+[[function]]
+va = 0x00032610
+size = 126
+symbol = "?UpdateInverse@AtCoordSys@@UAEHXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 6"
+
+[[function]]
+va = 0x00032780
+size = 35
+symbol = "?Transform@AtCoordSys@@QAEXPBVAtVector3@@PAV2@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00049F46 with the sphere's centre"
+
+[[function]]
+va = 0x00032910
+size = 37
+symbol = "?CopyLocal@AtCoordSys@@QAEXPBV1@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00049BD4"
+
+[[function]]
+va = 0x000329D0
+size = 36
+symbol = "??_GAtCoordSys@@UAEPAXI@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274AE8 slot 2"
+
+[[function]]
+va = 0x00032A80
+size = 19
+symbol = "?Reset@AtScaleCoordSys@@UAEXXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274B08 slot 3"
+
+[[function]]
+va = 0x00032AA0
+size = 26
+symbol = "?Attach@AtScaleCoordSys@@UAEXPAVAtCoordSys@@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274B08 slot 4"
+
+[[function]]
+va = 0x00032AC0
+size = 22
+symbol = "?Detach@AtScaleCoordSys@@UAEXPAVAtCoordSys@@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274B08 slot 5"
+
+[[function]]
+va = 0x00032AE0
+size = 32
+symbol = "??0AtScaleCoordSys@@QAE@XZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00274B08; passed to the array iterator by 0x00026ABB"
+
+[[function]]
+va = 0x00032B30
+size = 51
+symbol = "?SetScale@AtScaleCoordSys@@QAEXPBVAtVector3@@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "stores +0x28 and calls 0x002C6120 on the local matrix"
+
+[[function]]
+va = 0x00032B70
+size = 210
+symbol = "?UpdateInverse@AtScaleCoordSys@@UAEHXZ"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00274B08 slot 6"
+
+[[function]]
+va = 0x00033BC0
+size = 52
+symbol = "?Read@AtQuaternion@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AD0D for Quaternion: four reals"
+
+[[function]]
+va = 0x00039F00
+size = 119
+symbol = "?RemoveLink@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0003A328"
+
+[[function]]
+va = 0x00039F80
+size = 29
+symbol = "?Set@AtSceneSphere@@QAEXABU1@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AA82 for BoundingSphere"
+
+[[function]]
+va = 0x0003A2C0
+size = 71
+symbol = "?RemoveDirty@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0003A320"
+
+[[function]]
+va = 0x0003A310
+size = 34
+symbol = "?RemoveAsKind1@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AF40 on +0x48"
+
+[[function]]
+va = 0x0003A340
+size = 34
+symbol = "?RemoveAsKind3@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AF4F on +0x50"
+
+[[function]]
+va = 0x0003A370
+size = 34
+symbol = "?RemoveAsKind0@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004F3CD on +0x44"
+
+[[function]]
+va = 0x0003B790
+size = 10
+symbol = "?SetHeap@AtScene@@SAXPAX@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "stores 0x002C640C, the heap 0x0003BCD0 pushes"
+
+[[function]]
+va = 0x0003B7F0
+size = 84
+symbol = "??_GAtSceneNode@@UAEPAXI@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 7; size 0x6C"
+
+[[function]]
+va = 0x0003B910
+size = 5
+symbol = "??1AtSceneModifierNode@@UAE@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "jumps to 0x0004AFD0; passed to the array iterator by 0x0003C2A8"
+
+[[function]]
+va = 0x0003BB60
+size = 216
+symbol = "?ResetFields@AtScene@@AAEXXZ"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0003BC70 and jumped to by 0x0003D6F0"
+
+[[function]]
+va = 0x0003BC40
+size = 44
+symbol = "?NextMotionState@AtScene@@QAEPAUAtSceneMotionState@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004983B for the word MotionState; stride 0x30"
+
+[[function]]
+va = 0x0003BC70
+size = 81
+symbol = "??0AtScene@@QAE@XZ"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00275A44; passed to the array iterator by 0x0002E5DD"
+
+[[function]]
+va = 0x0003BCD0
+size = 3969
+symbol = "?Read@AtScene@@QAEXPAUAtSceneOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0003CDCF with the tokenizer; sets the keywords at 0x002B1990"
+
+[[function]]
+va = 0x0003CD00
+size = 84
+symbol = "??_GAtSceneModifierNode@@UAEPAXI@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00276C68 slot 7; size 0x70"
+
+[[function]]
+va = 0x0003CD60
+size = 162
+symbol = "?Load@AtScene@@QAEXPAUAtSceneOwner@@PBDH@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "opens name + .ASN; called by 0x0002F0CB"
+
+[[function]]
+va = 0x0003D6F0
+size = 461
+symbol = "?Clear@AtScene@@UAEXXZ"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00275A44 slot 1"
+
+[[function]]
+va = 0x0003D8C0
+size = 44
+symbol = "?NextRotTrans@AtScene@@QAEPAVAtRotTransCoordSys@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00049861 for the word RotTransCoordSys; stride 0x28"
+
+[[function]]
+va = 0x0003D8F0
+size = 41
+symbol = "?NextScale@AtScene@@QAEPAVAtScaleCoordSys@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00055BA9 for the word ScaleCoordSys; stride 0x34"
+
+[[function]]
+va = 0x0003E8C0
+size = 92
+symbol = "??1AtScene@@UAE@XZ"
+source = "src/at/AtScene.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00275A44; calls 0x0003D6F0, 0x00027280 and 0x00025260"
+
+[[function]]
+va = 0x00045680
+size = 55
+symbol = "?FindNode@AtSceneOwner@@QAEPAVAtSceneNode@@PBD0@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "the tables AddScene fills; called by 0x0004AAE6 for Attach"
+
+[[function]]
+va = 0x000467F0
+size = 46
+symbol = "?Unlink@AtSceneLinkItem@@QAEXI@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00039F40"
+
+[[function]]
+va = 0x000497F0
+size = 10
+symbol = "?SetHeap@AtSceneNode@@SAXPAX@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "stores 0x002C7E0C, the heap 0x00049A80 pushes"
+
+[[function]]
+va = 0x00049800
+size = 110
+symbol = "?ReadHeader@AtSceneNode@@UAEXPAVAtScene@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 0"
+
+[[function]]
+va = 0x000498A0
+size = 4
+symbol = "?CoordSys@AtSceneNode@@UAEPAVAtCoordSys@@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slots 4 and 5"
+
+[[function]]
+va = 0x00049920
+size = 54
+symbol = "?RemoveChild@AtSceneNode@@QAEXPAV1@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AF5C on the parent"
+
+[[function]]
+va = 0x00049960
+size = 39
+symbol = "?SetLookAt@AtCoordSys@@QAEXPBVAtVector3@@0@Z"
+source = "src/at/AtCoordSys.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004ACE7 for OrthoNormalize, calls 0x002C60F4"
+
+[[function]]
+va = 0x000499B0
+size = 55
+symbol = "?FindBoundingGeometry@AtSceneOwner@@QAEPAXPBD0@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AE4A for BoundingGeometry"
+
+[[function]]
+va = 0x000499F0
+size = 135
+symbol = "?Read@AtSceneNode@@UAEXPAUAtSceneOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 10; called by each array loop of 0x0003BCD0"
+
+[[function]]
+va = 0x00049A80
+size = 543
+symbol = "?CopyFrom@AtSceneNode@@UAEXPAUAtSceneOwner@@PBV1@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 8"
+
+[[function]]
+va = 0x00049CA0
+size = 129
+symbol = "?InitFrom@AtSceneNode@@UAEXPAUAtSceneOwner@@PBUAtSceneNodeDesc@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 9"
+
+[[function]]
+va = 0x00049F30
+size = 69
+symbol = "?FinishBody@AtSceneNode@@UAEXXZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 2"
+
+[[function]]
+va = 0x00049F80
+size = 89
+symbol = "?Reset@AtSceneNode@@QAEXXZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004A764 and jumped to by 0x0004AFC3"
+
+[[function]]
+va = 0x00049FE0
+size = 86
+symbol = "?ReleaseCoordSys@AtSceneNode@@QAEXXZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AFA3"
+
+[[function]]
+va = 0x0004A040
+size = 208
+symbol = "?OnMoved@AtSceneNode@@UAEXXZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 3"
+
+[[function]]
+va = 0x0004A210
+size = 69
+symbol = "?AttachBase@AtSceneNode@@QAEXPAV1@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AB87 for AttachBase"
+
+[[function]]
+va = 0x0004A310
+size = 85
+symbol = "?AttachToJoint@AtSceneNode@@QAEXPAV1@PBD@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x0004AB26 for Attach"
+
+[[function]]
+va = 0x0004A740
+size = 45
+symbol = "??0AtSceneNode@@QAE@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x002765A0; passed to the array iterator by 0x0003BF33"
+
+[[function]]
+va = 0x0004AA10
+size = 1163
+symbol = "?ReadBody@AtSceneNode@@UAEXPAUAtSceneOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 1"
+
+[[function]]
+va = 0x0004AF30
+size = 152
+symbol = "?Clear@AtSceneNode@@UAEXXZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x002765A0 slot 11"
+
+[[function]]
+va = 0x0004AFD0
+size = 11
+symbol = "??1AtSceneNode@@UAE@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x002765A0; jumps to 0x0004AF30"
+
+[[function]]
+va = 0x0004F370
+size = 5
+symbol = "?Read@AtSceneModifierNode@@UAEXPAUAtSceneOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00276C68 slot 10; jumps to 0x000499F0"
+
+[[function]]
+va = 0x0004F3A0
+size = 31
+symbol = "??0AtSceneModifierNode@@QAE@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "stores vftable 0x00276C68; passed to the array iterator by 0x0003C2AD"
+
+[[function]]
+va = 0x0004F3C0
+size = 34
+symbol = "?Clear@AtSceneModifierNode@@UAEXXZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00276C68 slot 11"
+
+[[function]]
+va = 0x0004F3F0
+size = 192
+symbol = "?ReadBody@AtSceneModifierNode@@UAEXPAUAtSceneOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "vftable 0x00276C68 slot 1"
+
+[[function]]
+va = 0x0004F5A0
+size = 40
+symbol = "??0AtSceneMotionState@@QAE@XZ"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "passed to 0x00011000 by 0x0003BE24"
+
+[[function]]
+va = 0x0004F5D0
+size = 77
+symbol = "?Set@AtSceneMotionState@@QAEXABU1@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "called by 0x00049C60"
+
+[[function]]
+va = 0x000559B0
+size = 55
+symbol = "?AsJointed@AtSceneNode@@SAPAV1@PAV1@@Z"
+source = "src/at/AtSceneNode.cpp"
+subsystem = "at/asn"
+evidence = "the message at 0x00276F3C; called by 0x0004AAFB for Attach"
+
+[[vtable]]
+va = 0x00273100
+slots = 8
+symbol = "??_7AtRotTransCoordSys@@6B@"
+source = "src/at/AtCoordSys.cpp"
+
+[[vtable]]
+va = 0x00273120
+slots = 2
+symbol = "??_7AtCoordSysDatabase@@6B@"
+source = "src/at/AtCoordSys.cpp"
+
+[[vtable]]
+va = 0x00274AE8
+slots = 8
+symbol = "??_7AtCoordSys@@6B@"
+source = "src/at/AtCoordSys.cpp"
+
+[[vtable]]
+va = 0x00274B08
+slots = 8
+symbol = "??_7AtScaleCoordSys@@6B@"
+source = "src/at/AtCoordSys.cpp"
+
+[[vtable]]
+va = 0x00275A44
+slots = 2
+symbol = "??_7AtScene@@6B@"
+source = "src/at/AtScene.cpp"
+
+[[vtable]]
+va = 0x002765A0
+slots = 32
+symbol = "??_7AtSceneNode@@6B@"
+source = "src/at/AtSceneNode.cpp"
+
+[[vtable]]
+va = 0x00276C68
+slots = 32
+symbol = "??_7AtSceneModifierNode@@6B@"
+source = "src/at/AtSceneNode.cpp"
+
+[symbols]
+"?s_heap@AtScene@@2PAXA" = 0x002C640C
+"?s_heap@AtSceneNode@@2PAXA" = 0x002C7E0C
+"?s_heap@AtCoordSysDatabase@@2PAXA" = 0x002C6344
+"?s_itemsInUse@AtSceneModifierSet@@2HA" = 0x002C63F4
+"?s_keywords@AtScene@@2QBUAtIoKeyword@@B" = 0x002B1990
+"?ParentCoordSys@AtSceneNode@@UAEPAVAtCoordSys@@XZ" = 0x000498A0  # vftable slot: the same code as CoordSys, folded
+"?FinishHeader@AtSceneNode@@UAEXXZ" = 0x001CC9F0  # vftable slot: empty, folded
+"?Invalidate@AtScaleCoordSys@@UAEXXZ" = 0x001CC9F0  # vftable slot: empty, folded
+"?Slot12@AtSceneNode@@UAEXXZ" = 0x00049870  # vftable slots from here on: not recovered
+"?Slot13@AtSceneNode@@UAEXXZ" = 0x000CBF30
+"?Slot14@AtSceneNode@@UAEXXZ" = 0x0004A110
+"?Slot15@AtSceneNode@@UAEXXZ" = 0x000498E0
+"?Slot16@AtSceneNode@@UAEXXZ" = 0x0004A640
+"?Slot17@AtSceneNode@@UAEXXZ" = 0x0004A6A0
+"?Slot18@AtSceneNode@@UAEXXZ" = 0x0004A5E0
+"?Slot19@AtSceneNode@@UAEXXZ" = 0x0004A610
+"?Slot20@AtSceneNode@@UAEXXZ" = 0x0004A800
+"?Slot21@AtSceneNode@@UAEXXZ" = 0x0004A7D0
+"?Slot22@AtSceneNode@@UAEXXZ" = 0x0004A7A0
+"?Slot23@AtSceneNode@@UAEXXZ" = 0x0004A770
+"?Slot24@AtSceneNode@@UAEXXZ" = 0x0004A830
+"?Slot25@AtSceneNode@@UAEXXZ" = 0x0004A870
+"?Slot26@AtSceneNode@@UAEXXZ" = 0x0004A910
+"?Slot27@AtSceneNode@@UAEXXZ" = 0x0004A8E0
+"?Slot28@AtSceneNode@@UAEXXZ" = 0x0004A8A0
+"?Slot29@AtSceneNode@@UAEXXZ" = 0x0004A950
+"?Slot30@AtSceneNode@@UAEXXZ" = 0x0004A990
+"?Slot31@AtSceneNode@@UAEXXZ" = 0x0004A9D0
+"?Slot12@AtSceneModifierNode@@UAEXXZ" = 0x0004F380
+"??_C@_0CO@CANGEKIA@Atlas?5Scene?3?5Error?5trying?5to?5ca@" = 0x00276F3C  # the message for a null node
+"__ehhandler$??0AtScene@@QAE@XZ" = 0x001F7368  # pushed by 0x0003BC70
+"??_C@_0DM@DLDGPIBK@Atlas?5Scene?3?5Error?5trying?5to?5ca@" = 0x00276F6C  # the message for another class
