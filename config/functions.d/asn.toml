@@ -307,7 +307,7 @@ evidence = "called by 0x0004AD0D for Quaternion: four reals"
 [[function]]
 va = 0x00039F00
 size = 119
-symbol = "?RemoveLink@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+symbol = "?RemoveLink@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0003A328"
@@ -323,7 +323,7 @@ evidence = "called by 0x0004AA82 for BoundingSphere"
 [[function]]
 va = 0x0003A2C0
 size = 71
-symbol = "?RemoveDirty@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+symbol = "?RemoveDirty@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0003A320"
@@ -331,7 +331,7 @@ evidence = "called by 0x0003A320"
 [[function]]
 va = 0x0003A310
 size = 34
-symbol = "?RemoveAsKind1@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+symbol = "?RemoveAsKind1@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0004AF40 on +0x48"
@@ -339,7 +339,7 @@ evidence = "called by 0x0004AF40 on +0x48"
 [[function]]
 va = 0x0003A340
 size = 34
-symbol = "?RemoveAsKind3@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+symbol = "?RemoveAsKind3@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0004AF4F on +0x50"
@@ -347,7 +347,7 @@ evidence = "called by 0x0004AF4F on +0x50"
 [[function]]
 va = 0x0003A370
 size = 34
-symbol = "?RemoveAsKind0@AtSceneModifierSet@@QAEXPAVAtSceneNode@@@Z"
+symbol = "?RemoveAsKind0@AtSpaceGraph@@QAEXPAVAtSceneNode@@@Z"
 source = "src/at/AtSceneNode.cpp"
 subsystem = "at/asn"
 evidence = "called by 0x0004F3CD on +0x44"
@@ -726,7 +726,7 @@ source = "src/at/AtSceneNode.cpp"
 "?s_heap@AtScene@@2PAXA" = 0x002C640C
 "?s_heap@AtSceneNode@@2PAXA" = 0x002C7E0C
 "?s_heap@AtCoordSysDatabase@@2PAXA" = 0x002C6344
-"?s_itemsInUse@AtSceneModifierSet@@2HA" = 0x002C63F4
+"?s_itemsInUse@AtSpaceGraph@@2HA" = 0x002C63F4
 "?s_keywords@AtScene@@2QBUAtIoKeyword@@B" = 0x002B1990
 "?ParentCoordSys@AtSceneNode@@UAEPAVAtCoordSys@@XZ" = 0x000498A0  # vftable slot: the same code as CoordSys, folded
 "?FinishHeader@AtSceneNode@@UAEXXZ" = 0x001CC9F0  # vftable slot: empty, folded
