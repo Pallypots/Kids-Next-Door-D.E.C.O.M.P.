@@ -1,0 +1,356 @@
+# The .AOB and .AOS lists, their banks and segments. Names inferred. See include/at/AtAudioBank.h.
+
+[[function]]
+va = 0x000249A0
+size = 33
+symbol = "??1AtAudioBankFile@@QAE@XZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "tail of 0x00031DA0, on +0x70"
+
+[[function]]
+va = 0x00025310
+size = 13
+symbol = "?Clear@AtAudioSegmentDatabase@@UAEXXZ"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00272EF0 slot 1; also the slot of a neighbouring class at 0x00272EC8"
+
+[[function]]
+va = 0x000254F0
+size = 10
+symbol = "?SetHeap@AtAudioSegmentDatabase@@SAXPAX@Z"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "stores 0x002C6334, read by the concrete database 0x0010EDA0; beside the .AOS class"
+
+[[function]]
+va = 0x00025500
+size = 11
+symbol = "??1AtAudioSegmentDatabase@@UAE@XZ"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00272EF0, goes on to ~GmNameMap"
+
+[[function]]
+va = 0x00025510
+size = 26
+symbol = "??0AtAudioSegmentDatabase@@QAE@XZ"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00272EF0"
+
+[[function]]
+va = 0x00025530
+size = 30
+symbol = "??_GAtAudioSegmentDatabase@@UAEPAXI@Z"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00272EF0 slot 0"
+
+[[function]]
+va = 0x00025550
+size = 239
+symbol = "?Read@AtAudioSegmentDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "called by the .AOS loader; keyword table 0x002B04E4"
+
+[[function]]
+va = 0x00025640
+size = 154
+symbol = "?Load@AtAudioSegmentDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = ".AOS loader: string AOS; called by the .AOD loader"
+
+[[function]]
+va = 0x000256E0
+size = 10
+symbol = "?SetHeap@AtAudioBankDatabase@@SAXPAX@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "stores 0x002C6338, read by 0x00025700"
+
+[[function]]
+va = 0x000256F0
+size = 11
+symbol = "??1AtAudioBankDatabase@@UAE@XZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00272FF0, goes on to ~GmNameMap"
+
+[[function]]
+va = 0x00025700
+size = 144
+symbol = "?Allocate@AtAudioBankDatabase@@QAEXABUArgs@1@@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "called by 0x00025860; fills the map and list from a local of its caller"
+
+[[function]]
+va = 0x00025790
+size = 141
+symbol = "?Clear@AtAudioBankDatabase@@UAEXXZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00272FF0 slot 1"
+
+[[function]]
+va = 0x00025820
+size = 29
+symbol = "??0AtAudioBankDatabase@@QAE@XZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00272FF0"
+
+[[function]]
+va = 0x00025840
+size = 30
+symbol = "??_GAtAudioBankDatabase@@UAEPAXI@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00272FF0 slot 0"
+
+[[function]]
+va = 0x00025860
+size = 487
+symbol = "?Read@AtAudioBankDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@PBD@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "called by the .AOB loader; keyword table 0x002B0518, jump table 0x00025A48"
+
+[[function]]
+va = 0x00025A90
+size = 233
+symbol = "?Load@AtAudioBankDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = ".AOB loader: string AOB; called by the .AOD loader"
+
+[[function]]
+va = 0x00031A30
+size = 44
+symbol = "?AddToFirst@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "+0x18 group or +0x30 name spaces; called by 0x00025700"
+
+[[function]]
+va = 0x00031A60
+size = 44
+symbol = "?AddToSecond@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "+0x54 group or +0x6C name spaces; called by 0x00025550"
+
+[[function]]
+va = 0x00031B90
+size = 7
+symbol = "??1AtAudioSegment@@UAE@XZ"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00274A84"
+
+[[function]]
+va = 0x00031BB0
+size = 62
+symbol = "?Length@AtAudioSegment@@QAEMXZ"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "bank slot 11 with m_index; the largest float when m_looping is 1"
+
+[[function]]
+va = 0x00031BF0
+size = 26
+symbol = "?Unknown31BF0@AtAudioSegment@@QAEMXZ"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "bank slot 12 with m_index"
+
+[[function]]
+va = 0x00031C10
+size = 20
+symbol = "??0AtAudioSegment@@QAE@XZ"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00274A84"
+
+[[function]]
+va = 0x00031C30
+size = 31
+symbol = "??_GAtAudioSegment@@UAEPAXI@Z"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00274A84 slot 0"
+
+[[function]]
+va = 0x00031C50
+size = 278
+symbol = "?Read@AtAudioSegment@@QAEXPAVAtAudioSegmentDatabase@@PAVAtIoTokenizer@@PBD2@Z"
+source = "src/at/AtAudioSegment.cpp"
+subsystem = "at/aob"
+evidence = "called on SegmentAt(i) by 0x00025550"
+
+[[function]]
+va = 0x00031D70
+size = 26
+symbol = "??0AtAudioBankDesc@@QAE@XZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "local of 0x00025860, passed to CreateBank; read by 0x00031F00"
+
+[[function]]
+va = 0x00031D90
+size = 10
+symbol = "?SetHeap@AtAudioBank@@SAXPAX@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "stores 0x002C63D4, read by the concrete bank at 0x0011F558"
+
+[[function]]
+va = 0x00031DA0
+size = 14
+symbol = "??1AtAudioBank@@UAE@XZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00274A90, destroys +0x70"
+
+[[function]]
+va = 0x00031DB0
+size = 104
+symbol = "?ResetFields@AtAudioBank@@QAEXXZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "called by the constructor and by 0x00031E20"
+
+[[function]]
+va = 0x00031E20
+size = 5
+symbol = "?Reset@AtAudioBank@@UAEXXZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00274A90 slot 2"
+
+[[function]]
+va = 0x00031E30
+size = 9
+symbol = "?SegmentLength@AtAudioBank@@UAEMH@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00274A90 slots 11 and 12"
+
+[[function]]
+va = 0x00031E40
+size = 43
+symbol = "?AddUser@AtAudioBank@@QAEHPAVAtAudioBankDatabase@@@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "called by 0x00025860 on a bank already known"
+
+[[function]]
+va = 0x00031E70
+size = 55
+symbol = "?RemoveUser@AtAudioBank@@QAEHPAVAtAudioBankDatabase@@@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "called by 0x00025790"
+
+[[function]]
+va = 0x00031EB0
+size = 4
+symbol = "?UserCount@AtAudioBank@@QBEHXZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "called by 0x00025790"
+
+[[function]]
+va = 0x00031EC0
+size = 28
+symbol = "??0AtAudioBank@@QAE@XZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "stores vftable 0x00274A90"
+
+[[function]]
+va = 0x00031EE0
+size = 30
+symbol = "??_GAtAudioBank@@UAEPAXI@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00274A90 slot 0"
+
+[[function]]
+va = 0x00031F00
+size = 108
+symbol = "?Init@AtAudioBank@@QAEXABUAtAudioBankDesc@@@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "called by the concrete database 0x0010EC80 with the desc from 0x00025860"
+
+[[function]]
+va = 0x00031F70
+size = 72
+symbol = "?Load@AtAudioBank@@UAEHXZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00274A90 slot 13"
+
+[[function]]
+va = 0x00031FC0
+size = 74
+symbol = "?Unload@AtAudioBank@@UAEHXZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00274A90 slot 10"
+
+[[function]]
+va = 0x00032010
+size = 12
+symbol = "?Update@AtAudioBank@@UAEXXZ"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "vftable 0x00274A90 slot 15"
+
+[[function]]
+va = 0x00032020
+size = 86
+symbol = "?GetNames@AtAudioBank@@QAEXPAD0@Z"
+source = "src/at/AtAudioBank.cpp"
+subsystem = "at/aob"
+evidence = "+0x04 and the first user's group name; called by 0x0011FB3E"
+
+[[vtable]]
+va = 0x00272EF0
+slots = 5
+symbol = "??_7AtAudioSegmentDatabase@@6B@"
+source = "src/at/AtAudioSegment.cpp"
+
+[[vtable]]
+va = 0x00272FF0
+slots = 4
+symbol = "??_7AtAudioBankDatabase@@6B@"
+source = "src/at/AtAudioBank.cpp"
+
+[[vtable]]
+va = 0x00274A84
+slots = 3
+symbol = "??_7AtAudioSegment@@6B@"
+source = "src/at/AtAudioSegment.cpp"
+
+[[vtable]]
+va = 0x00274A90
+slots = 17
+symbol = "??_7AtAudioBank@@6B@"
+source = "src/at/AtAudioBank.cpp"
+
+[symbols]
+"?Reset@AtAudioSegment@@UAEXXZ" = 0x00031BA0  # three stores, folded with AtText::ClearFields; vftable 0x00274A84 slot 2
+"?Unknown12@AtAudioBank@@UAEMH@Z" = 0x00031E30  # vftable slot: returns zero, folded with SegmentLength
+"?Unknown16@AtAudioBank@@UAEHXZ" = 0x000AB720  # vftable slot: returns 0, folded
+"??0AtAudioBankFile@@QAE@XZ" = 0x00018810  # two stores, folded with AtIoFileRef's constructor
+"?s_heap@AtAudioSegmentDatabase@@2PAXA" = 0x002C6334
+"?s_heap@AtAudioBankDatabase@@2PAXA" = 0x002C6338
+"?s_heap@AtAudioBank@@2PAXA" = 0x002C63D4
+"?s_keywords@AtAudioBankDatabase@@2QBUAtIoKeyword@@B" = 0x002B0518
+"?s_keywords@AtAudioSegmentDatabase@@2QBUAtIoKeyword@@B" = 0x002B04E4
