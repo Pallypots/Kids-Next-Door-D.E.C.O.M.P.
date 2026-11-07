@@ -24,6 +24,8 @@ try:
 except ImportError:  # Python older than 3.11.
     import tomli as tomllib
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fnconfig  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECTION_CLASS = {"D3D": "xdk", "D3DX": "xdk", "XGRPH": "xdk", "DSOUND": "xdk", "XACTENG": "xdk", "WMADEC": "xdk", "XPP": "xdk", "DOLBY": "xdk"}
@@ -181,8 +183,7 @@ def main():
         functions = json.load(f)
     with open(os.path.join(ROOT, "analysis-local", "inv", "string_tags.json")) as f:
         strings = {k: (v if isinstance(v, str) else v.get("tag")) for k, v in json.load(f).items()}
-    with open(os.path.join(ROOT, "config", "functions.toml"), "rb") as f:
-        cfg = tomllib.load(f)
+    cfg = fnconfig.load(ROOT)
     recovered = {r["va"] for r in cfg["function"]}
     library = {v for k, v in cfg.get("symbols", {}).items() if k in LIBRARY_SYMBOL}
     hints = load_hints()

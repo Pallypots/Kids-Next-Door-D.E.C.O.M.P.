@@ -14,6 +14,8 @@ import os
 import sys
 import tomllib
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fnconfig  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -111,8 +113,7 @@ def main(argv):
     detail["extent_differences"] = samples
 
     # ---- recorded (recovered) functions: the claims that matter most
-    with open(os.path.join(ROOT, "config", "functions.toml"), "rb") as f:
-        cfg = tomllib.load(f)
+    cfg = fnconfig.load(ROOT)
     rec_bad = []
     for r in cfg["function"]:
         g = gf.get(r["va"])

@@ -155,3 +155,22 @@ if(WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 4)
     # Base 0x10000: tests/oracle/reserve.asm owns the XBE's address range from process creation.
     target_link_options(oracle_gm PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
 endif()
+
+# Subsystems kept apart, one file each, so that branches worked on in parallel do not collide here. Each file adds its sources to knd_at or knd_gm with
+# target_sources, and uses these two.
+function(knd_native_test name)
+    add_executable(${name} tests/native/${name}.cpp platform/fatal.cpp)
+    target_link_libraries(${name} PRIVATE knd_at knd_gm)
+    add_test(NAME ${name} COMMAND ${name})
+endfunction()
+function(knd_oracle name)
+    if(TARGET oracle_mdb)
+        add_executable(${name} tests/oracle/reserve.asm tests/oracle/${name}.cpp)
+        target_link_libraries(${name} PRIVATE knd_at knd_gm)
+        target_link_options(${name} PRIVATE /BASE:0x10000 /DYNAMICBASE:NO /FIXED /SAFESEH:NO /SECTION:.text,ERW /INCREMENTAL:NO)
+    endif()
+endfunction()
+file(GLOB KND_SUBSYSTEMS CONFIGURE_DEPENDS cmake/subsystems/*.cmake)
+foreach(subsystem ${KND_SUBSYSTEMS})
+    include(${subsystem})
+endforeach()

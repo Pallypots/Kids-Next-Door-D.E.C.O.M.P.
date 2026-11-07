@@ -13,6 +13,7 @@ crashed; a mutant that survives means the oracle cannot see that behaviour, whic
 """
 import argparse
 import concurrent.futures
+import glob
 import hashlib
 import json
 import os
@@ -25,14 +26,17 @@ import threading
 import tomllib
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fnconfig  # noqa: E402
 BUILD = os.path.join(ROOT, "build", "oracle")
 MUTANT_BUILD = os.path.join(ROOT, "build", "oracle-mutant")
 MUTANT_SRC = os.path.join(ROOT, "build", "oracle-mutant-src")
 CONFIG = "RelWithDebInfo"
-XBE = os.path.join(ROOT, "orig", "xiso", "default.xbe")
+PRIVATE = fnconfig.private_root(ROOT)
+XBE = os.path.join(PRIVATE, "orig", "xiso", "default.xbe")
 
-CASES = os.path.join(ROOT, "analysis-local", "oracle-jam")
-TOK_CASES = os.path.join(ROOT, "analysis-local", "oracle-tok")
+CASES = os.path.join(PRIVATE, "analysis-local", "oracle-jam")
+TOK_CASES = os.path.join(PRIVATE, "analysis-local", "oracle-tok")
 
 # (name, file, exact text to replace, replacement). The text must occur exactly once.
 GM_MUTANTS = [
@@ -1641,6 +1645,15 @@ SUITES = {
 }
 
 
+# Suites kept apart from this file, one to a subsystem: tests/oracle/suites/<name>.py defines SUITE, a dict like those above with "cases": "tok" for the
+# text cases, "jam" for the archive cases, or "none" for no directory.
+for _path in sorted(glob.glob(os.path.join(ROOT, "tests", "oracle", "suites", "*.py"))):
+    _names = {}
+    with open(_path, encoding="utf-8") as _f:
+        exec(compile(_f.read(), _path, "exec"), _names)
+    SUITES[os.path.splitext(os.path.basename(_path))[0]] = _names["SUITE"]
+
+
 def run(cmd, **kw):
     return subprocess.run(cmd, capture_output=True, text=True, errors="replace", **kw)
 
@@ -1721,7 +1734,10 @@ class MutantWorker:
 
 def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
     target = SUITES[suite]["target"]
-    if suite == "gm":
+    apart = SUITES[suite].get("cases")
+    if apart:
+        cmd = [exe(build_dir, target), XBE] + ({"tok": [TOK_CASES], "jam": [CASES], "none": []}[apart])
+    elif suite == "gm":
         cmd = [exe(build_dir, target), XBE, "--seed", str(seed), "--ops", str(ops)]
     elif suite == "mnt":
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -1884,13 +1900,12 @@ def main(argv):
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
     ap.add_argument("--jobs", type=int, default=max(1, min(6, (os.cpu_count() or 2) - 1)), help="mutants built and run at once")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat", "mdb", "all"], default="all")
+    ap.add_argument("--suite", choices=list(SUITES) + ["all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
         return 2
-    with open(os.path.join(ROOT, "config", "functions.toml"), "rb") as f:
-        funcs = tomllib.load(f)["function"]
+    funcs = fnconfig.load(ROOT)["function"]
     report = {"xbe_sha256": hashlib.sha256(open(XBE, "rb").read()).hexdigest(), "suites": {}}
     path = os.path.join(ROOT, "build", "oracle-report.json")
     earlier = {}
@@ -1900,7 +1915,7 @@ def main(argv):
     if a.suite != "all":
         report["suites"] = dict(earlier)
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat", "mdb"] if a.suite == "all" else [a.suite]):
+    for suite in (list(SUITES) if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         if a.no_mutants and earlier.get(suite, {}).get("mutants"):

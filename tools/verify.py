@@ -18,6 +18,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import xbe as xbemod  # noqa: E402
 import xcheck  # noqa: E402
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import fnconfig  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -52,8 +54,7 @@ def compiler_version(compiler):
 
 
 def load_config():
-    with open(os.path.join(ROOT, "config", "functions.toml"), "rb") as f:
-        fcfg = tomllib.load(f)
+    fcfg = fnconfig.load(ROOT)
     with open(os.path.join(ROOT, "config", "toolchain.toml"), "rb") as f:
         tcfg = tomllib.load(f)
     return fcfg, tcfg
@@ -70,7 +71,7 @@ def symbol_map(fcfg):
 def main(argv):
     ap = argparse.ArgumentParser()
     ap.add_argument("--compiler", default="msvc14-host")
-    ap.add_argument("--xbe", default=os.path.join(ROOT, "orig", "xiso", "default.xbe"))
+    ap.add_argument("--xbe", default=os.path.join(fnconfig.private_root(ROOT), "orig", "xiso", "default.xbe"))
     ap.add_argument("--only", nargs="*", default=None)
     ap.add_argument("--report", default=os.path.join(ROOT, "build", "verify-report.json"))
     args = ap.parse_args(argv)

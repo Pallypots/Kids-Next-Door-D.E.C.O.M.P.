@@ -170,8 +170,7 @@ class RealObjects(unittest.TestCase):
         cls.verify = verify
         cls.x = xbe.load(XBE_PATH)
         cls.comp = _toolchain()
-        with open(os.path.join(ROOT, "config", "functions.toml"), "rb") as f:
-            cls.symbols = verify.symbol_map(tomllib.load(f))
+        cls.symbols = verify.symbol_map(verify.fnconfig.load(ROOT))
 
     def run_variant(self, name, body, symbol, va, size, symmap=None):
         # One directory per variant: MSVC resolves "quoted" includes relative to the source file first, so a shared
