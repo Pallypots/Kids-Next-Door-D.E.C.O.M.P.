@@ -17,6 +17,7 @@ public:
     void SetSlerp(const AtQuaternion& from, const AtQuaternion& to, float t);    // 0x000339D0 lerps when the angle is small
     void Rotate(AtVector3* vector) const;                           // 0x00033B00 (v * q) * conjugate(q)
     void SetAxisAngle(const AtVector3& axis, float angle);          // 0x00033B90
+    void Read(AtIoTokenizer* tokenizer);                            // 0x00033BC0 in src/at/AtCoordSys.cpp
 
     float x;   // +0x00
     float y;   // +0x04
