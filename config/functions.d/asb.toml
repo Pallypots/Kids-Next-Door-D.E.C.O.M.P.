@@ -1,0 +1,547 @@
+# Bounding geometry, .ASB. Names inferred; see include/at/AtBoundingGeometry.h. Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x0002ECC0
+size = 84
+symbol = "??_GAtBoundingGeometryDatabase@@UAEPAXI@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00032690
+size = 226
+symbol = "?UpdateDrawing@AtCoordSys@@QAEHPAUAtMatrix@@HH@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00032810
+size = 35
+symbol = "?TransformDirectionInverse@AtCoordSys@@QAEXPBVAtVector3@@PAV2@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000400B0
+size = 50
+symbol = "?AddGeometry@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00040A60
+size = 10
+symbol = "?SetHeap@AtBoundingGeometryDatabase@@SAXPAX@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00040A70
+size = 38
+symbol = "??0AtBoundingGeometryDatabase@@QAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00040AA0
+size = 1159
+symbol = "?Read@AtBoundingGeometryDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00040F90
+size = 154
+symbol = "?Load@AtBoundingGeometryDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00041030
+size = 82
+symbol = "?Clear@AtBoundingGeometryDatabase@@UAEXXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00041090
+size = 79
+symbol = "??1AtBoundingGeometryDatabase@@UAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000454C0
+size = 33
+symbol = "??0AtVertexFormat@@QAE@XZ"
+source = "src/at/AtBoundingDraw.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000454F0
+size = 151
+symbol = "?Set@AtVertexFormat@@QAEXIII@Z"
+source = "src/at/AtBoundingDraw.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00053960
+size = 101
+symbol = "?DrawTree@AtBoundingGeometry@@UAEXPAXPAVAtGeometryDrawDevice@@PAVAtSceneNode@@PAVAtCoordSys@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000539F0
+size = 23
+symbol = "?SwapNodes@AtBoundingGeometry@@SAXXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00053A10
+size = 36
+symbol = "??0AtBoundingGeometry@@QAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00053A40
+size = 167
+symbol = "?Read@AtBoundingGeometry@@QAEXPAVGmNameMap@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00053AF0
+size = 116
+symbol = "?SetDrawTransform@AtBoundingGeometry@@QAEXPAVAtGeometryDrawDevice@@PAVAtSceneNode@@PAVAtCoordSys@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00053DC0
+size = 747
+symbol = "?RelateTo@AtBoundingGeometry@@QAEXPBV1@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054290
+size = 25
+symbol = "??0AtGroupBoundingGeometry@@QAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000542B0
+size = 14
+symbol = "?ReadWord@AtGroupBoundingGeometry@@UAEXPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000542C0
+size = 9
+symbol = "?Penetration@AtGroupBoundingGeometry@@UAENPAVAtSceneNode@@PAVAtBoundingGeometry@@0PAVAtVector3@@PAM3@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000542D0
+size = 33
+symbol = "??0AtSphereBoundingGeometry@@QAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054300
+size = 53
+symbol = "?Draw@AtSphereBoundingGeometry@@UAEXPAXPAVAtGeometryDrawDevice@@PAVAtSceneNode@@PAVAtCoordSys@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054340
+size = 72
+symbol = "?ReadWord@AtSphereBoundingGeometry@@UAEXPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054390
+size = 401
+symbol = "?Overlaps@AtSphereBoundingGeometry@@UAEHPAVAtBoundingGeometry@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054530
+size = 540
+symbol = "?Penetration@AtSphereBoundingGeometry@@UAENPAVAtSceneNode@@PAVAtBoundingGeometry@@0PAVAtVector3@@PAM3@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054750
+size = 503
+symbol = "?PenetrationAlong@AtSphereBoundingGeometry@@UAENPAVAtSceneNode@@PAVAtBoundingGeometry@@0PBVAtVector3@@PAM3@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054950
+size = 59
+symbol = "?TestSegment@AtSphereBoundingGeometry@@UAEHXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054990
+size = 121
+symbol = "?CollectSegment@AtSphereBoundingGeometry@@UAEXXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054AA0
+size = 33
+symbol = "??0AtBoxBoundingGeometry@@QAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054AD0
+size = 25
+symbol = "?TestSegment@AtBoxBoundingGeometry@@UAEHXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054AF0
+size = 49
+symbol = "?Draw@AtBoxBoundingGeometry@@UAEXPAXPAVAtGeometryDrawDevice@@PAVAtSceneNode@@PAVAtCoordSys@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054B30
+size = 194
+symbol = "?ReadWord@AtBoxBoundingGeometry@@UAEXPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054C00
+size = 358
+symbol = "?Overlaps@AtBoxBoundingGeometry@@UAEHPAVAtBoundingGeometry@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054D70
+size = 540
+symbol = "?Penetration@AtBoxBoundingGeometry@@UAENPAVAtSceneNode@@PAVAtBoundingGeometry@@0PAVAtVector3@@PAM3@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00054F90
+size = 554
+symbol = "?PenetrationAlong@AtBoxBoundingGeometry@@UAENPAVAtSceneNode@@PAVAtBoundingGeometry@@0PBVAtVector3@@PAM3@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000551C0
+size = 222
+symbol = "?CollectSegment@AtBoxBoundingGeometry@@UAEXXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000552A0
+size = 10
+symbol = "?SetHeap@AtSegmentHitList@@SAXPAX@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00055340
+size = 19
+symbol = "?CountOne@AtSegmentHitList@@UAEXXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00055360
+size = 55
+symbol = "?SetStorage@AtSegmentHitList@@UAEXIPAX0@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000553A0
+size = 233
+symbol = "?Allocate@AtSegmentHitList@@UAEXI@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00055490
+size = 131
+symbol = "?Reset@AtSegmentHitList@@QAEXXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000555A0
+size = 14
+symbol = "??0AtSegmentHitList@@QAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000555B0
+size = 55
+symbol = "?Clear@AtSegmentHitList@@UAEXXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000555F0
+size = 61
+symbol = "??1AtSegmentHitList@@UAE@XZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00055750
+size = 22
+symbol = "??0AtVertexAttributes@@QAE@XZ"
+source = "src/at/AtBoundingDraw.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00055770
+size = 88
+symbol = "?Set@AtVertexAttributes@@QAEXII@Z"
+source = "src/at/AtBoundingDraw.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00057440
+size = 87
+symbol = "??_GAtSegmentHitList@@UAEPAXI@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00058CB0
+size = 1201
+symbol = "?DrawBox@AtGeometryDrawDevice@@QAEXPBUAtBoundingBox@@PAX1@Z"
+source = "src/at/AtBoundingDraw.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x00059170
+size = 910
+symbol = "?DrawSphere@AtGeometryDrawDevice@@QAEXPBUAtSceneSphere@@PAXII1@Z"
+source = "src/at/AtBoundingDraw.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005CC80
+size = 103
+symbol = "?Add@AtBoundingContactList@@QAEXPAVAtBoundingGeometry@@0PAVAtSceneNode@@1@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005CDB0
+size = 105
+symbol = "?Read@AtBoundingBox@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtBoundingBox.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005CE20
+size = 1858
+symbol = "?Overlaps@AtBoundingBox@@QBEHPBU1@PBVAtVector3@@1@Z"
+source = "src/at/AtBoundingBox.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005D570
+size = 364
+symbol = "?OverlapsSphere@AtBoundingBox@@QBEHPBUAtSceneSphere@@@Z"
+source = "src/at/AtBoundingBox.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005D6E0
+size = 405
+symbol = "?OverlapsSegment@AtBoundingBox@@QBEHPBVAtVector3@@0M@Z"
+source = "src/at/AtBoundingBox.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005D880
+size = 1226
+symbol = "?Clip@AtBoundingBox@@QBEIPBVAtVector3@@0PAV2@1PAM2@Z"
+source = "src/at/AtBoundingBox.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005DD50
+size = 3420
+symbol = "?Penetration@AtBoundingBox@@QBENPBU1@PBVAtVector3@@1PAV2@PAM3@Z"
+source = "src/at/AtBoundingBox.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x0005EAB0
+size = 693
+symbol = "?PenetrationSphere@AtBoundingBox@@QBENPBUAtSceneSphere@@PAVAtVector3@@PAM2@Z"
+source = "src/at/AtBoundingBox.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000FBA70
+size = 8
+symbol = "?Overlaps@AtGroupBoundingGeometry@@UAEHPAVAtBoundingGeometry@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x000FCD40
+size = 3
+symbol = "?Draw@AtBoundingGeometry@@UAEXPAXPAVAtGeometryDrawDevice@@PAVAtSceneNode@@PAVAtCoordSys@@@Z"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[function]]
+va = 0x001A2B40
+size = 6
+symbol = "?TestSegment@AtGroupBoundingGeometry@@UAEHXZ"
+source = "src/at/AtBoundingGeometry.cpp"
+subsystem = "at/asb"
+evidence = "tests/oracle/oracle_asb.cpp; address noted beside the declaration in include/at/AtBoundingGeometry.h"
+
+[[vtable]]
+va = 0x002761F8
+slots = 2
+symbol = "??_7AtBoundingGeometryDatabase@@6B@"
+source = "src/at/AtBoundingGeometry.cpp"
+
+[[vtable]]
+va = 0x00276D98
+slots = 8
+symbol = "??_7AtBoundingGeometry@@6B@"
+source = "src/at/AtBoundingGeometry.cpp"
+
+[[vtable]]
+va = 0x00276E38
+slots = 8
+symbol = "??_7AtGroupBoundingGeometry@@6B@"
+source = "src/at/AtBoundingGeometry.cpp"
+
+[[vtable]]
+va = 0x00276E58
+slots = 8
+symbol = "??_7AtSphereBoundingGeometry@@6B@"
+source = "src/at/AtBoundingGeometry.cpp"
+
+[[vtable]]
+va = 0x00276F08
+slots = 8
+symbol = "??_7AtBoxBoundingGeometry@@6B@"
+source = "src/at/AtBoundingGeometry.cpp"
+
+[[vtable]]
+va = 0x00276F28
+slots = 5
+symbol = "??_7AtSegmentHitList@@6B@"
+source = "src/at/AtBoundingGeometry.cpp"
+
+[symbols]
+"?s_heap@AtBoundingGeometryDatabase@@2PAXA" = 0x002C6428
+"?s_heap@AtSegmentHitList@@2PAXA" = 0x002C7F58
+"?s_keywords@AtBoundingGeometryDatabase@@2QBUAtIoKeyword@@B" = 0x002B21A0
+"?s_otherNode@AtBoundingGeometry@@2PAVAtSceneNode@@A" = 0x002C7ED8
+"?s_node@AtBoundingGeometry@@2PAVAtSceneNode@@A" = 0x002C7EDC
+"?s_otherCoordSys@AtBoundingGeometry@@2PAVAtCoordSys@@A" = 0x002C7EE4
+"?s_query@AtBoundingGeometry@@2PAVAtSegmentQuery@@A" = 0x002C7EE8
+"?s_contacts@AtBoundingGeometry@@2PAUAtBoundingContactList@@A" = 0x002C7EEC
+"?s_segmentHalfLength@AtBoundingGeometry@@2MA" = 0x002C7EF0
+"?s_coordSys@AtBoundingGeometry@@2PAVAtCoordSys@@A" = 0x002C7EF4
+"?s_segmentDirection@AtBoundingGeometry@@2VAtVector3@@A" = 0x002C7EF8
+"?s_segmentStart@AtBoundingGeometry@@2VAtVector3@@A" = 0x002C7F04
+"?s_relativePosition@AtBoundingGeometry@@2VAtVector3@@A" = 0x002C7F10
+"?s_relativeAxes@AtBoundingGeometry@@2PAVAtVector3@@A" = 0x002C7F1C
+"?s_segmentMiddle@AtBoundingGeometry@@2VAtVector3@@A" = 0x002C7F40
+"?s_segmentEnd@AtBoundingGeometry@@2VAtVector3@@A" = 0x002C7F4C
+"__purecall" = 0x00125F25
+"??0AtBoundingBox@@QAE@XZ" = 0x000320A0  # the same code as AtSceneAnimBlend's constructor, folded
+"?CollectSegment@AtGroupBoundingGeometry@@UAEXXZ" = 0x001CC9F0  # vftable slot: empty, folded
+"?PenetrationAlong@AtGroupBoundingGeometry@@UAENPAVAtSceneNode@@PAVAtBoundingGeometry@@0PBVAtVector3@@PAM3@Z" = 0x000542C0  # vftable slot: the same code as Penetration, folded

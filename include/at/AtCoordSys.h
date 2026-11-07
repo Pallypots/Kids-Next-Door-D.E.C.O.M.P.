@@ -73,6 +73,8 @@ public:
     void SetMatrices(AtMatrix* local, AtMatrix* world);  // 0x000324A0 resets first, if it had any
     int UpdateWorld();                         // 0x000325A0 parents first; kWorld if it was done, otherwise 0
     void Transform(const AtVector3* from, AtVector3* to);  // 0x00032780 local to world
+    int UpdateDrawing(AtMatrix* base, int generation, int multiply);  // 0x00032690 for this generation of drawing: 2 if it was done. src/at/AtBoundingGeometry.cpp
+    void TransformDirectionInverse(const AtVector3* from, AtVector3* to);  // 0x00032810 world to local, no translation. src/at/AtBoundingGeometry.cpp
     void CopyLocal(const AtCoordSys* from);    // 0x00032910
     void CopyFromDatabase(class AtCoordSysDatabase* database, class AtCoordSysDatabase* from, const AtCoordSys* source);  // 0x00032860 what source is under in from, this goes under the same place in database. src/at/AtSceneAnimation.cpp
     void SetRotation(const AtQuaternion* rotation);  // 0x000272E0
