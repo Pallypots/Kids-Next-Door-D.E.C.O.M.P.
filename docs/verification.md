@@ -413,3 +413,18 @@ Four branches, written separately, were merged and all results below were rerun 
 Not run: a node attached to itself and cycles of coordinate systems, which recurse for ever on both sides; a non-string where a name is required. Compared in part: a file ending inside a node, up to a deliberate crash after 40 reports; after any crash, logs and messages only; stale or out-of-bounds node pointers only as "unknown on both sides"; `Next` with no file name, where the report starts from an uninitialised buffer. The original's vector deleters have no recovered twin, and are compared by effect.
 
 The mutant run found 30 survivors at first, most from written text using integers where reals are read, so values never reached the matrices. A green oracle on hollow cases would have looked the same, which is why mutants gate every commit here.
+
+## Second parallel batch, on merged source
+
+Every suite ran with no mutants on the merged source with no difference and all entries reached. Mutants of new and changed suites, on merged source:
+
+* `actor`: `NO DIFFERENCE OBSERVED: 652 files, 14674 nodes seen, 6057 actors; 3122980 comparisons, 0 differences`; entries 60 / 60; mutants 336 / 336.
+* `afx`: `NO DIFFERENCE OBSERVED: 20 .AFX files, 132 text formats; 2 .AFL files; 4845 comparisons, 0 differences`; entries 21 / 21; mutants 212 / 212.
+* `agn`: `NO DIFFERENCE OBSERVED: files AGN 61, AGA 7, AGI 102, AGF 2, AGL 17, ASL 3, 1704 items; 124593 comparisons, 0 differences`; entries 85 / 85; mutants 362 / 362.
+* `agt`: `NO DIFFERENCE OBSERVED: 579 files, 2358 textures, 2424 surfaces, 112 on demand; 1100673 comparisons, 0 differences`; entries 26 / 26; mutants 306 / 306.
+* `akc`: `NO DIFFERENCE OBSERVED: 544 files, 2130 rotations, 65 scales, 1220 drawing transforms, 544 with a root; 1409276 comparisons, 0 differences`; entries 7 / 7; mutants 116 / 116.
+* `ana`: `NO DIFFERENCE OBSERVED: 1 files, 19 mappers, 312 button and 114 axis maps, each file on two fills and read twice on each; 60746 comparisons, 0 differences`; entries 40 / 40; mutants 274 / 274.
+* `aod`: `NO DIFFERENCE OBSERVED: 158 .AOD, 175 .AOB, 175 .AOS, 1 .AOE files (38 of them loose on the disc); loaded through them, last pass 525 lists of banks, 525 of segments, 3 of emitters, 525 banks, 5361 segments (5361 with a bank), 150 emitters; 107190 comparisons, 0 differences`; entries 66 / 66; mutants 281 / 281.
+* `asn`: `NO DIFFERENCE OBSERVED: 652 files, 14453 nodes seen, 5704 actors; 8736656 comparisons, 0 differences`; entries 85 / 85; mutants 413 / 413.
+
+`tools/verify.py`: 124 MATCH, 99 MISMATCH, 755 SIZE, no MISSING or UNRESOLVED, all 78 vftables MATCH (host compiler, no claim about the original). x64 host tests 22 of 22; Python tests 87 OK. A written `.AGA` case with an empty name was removed: 0x00024C20 reads the second byte of the name, confirmed in its disassembly, which is uninitialised stack, so a search on it finds or misses by chance. Real-file runs have doubles standing in for whatever each suite's worklog names; read those limits with these numbers.

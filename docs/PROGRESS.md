@@ -29,13 +29,13 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 
 | Owner | Functions | Unique bytes | Direct evidence | Signature hint only | Inferred from neighbours | No evidence |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| game | 10640 | 1564589 | 1173 | 0 | 9467 | 0 |
+| game | 10741 | 1580899 | 1460 | 0 | 9281 | 0 |
 | crt | 279 | 35723 | 9 | 0 | 270 | 0 |
 | xdk | 1300 | 208507 | 1189 | 24 | 87 | 0 |
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
-| unknown | 642 | 73443 | 0 | 0 | 0 | 642 |
+| unknown | 541 | 57133 | 0 | 0 | 0 | 541 |
 
-**Estimate**, because most of the game row is inferred: 680 of about 10640 game functions are recorded in config/functions.toml and config/functions.d/. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 968 of about 10741 game functions are recorded in config/functions.toml and config/functions.d/. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -556,6 +556,172 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00039890 | 30 | `??_GAtMaterialDatabase@@UAEPAXI@Z` | at/matdb | SIZE |
 | 0x000383A0 | 55 | `?FindShader@AtMaterialOwner@@QAEPAXPBD0@Z` | at/matdb | SIZE |
 | 0x00025EB0 | 52 | `?AddMaterials@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/matdb | SIZE |
+| 0x00026E50 | 924 | `?CopyFrom@AtCoordSysDatabase@@QAEXPAVAtMatrixDevice@@PAV1@@Z` | at/actor | SIZE |
+| 0x000320A0 | 22 | `??0AtSceneAnimBlend@@QAE@XZ` | at/actor | SIZE |
+| 0x00032860 | 171 | `?CopyFromDatabase@AtCoordSys@@QAEXPAVAtCoordSysDatabase@@0PBV1@@Z` | at/actor | SIZE |
+| 0x00032C50 | 27 | `?CopyFromDatabase@AtScaleCoordSys@@QAEXPAVAtCoordSysDatabase@@0I@Z` | at/actor | SIZE |
+| 0x000332F0 | 32 | `?CopyFromDatabase@AtRotTransCoordSys@@QAEXPAVAtCoordSysDatabase@@0I@Z` | at/actor | SIZE |
+| 0x00033C70 | 10 | `?SetHeap@AtSceneAnimBlend@@SAXPAX@Z` | at/actor | MATCH |
+| 0x00033C80 | 94 | `?Reset@AtSceneAnimBlend@@QAEXXZ` | at/actor | SIZE |
+| 0x00033CE0 | 73 | `?Clear@AtSceneAnimBlend@@QAEXXZ` | at/actor | SIZE |
+| 0x00034310 | 493 | `?Allocate@AtSceneAnimBlend@@QAEXPBVAtCoordSysDatabase@@@Z` | at/actor | SIZE |
+| 0x0003B850 | 87 | `??_GAtSceneModelActor@@UAEPAXI@Z` | at/actor | SIZE |
+| 0x0003B8B0 | 87 | `??_GAtSceneJointedModelActor@@UAEPAXI@Z` | at/actor | SIZE |
+| 0x00049900 | 24 | `?AddChild@AtSceneNode@@QAEXPAV1@@Z` | at/actor | MISMATCH |
+| 0x0004AFE0 | 5 | `?Read@AtSceneModelActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z` | at/actor | MATCH |
+| 0x0004B0A0 | 13 | `?SetMesh@AtSceneModelActor@@UAEXPAX@Z` | at/actor | MATCH |
+| 0x0004B0B0 | 38 | `??0AtSceneModelActor@@QAE@XZ` | at/actor | SIZE |
+| 0x0004B0E0 | 24 | `?Clear@AtSceneModelActor@@UAEXXZ` | at/actor | SIZE |
+| 0x0004B100 | 197 | `?ReadBody@AtSceneModelActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z` | at/actor | SIZE |
+| 0x0004B5E0 | 99 | `??1AtSceneModelActor@@UAE@XZ` | at/actor | SIZE |
+| 0x0004B650 | 42 | `?Read@AtSceneJointedModelActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z` | at/actor | SIZE |
+| 0x0004B680 | 93 | `??0AtSceneJointedModelActor@@QAE@XZ` | at/actor | SIZE |
+| 0x0004B6E0 | 219 | `?CopyJointDatabase@AtSceneJointedModelActor@@QAEPAVAtCoordSysDatabase@@PAV2@@Z` | at/actor | SIZE |
+| 0x0004B7C0 | 86 | `?Clear@AtSceneJointedModelActor@@UAEXXZ` | at/actor | SIZE |
+| 0x0004B9E0 | 539 | `?ReadBody@AtSceneJointedModelActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z` | at/actor | SIZE |
+| 0x0004C040 | 95 | `??1AtSceneJointedModelActor@@UAE@XZ` | at/actor | SIZE |
+| 0x00055930 | 64 | `?AsActor@AtSceneActor@@SAPAV1@PAVAtSceneNode@@@Z` | at/actor | SIZE |
+| 0x00055B70 | 10 | `?SetHeap@AtSceneActor@@SAXPAX@Z` | at/actor | MATCH |
+| 0x00055B80 | 79 | `?ReadHeader@AtSceneActor@@UAEXPAVAtScene@@PAVAtIoTokenizer@@H@Z` | at/actor | SIZE |
+| 0x00055BD0 | 14 | `?CoordSys@AtSceneActor@@UAEPAVAtCoordSys@@XZ` | at/actor | MATCH |
+| 0x00055BE0 | 31 | `?ParentCoordSys@AtSceneActor@@UAEPAVAtCoordSys@@XZ` | at/actor | MISMATCH |
+| 0x00055C00 | 26 | `?FinishHeader@AtSceneActor@@UAEXXZ` | at/actor | SIZE |
+| 0x00055C20 | 46 | `?Read@AtSceneActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z` | at/actor | SIZE |
+| 0x00055C50 | 28 | `?ShareCoordSys@AtSceneActor@@UAEXPAV1@@Z` | at/actor | MISMATCH |
+| 0x00055C70 | 12 | `?StopSharingCoordSys@AtSceneActor@@UAEXXZ` | at/actor | SIZE |
+| 0x00055CE0 | 169 | `?EnsureAnimations@AtSceneActor@@QAEPAVAtSceneAnimSet@@XZ` | at/actor | SIZE |
+| 0x00055DB0 | 74 | `??0AtSceneActor@@QAE@XZ` | at/actor | SIZE |
+| 0x00055E00 | 300 | `?Clear@AtSceneActor@@UAEXXZ` | at/actor | SIZE |
+| 0x00056260 | 183 | `?CopyAnimDatabase@AtSceneActor@@QAEPAVAtCoordSysDatabase@@PAV2@@Z` | at/actor | SIZE |
+| 0x00056320 | 195 | `?FinishBody@AtSceneActor@@UAEXXZ` | at/actor | SIZE |
+| 0x000564B0 | 79 | `??1AtSceneActor@@UAE@XZ` | at/actor | SIZE |
+| 0x00056500 | 1240 | `?ReadBody@AtSceneActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z` | at/actor | SIZE |
+| 0x00056D80 | 30 | `??_GAtSceneActor@@UAEPAXI@Z` | at/actor | SIZE |
+| 0x00059A70 | 10 | `?SetHeap@AtSceneAnimSet@@SAXPAX@Z` | at/actor | MATCH |
+| 0x00059A80 | 35 | `?PrepareBlend@AtSceneAnimSet@@QAEXH@Z` | at/actor | SIZE |
+| 0x00059AB0 | 28 | `??0AtSceneAnimSet@@QAE@XZ` | at/actor | SIZE |
+| 0x00059AD0 | 83 | `?ReadDatabase@AtSceneAnimSet@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z` | at/actor | MISMATCH |
+| 0x00059B30 | 305 | `?ReadChannels@AtSceneAnimSet@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z` | at/actor | SIZE |
+| 0x00059D70 | 56 | `?Clear@AtSceneAnimSet@@QAEXXZ` | at/actor | MATCH |
+| 0x0005A2C0 | 107 | `??1AtSceneAnimSet@@QAE@XZ` | at/actor | SIZE |
+| 0x0005A720 | 33 | `??0AtSceneAnimChannel@@QAE@XZ` | at/actor | SIZE |
+| 0x0005A750 | 560 | `?Read@AtSceneAnimChannel@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@H@Z` | at/actor | SIZE |
+| 0x0005B710 | 14 | `?Rewind@AtScenePlayback@@QAEXXZ` | at/actor | SIZE |
+| 0x0005BAA0 | 19 | `??0AtSceneMatPlayback@@QAE@XZ` | at/actor | SIZE |
+| 0x0005BAC0 | 21 | `?SetAnimation@AtSceneMatPlayback@@QAEXPAUAtSceneMatAnimation@@@Z` | at/actor | SIZE |
+| 0x0005EE30 | 20 | `??0AtSceneMatChannel@@QAE@XZ` | at/actor | SIZE |
+| 0x0005EE50 | 339 | `?Read@AtSceneMatChannel@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@@Z` | at/actor | SIZE |
+| 0x0005EFB0 | 18 | `??1AtSceneMatChannel@@QAE@XZ` | at/actor | SIZE |
+| 0x0005FD30 | 37 | `??0AtSceneAnimPlayback@@QAE@XZ` | at/actor | SIZE |
+| 0x0005FD60 | 28 | `?SetAnimation@AtSceneAnimPlayback@@QAEXPAUAtSceneAnimation@@@Z` | at/actor | SIZE |
+| 0x0005FF90 | 17 | `??1AtSceneMatPlayback@@QAE@XZ` | at/actor | SIZE |
+| 0x00082690 | 9 | `?SetDatabase@AtSceneAnimSet@@QAEXPAVAtCoordSysDatabase@@@Z` | at/actor | MATCH |
+| 0x00016FB0 | 124 | `?Allocate@AtFlashResourceTable@@UAEXI@Z` | at/afx | SIZE |
+| 0x00017040 | 14 | `?Release@AtFlashResourceTable@@UAEXI@Z` | at/afx | SIZE |
+| 0x000172A0 | 61 | `??0AtFlashResourceTable@@QAE@XZ` | at/afx | SIZE |
+| 0x000172E0 | 128 | `?Clear@AtFlashResourceTable@@QAEXXZ` | at/afx | SIZE |
+| 0x00017360 | 11 | `??1AtFlashResourceTable@@UAE@XZ` | at/afx | MATCH |
+| 0x000173A0 | 46 | `??_GAtFlashResourceTable@@UAEPAXI@Z` | at/afx | SIZE |
+| 0x00020280 | 26 | `??0AtFlashTextFormatTable@@QAE@XZ` | at/afx | SIZE |
+| 0x000202A0 | 105 | `?ReleaseFormats@AtFlashTextFormatTable@@QAEXXZ` | at/afx | SIZE |
+| 0x00020310 | 288 | `?Read@AtFlashTextFormatTable@@QAEXPBD@Z` | at/afx | SIZE |
+| 0x00020430 | 226 | `?Allocate@AtFlashTextFormatTable@@UAEXI@Z` | at/afx | SIZE |
+| 0x00020520 | 79 | `??1AtFlashTextFormatTable@@UAE@XZ` | at/afx | SIZE |
+| 0x00020620 | 30 | `??_GAtFlashTextFormatTable@@UAEPAXI@Z` | at/afx | SIZE |
+| 0x00023400 | 19 | `?ResetLinks@AtFlashResource@@QAEXXZ` | at/afx | SIZE |
+| 0x00023420 | 27 | `??0AtFlashResource@@QAE@XZ` | at/afx | SIZE |
+| 0x00023440 | 25 | `??1AtFlashResource@@QAE@XZ` | at/afx | SIZE |
+| 0x00030270 | 461 | `?ReadFields@AtFlashTextFormat@@QAEXPAVAtIoTokenizer@@@Z` | at/afx | SIZE |
+| 0x00030440 | 84 | `?Reset@AtFlashTextFormat@@QAEXXZ` | at/afx | SIZE |
+| 0x000304A0 | 73 | `??0AtFlashTextFormat@@QAE@XZ` | at/afx | SIZE |
+| 0x000304F0 | 24 | `?Read@AtFlashTextFormat@@UAEXPAVAtIoTokenizer@@@Z` | at/afx | SIZE |
+| 0x00030510 | 93 | `??1AtFlashTextFormat@@QAE@XZ` | at/afx | SIZE |
+| 0x000114A0 | 606 | `?Load@AtFlashLevel@@QAEXPBDH@Z` | at/afx | SIZE |
+| 0x00025F70 | 55 | `?AddLights@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/agn | SIZE |
+| 0x00025FF0 | 55 | `?AddMatAssignments@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/agn | SIZE |
+| 0x00026030 | 55 | `?AddMatAnimations@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/agn | SIZE |
+| 0x000260B0 | 55 | `?AddFonts@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/agn | SIZE |
+| 0x000260F0 | 55 | `?AddImages@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/agn | SIZE |
+| 0x00027EF0 | 52 | `?FindMaterial@AtMaterialOwner@@QAEPAXPBD0@Z` | at/agn | SIZE |
+| 0x00040070 | 50 | `?AddLensFlares@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/agn | SIZE |
+| 0x00053570 | 34 | `??1AtMatAssignment@@QAE@XZ` | at/agn | MISMATCH |
+| 0x000347C0 | 258 | `?ReadWithNameSpaces@AtMatAssignment@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x000348D0 | 242 | `?Read@AtMatAssignment@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@PBD@Z` | at/agn | SIZE |
+| 0x000349D0 | 168 | `?Copy@AtMatAssignment@@QAEXABU1@@Z` | at/agn | SIZE |
+| 0x00034710 | 10 | `?SetHeap@AtMatAssignment@@SAXPAX@Z` | at/agn | MATCH |
+| 0x00027B60 | 10 | `?SetHeap@AtMatAssignmentDatabase@@SAXPAX@Z` | at/agn | MATCH |
+| 0x00027B70 | 442 | `?Read@AtMatAssignmentDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x00027D30 | 26 | `??0AtMatAssignmentDatabase@@QAE@XZ` | at/agn | SIZE |
+| 0x00027D50 | 184 | `?Load@AtMatAssignmentDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z` | at/agn | SIZE |
+| 0x00027E10 | 64 | `?Clear@AtMatAssignmentDatabase@@UAEXXZ` | at/agn | SIZE |
+| 0x00027E50 | 133 | `??1AtMatAssignmentDatabase@@UAE@XZ` | at/agn | SIZE |
+| 0x0001A070 | 84 | `??_GAtMatAssignmentDatabase@@UAEPAXI@Z` | at/agn | SIZE |
+| 0x00034F70 | 20 | `??0AtGrKeySet@@QAE@XZ` | at/agn | SIZE |
+| 0x00035070 | 42 | `??1AtGrKeySet@@QAE@XZ` | at/agn | SIZE |
+| 0x00035040 | 35 | `?Clear@AtGrKeySet@@UAEXXZ` | at/agn | SIZE |
+| 0x00034F40 | 33 | `?SetExternalName@AtGrKeySet@@UAEXPBD@Z` | at/agn | SIZE |
+| 0x00034F90 | 124 | `?Read@AtGrKeySet@@QAEXPAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x00035010 | 40 | `?Reserve@AtGrKeySet@@QAEXI@Z` | at/agn | MISMATCH |
+| 0x00034F30 | 10 | `?SetHeap@AtGrFrameNumberSet@@SAXPAX@Z` | at/agn | MATCH |
+| 0x00034CE0 | 25 | `??0AtGrFrameNumberSet@@QAE@XZ` | at/agn | SIZE |
+| 0x00034ED0 | 86 | `??1AtGrFrameNumberSet@@QAE@XZ` | at/agn | SIZE |
+| 0x00034C30 | 90 | `?Allocate@AtGrFrameNumberSet@@UAEXI@Z` | at/agn | SIZE |
+| 0x00034C90 | 11 | `?Free@AtGrFrameNumberSet@@UAEXXZ` | at/agn | SIZE |
+| 0x00034CA0 | 46 | `?ReadEntries@AtGrFrameNumberSet@@UAEXPAVAtIoTokenizer@@@Z` | at/agn | MISMATCH |
+| 0x00034D00 | 17 | `?Clear@AtGrFrameNumberSet@@UAEXXZ` | at/agn | SIZE |
+| 0x00034D20 | 271 | `?Interpolate@AtGrFrameNumberSet@@UAEXIIMHPAH0PAM@Z` | at/agn | SIZE |
+| 0x00034E30 | 118 | `?Find@AtGrFrameNumberSet@@UAEHIIMH@Z` | at/agn | SIZE |
+| 0x00034EB0 | 26 | `?Load@AtGrFrameNumberSet@@UAEXXZ` | at/agn | MATCH |
+| 0x00034CD0 | 14 | `?At@AtGrFrameNumberSet@@UAEGI@Z` | at/agn | MISMATCH |
+| 0x00034A80 | 29 | `??0AtMatAnimation@@QAE@XZ` | at/agn | SIZE |
+| 0x00034AE0 | 27 | `??1AtMatAnimation@@QAE@XZ` | at/agn | SIZE |
+| 0x00034AA0 | 61 | `?Apply@AtMatAnimation@@QAEXPAUAtMatAssignment@@IM@Z` | at/agn | SIZE |
+| 0x00034B00 | 280 | `?Read@AtMatAnimation@@QAEXPAUAtMaterialOwner@@PAVAtMatAnimationDatabase@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x00027EE0 | 10 | `?SetHeap@AtMatAnimationDatabase@@SAXPAX@Z` | at/agn | MATCH |
+| 0x00027F30 | 86 | `??0AtMatAnimationDatabase@@QAE@XZ` | at/agn | SIZE |
+| 0x00027F90 | 739 | `?Read@AtMatAnimationDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x00028280 | 91 | `?Clear@AtMatAnimationDatabase@@UAEXXZ` | at/agn | SIZE |
+| 0x000282E0 | 92 | `??1AtMatAnimationDatabase@@UAE@XZ` | at/agn | SIZE |
+| 0x00028340 | 154 | `?Load@AtMatAnimationDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z` | at/agn | SIZE |
+| 0x0001A190 | 84 | `??_GAtMatAnimationDatabase@@UAEPAXI@Z` | at/agn | SIZE |
+| 0x00029B90 | 10 | `?SetHeap@AtImageDatabase@@SAXPAX@Z` | at/agn | MATCH |
+| 0x00029BA0 | 83 | `??0AtImageDatabase@@QAE@XZ` | at/agn | SIZE |
+| 0x00029C00 | 433 | `?Read@AtImageDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x00029DC0 | 316 | `?Load@AtImageDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z` | at/agn | SIZE |
+| 0x00029F00 | 57 | `?Clear@AtImageDatabase@@UAEXXZ` | at/agn | MATCH |
+| 0x00029F40 | 25 | `?PopDirectory@AtImageDatabase@@QAEXXZ` | at/agn | SIZE |
+| 0x00029F60 | 133 | `??1AtImageDatabase@@UAE@XZ` | at/agn | SIZE |
+| 0x00029FF0 | 30 | `??_GAtImageDatabase@@UAEPAXI@Z` | at/agn | SIZE |
+| 0x0002A010 | 10 | `?SetHeap@AtFontDatabase@@SAXPAX@Z` | at/agn | MATCH |
+| 0x0002A020 | 83 | `??0AtFontDatabase@@QAE@XZ` | at/agn | SIZE |
+| 0x0002A080 | 520 | `?Read@AtFontDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x0002A290 | 316 | `?Load@AtFontDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z` | at/agn | SIZE |
+| 0x0002A3D0 | 56 | `?Allocate@AtFontDatabase@@QAEXPAUAtMaterialOwner@@IPBD@Z` | at/agn | SIZE |
+| 0x0002A410 | 56 | `?Clear@AtFontDatabase@@UAEXXZ` | at/agn | MISMATCH |
+| 0x0002A450 | 24 | `?PushDirectory@AtFontDatabase@@QAEXXZ` | at/agn | MISMATCH |
+| 0x0002A470 | 133 | `??1AtFontDatabase@@UAE@XZ` | at/agn | SIZE |
+| 0x0002A500 | 30 | `??_GAtFontDatabase@@UAEPAXI@Z` | at/agn | SIZE |
+| 0x0002AB00 | 25 | `??0AtLightDatabase@@QAE@XZ` | at/agn | SIZE |
+| 0x0002AB20 | 232 | `?Read@AtLightDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x0002AC10 | 154 | `?Load@AtLightDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z` | at/agn | SIZE |
+| 0x0002ACB0 | 17 | `?Clear@AtLightDatabase@@UAEXXZ` | at/agn | MATCH |
+| 0x0002ACD0 | 86 | `??1AtLightDatabase@@UAE@XZ` | at/agn | SIZE |
+| 0x0002AD30 | 30 | `??_GAtLightDatabase@@UAEPAXI@Z` | at/agn | SIZE |
+| 0x000368C0 | 196 | `?Read@AtLight@@QAEXPAUAtMaterialOwner@@PAVAtLightDatabase@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x00035800 | 17 | `?SetWhite@AtLensColor@@QAEXXZ` | at/agn | SIZE |
+| 0x0003F8E0 | 10 | `?SetHeap@AtLensFlareDatabase@@SAXPAX@Z` | at/agn | MATCH |
+| 0x0003F8F0 | 26 | `??0AtLensFlareDatabase@@QAE@XZ` | at/agn | SIZE |
+| 0x0003F910 | 420 | `?Read@AtLensFlareDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x0003FAC0 | 154 | `?Load@AtLensFlareDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z` | at/agn | SIZE |
+| 0x0003FB60 | 64 | `?Clear@AtLensFlareDatabase@@UAEXXZ` | at/agn | SIZE |
+| 0x0003FBA0 | 133 | `??1AtLensFlareDatabase@@UAE@XZ` | at/agn | SIZE |
+| 0x0002E9A0 | 84 | `??_GAtLensFlareDatabase@@UAEPAXI@Z` | at/agn | SIZE |
+| 0x00052190 | 10 | `?SetHeap@AtLensFlare@@SAXPAX@Z` | at/agn | MATCH |
+| 0x000521A0 | 129 | `??0AtLensFlare@@QAE@XZ` | at/agn | SIZE |
+| 0x00052230 | 154 | `?ReadSquare@AtLensFlare@@QAEXPAUAtLensFlareSquare@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
+| 0x000522E0 | 99 | `?Reset@AtLensFlare@@QAEXXZ` | at/agn | SIZE |
+| 0x00052920 | 74 | `??1AtLensFlare@@QAE@XZ` | at/agn | SIZE |
+| 0x00052970 | 474 | `?Read@AtLensFlare@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z` | at/agn | SIZE |
 | 0x0002B1B0 | 10 | `?SetHeap@AtShaderDatabase@@SAXPAX@Z` | at/ags | MATCH |
 | 0x0002B1C0 | 25 | `??0AtShaderDatabase@@QAE@XZ` | at/ags | SIZE |
 | 0x0002B1E0 | 241 | `?Read@AtShaderDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z` | at/ags | SIZE |
@@ -602,6 +768,66 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x0001C7B0 | 316 | `?Load@AtTextureDatabase@@QAEXPAUAtMaterialOwner@@PBDH@Z` | at/agt | SIZE |
 | 0x00025E70 | 49 | `?AddTextures@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/agt | SIZE |
 | 0x0002ADF0 | 30 | `??_GAtTextureDatabase@@UAEPAXI@Z` | at/agt | SIZE |
+| 0x000268C0 | 42 | `?NextMatrix@AtCoordSysDatabase@@QAEPAUAtMatrix@@XZ` | at/akc | MISMATCH |
+| 0x00026C10 | 411 | `?Read@AtCoordSysDatabase@@QAEXPAVAtMatrixDevice@@PAVAtIoTokenizer@@@Z` | at/akc | SIZE |
+| 0x00026DB0 | 154 | `?Load@AtCoordSysDatabase@@QAEXPAVAtMatrixDevice@@PBDH@Z` | at/akc | SIZE |
+| 0x000324E0 | 179 | `?ReadWord@AtCoordSys@@QAEXPAVAtIoTokenizer@@PAVAtCoordSysDatabase@@H@Z` | at/akc | SIZE |
+| 0x00032C70 | 208 | `?Read@AtScaleCoordSys@@QAEXPAVAtIoTokenizer@@PAVAtCoordSysDatabase@@@Z` | at/akc | SIZE |
+| 0x00032D40 | 173 | `?Read@AtRotTransCoordSys@@QAEXPAVAtIoTokenizer@@PAVAtCoordSysDatabase@@@Z` | at/akc | SIZE |
+| 0x00117080 | 172 | `?AtMatrixRead@@YAXPAUAtMatrix@@PAVAtIoTokenizer@@@Z` | at/akc | SIZE |
+| 0x00030FF0 | 77 | `?Describe@AtTextureBase@@UAEXPAVAtTextureDatabase@@PBDIHIH@Z` | at/agt | SIZE |
+| 0x00031040 | 11 | `?FreeProgSource@AtTextureBase@@QAEXXZ` | at/agt | SIZE |
+| 0x00031050 | 5 | `?ClearTransparentColor@AtTextureBase@@UAEXXZ` | at/agt | SIZE |
+| 0x00031060 | 7 | `?ClearModifyUsage@AtTextureBase@@UAEXH@Z` | at/agt | MATCH |
+| 0x00031070 | 66 | `??0AtTextureBase@@QAE@XZ` | at/agt | SIZE |
+| 0x000310C0 | 58 | `?Reset@AtTextureBase@@UAEXXZ` | at/agt | SIZE |
+| 0x00031100 | 21 | `?ClearPending@AtTextureBase@@UAEXXZ` | at/agt | MISMATCH |
+| 0x00031120 | 201 | `?ReadProgSource@AtTextureBase@@QAEXPAVAtIoTokenizer@@@Z` | at/agt | SIZE |
+| 0x000311F0 | 99 | `?SetLightDirection@AtTextureBase@@UAEXPBVAtVector3@@@Z` | at/agt | SIZE |
+| 0x00031260 | 34 | `?SetTransparentColor@AtTextureBase@@UAEXPBE@Z` | at/agt | SIZE |
+| 0x00031290 | 64 | `??1AtTextureBase@@UAE@XZ` | at/agt | SIZE |
+| 0x000312D0 | 501 | `?Read@AtTextureBase@@UAEXPAVAtTextureDatabase@@PBDPAVAtIoTokenizer@@@Z` | at/agt | SIZE |
+| 0x00031530 | 88 | `??_GAtTextureBase@@UAEPAXI@Z` | at/agt | SIZE |
+| 0x00072B70 | 10 | `?SetHeap@AtInputMapper@@SAXPAX@Z` | at/ana | MATCH |
+| 0x00072B90 | 44 | `??0AtInputMapper@@QAE@XZ` | at/ana | SIZE |
+| 0x00072BC0 | 78 | `?Clear@AtInputMapper@@QAEXXZ` | at/ana | SIZE |
+| 0x00072C10 | 569 | `?ReadButtonMaps@AtInputMapper@@QAEXPAVAtIoTokenizer@@@Z` | at/ana | SIZE |
+| 0x00072E80 | 377 | `?ReadAxisMaps@AtInputMapper@@QAEXPAVAtIoTokenizer@@@Z` | at/ana | SIZE |
+| 0x000730B0 | 80 | `??1AtInputMapper@@UAE@XZ` | at/ana | SIZE |
+| 0x00073100 | 285 | `?Allocate@AtInputMapper@@QAEXABUSizes@1@@Z` | at/ana | SIZE |
+| 0x00073220 | 119 | `?CopyFrom@AtInputMapper@@QAEXABV1@@Z` | at/ana | SIZE |
+| 0x000732A0 | 262 | `?Read@AtInputMapper@@QAEXPAUAtInputOwner@@PAVAtIoTokenizer@@@Z` | at/ana | SIZE |
+| 0x00073780 | 10 | `?SetHeap@AtInputMapperDatabase@@SAXPAX@Z` | at/ana | MATCH |
+| 0x00073790 | 84 | `??_GAtInputMapper@@UAEPAXI@Z` | at/ana | SIZE |
+| 0x000737F0 | 29 | `??0AtInputMapperDatabase@@QAE@XZ` | at/ana | SIZE |
+| 0x00073810 | 486 | `?Read@AtInputMapperDatabase@@QAEXPAUAtInputOwner@@PAVAtIoTokenizer@@@Z` | at/ana | SIZE |
+| 0x00073A00 | 68 | `?Clear@AtInputMapperDatabase@@UAEXXZ` | at/ana | SIZE |
+| 0x00073A50 | 124 | `??1AtInputMapperDatabase@@UAE@XZ` | at/ana | SIZE |
+| 0x00073AD0 | 154 | `?Load@AtInputMapperDatabase@@QAEXPAUAtInputOwner@@PBDH@Z` | at/ana | SIZE |
+| 0x00073B70 | 30 | `??_GAtInputMapperDatabase@@UAEPAXI@Z` | at/ana | SIZE |
+| 0x00073BC0 | 44 | `?AddMappers@AtInputOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/ana | SIZE |
+| 0x00077870 | 167 | `?UnbindButton@AtInputController@@QAEHPAUAtInputLink@@@Z` | at/ana | SIZE |
+| 0x000779A0 | 167 | `?UnbindAxis@AtInputController@@QAEHPAUAtInputLink@@@Z` | at/ana | SIZE |
+| 0x00078940 | 10 | `?SetHeap@AtInputLinkList@@SAXPAX@Z` | at/ana | MATCH |
+| 0x00078950 | 42 | `?Clear@AtInputLinkList@@QAEXXZ` | at/ana | MATCH |
+| 0x00078980 | 102 | `?Remove@AtInputLinkList@@QAEHPAUAtInputLink@@@Z` | at/ana | SIZE |
+| 0x000789F0 | 20 | `??0AtInputLinkList@@QAE@XZ` | at/ana | SIZE |
+| 0x00078A10 | 48 | `??1AtInputLinkList@@UAE@XZ` | at/ana | MISMATCH |
+| 0x00078A40 | 139 | `?Allocate@AtInputLinkList@@QAEXI@Z` | at/ana | SIZE |
+| 0x00078B00 | 68 | `??_GAtInputLinkList@@UAEPAXI@Z` | at/ana | MISMATCH |
+| 0x00078B50 | 10 | `?SetHeap@AtInputRouter@@SAXPAX@Z` | at/ana | MATCH |
+| 0x00078B60 | 16 | `?Slot0@AtInputRouter@@UAEXPAX@Z` | at/ana | SIZE |
+| 0x00078B70 | 17 | `?Slot1@AtInputRouter@@UAEXPAX@Z` | at/ana | SIZE |
+| 0x00078B90 | 17 | `?Slot2@AtInputRouter@@UAEXPAX@Z` | at/ana | SIZE |
+| 0x00078BB0 | 17 | `?Slot3@AtInputRouter@@UAEXPAX0@Z` | at/ana | SIZE |
+| 0x00078BD0 | 98 | `??0AtInputRouter@@QAE@XZ` | at/ana | SIZE |
+| 0x00078C40 | 177 | `?AllocateButtonLinks@AtInputRouter@@QAEXI@Z` | at/ana | SIZE |
+| 0x00078D00 | 177 | `?AllocateAxisLinks@AtInputRouter@@QAEXI@Z` | at/ana | SIZE |
+| 0x00078DC0 | 138 | `?UnbindAll@AtInputRouter@@QAEXXZ` | at/ana | SIZE |
+| 0x000791B0 | 227 | `?Unbind@AtInputRouter@@UAEXPAVAtInputController@@H@Z` | at/ana | SIZE |
+| 0x000792A0 | 77 | `?Release@AtInputRouter@@QAEXXZ` | at/ana | SIZE |
+| 0x000792F0 | 93 | `??1AtInputRouter@@QAE@XZ` | at/ana | SIZE |
+| 0x00079350 | 51 | `?Allocate@AtInputRouter@@QAEXPAXII@Z` | at/ana | SIZE |
 | 0x000249A0 | 33 | `??1AtAudioBankFile@@QAE@XZ` | at/aob | MISMATCH |
 | 0x00025310 | 13 | `?Clear@AtAudioSegmentDatabase@@UAEXXZ` | at/aob | SIZE |
 | 0x000254F0 | 10 | `?SetHeap@AtAudioSegmentDatabase@@SAXPAX@Z` | at/aob | MATCH |
@@ -642,6 +868,72 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x00031FC0 | 74 | `?Unload@AtAudioBank@@UAEHXZ` | at/aob | SIZE |
 | 0x00032010 | 12 | `?Update@AtAudioBank@@UAEXXZ` | at/aob | MATCH |
 | 0x00032020 | 86 | `?GetNames@AtAudioBank@@QAEXPAD0@Z` | at/aob | SIZE |
+| 0x00018A90 | 10 | `?SetHeap@AtAudioDatabase@@SAXPAX@Z` | at/aod | MATCH |
+| 0x00018AA0 | 26 | `??0AtAudioDatabase@@QAE@XZ` | at/aod | SIZE |
+| 0x00018AC0 | 1374 | `?Load@AtAudioDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z` | at/aod | SIZE |
+| 0x00019030 | 217 | `?LoadLists@AtAudioDatabase@@QAEXPAUAtNameTableOwner@@H@Z` | at/aod | SIZE |
+| 0x00019110 | 18 | `?Clear@AtAudioDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x00019130 | 24 | `??1AtAudioDatabase@@UAE@XZ` | at/aod | SIZE |
+| 0x00019150 | 48 | `??_GAtAudioDatabase@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x000252F0 | 10 | `?SetHeap@AtAudioEmitterDatabase@@SAXPAX@Z` | at/aod | MATCH |
+| 0x00025300 | 11 | `??1AtAudioEmitterDatabase@@UAE@XZ` | at/aod | SIZE |
+| 0x00025320 | 26 | `??0AtAudioEmitterDatabase@@QAE@XZ` | at/aod | SIZE |
+| 0x00025340 | 30 | `??_GAtAudioEmitterDatabase@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x00025360 | 239 | `?Read@AtAudioEmitterDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z` | at/aod | SIZE |
+| 0x00025450 | 154 | `?Load@AtAudioEmitterDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z` | at/aod | SIZE |
+| 0x000E9F30 | 18 | `??0AtSoXboxBankDatabase@@QAE@XZ` | at/aod | SIZE |
+| 0x000EA230 | 5 | `??1AtSoXboxBankDatabase@@UAE@XZ` | at/aod | SIZE |
+| 0x0010E5E0 | 184 | `?AllocateSegmentDatabases@AtSoXboxDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010E6A0 | 84 | `??_GAtSoXboxSegmentDatabase@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0010E700 | 184 | `?AllocateEmitterDatabases@AtSoXboxDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010E7C0 | 84 | `??_GAtSoXboxEmitterDatabase@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0010E820 | 25 | `?BankDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioBankDatabase@@I@Z` | at/aod | SIZE |
+| 0x0010E840 | 15 | `?SegmentDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioSegmentDatabase@@I@Z` | at/aod | SIZE |
+| 0x0010E850 | 15 | `?EmitterDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioEmitterDatabase@@I@Z` | at/aod | SIZE |
+| 0x0010E860 | 16 | `?NestedDatabaseAt@AtSoXboxDatabase@@UAEPAVAtAudioDatabase@@I@Z` | at/aod | MISMATCH |
+| 0x0010E870 | 32 | `??0AtSoXboxDatabase@@QAE@XZ` | at/aod | SIZE |
+| 0x0010E890 | 336 | `?Clear@AtSoXboxDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010E9E0 | 195 | `?AllocateBankDatabases@AtSoXboxDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010EAB0 | 84 | `??_GAtSoXboxBankDatabase@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0010EB10 | 79 | `??1AtSoXboxDatabase@@UAE@XZ` | at/aod | SIZE |
+| 0x0010EB60 | 186 | `?AllocateNestedDatabases@AtSoXboxDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010EC20 | 84 | `??_GAtSoXboxDatabase@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0010EC80 | 261 | `?CreateBank@AtSoXboxBankDatabase@@UAEXIABUAtAudioBankDesc@@@Z` | at/aod | SIZE |
+| 0x0010ED90 | 11 | `??1AtSoXboxSegmentDatabase@@UAE@XZ` | at/aod | SIZE |
+| 0x0010EDA0 | 195 | `?OnReady@AtSoXboxSegmentDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010EE70 | 84 | `??_GAtSoXboxSegment@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0010EED0 | 110 | `?Clear@AtSoXboxSegmentDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010EF40 | 15 | `?SegmentAt@AtSoXboxSegmentDatabase@@UAEPAVAtAudioSegment@@I@Z` | at/aod | SIZE |
+| 0x0010EF50 | 25 | `??0AtSoXboxSegmentDatabase@@QAE@XZ` | at/aod | SIZE |
+| 0x0010EF70 | 11 | `??1AtSoXboxEmitter@@UAE@XZ` | at/aod | SIZE |
+| 0x0010EF80 | 26 | `??0AtSoXboxEmitter@@QAE@XZ` | at/aod | SIZE |
+| 0x0010EFA0 | 198 | `?InitPlatform@AtSoXboxEmitter@@UAEXXZ` | at/aod | SIZE |
+| 0x0010F070 | 71 | `?Reset@AtSoXboxEmitter@@UAEXXZ` | at/aod | SIZE |
+| 0x0010F160 | 11 | `??1AtSoXboxEmitterDatabase@@UAE@XZ` | at/aod | SIZE |
+| 0x0010F170 | 111 | `?Clear@AtSoXboxEmitterDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010F1E0 | 195 | `?OnReady@AtSoXboxEmitterDatabase@@UAEXXZ` | at/aod | SIZE |
+| 0x0010F2B0 | 84 | `??_GAtSoXboxEmitter@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0010F310 | 15 | `?EmitterAt@AtSoXboxEmitterDatabase@@UAEPAVAtAudioEmitter@@I@Z` | at/aod | SIZE |
+| 0x0010F320 | 25 | `??0AtSoXboxEmitterDatabase@@QAE@XZ` | at/aod | SIZE |
+| 0x0011EB60 | 11 | `??1AtAudioEmitter@@UAE@XZ` | at/aod | SIZE |
+| 0x0011EC50 | 30 | `??_GAtAudioEmitter@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0011EC70 | 255 | `?Read@AtAudioEmitter@@UAEXPAVAtAudioEmitterDatabase@@PAVAtIoTokenizer@@PBD2@Z` | at/aod | SIZE |
+| 0x0011ED90 | 145 | `?Init@AtAudioEmitter@@UAEXABUAtAudioEmitterDesc@@@Z` | at/aod | SIZE |
+| 0x0011EE30 | 81 | `?Reset@AtAudioEmitter@@UAEXXZ` | at/aod | SIZE |
+| 0x0011F1B0 | 44 | `??0AtAudioEmitter@@QAE@XZ` | at/aod | SIZE |
+| 0x0011F290 | 11 | `??1AtSoXboxXactBank@@UAE@XZ` | at/aod | SIZE |
+| 0x0011F370 | 7 | `?Unknown16@AtSoXboxXactBank@@UAEHXZ` | at/aod | MATCH |
+| 0x0011F380 | 30 | `??_GAtSoXboxXactBank@@UAEPAXI@Z` | at/aod | SIZE |
+| 0x0011F3A0 | 185 | `?ClearFields@AtSoXboxXactBank@@QAEXXZ` | at/aod | SIZE |
+| 0x0011F460 | 65 | `?OnInit@AtSoXboxXactBank@@UAEXABUAtAudioBankDesc@@@Z` | at/aod | MISMATCH |
+| 0x001200D0 | 118 | `?Reset@AtSoXboxXactBank@@UAEXXZ` | at/aod | SIZE |
+| 0x00120550 | 51 | `??0AtSoXboxXactBank@@QAE@XZ` | at/aod | SIZE |
+| 0x00120650 | 18 | `??0AtSoXboxSegment@@QAE@XZ` | at/aod | SIZE |
+| 0x00120670 | 11 | `??1AtSoXboxSegment@@UAE@XZ` | at/aod | SIZE |
+| 0x00120680 | 5 | `?Reset@AtSoXboxSegment@@UAEXXZ` | at/aod | MATCH |
+| 0x00125070 | 18 | `??0AtSoBank@@QAE@XZ` | at/aod | SIZE |
+| 0x00125090 | 11 | `??1AtSoBank@@UAE@XZ` | at/aod | SIZE |
+| 0x001250A0 | 30 | `??_GAtSoBank@@UAEPAXI@Z` | at/aod | SIZE |
 | 0x00011000 | 48 | `?AtConstructEach@@YAXPAXIHP6AX0@Z@Z` | at/asn | SIZE |
 | 0x0017AED0 | 16 | `??0AtSceneSphere@@QAE@XZ` | at/asn | MISMATCH |
 | 0x00019CD0 | 84 | `??_GAtCoordSysDatabase@@UAEPAXI@Z` | at/asn | SIZE |
@@ -657,7 +949,7 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x000272E0 | 34 | `?SetRotation@AtCoordSys@@QAEXPBVAtQuaternion@@@Z` | at/asn | SIZE |
 | 0x00027310 | 34 | `?SetPosition@AtCoordSys@@QAEXPBVAtVector3@@@Z` | at/asn | SIZE |
 | 0x0002E640 | 87 | `??_GAtScene@@UAEPAXI@Z` | at/asn | SIZE |
-| 0x00031A90 | 50 | `?AddScene@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/asn | SIZE |
+| 0x00031A90 | 50 | `?AddToThird@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/asn | SIZE |
 | 0x000322D0 | 52 | `?MarkDirty@AtCoordSys@@QAEXI@Z` | at/asn | MISMATCH |
 | 0x00032270 | 84 | `?Reset@AtCoordSys@@UAEXXZ` | at/asn | SIZE |
 | 0x00032330 | 33 | `?Invalidate@AtCoordSys@@UAEXXZ` | at/asn | SIZE |
@@ -728,8 +1020,8 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x0004F5D0 | 77 | `?Set@AtSceneMotionState@@QAEXABU1@@Z` | at/asn | MISMATCH |
 | 0x000559B0 | 55 | `?AsJointed@AtSceneNode@@SAPAV1@PAV1@@Z` | at/asn | MATCH |
 
-Relocation-aware matches with the host compiler: 94 functions, 1480 unique bytes.
-Share of `.text` raw bytes: 0.0724% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 124 functions, 1919 unique bytes.
+Share of `.text` raw bytes: 0.0938% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -774,13 +1066,40 @@ Exact linked match (whole XBE): not attempted.
 | 0x00284840 | 4 | `??_7AtRegionMemorySystem@@6B@` | MATCH |
 | 0x00275124 | 9 | `??_7AtMaterialDatabase@@6B@` | MATCH |
 | 0x00274E20 | 5 | `??_7AtMaterial@@6B@` | MATCH |
+| 0x00276FA8 | 43 | `??_7AtSceneActor@@6B@` | MATCH |
+| 0x00276620 | 44 | `??_7AtSceneModelActor@@6B@` | MATCH |
+| 0x002766D0 | 44 | `??_7AtSceneJointedModelActor@@6B@` | MATCH |
+| 0x00271F78 | 4 | `??_7AtFlashResourceTable@@6B@` | MATCH |
+| 0x0027294C | 4 | `??_7AtFlashTextFormatTable@@6B@` | MATCH |
+| 0x00272D28 | 1 | `??_7AtFlashResource@@6B@` | MATCH |
+| 0x002749D0 | 1 | `??_7AtFlashTextFormat@@6B@` | MATCH |
+| 0x0027319C | 2 | `??_7AtMatAssignmentDatabase@@6B@` | MATCH |
+| 0x002731F8 | 2 | `??_7AtMatAnimationDatabase@@6B@` | MATCH |
+| 0x00274BD4 | 9 | `??_7AtGrKeySet@@6B@` | MATCH |
+| 0x00274B68 | 9 | `??_7AtGrFrameNumberSet@@6B@` | MATCH |
+| 0x002733E0 | 6 | `??_7AtImageDatabase@@6B@` | MATCH |
+| 0x0027344C | 8 | `??_7AtFontDatabase@@6B@` | MATCH |
+| 0x00273610 | 4 | `??_7AtLightDatabase@@6B@` | MATCH |
+| 0x002760BC | 2 | `??_7AtLensFlareDatabase@@6B@` | MATCH |
 | 0x00273D20 | 4 | `??_7AtShaderDatabase@@6B@` | MATCH |
 | 0x00274D6C | 2 | `??_7AtShader@@6B@` | MATCH |
 | 0x00272574 | 14 | `??_7AtTextureDatabase@@6B@` | MATCH |
+| 0x00274A04 | 11 | `??_7AtTextureBase@@6B@` | MATCH |
+| 0x00277BC0 | 1 | `??_7AtInputMapper@@6B@` | MATCH |
+| 0x00277D4C | 2 | `??_7AtInputMapperDatabase@@6B@` | MATCH |
+| 0x002785F8 | 1 | `??_7AtInputLinkList@@6B@` | MATCH |
+| 0x002785FC | 5 | `??_7AtInputRouter@@6B@` | MATCH |
 | 0x00272EF0 | 5 | `??_7AtAudioSegmentDatabase@@6B@` | MATCH |
 | 0x00272FF0 | 4 | `??_7AtAudioBankDatabase@@6B@` | MATCH |
 | 0x00274A84 | 3 | `??_7AtAudioSegment@@6B@` | MATCH |
 | 0x00274A90 | 17 | `??_7AtAudioBank@@6B@` | MATCH |
+| 0x00272194 | 10 | `??_7AtAudioDatabase@@6B@` | MATCH |
+| 0x00272EC4 | 4 | `??_7AtAudioEmitterDatabase@@6B@` | MATCH |
+| 0x00288A74 | 4 | `??_7AtSoXboxBankDatabase@@6B@` | MATCH |
+| 0x0028A448 | 10 | `??_7AtSoXboxDatabase@@6B@` | MATCH |
+| 0x0028A470 | 5 | `??_7AtSoXboxSegmentDatabase@@6B@` | MATCH |
+| 0x0028A5B4 | 4 | `??_7AtSoXboxEmitterDatabase@@6B@` | MATCH |
+| 0x0028B7D8 | 3 | `??_7AtSoXboxSegment@@6B@` | MATCH |
 | 0x00273100 | 8 | `??_7AtRotTransCoordSys@@6B@` | MATCH |
 | 0x00273120 | 2 | `??_7AtCoordSysDatabase@@6B@` | MATCH |
 | 0x00274AE8 | 8 | `??_7AtCoordSys@@6B@` | MATCH |
@@ -825,13 +1144,25 @@ Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 f
 
 Suite `tok`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 5864 files (60 binary samples), 12749375 bytes, 1372044 tokens, 22236514 comparisons, 0 differences, 0 x87 precision differences, 145 rumble keywords). Recorded function entries reached in every run: 99 / 99. Source mutants detected (by an earlier run): 172 / 172. Positive control exit: 0. Harness mutation exit: 1.
 
+Suite `actor`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 14674 nodes seen, 6057 actors; 3122980 comparisons, 0 differences). Recorded function entries reached in every run: 60 / 60. Source mutants detected: 336 / 336. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `afx`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 20 .AFX files, 132 text formats; 2 .AFL files; 4845 comparisons, 0 differences). Recorded function entries reached in every run: 21 / 21. Source mutants detected: 212 / 212. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `agn`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: files AGN 61, AGA 7, AGI 102, AGF 2, AGL 17, ASL 3, 1704 items; 124593 comparisons, 0 differences). Recorded function entries reached in every run: 85 / 85. Source mutants detected: 362 / 362. Positive control exit: 0. Harness mutation exit: 1.
+
 Suite `ags`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 267 files, 485 shaders, 647 staged and 0 programmable components; 55387 comparisons, 0 differences). Recorded function entries reached in every run: 33 / 33. Source mutants detected (by an earlier run): 282 / 282. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `agt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 579 files, 2358 textures, 2424 surfaces, 112 on demand; 502261 comparisons, 0 differences). Recorded function entries reached in every run: 13 / 13. Source mutants detected (by an earlier run): 187 / 187. Positive control exit: 0. Harness mutation exit: 1.
+Suite `agt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 579 files, 2358 textures, 2424 surfaces, 112 on demand; 1100673 comparisons, 0 differences). Recorded function entries reached in every run: 26 / 26. Source mutants detected: 306 / 306. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `akc`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 544 files, 2130 rotations, 65 scales, 1220 drawing transforms, 544 with a root; 1409276 comparisons, 0 differences). Recorded function entries reached in every run: 7 / 7. Source mutants detected: 116 / 116. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `ana`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 1 files, 19 mappers, 312 button and 114 axis maps, each file on two fills and read twice on each; 60746 comparisons, 0 differences). Recorded function entries reached in every run: 40 / 40. Source mutants detected: 274 / 274. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `aob`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 160 .AOB and 160 .AOS files, 160 banks, 1517 segments; 152766 comparisons, 0 differences). Recorded function entries reached in every run: 40 / 40. Source mutants detected (by an earlier run): 244 / 244. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `asn`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 14413 nodes seen, 5684 actors; 7346860 comparisons, 0 differences). Recorded function entries reached in every run: 85 / 85. Source mutants detected (by an earlier run): 413 / 413. Positive control exit: 0. Harness mutation exit: 1.
+Suite `aod`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 158 .AOD, 175 .AOB, 175 .AOS, 1 .AOE files (38 of them loose on the disc); loaded through them, last pass 525 lists of banks, 525 of segments, 3 of emitters, 525 banks, 5361 segments (5361 with a bank), 150 emitters; 107190 comparisons, 0 differences). Recorded function entries reached in every run: 66 / 66. Source mutants detected: 281 / 281. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `asn`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 14453 nodes seen, 5704 actors; 8736656 comparisons, 0 differences). Recorded function entries reached in every run: 85 / 85. Source mutants detected: 413 / 413. Positive control exit: 0. Harness mutation exit: 1.
 
 This is behaviour evidence (Semantic-tested), not a byte match and not a proof.
 

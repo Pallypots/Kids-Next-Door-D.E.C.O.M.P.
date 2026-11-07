@@ -172,7 +172,7 @@ Every loader that opens a text file, from the callers of `AtIoTokenFile::Open`, 
 | ASN | 2001 | 0x0003CD60 | Scenes: below. Scene, base nodes and coordinate systems recovered; nine node classes not |
 | AGM | 1944 | 0x00038FB0 | Materials: `AtMaterial` and `AtMaterialDatabase` recovered |
 | AGT | 1722 | 0x0001C7B0 | Lists of textures: below. The database is recovered; the items are not |
-| AKC | 1489 | 0x00026DB0 | |
+| AKC | 1489 | 0x00026DB0 | Skeletons: below. Recovered |
 | ASD | 1380 | 0x0002F7F0 | |
 | ASL | 1127 | 0x0003FAC0 | |
 | AGD | 1215 | 0x0001ADC0 | Lists of databases (`MaterialDatabase`, `FontDatabase`, `ImageDatabase`, `MatAssignmentDatabase`) |
@@ -181,8 +181,8 @@ Every loader that opens a text file, from the callers of `AtIoTokenFile::Open`, 
 | ASB | 632 | 0x00040F90 | |
 | ADR | 311 | 0x00068880 | |
 | AOB, AOS | 271 each | 0x00025A90, 0x00025640 | Sound banks and segments: below. The lists are recovered; the concrete banks are not |
-| AOD | 261 | 0x00018AC0 | |
-| AGN | 229 | 0x00027D50 | |
+| AOD | 261 | 0x00018AC0 | Sound databases: below. Recovered up to the concrete banks |
+| AGN | 229 | 0x00027D50 | AGN family: below. Recovered |
 | GON | 171 | 0x00139090 | |
 | AIS | 106 | 0x0001FA70 | Game text: recovered |
 | MNG | 104 | 0x00141EA0 | Load lists: base recovered |
@@ -259,3 +259,81 @@ ClassWord[count]              then any number of lists, one to a class
 `Node[n]` has two meanings: first the total of names, later a list of plain nodes. Real files have both. The 652 distinct files use five classes: Node, ModifierNode, ModelActor, JointedModelActor, ParticleSystemActor. Keyword table 0x002B1990, 116 words.
 
 The base node reads BoundingSphere, ActiveDistance (stored squared), Attach, AttachBase, AttachNodeToThisJoint, AttachNodeToThisBase, Position, OrthoNormalize, Quaternion, LookAt, LinearVelocity, AngularVelocity, CollisionEnable and Disable, BoundingGeometry, LineSegIntersectEnable and Disable, two MatAssignment words whose integer is thrown away, and four debug draw words that do nothing. The modifier node adds Modifier, ModificationEnable and Disable. Mesh, animation channels, emitters and the rest belong to classes not recovered.
+
+## AGN family (.AGN, .AGA, .AGI, .AGF, .AGL, .ASL)
+
+| Ext | Loader | Holds | Real files |
+| --- | --- | --- | --- |
+| .AGN | 0x00027D50 | Named lists of materials, `MatAssignment` / `MatAssignmentWithNameSpace` | 61 |
+| .AGA | 0x00028340 | Material animations: `FrameNumber`, `MaterialKey`, `MatAnimation` with `Keyframes`, `Rate`, `Length`, `LoopPeriod` | 7 |
+| .AGI | 0x00029DC0 | Images: `MatAssignment`, `Image` | 102 |
+| .AGF | 0x0002A290 | Fonts: `Font[n]`, `MatAssignment`, `Font2D`; `Font3D` stops with a message | 2 |
+| .AGL | 0x0002AC10 | Lights: colours, `Range`, `Attenuation`, cone angles | 17 |
+| .ASL | 0x0003FAC0 | Lens flares, by its keyword table. **No file on the disc is this.** | 0 of that format |
+
+The three disc files named .ASL are in `DESIGN\BEHAVIOR` and begin with binary and names such as `func0000`: compiled scripts of some kind, not recovered here and not established further. Run through 0x0003FAC0 they are read as bad text, and the oracle compares that, which shows little. So the lens flare's fields are tested by written text only.
+
+## Skeletons (.AKC)
+
+The executable never says. It has the three letters, as an extension, at 0x00273128, and no message that names the format. What the code and files show: an .AKC file is one `AtCoordSysDatabase`, read at 0x00026DB0 and called at 0x0001A692 for each name in a list the owner keeps (0x002C62AC). It holds a tree of named coordinate systems, and for some of them a matrix given in full.
+
+```
+RotTransCoordSys[n]            at least one of these two counts
+ScaleCoordSys[n]
+LocalDrawingTransform[n]       optional: how many entries give the word below
+CoordSys
+{
+    RotTransCoordSys "rootR"   Position x y z, Orientation x y z w
+    {
+        Parent "name"          must have come earlier in the file
+        LocalDrawingTransform  sixteen reals
+    }
+    ScaleCoordSys "name"       Scale x y z, or UniformScale s
+    {
+    }
+}
+```
+
+Words are the original's, table 0x002B05F8. On the disc's 544 distinct files: 2,130 rotations, 65 scales, 1,220 drawing transforms; `UniformScale` is on no file. 474 files have no drawing transforms, most with one to three entries (for example `UI\TRANS\WIPE.AKC`: `bone0R`, `bone1R`); the 70 that do are mainly under `ART\CAST` with names such as `rootR`, `pelvisR`, `rtthighR`. "Skeleton" is my word for this, from those names. 0x00032940 multiplies `m_drawingLocal` by the world matrix into `m_drawingWorld`, and the values on real files look like the inverse of the pose at rest, which is what skinning wants: an inference from the numbers, not recovered code.
+
+Each entry takes two matrices from the pool as it is made, and each drawing transform two more: hence `(rotTrans + scaled + extra) * 2` in `Allocate`.
+
+## Sound databases (.AOD, .AOE)
+
+Established from the code, its keyword tables, its messages and the text:
+
+* An `.AOD` file names other files, relative to its own directory: `BankDatabase[n] { "name" ... }` (`.AOB`), `SegmentDatabase[n]` (`.AOS`), `EmitterDatabase[n]` (`.AOE`), `DatabaseLoader[n]` (another `.AOD`). No file on the disc uses `DatabaseLoader`. Only `AUDIO\GLOBAL.AOD` uses `EmitterDatabase`.
+* An `.AOE` file is a list of emitters: `Emitter[n] { Emitter "name" { ... } ... }`, with the words `Center`, `Stereo`, `Emitter3D`, `Position x y z`, `Orientation x y z w`, and `NameSpace` before the block. An emitter is a named place a sound comes from: an `AtCoordSys` with a kind and perhaps an SDK stream. `Emitter3D` makes a stream of kind 2. `Center` makes a stream of kind 1 on mix bin 2, which is the front centre. `Stereo` and nothing make no stream. There is one real file, `AUDIO\EMITTERS.AOE`, with 50 emitters: `sfx`, `ui`, `voice`, `music`, `ambience`, `collsn1-5`, `actor1-40`.
+* Position and orientation are real numbers. An integer there is reported as "expected real".
+
+A finding the earlier notes did not have: 38 list files lie **loose on the disc**, under `/DataXbox/Audio/Music/`, in no archive, beside their `.wba` files: 8 `.aod`, 15 `.aob`, 15 `.AOS`. The text cases come only from the archives, so they lack these, and `AUDIO\GLOBAL.AOD` names four of them. `tests/oracle/aod_loose_cases.py` writes them to `analysis-local/scratch/aod/loose`, and the oracle will not run without them. To regenerate: `python -I tests/oracle/aod_loose_cases.py "<disc image>" analysis-local/scratch/aod/loose`, from the main checkout. The integrator may prefer this in `tools/jam.py textcases`; I was not to edit that. The `aob` suite has not seen these 30 lists either.
+
+```
+.ANM
+[NameSpace "space"]
+AbstractMapper[n]
+{
+    AbstractMapper "name"
+    {
+        ButtonMap[n] { ButtonMap { PhysicalID code  AbstractID code  [PhysicalButtonState word] [AbstractAxisState word] [AbstractPOVState word] } ... }
+        AxisMap[n]   { AxisMap   { PhysicalID code  AbstractID code  [PhysicalPOVAxis AxisX|AxisY] [AbstractPOVAxis AxisX|AxisY] } ... }
+    }
+    or
+    AbstractMapper "name" { AbstractMapper "earlier" "space or empty" }
+}
+Codes: Key* 0x1000xxxx, Mouse* 0x2000xxxx, JoystickButton0-63 0x3000xxxx, Axis* 0x4000xxxx, POV 0x50000000; table at 0x002B2C10, 235 entries, two pairs sharing a value.
+
+.AFX
+NameSpace "space"
+TextFormat[ n ]
+{
+    TextFormat index
+    {
+        BoundsRectangle r r r r | WordWrap | MultiLine | Password | ReadOnly | NoSelect | Border | FontHeight r | TextColor i i i i | TextMaxLength i
+        Alignment AlignmentLeft|Right|Center|Justify | LeftMargin r | RightMargin r | Indent r | Leading r
+    }
+}
+
+.AFL
+Level { HeapSize i  MaxVariableValueLength i  MaxVariables i  FontSourceLevel i|Self|All }
+```

@@ -78,3 +78,8 @@ tooling and is excluded from x64 builds.
 ## Find on a cleared name map divides by zero
 
 The hash divides by the table's size, which a cleared map has as zero. The original does the same. Any new code calling `Find` on a cleared map crashes, on this hardware and on the Xbox.
+
+## Actors
+
+* Channel arrays are `sizeof`, and offsets are checked on x86 only; the host test runs on x64.
+* The stand-in views `AtSceneAnimation` and `AtSceneMatAnimation` have floats and integers only, so they hold on x64 as declared; real loaders must fill them.
