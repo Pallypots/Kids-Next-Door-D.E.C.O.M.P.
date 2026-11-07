@@ -22,7 +22,9 @@ static void record_message(const char* m, int side) {
 
 // The game's heap is not cleared, so a harness that hands out zeroes hides a missing store. Fill byte 0 means zeroes.
 static int g_fill;
-static void* filled(std::size_t n) { void* p = std::calloc(1, n); if (p && g_fill) std::memset(p, g_fill, n); return p; }
+static bool g_fail_alloc;  // Heap requests of the code under test come back null.
+static std::size_t g_heap_pad;  // Room past each block, for code under test that writes beyond what it asked for.
+static void* filled(std::size_t n) { if (g_fail_alloc) return nullptr; n += g_heap_pad; void* p = std::calloc(1, n); if (p && g_fill) std::memset(p, g_fill, n); return p; }
 
 static void* __cdecl o_new(unsigned n) { if (g_recording) g_log[0].add('N', n); return filled(n); }
 static void __cdecl o_delete(void* p) { if (g_recording && p) g_log[0].add('D'); std::free(p); }

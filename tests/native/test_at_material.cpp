@@ -3,7 +3,7 @@
 #include <cstring>
 
 #include "at/AtIoTokenizer.h"
-#include "at/AtMaterial.h"
+#include "at/AtMaterialDatabase.h"
 
 static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
@@ -27,7 +27,14 @@ void* const kShader = (void*)&g_stages;
 
 }  // namespace
 
-void* AtFindShader(AtMaterialOwner*, const char* name, const char*) { return std::strcmp(name, "Found") == 0 ? kShader : nullptr; }
+class Store : public AtMaterialDatabase {
+public:
+    ~Store() override { m_stages = nullptr; m_textures = nullptr; }  // These lists are not on the heap.
+    void OnReady(AtMaterialOwner*) override {}
+    void Slot3() override {}
+    AtMaterial* MaterialAt(unsigned int) override { return nullptr; }
+};
+int g_heap;
 
 int main() {
     // A text of the kind the game has, written here. Comes first: "Material" and its name, then what Read takes.
@@ -48,12 +55,17 @@ int main() {
     tokenizer.SetStream(&stream);
     tokenizer.SetKeywords(AtMaterial::s_keywords, AtMaterial::kKeywordCount, nullptr);
 
-    AtMaterialStore store = {};
+    Store store;
     store.m_stageCapacity = 8;
     store.m_textureCapacity = 8;
     store.m_stages = g_stages;
     store.m_textures = g_textures;
     AtMaterialOwner owner = {};
+    GmNameMap::s_heap = &g_heap;
+    GmNameMap shaders;
+    shaders.Init(3);
+    shaders.Insert("Found", kShader);
+    owner.m_shaders.Add(&shaders);
 
     Concrete m;
     CHECK(m.m_depthCompare == 2);

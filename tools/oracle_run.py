@@ -1066,7 +1066,7 @@ MAT_MUTANTS = [
     ('After: blend alpha', 'AtMaterial.cpp', '    if (!(m_flags & kBlendSeparateAlpha)) {\n        m_blendAlpha = m_blend;\n    }\n', ''),
     ('After: no hook', 'AtMaterial.cpp', '    OnLoaded(owner);\n    m_flags |= kLoaded;\n}\n\nvoid AtMaterial::Copy', '    m_flags |= kLoaded;\n}\n\nvoid AtMaterial::Copy'),
     ('After: not loaded', 'AtMaterial.cpp', '    OnLoaded(owner);\n    m_flags |= kLoaded;\n}\n\nvoid AtMaterial::Copy', '    OnLoaded(owner);\n}\n\nvoid AtMaterial::Copy'),
-    ('Read: no reset', 'AtMaterial.cpp', 'void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokenizer* tokenizer, const char* ns) {\n    if (m_flags & kLoaded) {\n        Reset();\n    }\n', 'void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokenizer* tokenizer, const char* ns) {\n'),
+    ('Read: no reset', 'AtMaterial.cpp', 'void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialDatabase* store, AtIoTokenizer* tokenizer, const char* ns) {\n    if (m_flags & kLoaded) {\n        Reset();\n    }\n', 'void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialDatabase* store, AtIoTokenizer* tokenizer, const char* ns) {\n'),
     ('Read: store', 'AtMaterial.cpp', '    m_store = store;\n    tokenizer->ExpectLeftCurly();\n', '    tokenizer->ExpectLeftCurly();\n'),
     ('Read: curly', 'AtMaterial.cpp', '    tokenizer->ExpectLeftCurly();\n', ''),
     ('Copy: no reset', 'AtMaterial.cpp', 'const AtMaterial& from) {\n    if (m_flags & kLoaded) {\n        Reset();\n    }\n', 'const AtMaterial& from) {\n'),
@@ -1506,6 +1506,120 @@ HEP_MUTANTS = [
 ]
 
 
+MDB_MUTANTS = [
+    ('NewList: no raise without heap', 'AtMaterialDatabase.cpp', 'if (AtMaterialDatabase::s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }', ''),
+    ('NewList: other raise', 'AtMaterialDatabase.cpp', 'AtRaise(-2, 0, 0, 0);', 'AtRaise(-3, 0, 0, 0);'),
+    ('NewList: no push', 'AtMaterialDatabase.cpp', '    AtPushHeap(AtMaterialDatabase::s_heap);\n', ''),
+    ('NewList: no pop', 'AtMaterialDatabase.cpp', '    AtPopHeap();\n', ''),
+    ('NewList: size', 'AtMaterialDatabase.cpp', 'operator new(count * sizeof(void*))', 'operator new((count + 1) * sizeof(void*))'),
+    ('NewList: no raise on null', 'AtMaterialDatabase.cpp', 'if (list == 0) {\n        AtRaise(-4, 0, 0, 0);\n    }', ''),
+    ('NewList: other raise on null', 'AtMaterialDatabase.cpp', 'AtRaise(-4, 0, 0, 0);', 'AtRaise(-5, 0, 0, 0);'),
+    ('NewClearedList: not cleared', 'AtMaterialDatabase.cpp', '        list[i] = 0;\n    }\n    return list;', '    }\n    return list;'),
+    ('NewClearedList: short', 'AtMaterialDatabase.cpp', 'for (unsigned int i = 0; i < count; i++) {\n        list[i] = 0;', 'for (unsigned int i = 0; i + 1 < count; i++) {\n        list[i] = 0;'),
+    ('SetHeap: nothing', 'AtMaterialDatabase.cpp', '    s_heap = heap;\n', '    (void)heap;\n'),
+    ('ctor: count', 'AtMaterialDatabase.cpp', 'AtMaterialDatabase::AtMaterialDatabase() {\n    m_count = 0;\n', 'AtMaterialDatabase::AtMaterialDatabase() {\n'),
+    ('ctor: stage capacity', 'AtMaterialDatabase.cpp', 'AtMaterialDatabase::AtMaterialDatabase() {\n    m_count = 0;\n    m_stageCapacity = 0;\n', 'AtMaterialDatabase::AtMaterialDatabase() {\n    m_count = 0;\n'),
+    ('ctor: unknown', 'AtMaterialDatabase.cpp', 'm_textures = 0;\n    m_unknown30 = 0;\n}\n\nAtMaterialDatabase::~', 'm_textures = 0;\n}\n\nAtMaterialDatabase::~'),
+    ('dtor: stages kept', 'AtMaterialDatabase.cpp', 'AtMaterialDatabase::~AtMaterialDatabase() {\n    if (m_stages != 0) {\n        operator delete(m_stages);\n    }\n', 'AtMaterialDatabase::~AtMaterialDatabase() {\n'),
+    ('dtor: textures kept', 'AtMaterialDatabase.cpp', '    if (m_textures != 0) {\n        operator delete(m_textures);\n    }\n    GmNameMap::Clear();\n    m_count = 0;\n    m_stageCapacity = 0;\n    m_stageUsed = 0;\n    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Clear', '    GmNameMap::Clear();\n    m_count = 0;\n    m_stageCapacity = 0;\n    m_stageUsed = 0;\n    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Clear'),
+    ('dtor: used kept', 'AtMaterialDatabase.cpp', '    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Clear', '    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Clear'),
+    ('dtor: unknown kept', 'AtMaterialDatabase.cpp', '    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Clear', '    m_textures = 0;\n}\n\nvoid AtMaterialDatabase::Clear'),
+    ('Clear: stages kept', 'AtMaterialDatabase.cpp', 'void AtMaterialDatabase::Clear() {\n    if (m_stages != 0) {\n        operator delete(m_stages);\n    }\n', 'void AtMaterialDatabase::Clear() {\n'),
+    ('Clear: textures kept', 'AtMaterialDatabase.cpp', 'void AtMaterialDatabase::Clear() {\n    if (m_stages != 0) {\n        operator delete(m_stages);\n    }\n    if (m_textures != 0) {\n        operator delete(m_textures);\n    }\n', 'void AtMaterialDatabase::Clear() {\n    if (m_stages != 0) {\n        operator delete(m_stages);\n    }\n'),
+    ('Clear: map kept', 'AtMaterialDatabase.cpp', '    GmNameMap::Clear();\n    m_count = 0;\n    m_stageCapacity = 0;\n    m_stageUsed = 0;\n    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate', '    m_count = 0;\n    m_stageCapacity = 0;\n    m_stageUsed = 0;\n    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate'),
+    ('Clear: count kept', 'AtMaterialDatabase.cpp', '    GmNameMap::Clear();\n    m_count = 0;\n    m_stageCapacity = 0;\n    m_stageUsed = 0;\n    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate', '    GmNameMap::Clear();\n    m_stageCapacity = 0;\n    m_stageUsed = 0;\n    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate'),
+    ('Clear: used kept', 'AtMaterialDatabase.cpp', '    m_stageUsed = 0;\n    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate', '    m_stages = 0;\n    m_textureCapacity = 0;\n    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate'),
+    ('Clear: textures used kept', 'AtMaterialDatabase.cpp', '    m_textureUsed = 0;\n    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate', '    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate'),
+    ('Clear: unknown kept', 'AtMaterialDatabase.cpp', '    m_textures = 0;\n    m_unknown30 = 0;\n}\n\nvoid AtMaterialDatabase::Allocate', '    m_textures = 0;\n}\n\nvoid AtMaterialDatabase::Allocate'),
+    ('Allocate: no clear', 'AtMaterialDatabase.cpp', 'unsigned int count, const char* ns) {\n    if (m_count > 0) {\n        Clear();\n    }\n', 'unsigned int count, const char* ns) {\n'),
+    ('Allocate: swapped', 'AtMaterialDatabase.cpp', '    m_stageCapacity = stages;\n    m_textureCapacity = textures;\n', '    m_stageCapacity = textures;\n    m_textureCapacity = stages;\n'),
+    ('Allocate: no count', 'AtMaterialDatabase.cpp', '    m_count = count;\n', ''),
+    ('Allocate: no init', 'AtMaterialDatabase.cpp', '    Init(count);\n', ''),
+    ('Allocate: no stages', 'AtMaterialDatabase.cpp', '    m_textureCapacity = textures;\n    m_count = count;\n    Init(count);\n    if (m_stageCapacity != 0) {\n        m_stages = NewClearedList(m_stageCapacity);\n    }\n', '    m_textureCapacity = textures;\n    m_count = count;\n    Init(count);\n'),
+    ('Allocate: always stages', 'AtMaterialDatabase.cpp', '    Init(count);\n    if (m_stageCapacity != 0) {\n', '    Init(count);\n    {\n'),
+    ('Allocate: always textures', 'AtMaterialDatabase.cpp', '        m_stages = NewClearedList(m_stageCapacity);\n    }\n    if (m_textureCapacity != 0) {\n        m_textures = NewClearedList(m_textureCapacity);\n    }\n    OnReady(owner);\n    owner->AddMaterials(this, ns);', '        m_stages = NewClearedList(m_stageCapacity);\n    }\n    {\n        m_textures = NewClearedList(m_textureCapacity);\n    }\n    OnReady(owner);\n    owner->AddMaterials(this, ns);'),
+    ('Allocate: not ready', 'AtMaterialDatabase.cpp', '    OnReady(owner);\n    owner->AddMaterials(this, ns);\n}\n\nvoid AtMaterialDatabase::CopyFrom', '    owner->AddMaterials(this, ns);\n}\n\nvoid AtMaterialDatabase::CopyFrom'),
+    ('Allocate: not added', 'AtMaterialDatabase.cpp', '    OnReady(owner);\n    owner->AddMaterials(this, ns);\n}\n\nvoid AtMaterialDatabase::CopyFrom', '    OnReady(owner);\n}\n\nvoid AtMaterialDatabase::CopyFrom'),
+    ('Allocate: order', 'AtMaterialDatabase.cpp', '    OnReady(owner);\n    owner->AddMaterials(this, ns);\n}\n\nvoid AtMaterialDatabase::CopyFrom', '    owner->AddMaterials(this, ns);\n    OnReady(owner);\n}\n\nvoid AtMaterialDatabase::CopyFrom'),
+    ('CopyFrom: no clear', 'AtMaterialDatabase.cpp', 'AtMaterialDatabase& from, const char* ns) {\n    if (m_count > 0) {\n        Clear();\n    }\n', 'AtMaterialDatabase& from, const char* ns) {\n'),
+    ('CopyFrom: stage capacity', 'AtMaterialDatabase.cpp', 'm_stageCapacity = from.m_stageCapacity;', 'm_stageCapacity = from.m_textureCapacity;'),
+    ('CopyFrom: texture capacity', 'AtMaterialDatabase.cpp', 'm_textureCapacity = from.m_textureCapacity;', 'm_textureCapacity = from.m_stageCapacity;'),
+    ('CopyFrom: no init', 'AtMaterialDatabase.cpp', '    Init(m_count);\n    if (m_stageCapacity', '    if (m_stageCapacity'),
+    ('CopyFrom: every material', 'AtMaterialDatabase.cpp', 'if (material->m_flags & AtMaterial::kLoaded) {', 'if (true) {'),
+    ('CopyFrom: no material', 'AtMaterialDatabase.cpp', 'if (material->m_flags & AtMaterial::kLoaded) {', 'if (false) {'),
+    ('CopyFrom: from itself', 'AtMaterialDatabase.cpp', 'AtMaterial* material = from.MaterialAt(i);', 'AtMaterial* material = MaterialAt(i);'),
+    ('CopyFrom: not ready', 'AtMaterialDatabase.cpp', '    OnReady(owner);\n    for (unsigned int i = 0; i < m_count; i++) {\n        AtMaterial* material', '    for (unsigned int i = 0; i < m_count; i++) {\n        AtMaterial* material'),
+    ('CopyFrom: not added', 'AtMaterialDatabase.cpp', '        }\n    }\n    owner->AddMaterials(this, ns);\n}\n\nvoid AtMaterialDatabase::Load', '        }\n    }\n}\n\nvoid AtMaterialDatabase::Load'),
+    ('CopyFrom: no space', 'AtMaterialDatabase.cpp', '        }\n    }\n    owner->AddMaterials(this, ns);\n}\n\nvoid AtMaterialDatabase::Load', '        }\n    }\n    owner->AddMaterials(this, 0);\n}\n\nvoid AtMaterialDatabase::Load'),
+    ('Load: other extension', 'AtMaterialDatabase.cpp', 'file.Open(name, "AGM", 2, 0)', 'file.Open(name, "AGT", 2, 0)'),
+    ('Load: other flags', 'AtMaterialDatabase.cpp', 'file.Open(name, "AGM", 2, 0)', 'file.Open(name, "AGM", 0, 0)'),
+    ('Load: no report', 'AtMaterialDatabase.cpp', 'if (status != 0) {\n        AtReportFileError(status, name, "AGM");\n    }', ''),
+    ('Load: reports other status', 'AtMaterialDatabase.cpp', 'AtReportFileError(status, name, "AGM");', 'AtReportFileError(status + 1, name, "AGM");'),
+    ('Load: not read', 'AtMaterialDatabase.cpp', '    Read(owner, file.m_tokenizer);\n', ''),
+    # Dropped, equivalent: Load: not closed: the token file's destructor closes it, and a second Close does nothing.
+    ('ReadTextures: not a string', 'AtMaterialDatabase.cpp', 'if (token == AtIoTokenizer::kString) {', 'if (token == AtIoTokenizer::kInt) {'),
+    ('ReadTextures: entry for no texture kept', 'AtMaterialDatabase.cpp', '            list[i] = texture;\n', '            if (texture != 0) list[i] = texture;\n'),
+    ('ReadTextures: no missing error', 'AtMaterialDatabase.cpp', 'if (texture == 0) {\n                tokenizer->Error(kTextureNotFound);\n            }', ''),
+    ('ReadTextures: other missing error', 'AtMaterialDatabase.cpp', 'enum Problem { kListAlreadyGiven = 0x27, kListIsEmpty = 0x23, kTextureNotFound = 0x25 };', 'enum Problem { kListAlreadyGiven = 0x27, kListIsEmpty = 0x23, kTextureNotFound = 0x24 };'),
+    ('ReadTextures: default not null', 'AtMaterialDatabase.cpp', '} else if (token == kDefault) {\n            list[i] = 0;\n', '} else if (token == kDefault) {\n'),
+    ('ReadTextures: default errors', 'AtMaterialDatabase.cpp', '} else if (token == kDefault) {\n            list[i] = 0;\n        } else {', '} else {'),
+    ('ReadTextures: other kind error', 'AtMaterialDatabase.cpp', 'tokenizer->Error(AtIoTokenizer::kExpectedString);', 'tokenizer->Error(AtIoTokenizer::kExpectedInt);'),
+    ('ReadTextures: no right curly', 'AtMaterialDatabase.cpp', '    tokenizer->ExpectRightCurly();\n}\n\nvoid AtMaterialDatabase::Read', '}\n\nvoid AtMaterialDatabase::Read'),
+    ('ReadTextures: spaces ignored', 'AtMaterialDatabase.cpp', 'if (withSpaces != 0) {', 'if (false) {'),
+    ('ReadTextures: always spaces', 'AtMaterialDatabase.cpp', 'if (withSpaces != 0) {', 'if (true) {'),
+    ('ReadTextures: only the flag 1', 'AtMaterialDatabase.cpp', 'if (withSpaces != 0) {', 'if (withSpaces == 1) {'),
+    ('ReadTextures: empty space looked up', 'AtMaterialDatabase.cpp', 'texture = space[0] != 0 ? owner->m_textureSpaces.Find(space, name) : owner->m_textures.Find(name);', 'texture = owner->m_textureSpaces.Find(space, name);'),
+    ('ReadTextures: space not used', 'AtMaterialDatabase.cpp', 'texture = space[0] != 0 ? owner->m_textureSpaces.Find(space, name) : owner->m_textures.Find(name);', 'texture = owner->m_textures.Find(name);'),
+    ('ReadTextures: ns not used', 'AtMaterialDatabase.cpp', 'texture = ns != 0 && ns[0] != 0 ? owner->m_textureSpaces.Find(ns, name) : owner->m_textures.Find(name);', 'texture = owner->m_textures.Find(name);'),
+    ('ReadTextures: empty ns looked up', 'AtMaterialDatabase.cpp', 'texture = ns != 0 && ns[0] != 0 ? owner->m_textureSpaces', 'texture = ns != 0 ? owner->m_textureSpaces'),
+    ('Read: no clear', 'AtMaterialDatabase.cpp', 'AtIoTokenizer* tokenizer) {\n    if (m_count > 0) {\n        Clear();\n    }\n', 'AtIoTokenizer* tokenizer) {\n'),
+    ('Read: other keyword count', 'AtMaterialDatabase.cpp', 'tokenizer->SetKeywords(AtMaterial::s_keywords, AtMaterial::kKeywordCount, 0);', 'tokenizer->SetKeywords(AtMaterial::s_keywords, 7, 0);'),
+    ('Read: no keywords', 'AtMaterialDatabase.cpp', '    tokenizer->SetKeywords(AtMaterial::s_keywords, AtMaterial::kKeywordCount, 0);\n', ''),
+    ('Read: name space not read', 'AtMaterialDatabase.cpp', '    if (token == kNameSpace) {\n        tokenizer->ExpectName(space);\n        ns = space;\n        token = tokenizer->Next();\n    }\n', ''),
+    ('Read: name space not used', 'AtMaterialDatabase.cpp', '        ns = space;\n', ''),
+    ('Read: name space anywhere', 'AtMaterialDatabase.cpp', '    while (token != AtIoTokenizer::kEnd) {\n        switch (token) {\n', '    while (token != AtIoTokenizer::kEnd) {\n        switch (token) {\n        case kNameSpace:\n            tokenizer->ExpectName(space);\n            ns = space;\n            break;\n'),
+    ('Read: stages given twice', 'AtMaterialDatabase.cpp', 'if (m_stageCapacity > 0) {\n                tokenizer->Error(kListAlreadyGiven);\n            }\n', ''),
+    ('Read: textures given twice', 'AtMaterialDatabase.cpp', 'if (m_textureCapacity > 0) {\n                tokenizer->Error(kListAlreadyGiven);\n            }\n', ''),
+    ('Read: other twice error', 'AtMaterialDatabase.cpp', 'enum Problem { kListAlreadyGiven = 0x27,', 'enum Problem { kListAlreadyGiven = 0x28,'),
+    ('Read: no stages empty error', 'AtMaterialDatabase.cpp', 'if (m_stageCapacity < 1) {\n                tokenizer->Error(kListIsEmpty);\n            }\n', ''),
+    ('Read: no textures empty error', 'AtMaterialDatabase.cpp', 'if (m_textureCapacity < 1) {\n                tokenizer->Error(kListIsEmpty);\n            }\n', ''),
+    ('Read: other empty error', 'AtMaterialDatabase.cpp', 'kListIsEmpty = 0x23,', 'kListIsEmpty = 0x22,'),
+    ('Read: stages cleared', 'AtMaterialDatabase.cpp', 'm_stages = NewList(m_stageCapacity);', 'm_stages = NewClearedList(m_stageCapacity);'),
+    ('Read: textures cleared', 'AtMaterialDatabase.cpp', 'm_textures = NewList(m_textureCapacity);', 'm_textures = NewClearedList(m_textureCapacity);'),
+    ('Read: stage word confused', 'AtMaterialDatabase.cpp', 'ReadTextures(owner, tokenizer, m_stages, m_stageCapacity, ns, token == kProgShaderTextureWithNameSpace);', 'ReadTextures(owner, tokenizer, m_stages, m_stageCapacity, ns, token == kProgShaderTexture);'),
+    ('Read: texture word confused', 'AtMaterialDatabase.cpp', 'ReadTextures(owner, tokenizer, m_textures, m_textureCapacity, ns, token == kStagedShaderTextureWithNameSpace);', 'ReadTextures(owner, tokenizer, m_textures, m_textureCapacity, ns, token == kStagedShaderTexture);'),
+    ('Read: stages without ns', 'AtMaterialDatabase.cpp', 'ReadTextures(owner, tokenizer, m_stages, m_stageCapacity, ns,', 'ReadTextures(owner, tokenizer, m_stages, m_stageCapacity, 0,'),
+    ('Read: textures without ns', 'AtMaterialDatabase.cpp', 'ReadTextures(owner, tokenizer, m_textures, m_textureCapacity, ns,', 'ReadTextures(owner, tokenizer, m_textures, m_textureCapacity, 0,'),
+    ('Read: lists swapped', 'AtMaterialDatabase.cpp', 'kProgShaderTexture = 58, kStagedShaderTexture = 59,', 'kProgShaderTexture = 59, kStagedShaderTexture = 58,'),
+    ('Read: with-space lists swapped', 'AtMaterialDatabase.cpp', 'kProgShaderTextureWithNameSpace = 60, kStagedShaderTextureWithNameSpace = 61,', 'kProgShaderTextureWithNameSpace = 61, kStagedShaderTextureWithNameSpace = 60,'),
+    ('Read: material no count', 'AtMaterialDatabase.cpp', '            m_count = (unsigned int)tokenizer->ExpectCount();\n            Init(m_count);\n', '            tokenizer->ExpectCount();\n            Init(m_count);\n'),
+    ('Read: material no init', 'AtMaterialDatabase.cpp', 'tokenizer->ExpectCount();\n            Init(m_count);\n', 'tokenizer->ExpectCount();\n'),
+    ('Read: material not added', 'AtMaterialDatabase.cpp', '            owner->AddMaterials(this, ns);\n            OnReady(owner);\n            for', '            OnReady(owner);\n            for'),
+    ('Read: material added without ns', 'AtMaterialDatabase.cpp', '            owner->AddMaterials(this, ns);\n            OnReady(owner);\n            for', '            owner->AddMaterials(this, 0);\n            OnReady(owner);\n            for'),
+    ('Read: material added last', 'AtMaterialDatabase.cpp', '            owner->AddMaterials(this, ns);\n            OnReady(owner);\n            for (unsigned int i = 0; i < m_count; i++) {\n                tokenizer->ExpectToken(kMaterial);\n                char name[8];\n                tokenizer->ExpectName(name);\n                AtMaterial* material = MaterialAt(i);\n                Insert(name, material);\n                material->Read(owner, this, tokenizer, ns);\n            }\n', '            OnReady(owner);\n            for (unsigned int i = 0; i < m_count; i++) {\n                tokenizer->ExpectToken(kMaterial);\n                char name[8];\n                tokenizer->ExpectName(name);\n                AtMaterial* material = MaterialAt(i);\n                Insert(name, material);\n                material->Read(owner, this, tokenizer, ns);\n            }\n            owner->AddMaterials(this, ns);\n'),
+    ('Read: material not ready', 'AtMaterialDatabase.cpp', '            OnReady(owner);\n            for (unsigned int i = 0; i < m_count; i++) {\n                tokenizer->ExpectToken', '            for (unsigned int i = 0; i < m_count; i++) {\n                tokenizer->ExpectToken'),
+    ('Read: no material word', 'AtMaterialDatabase.cpp', '                tokenizer->ExpectToken(kMaterial);\n', ''),
+    ('Read: other material word', 'AtMaterialDatabase.cpp', 'kDefault = 62, kMaterial = 63', 'kDefault = 62, kMaterial = 64'),
+    ('Read: other default', 'AtMaterialDatabase.cpp', 'kDefault = 62,', 'kDefault = 65,'),
+    ('Read: no name', 'AtMaterialDatabase.cpp', '                tokenizer->ExpectName(name);\n', '                name[0] = 0;\n'),
+    ('Read: not inserted', 'AtMaterialDatabase.cpp', '                Insert(name, material);\n', ''),
+    ('Read: inserted after', 'AtMaterialDatabase.cpp', '                Insert(name, material);\n                material->Read(owner, this, tokenizer, ns);\n', '                material->Read(owner, this, tokenizer, ns);\n                Insert(name, material);\n'),
+    ('Read: material not read', 'AtMaterialDatabase.cpp', '                material->Read(owner, this, tokenizer, ns);\n', ''),
+    ('Read: material without ns', 'AtMaterialDatabase.cpp', 'material->Read(owner, this, tokenizer, ns);', 'material->Read(owner, this, tokenizer, 0);'),
+    ('Read: no closing curly', 'AtMaterialDatabase.cpp', '            tokenizer->ExpectRightCurly();\n            break;\n', '            break;\n'),
+    ('Read: other word error', 'AtMaterialDatabase.cpp', 'tokenizer->Error(AtIoTokenizer::kExpectedKeyword);', 'tokenizer->Error(AtIoTokenizer::kSyntaxError);'),
+    ('Read: no word error', 'AtMaterialDatabase.cpp', '            tokenizer->Error(AtIoTokenizer::kExpectedKeyword);\n', ''),
+    ('Read: stops at a word', 'AtMaterialDatabase.cpp', '            tokenizer->Error(AtIoTokenizer::kExpectedKeyword);\n            break;\n', '            tokenizer->Error(AtIoTokenizer::kExpectedKeyword);\n            return;\n'),
+    ('FindShader: empty ns looked up', 'AtMaterialOwner.cpp', 'if (ns != 0 && ns[0] != 0) {\n        return m_shaderSpaces.Find(ns, name);', 'if (ns != 0) {\n        return m_shaderSpaces.Find(ns, name);'),
+    ('FindShader: ns not used', 'AtMaterialOwner.cpp', 'return m_shaderSpaces.Find(ns, name);', 'return m_shaders.Find(name);'),
+    ('FindShader: other space table', 'AtMaterialOwner.cpp', 'return m_shaderSpaces.Find(ns, name);', 'return m_textureSpaces.Find(ns, name);'),
+    ('FindShader: other group', 'AtMaterialOwner.cpp', 'return m_shaders.Find(name);', 'return m_textures.Find(name);'),
+    ('AddMaterials: empty ns used', 'AtMaterialOwner.cpp', 'if (ns != 0 && ns[0] != 0) {\n        m_materialSpaces.Add(ns, map);', 'if (ns != 0) {\n        m_materialSpaces.Add(ns, map);'),
+    ('AddMaterials: other space table', 'AtMaterialOwner.cpp', 'm_materialSpaces.Add(ns, map);', 'm_textureSpaces.Add(ns, map);'),
+    ('AddMaterials: and to the group', 'AtMaterialOwner.cpp', 'm_materialSpaces.Add(ns, map);\n        return;', 'm_materialSpaces.Add(ns, map);'),
+    ('AddMaterials: other group', 'AtMaterialOwner.cpp', 'm_materials.Add(map);', 'm_textures.Add(map);'),
+]
+
 SUITES = {
     "gm": {"target": "oracle_gm", "subsystem": "gm/containers", "mutants": GM_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "jam": {"target": "oracle_jam", "subsystem": "at/jam", "mutants": JAM_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -1515,6 +1629,7 @@ SUITES = {
     "txt": {"target": "oracle_txt", "subsystem": "at/gametext", "mutants": TXT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "set": {"target": "oracle_set", "subsystem": "gm/settings", "mutants": SET_MUTANTS, "src": "gm", "var": "KND_GM_SRC"},
     "mat": {"target": "oracle_mat", "subsystem": "at/material", "mutants": MAT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
+    "mdb": {"target": "oracle_mdb", "subsystem": "at/matdb", "mutants": MDB_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "qua": {"target": "oracle_qua", "subsystem": "at/quaternion", "mutants": QUA_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "fmt": {"target": "oracle_fmt", "subsystem": "at/pixelformat", "mutants": FMT_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
     "vec": {"target": "oracle_vec", "subsystem": "at/vector", "mutants": VEC_MUTANTS, "src": "at", "var": "KND_AT_SRC"},
@@ -1587,10 +1702,11 @@ class MutantWorker:
         self.previous = mutant[1]
         target = self.cfg["target"]
         # An output or debug file can be held for a moment, by a scanner or a parallel build. Only those errors are retried.
+        log = ""
         for _ in range(6):
             r = run(["cmake", "--build", self.build_dir, "--config", CONFIG, "--target", target])
-            log = r.stdout + r.stderr
-            if r.returncode == 0 or not re.search(r"LNK1104|LNK1201|C1041|C1090", log):
+            log += r.stdout + r.stderr  # All attempts: a retry after a link error has nothing left to compile.
+            if r.returncode == 0 or not re.search(r"LNK1104|LNK1201|C1041|C1090", r.stdout + r.stderr):
                 break
             time.sleep(2)
         if r.returncode:
@@ -1611,7 +1727,7 @@ def command(suite, build_dir, ops=500, seed=1, entries=None, mutate=False):
         cmd = [exe(build_dir, target), XBE, CASES]
     elif suite in ("hep", "mem", "vec", "fmt", "qua"):
         cmd = [exe(build_dir, target), XBE]
-    elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr", "mat"):
+    elif suite in ("tok", "lvl", "rmb", "txt", "set", "aud", "ldr", "mat", "mdb"):
         cmd = [exe(build_dir, target), XBE, TOK_CASES]
     else:
         cmd = [exe(build_dir, target), XBE, CASES]
@@ -1768,7 +1884,7 @@ def main(argv):
     ap.add_argument("--ops", type=int, default=3000)
     ap.add_argument("--no-mutants", action="store_true")
     ap.add_argument("--jobs", type=int, default=max(1, min(6, (os.cpu_count() or 2) - 1)), help="mutants built and run at once")
-    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat", "all"], default="all")
+    ap.add_argument("--suite", choices=["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat", "mdb", "all"], default="all")
     a = ap.parse_args(argv)
     if not os.path.exists(XBE):
         print("reference XBE not found (owner input)")
@@ -1784,7 +1900,7 @@ def main(argv):
     if a.suite != "all":
         report["suites"] = dict(earlier)
     good = True
-    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat"] if a.suite == "all" else [a.suite]):
+    for suite in (["gm", "jam", "tok", "lvl", "mnt", "rmb", "txt", "set", "aud", "ldr", "hep", "mem", "vec", "fmt", "qua", "mat", "mdb"] if a.suite == "all" else [a.suite]):
         print("== suite %s" % suite)
         ok, rep = run_suite(suite, a, funcs)
         if a.no_mutants and earlier.get(suite, {}).get("mutants"):

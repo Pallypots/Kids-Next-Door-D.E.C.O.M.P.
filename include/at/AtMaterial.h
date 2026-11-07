@@ -3,6 +3,7 @@
 #pragma once
 
 #include "at/AtIoTokenizer.h"
+#include "gm/GmNameMap.h"
 
 struct AtColor {
     void SetWhite();                           // 0x000412B0 all 255
@@ -10,25 +11,24 @@ struct AtColor {
     unsigned char r, g, b, a;
 };
 
-// What holds the arrays a material's textures live in, known here by these fields. Vftable 0x00275124; not recovered.
-struct AtMaterialStore {
-    char m_unknown00[0x18];
-    unsigned int m_stageCapacity;    // +0x18
-    unsigned int m_stageUsed;        // +0x1C
-    void** m_stages;                 // +0x20
-    unsigned int m_textureCapacity;  // +0x24
-    unsigned int m_textureUsed;      // +0x28
-    void** m_textures;               // +0x2C
-};
+class AtMaterialDatabase;  // include/at/AtMaterialDatabase.h
 
-// What materials load for, known here by one flag and by what finds a shader. Not recovered.
+// What materials load for, known here by the tables they use: for each of textures, materials and shaders, a group with no name space and a database of name spaces.
+// Most of it is not recovered. Its constructor and vftable are not known either; these members' own constructors stand in.
 struct AtMaterialOwner {
-    char m_unknown00[0x30];
-    signed char m_noTextures;        // +0x30 negative: a material loaded for it keeps no shader or textures
-};
+    void* FindShader(const char* name, const char* ns);     // 0x000383A0 ns may be empty or null
+    void AddMaterials(GmNameMap* map, const char* ns);      // 0x00025EB0 ns may be empty or null
 
-// Not recovered: 0x000383A0, which looks a name up in two tables of the owner. platform or a port supplies it. ns may be empty or null.
-void* AtFindShader(AtMaterialOwner* owner, const char* name, const char* ns);
+    char m_unknown00[0x30];
+    signed char m_noTextures;          // +0x30 negative: a material loaded for it keeps no shader or textures
+    char m_unknown31[0x0B];
+    GmNameMapGroup m_textures;         // +0x3C
+    GmNameSpaceDb m_textureSpaces;     // +0x54
+    GmNameMapGroup m_materials;        // +0x78
+    GmNameSpaceDb m_materialSpaces;    // +0x90
+    GmNameMapGroup m_shaders;          // +0xB4
+    GmNameSpaceDb m_shaderSpaces;      // +0xCC
+};
 
 // What a material hands on to the device layer. Filled by Describe.
 struct AtMaterialDesc {
@@ -79,9 +79,9 @@ public:
     virtual void ClearAlphaCompare();          // slot 4, 0x00038390
 
     // 0x00038590. The token after the name, a left curly, through its right curly. ns goes to the shader lookup. Errors go to the tokenizer, and reading goes on.
-    void Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokenizer* tokenizer, const char* ns);
+    void Read(AtMaterialOwner* owner, AtMaterialDatabase* store, AtIoTokenizer* tokenizer, const char* ns);
     // 0x00038AD0. Takes room for its arrays from store, copying them. Power and the sort bias are not copied.
-    void Copy(AtMaterialOwner* owner, AtMaterialStore* store, const AtMaterial& from);
+    void Copy(AtMaterialOwner* owner, AtMaterialDatabase* store, const AtMaterial& from);
     void Describe(AtMaterialDesc* out) const;  // 0x00038D60
 
     int ReadBlendMode(AtIoTokenizer* tokenizer, int token);   // 0x000381A0
@@ -113,7 +113,7 @@ public:
     unsigned char m_stencilCompare;            // +0x3E
     unsigned char m_stencilReference;          // +0x3F
     float m_sortBias;                          // +0x40
-    AtMaterialStore* m_store;                  // +0x44
+    AtMaterialDatabase* m_store;                  // +0x44
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
@@ -125,6 +125,12 @@ static_assert(offsetof(AtMaterial, m_blend) == 0x38, "AtMaterial::m_blend");
 static_assert(offsetof(AtMaterial, m_store) == 0x44, "AtMaterial::m_store");
 static_assert(sizeof(AtMaterial) == 0x48, "AtMaterial");
 static_assert(offsetof(AtMaterialDesc, m_textures) == 0x5C, "AtMaterialDesc::m_textures");
-static_assert(offsetof(AtMaterialStore, m_stages) == 0x20, "AtMaterialStore::m_stages");
+static_assert(offsetof(AtMaterialOwner, m_noTextures) == 0x30, "AtMaterialOwner::m_noTextures");
+static_assert(offsetof(AtMaterialOwner, m_textures) == 0x3C, "AtMaterialOwner::m_textures");
+static_assert(offsetof(AtMaterialOwner, m_textureSpaces) == 0x54, "AtMaterialOwner::m_textureSpaces");
+static_assert(offsetof(AtMaterialOwner, m_materials) == 0x78, "AtMaterialOwner::m_materials");
+static_assert(offsetof(AtMaterialOwner, m_materialSpaces) == 0x90, "AtMaterialOwner::m_materialSpaces");
+static_assert(offsetof(AtMaterialOwner, m_shaders) == 0xB4, "AtMaterialOwner::m_shaders");
+static_assert(offsetof(AtMaterialOwner, m_shaderSpaces) == 0xCC, "AtMaterialOwner::m_shaderSpaces");
 #pragma pop_macro("offsetof")
 #endif

@@ -4010,7 +4010,7 @@ evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in
 [[function]]
 va = 0x00038590
 size = 1191
-symbol = "?Read@AtMaterial@@QAEXPAUAtMaterialOwner@@PAUAtMaterialStore@@PAVAtIoTokenizer@@PBD@Z"
+symbol = "?Read@AtMaterial@@QAEXPAUAtMaterialOwner@@PAVAtMaterialDatabase@@PAVAtIoTokenizer@@PBD@Z"
 source = "src/at/AtMaterial.cpp"
 subsystem = "at/material"
 evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
@@ -4018,7 +4018,7 @@ evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in
 [[function]]
 va = 0x00038AD0
 size = 373
-symbol = "?Copy@AtMaterial@@QAEXPAUAtMaterialOwner@@PAUAtMaterialStore@@ABV1@@Z"
+symbol = "?Copy@AtMaterial@@QAEXPAUAtMaterialOwner@@PAVAtMaterialDatabase@@ABV1@@Z"
 source = "src/at/AtMaterial.cpp"
 subsystem = "at/material"
 evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
@@ -4030,6 +4030,102 @@ symbol = "?Describe@AtMaterial@@QBEXPAUAtMaterialDesc@@@Z"
 source = "src/at/AtMaterial.cpp"
 subsystem = "at/material"
 evidence = "tests/oracle/oracle_mat.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00038F70
+size = 10
+symbol = "?SetHeap@AtMaterialDatabase@@SAXPAX@Z"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00038F80
+size = 44
+symbol = "??0AtMaterialDatabase@@QAE@XZ"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00038FB0
+size = 154
+symbol = "?Load@AtMaterialDatabase@@UAEXPAUAtMaterialOwner@@PBDH@Z"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00039050
+size = 303
+symbol = "?Allocate@AtMaterialDatabase@@UAEXPAUAtMaterialOwner@@IIIPBD@Z"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00039180
+size = 365
+symbol = "?CopyFrom@AtMaterialDatabase@@UAEXPAUAtMaterialOwner@@AAV1@PBD@Z"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x000392F0
+size = 72
+symbol = "?Clear@AtMaterialDatabase@@UAEXXZ"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00039340
+size = 234
+symbol = "?ReadTextures@AtMaterialDatabase@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@PAPAXIPBDH@Z"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00039470
+size = 137
+symbol = "??1AtMaterialDatabase@@UAE@XZ"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00039500
+size = 879
+symbol = "?Read@AtMaterialDatabase@@UAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x00039890
+size = 30
+symbol = "??_GAtMaterialDatabase@@UAEPAXI@Z"
+source = "src/at/AtMaterialDatabase.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterialDatabase.h"
+
+[[function]]
+va = 0x000383A0
+size = 55
+symbol = "?FindShader@AtMaterialOwner@@QAEPAXPBD0@Z"
+source = "src/at/AtMaterialOwner.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterial.h"
+
+[[function]]
+va = 0x00025EB0
+size = 52
+symbol = "?AddMaterials@AtMaterialOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtMaterialOwner.cpp"
+subsystem = "at/matdb"
+evidence = "tests/oracle/oracle_mdb.cpp; address noted beside the declaration in include/at/AtMaterial.h"
 
 [[vtable]]
 va = 0x00278418
@@ -4251,6 +4347,7 @@ source = "src/gm/GmManifestLoader.cpp"
 "?s_heap@GmNameSpaceDb@@2PAXA" = 0x002C6274  # written at 0x00018004
 "?ToFloat@AtTextUnicode@@UAEMXZ" = 0x0002DDC0  # vftable slot: swscanf cannot run in the harness, so this is NOT recorded as tested
 "?s_heap@GmNameMap@@2PAXA" = 0x002C632C  # read at 0x00024CFA
+"?s_heap@AtMaterialDatabase@@2PAXA" = 0x002C63F0  # written at 0x00038F74
 "?s_heap@GmRumbleEffectArray@@2PAXA" = 0x002CF164  # read at 0x000745AB
 "?s_heap@GmRumbleFrameArray@@2PAXA" = 0x002CF168  # read at 0x00074376
 "?s_instance@AtIoMountManager@@2PAV1@A" = 0x002E26E0  # written at 0x00076873
@@ -4326,6 +4423,12 @@ va = 0x00284840
 slots = 4
 symbol = "??_7AtRegionMemorySystem@@6B@"
 source = "src/at/AtMemorySystem.cpp"
+
+[[vtable]]
+va = 0x00275124
+slots = 9
+symbol = "??_7AtMaterialDatabase@@6B@"
+source = "src/at/AtMaterialDatabase.cpp"
 
 [[vtable]]
 va = 0x00274E20

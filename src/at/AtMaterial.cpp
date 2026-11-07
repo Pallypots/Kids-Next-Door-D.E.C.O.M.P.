@@ -1,6 +1,7 @@
 // AtMaterial and AtColor. Original address clusters 0x00038370-0x00038F6F, 0x00041270-0x000412BD.
 // Verification status per function: config/functions.toml, docs/PROGRESS.md.
 #include "at/AtMaterial.h"
+#include "at/AtMaterialDatabase.h"
 
 extern "C" void* memcpy(void* to, const void* from, decltype(sizeof(0)) count);
 
@@ -253,7 +254,7 @@ int AtMaterial::ReadCompare(AtIoTokenizer* tokenizer) {
     }
 }
 
-void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokenizer* tokenizer, const char* ns) {
+void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialDatabase* store, AtIoTokenizer* tokenizer, const char* ns) {
     if (m_flags & kLoaded) {
         Reset();
     }
@@ -352,7 +353,7 @@ void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokeni
                 tokenizer->ExpectName(nameSpace);
                 look = nameSpace;
             }
-            m_shader = AtFindShader(owner, name, look);
+            m_shader = owner->FindShader(name, look);
             if (m_shader == 0) {
                 tokenizer->Error(kNoSuchShader);
             }
@@ -448,7 +449,7 @@ void AtMaterial::Read(AtMaterialOwner* owner, AtMaterialStore* store, AtIoTokeni
     m_flags |= kLoaded;
 }
 
-void AtMaterial::Copy(AtMaterialOwner* owner, AtMaterialStore* store, const AtMaterial& from) {
+void AtMaterial::Copy(AtMaterialOwner* owner, AtMaterialDatabase* store, const AtMaterial& from) {
     if (m_flags & kLoaded) {
         Reset();
     }

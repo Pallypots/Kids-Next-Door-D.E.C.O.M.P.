@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-06, dev cycle 19 (material). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-06, dev cycle 20 (material database). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-06, dev cycle 19 (material). Per-function results live in 
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 503 functions and 36 vftables are recorded in `config/functions.toml`.
+All source is in `src/`, types in `include/`. 515 functions and 37 vftables are recorded in `config/functions.toml`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -31,7 +31,8 @@ All source is in `src/`, types in `include/`. 503 functions and 36 vftables are 
 * `gm/audiodata` (3 functions), **partial**: the volume preset (`.GOV`) and memory block (`.GOB`) readers of the audio manager, which is not itself recovered. `MEMBLOCK.GOB` on this disc has only `PSX2` and `GCN` sections, so the Xbox game takes no blocks from it.
 * `at/heap` (22 functions): the allocator, a manager carving up to 16 heaps out of one region, first-fit heaps with coalescing free lists, wider-aligned allocations, groups of heaps standing in for each other, and the report. The arena of the original and the recovered source stay identical byte by byte through long random runs.
 * `at/memory` (19 functions, 2 vftables): the stack of heaps, the original's global new and delete, the error routine, and the object that takes a region from the platform, starts the manager and makes the default heap. A port can now start the allocator, as the host test does. **Recovered code does not use it yet**: `new` still reaches the host's allocator, by decision, since the host's library shares the process (`include/at/AtMemory.h`). Which concrete object the game starts, and with what sizes, is not recovered: its class at 0x00141840 holds this as a member. `AtFatal` stays a stand-in, since the original reaches into graphics and sound.
-* `at/material` (14 functions, 1 vftable): the material as read from `.AGM` files, and its keyword table. Reads every material on the disc the same as the original. Not recovered: the database above it (vftable 0x00275124), the concrete material at 0x0028A204 that passes this to the graphics device, and what finds a shader by name (0x000383A0), which stops with a diagnostic.
+* `at/material` (14 functions, 1 vftable): the material as read from `.AGM` files, and its keyword table. Reads every material on the disc the same as the original. Not recovered: the concrete material at 0x0028A204 that passes this to the graphics device.
+* `at/matdb` (12 functions, 1 vftable): the database that loads an `.AGM` file, its texture lists, and the owner's lookups for shaders and materials. Loads every `.AGM` on the disc the same as the original. Not recovered: the concrete database at vftable 0x00289300 in the graphics layer, and the rest of the owner.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.

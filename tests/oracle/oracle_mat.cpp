@@ -9,6 +9,7 @@
 #include <algorithm>
 #include <cstdint>
 #include <cstdio>
+#include <cstddef>
 #include <cstdlib>
 #include <cstring>
 #include <new>
@@ -17,6 +18,7 @@
 
 #include "at/AtIoTokenizer.h"
 #include "at/AtMaterial.h"
+#include "at/AtMaterialDatabase.h"
 #include "oracle_image.h"
 
 static bool g_mutate;
@@ -130,7 +132,7 @@ static void* answer(const char* name, const char* ns, int side) {
     return (void*)(uintptr_t)(h | 0x1000);
 }
 static void* __fastcall o_find(void*, void*, const char* name, const char* ns) { return answer(name, ns, 0); }
-void* AtFindShader(AtMaterialOwner*, const char* name, const char* ns) { return answer(name, ns, 1); }
+void* AtMaterialOwner::FindShader(const char* name, const char* ns) { return answer(name, ns, 1); }
 
 typedef void(__fastcall* Fn0)(void*, void*);
 typedef void(__fastcall* FnRead)(void*, void*, void*, void*, void*, const char*);
@@ -165,6 +167,20 @@ struct Both {
     }
 };
 
+// The fields of a database that a material uses. The oracle copies these by value, so it holds them as a plain layout rather than a class with a destructor.
+struct AtMaterialStore {
+    char m_unknown00[0x18];
+    unsigned int m_stageCapacity;
+    unsigned int m_stageUsed;
+    void** m_stages;
+    unsigned int m_textureCapacity;
+    unsigned int m_textureUsed;
+    void** m_textures;
+};
+static_assert(offsetof(AtMaterialDatabase, m_stages) == offsetof(AtMaterialStore, m_stages), "layout");
+static_assert(offsetof(AtMaterialDatabase, m_textures) == offsetof(AtMaterialStore, m_textures), "layout");
+static AtMaterialDatabase* as_db(AtMaterialStore* s) { return (AtMaterialDatabase*)s; }
+
 static AtMaterialOwner g_owner[2];
 static void* g_stagesArray[64];
 static void* g_texturesArray[64];
@@ -181,7 +197,7 @@ static void run_read(const std::vector<ScriptToken>& tokens, unsigned char fill,
     a.m_log = &g_log[0];
     b.m_log = &g_log[1];
     at<FnRead>(0x00038590)(m.o, nullptr, &g_owner[0], &g_store, &a, ns);
-    m.R()->Read(&g_owner[0], &g_store, &b, ns);
+    m.R()->Read(&g_owner[0], as_db(&g_store), &b, ns);
     m.same("read");
     eqs("log", g_log[0], g_log[1]);
     eq("taken", (long long)a.m_next, (long long)b.m_next);
@@ -189,7 +205,7 @@ static void run_read(const std::vector<ScriptToken>& tokens, unsigned char fill,
     a.m_next = b.m_next = 0;
     a.m_pushedBack = b.m_pushedBack = 0;
     at<FnRead>(0x00038590)(m.o, nullptr, &g_owner[0], &g_store, &a, ns);
-    m.R()->Read(&g_owner[0], &g_store, &b, ns);
+    m.R()->Read(&g_owner[0], as_db(&g_store), &b, ns);
     m.same("read again");
     eqs("log", g_log[0], g_log[1]);
     // Describing it.
@@ -212,7 +228,7 @@ static void run_read(const std::vector<ScriptToken>& tokens, unsigned char fill,
     Both c;
     c.make(0x77);
     at<FnCopy>(0x00038AD0)(c.o, nullptr, &g_owner[0], &sa, m.o);
-    c.R()->Copy(&g_owner[0], &sb, *m.R());
+    c.R()->Copy(&g_owner[0], as_db(&sb), *m.R());
     eq("copied flags", c.O()->m_flags, c.R()->m_flags);
     eq("stages used", sa.m_stageUsed, sb.m_stageUsed);
     eq("textures used", sa.m_textureUsed, sb.m_textureUsed);
@@ -386,7 +402,7 @@ static void run_over() {
         a.m_log = &g_log[0];
         b.m_log = &g_log[1];
         at<FnRead>(0x00038590)(m.o, nullptr, &g_owner[0], &g_store, &a, "Space");
-        m.R()->Read(&g_owner[0], &g_store, &b, "Space");
+        m.R()->Read(&g_owner[0], as_db(&g_store), &b, "Space");
     };
     g_log[0].clear();
     g_log[1].clear();
@@ -418,8 +434,8 @@ static void run_over() {
         from.O()->m_unknown28 = from.R()->m_unknown28 = 0x1234;
         AtMaterialStore sa = g_store, sb = g_store;
         at<FnCopy>(0x00038AD0)(to.o, nullptr, &g_owner[0], &sa, from.o);
-        to.R()->Copy(&g_owner[0], &sb, *from.R());
-        eq("store", to.O()->m_store == &sa, to.R()->m_store == &sb);
+        to.R()->Copy(&g_owner[0], as_db(&sb), *from.R());
+        eq("store", to.O()->m_store == as_db(&sa), to.R()->m_store == as_db(&sb));
         to.O()->m_store = to.R()->m_store = nullptr;  // One store for each side.
         to.same("over a loaded one");
         eq("cleared", to.R()->m_power == 0.0f && to.R()->m_sortBias == 0.0f, 1);
@@ -445,7 +461,7 @@ static void run_over() {
             sa.m_stageUsed = sb.m_stageUsed = 1;
             sa.m_textureUsed = sb.m_textureUsed = 2;
             at<FnCopy>(0x00038AD0)(to.o, nullptr, &g_owner[0], &sa, from.o);
-            to.R()->Copy(&g_owner[0], &sb, *from.R());
+            to.R()->Copy(&g_owner[0], as_db(&sb), *from.R());
             eq("stages used", sa.m_stageUsed, sb.m_stageUsed);
             eq("textures used", sa.m_textureUsed, sb.m_textureUsed);
             eq("stage array set", to.O()->m_stages == nullptr, to.R()->m_stages == nullptr);
@@ -532,7 +548,6 @@ int main(int argc, char** argv) {
     g_store.m_textureCapacity = 64;
     g_store.m_stages = g_stagesArray;
     g_store.m_textures = g_texturesArray;
-    std::memset(&g_owner, 0, sizeof g_owner);
 
     run_small();
     run_written();

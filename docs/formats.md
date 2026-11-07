@@ -170,7 +170,7 @@ Every loader that opens a text file, from the callers of `AtIoTokenFile::Open`, 
 | Ext | Files | Loader | Reader state or content |
 | --- | --- | --- | --- |
 | ASN | 2001 | 0x0003CD60 | |
-| AGM | 1944 | 0x00038FB0 | Materials: `AtMaterial` recovered; the database not |
+| AGM | 1944 | 0x00038FB0 | Materials: `AtMaterial` and `AtMaterialDatabase` recovered |
 | AGT | 1722 | 0x0001C7B0 | Lists of textures (`Surface2D`, `Texture2D`) |
 | AKC | 1489 | 0x00026DB0 | |
 | ASD | 1380 | 0x0002F7F0 | |
@@ -194,3 +194,5 @@ Files with no text loader above, by count: DDS 3913, XKA 1489, SDL 1269, SSM 112
 ## Materials (.AGM)
 
 `Material "name" { ... }`, inside a `Material[n] { }` list, often after shader definitions and under `NameSpace "x"`. The keywords are in `AtMaterial::s_keywords`. Colours are four integers, or three for `ConstantColor`, with `ConstantAlpha` the fourth. `SimpleTextureShader n` takes one texture from the store at index n. `Shader "name" firstStage stageCount firstTexture textureCount` names a shader, and `ShaderWithNameSpace` a space too. Blending by `Add` or by `BlendInverseAlpha` also turns fog off. Unless `BlendSeparateAlpha` is given, alpha blends as colour does.
+
+A file is an optional `NameSpace "x"` as its very first token, then in any order `ProgShaderTexture[n] { }`, `StagedShaderTexture[n] { }` and `Material[n] { }`. A list holds names or the word `Default`, meaning none. The `...WithNameSpace` forms take each name followed by a name space; an empty one means no space. `NameSpace` anywhere but first is an error.
