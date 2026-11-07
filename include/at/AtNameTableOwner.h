@@ -15,6 +15,7 @@ struct AtNameTableOwner {
     void AddToFirst(GmNameMap* map, const char* ns);   // 0x00031A30 a null ns means the plain group; an empty one is a name space with an empty name. Holds sound banks. src/at/AtAudioBank.cpp
     void AddToSecond(GmNameMap* map, const char* ns);  // 0x00031A60 the same. Holds sound segments. src/at/AtAudioBank.cpp
     void AddLensFlares(GmNameMap* map, const char* ns); // 0x00040070 the same as AddToFirst, by test of null only. src/at/AtLensFlare.cpp
+    void AddEmitters(GmNameMap* map, const char* ns);   // 0x00040030 the same, by test of null only. src/at/AtEmitter.cpp
     void AddToThird(GmNameMap* scene, const char* ns);   // 0x00031A90 the same, into the third table, which holds both scenes and, from 0x00025360, lists of sound emitters; a scene owner first named this AddScene. src/at/AtSceneNode.cpp
     // The original has this inline in 0x00031C50. Here an empty ns does mean the plain group, unlike the add methods.
     void* FindInFirst(const char* name, const char* ns) { return ns != 0 && ns[0] != 0 ? m_firstSpaces.Find(ns, name) : m_first.Find(name); }
@@ -35,7 +36,8 @@ struct AtNameTableOwner {
     GmNameSpaceDb m_nodeSpaces;        // +0xA8
     GmNameMapGroup m_modifiers;        // +0xCC
     GmNameSpaceDb m_modifierSpaces;    // +0xE4
-    char m_unknown108[0x3C];
+    GmNameMapGroup m_emitters;         // +0x108 particle emitters: src/at/AtEmitter.cpp
+    GmNameSpaceDb m_emitterSpaces;     // +0x120
     GmNameMapGroup m_lensFlares;       // +0x144
     GmNameSpaceDb m_lensFlareSpaces;   // +0x15C
     GmNameMapGroup m_geometry;         // +0x180
@@ -56,6 +58,8 @@ static_assert(offsetof(AtNameTableOwner, m_nodes) == 0x90, "AtNameTableOwner::m_
 static_assert(offsetof(AtNameTableOwner, m_nodeSpaces) == 0xA8, "AtNameTableOwner::m_nodeSpaces");
 static_assert(offsetof(AtNameTableOwner, m_modifiers) == 0xCC, "AtNameTableOwner::m_modifiers");
 static_assert(offsetof(AtNameTableOwner, m_modifierSpaces) == 0xE4, "AtNameTableOwner::m_modifierSpaces");
+static_assert(offsetof(AtNameTableOwner, m_emitters) == 0x108, "AtNameTableOwner::m_emitters");
+static_assert(offsetof(AtNameTableOwner, m_emitterSpaces) == 0x120, "AtNameTableOwner::m_emitterSpaces");
 static_assert(offsetof(AtNameTableOwner, m_lensFlares) == 0x144, "AtNameTableOwner::m_lensFlares");
 static_assert(offsetof(AtNameTableOwner, m_lensFlareSpaces) == 0x15C, "AtNameTableOwner::m_lensFlareSpaces");
 static_assert(offsetof(AtNameTableOwner, m_geometry) == 0x180, "AtNameTableOwner::m_geometry");

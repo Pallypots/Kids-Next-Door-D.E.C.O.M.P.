@@ -37,6 +37,8 @@ public:
     void SetRejected(const AtVector3& from, const AtVector3& direction);   // 0x00043370 with a zero direction: 0, then from's y and z
     void SetCross(const AtVector3& a, const AtVector3& b);                 // 0x00033C00 writes as it goes, so neither may be this
     void SetDifference(const AtVector3& a, const AtVector3& b);            // 0x00033C40
+    // 0x00050790. a cross b, unit length. Writes as it goes, so neither may be this. Exactly zero becomes (1, 0, 0), with no shortest length, unlike Normalize. In src/at/AtEmitter.cpp.
+    void SetCrossNormalized(const AtVector3& a, const AtVector3& b);
 
     float x;   // +0x00
     float y;   // +0x04
