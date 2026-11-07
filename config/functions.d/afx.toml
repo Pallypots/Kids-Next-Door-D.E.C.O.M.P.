@@ -1,0 +1,198 @@
+# The Flash user interface's text formats and level files, .AFX and .AFL. Names inferred; see include/at/AtFlashTextFormat.h and include/at/AtFlashLevel.h. Recorded sizes are the inventory's, or measured where it has none.
+[[function]]
+va = 0x00016FB0
+size = 124
+symbol = "?Allocate@AtFlashResourceTable@@UAEXI@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00017040
+size = 14
+symbol = "?Release@AtFlashResourceTable@@UAEXI@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x000172A0
+size = 61
+symbol = "??0AtFlashResourceTable@@QAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x000172E0
+size = 128
+symbol = "?Clear@AtFlashResourceTable@@QAEXXZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00017360
+size = 11
+symbol = "??1AtFlashResourceTable@@UAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x000173A0
+size = 46
+symbol = "??_GAtFlashResourceTable@@UAEPAXI@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00020280
+size = 26
+symbol = "??0AtFlashTextFormatTable@@QAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x000202A0
+size = 105
+symbol = "?ReleaseFormats@AtFlashTextFormatTable@@QAEXXZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00020310
+size = 288
+symbol = "?Read@AtFlashTextFormatTable@@QAEXPBD@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00020430
+size = 226
+symbol = "?Allocate@AtFlashTextFormatTable@@UAEXI@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00020520
+size = 79
+symbol = "??1AtFlashTextFormatTable@@UAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00020620
+size = 30
+symbol = "??_GAtFlashTextFormatTable@@UAEPAXI@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00023400
+size = 19
+symbol = "?ResetLinks@AtFlashResource@@QAEXXZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00023420
+size = 27
+symbol = "??0AtFlashResource@@QAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00023440
+size = 25
+symbol = "??1AtFlashResource@@QAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00030270
+size = 461
+symbol = "?ReadFields@AtFlashTextFormat@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00030440
+size = 84
+symbol = "?Reset@AtFlashTextFormat@@QAEXXZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x000304A0
+size = 73
+symbol = "??0AtFlashTextFormat@@QAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x000304F0
+size = 24
+symbol = "?Read@AtFlashTextFormat@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x00030510
+size = 93
+symbol = "??1AtFlashTextFormat@@QAE@XZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashTextFormat.h"
+
+[[function]]
+va = 0x000114A0
+size = 606
+symbol = "?Load@AtFlashLevel@@QAEXPBDH@Z"
+source = "src/at/AtFlashLevel.cpp"
+subsystem = "at/afx"
+evidence = "tests/oracle/oracle_afx.cpp; address noted beside the declaration in include/at/AtFlashLevel.h"
+
+[[vtable]]
+va = 0x00271F78
+slots = 4
+symbol = "??_7AtFlashResourceTable@@6B@"
+source = "src/at/AtFlashTextFormat.cpp"
+
+[[vtable]]
+va = 0x0027294C
+slots = 4
+symbol = "??_7AtFlashTextFormatTable@@6B@"
+source = "src/at/AtFlashTextFormat.cpp"
+
+[[vtable]]
+va = 0x00272D28
+slots = 1
+symbol = "??_7AtFlashResource@@6B@"
+source = "src/at/AtFlashTextFormat.cpp"
+
+[[vtable]]
+va = 0x002749D0
+slots = 1
+symbol = "??_7AtFlashTextFormat@@6B@"
+source = "src/at/AtFlashTextFormat.cpp"
+
+[symbols]
+"?Read@AtFlashResource@@UAEXPAVAtIoTokenizer@@@Z" = 0x000CBF30  # empty, folded
+"?Slot3@AtFlashResourceTable@@UAEXH@Z" = 0x00017290  # not recovered; stops with a diagnostic
+"?s_defaultHeap@AtFlashResourceTable@@2PAXA" = 0x002C6270
+"?SetHeap@AtFlashHeapUser@@QAEXPAX@Z" = 0x00058AF0  # a seam: defined by the class that holds it, in a range another worker has

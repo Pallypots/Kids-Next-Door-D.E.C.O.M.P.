@@ -1,0 +1,352 @@
+# The input mappers, .ANM. Names inferred; see include/at/AtInputMapper.h. Recorded sizes are the inventory's.
+[[function]]
+va = 0x00072B70
+size = 10
+symbol = "?SetHeap@AtInputMapper@@SAXPAX@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00072B90
+size = 44
+symbol = "??0AtInputMapper@@QAE@XZ"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00072BC0
+size = 78
+symbol = "?Clear@AtInputMapper@@QAEXXZ"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00072C10
+size = 569
+symbol = "?ReadButtonMaps@AtInputMapper@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00072E80
+size = 377
+symbol = "?ReadAxisMaps@AtInputMapper@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000730B0
+size = 80
+symbol = "??1AtInputMapper@@UAE@XZ"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073100
+size = 285
+symbol = "?Allocate@AtInputMapper@@QAEXABUSizes@1@@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073220
+size = 119
+symbol = "?CopyFrom@AtInputMapper@@QAEXABV1@@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000732A0
+size = 262
+symbol = "?Read@AtInputMapper@@QAEXPAUAtInputOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073780
+size = 10
+symbol = "?SetHeap@AtInputMapperDatabase@@SAXPAX@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073790
+size = 84
+symbol = "??_GAtInputMapper@@UAEPAXI@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000737F0
+size = 29
+symbol = "??0AtInputMapperDatabase@@QAE@XZ"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073810
+size = 486
+symbol = "?Read@AtInputMapperDatabase@@QAEXPAUAtInputOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073A00
+size = 68
+symbol = "?Clear@AtInputMapperDatabase@@UAEXXZ"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073A50
+size = 124
+symbol = "??1AtInputMapperDatabase@@UAE@XZ"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073AD0
+size = 154
+symbol = "?Load@AtInputMapperDatabase@@QAEXPAUAtInputOwner@@PBDH@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073B70
+size = 30
+symbol = "??_GAtInputMapperDatabase@@UAEPAXI@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00073BC0
+size = 44
+symbol = "?AddMappers@AtInputOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtInputMapper.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00077870
+size = 167
+symbol = "?UnbindButton@AtInputController@@QAEHPAUAtInputLink@@@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000779A0
+size = 167
+symbol = "?UnbindAxis@AtInputController@@QAEHPAUAtInputLink@@@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078940
+size = 10
+symbol = "?SetHeap@AtInputLinkList@@SAXPAX@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078950
+size = 42
+symbol = "?Clear@AtInputLinkList@@QAEXXZ"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078980
+size = 102
+symbol = "?Remove@AtInputLinkList@@QAEHPAUAtInputLink@@@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000789F0
+size = 20
+symbol = "??0AtInputLinkList@@QAE@XZ"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078A10
+size = 48
+symbol = "??1AtInputLinkList@@UAE@XZ"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078A40
+size = 139
+symbol = "?Allocate@AtInputLinkList@@QAEXI@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078B00
+size = 68
+symbol = "??_GAtInputLinkList@@UAEPAXI@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078B50
+size = 10
+symbol = "?SetHeap@AtInputRouter@@SAXPAX@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078B60
+size = 16
+symbol = "?Slot0@AtInputRouter@@UAEXPAX@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078B70
+size = 17
+symbol = "?Slot1@AtInputRouter@@UAEXPAX@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078B90
+size = 17
+symbol = "?Slot2@AtInputRouter@@UAEXPAX@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078BB0
+size = 17
+symbol = "?Slot3@AtInputRouter@@UAEXPAX0@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078BD0
+size = 98
+symbol = "??0AtInputRouter@@QAE@XZ"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078C40
+size = 177
+symbol = "?AllocateButtonLinks@AtInputRouter@@QAEXI@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078D00
+size = 177
+symbol = "?AllocateAxisLinks@AtInputRouter@@QAEXI@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00078DC0
+size = 138
+symbol = "?UnbindAll@AtInputRouter@@QAEXXZ"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000791B0
+size = 227
+symbol = "?Unbind@AtInputRouter@@UAEXPAVAtInputController@@H@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000792A0
+size = 77
+symbol = "?Release@AtInputRouter@@QAEXXZ"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x000792F0
+size = 93
+symbol = "??1AtInputRouter@@QAE@XZ"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[function]]
+va = 0x00079350
+size = 51
+symbol = "?Allocate@AtInputRouter@@QAEXPAXII@Z"
+source = "src/at/AtInputRouter.cpp"
+subsystem = "at/ana"
+evidence = "tests/oracle/oracle_ana.cpp; address noted beside the declaration in include/at/AtInputMapper.h"
+
+[[vtable]]
+va = 0x00277BC0
+slots = 1
+symbol = "??_7AtInputMapper@@6B@"
+source = "src/at/AtInputMapper.cpp"
+
+[[vtable]]
+va = 0x00277D4C
+slots = 2
+symbol = "??_7AtInputMapperDatabase@@6B@"
+source = "src/at/AtInputMapper.cpp"
+
+[[vtable]]
+va = 0x002785F8
+slots = 1
+symbol = "??_7AtInputLinkList@@6B@"
+source = "src/at/AtInputRouter.cpp"
+
+[[vtable]]
+va = 0x002785FC
+slots = 5
+symbol = "??_7AtInputRouter@@6B@"
+source = "src/at/AtInputRouter.cpp"
+
+[symbols]
+"?s_heap@AtInputMapper@@2PAXA" = 0x002CF14C
+"?s_heap@AtInputMapperDatabase@@2PAXA" = 0x002CF154
+"?s_heap@AtInputLinkList@@2PAXA" = 0x00301B00
+"?s_heap@AtInputRouter@@2PAXA" = 0x00301B04
+"?s_keywords@AtInputMapperDatabase@@2QBUAtIoKeyword@@B" = 0x002B2878
+"?s_inputCodes@AtInputMapperDatabase@@2QBUAtIoKeyword@@B" = 0x002B2C10
