@@ -83,3 +83,23 @@ The hash divides by the table's size, which a cleared map has as zero. The origi
 
 * Channel arrays are `sizeof`, and offsets are checked on x86 only; the host test runs on x64.
 * The stand-in views `AtSceneAnimation` and `AtSceneMatAnimation` have floats and integers only, so they hold on x64 as declared; real loaders must fill them.
+
+## Modifiers and space graphs
+
+* `AtSceneLinkItem::m_list` is now `AtLeafSpace*`, in place of a struct with padding that only worked at 32 bits. `tests/oracle/oracle_asn.cpp` keeps that struct for itself.
+* `AtSceneDevice` and `AtNameTableOwner` have `char` padding that preserves offsets on the Xbox only; nothing depends on the offsets on x64.
+* An array's count ahead of it is a `size_t`. Modifier and graph heaps are `AtHeap`s, whose `m_allocShift` these set directly: a heap of another kind would need an interface.
+* `AtSpaceCellTable` is known only to have a map at +0x30.
+
+## Particle systems
+
+* The array's count word is `AtSize` on the host, as in `AtSceneArray.h`; offsets are checked on x86 only, and the host test runs on x64.
+* The sum for a colour is written with `double` for what the original keeps in an x87 register, one rounding to float after each term.
+* `AtRandom.cpp` assumes `unsigned int` is 32 bits, for its wrap.
+
+## Collision shapes
+
+* Arrays are `sizeof`-based, so 0x38, 0x30 and 0x20 bytes on the Xbox and larger on x64; nothing depends on it.
+* A joint is reached through `AtSceneJointedModelActor::m_joints`, by a cast from a node whose class the code has checked or trusts.
+* `AtSegmentHitList` holds the 8-byte keys and 0x2C-byte hits opaque here, at those sizes on any pointer size. Whoever recovers what is in a hit should check that.
+* `DrawBox`'s and `DrawSphere`'s `instances` is the address of the caller's own argument: one pointer on x64 too.

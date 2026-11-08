@@ -177,8 +177,8 @@ Every loader that opens a text file, from the callers of `AtIoTokenFile::Open`, 
 | ASL | 1127 | 0x0003FAC0 | |
 | AGD | 1215 | 0x0001ADC0 | Lists of databases (`MaterialDatabase`, `FontDatabase`, `ImageDatabase`, `MatAssignmentDatabase`) |
 | AGS | 786 | 0x0002B2E0 | Shaders: below. Recovered |
-| ASE | 737 | 0x0003F760 | |
-| ASB | 632 | 0x00040F90 | |
+| ASE | 737 | 0x0003F760 | Emitters: below. Recovered |
+| ASB | 632 | 0x00040F90 | Collision shapes: below. Recovered |
 | ADR | 311 | 0x00068880 | |
 | AOB, AOS | 271 each | 0x00025A90, 0x00025640 | Sound banks and segments: below. The lists are recovered; the concrete banks are not |
 | AOD | 261 | 0x00018AC0 | Sound databases: below. Recovered up to the concrete banks |
@@ -336,4 +336,113 @@ TextFormat[ n ]
 
 .AFL
 Level { HeapSize i  MaxVariableValueLength i  MaxVariables i  FontSourceLevel i|Self|All }
+```
+
+## Modifiers and space graphs (.ASM, .ASG)
+
+Both are established from the keyword tables at 0x002B1D40 (58 words) and 0x002B1800 (19 words) and from what the readers do with them, not from the extensions.
+
+**.ASM: modifiers.** Named objects, one name map to a file; the map goes into the owner's `m_modifiers` (+0xCC) or, under a name space, `m_modifierSpaces` (+0xE4). That is what fills them. Scene `ModifierNode`s and graphs look names up there.
+
+```
+NameSpace "x"                  optional
+Modifier[n]                    the word is not checked; n is the size of the map, and at least 1
+LightModifier[n]               then any lists, any order
+{
+    LightModifier "name" { Light "name" "ns"  Directional | Point | SpotLight  Position x y z  Direction x y z  LightAnimation "name" "ns"  Priority n }
+}
+AmbientModifier[n] { AmbientModifier "name" { Color r g b a  Priority n } }
+PerspectiveModifier[n] { PerspectiveModifier "name" { FieldOfViewY v  Priority n } }
+ContextConstantModifier[n] { ContextConstantModifier "name" { VertexProcessConstant[m] { a b c d i ... }  PixelProcessConstant[m] { a b c d i ... }  Priority n } }
+GroupModifier[n] { GroupModifier "name" { Modifier[m] { "name" "ns" ... }  Priority n } }
+BlockModifier[n] { BlockModifier "name" { Block <class word>  Priority n } }
+```
+
+The table holds many other words (TextureProjectorModifier, ProjectedShadowModifier, CubeMapModifier, MaterialOverrideModifier ...). No reader here takes them: they report a keyword error. The 17 real files use only LightModifier (Point or Directional), AmbientModifier, GroupModifier.
+
+**.ASG: a space graph**, a binary partition of space. See the head of `include/at/AtSpaceGraph.h` for the grammar. Real files, all 16: BinarySpace and LeafSpace only, Partition, PosChild, NegChild, BoundingBox, Draw, Cell, Modifier. No X/Y/ZBinarySpace, no LineSegIntersect, no NodeLink beyond a count.
+
+`AtSceneModifierSet` of the scene work **is this class**: renamed `AtSpaceGraph`. Its "links" are the file's NodeLink, their "items" NodeIncidence. `AtSceneDirtyOwner` was a leaf.
+
+What a graph does on load: reads counts; makes pools and arrays; reads each space. A leaf attaches its Draw and LineSegIntersect nodes at once; other spaces keep them in a pending list, and after everything is read pass them to all leaves under them. Then it walks the tree with a stack of modifier states (the owner's +0x210, sized by its +0x264 and +0x268, made and freed for the walk). A space with a modifier pushes a copy and applies it; each leaf keeps a copy of the top. So each leaf ends with, per kind of modifier, what is in force there: lights accumulate in priority order, up to 7; others replace, unless what holds the slot has a higher priority; a block empties a kind's slot; a group applies its members.
+
+## Lists of databases (.AGD)
+
+The executable never says. The three letters are an extension at 0x002723CC, and the words are at 0x002B0190. From the code and all 423 distinct files: an .AGD is a list of other files to load, by kind, with nothing else in it.
+
+```
+TextureDatabase[1]
+{
+    "Name"
+}
+MaterialDatabase[2]
+{
+    "A\B"
+    "C"
+}
+```
+
+Eighteen words: `TextureDatabase`, `ShaderDatabase`, `MaterialDatabase`, `MeshDatabase`, `LightDatabase`, `CoordSysDatabase`, `CoordSysMirrorDatabase`, `WeightsDatabase`, `AnimationDatabase`, `MatAssignmentDatabase`, `MatAnimationDatabase`, `MorphAnimationDatabase`, `LightAnimationDatabase`, `FontDatabase`, `ImageDatabase`, `VertexProcessDatabase`, `PixelProcessDatabase`, `DatabaseLoader`.
+
+Uses on the disc's distinct files (lists, then names):
+
+| Word | Lists | Names |
+| --- | --- | --- |
+| MaterialDatabase | 420 | 688 |
+| TextureDatabase | 414 | 652 |
+| MeshDatabase | 352 | 461 |
+| CoordSysDatabase | 289 | 699 |
+| AnimationDatabase | 289 | 699 |
+| ShaderDatabase | 228 | 298 |
+| MatAssignmentDatabase | 62 | 67 |
+| LightDatabase | 16 | 16 |
+| MatAnimationDatabase | 7 | 7 |
+| FontDatabase | 1 | 1 |
+| ImageDatabase | 1 | 1 |
+
+The other seven words are on no file. Three comments occur.
+
+Order in the file does not matter to loading: 0x0001A4B0 goes vertex processes, pixel processes, textures, shaders, materials, meshes, lights, coordinate systems, mirrors, weights, animations, material lists, fonts, images, material animations, morph animations, light animations; frees the names; then nested loaders. Names are relative to the .AGD's own directory, which is pushed while they load.
+
+## Emitters (.ASE)
+
+Text, in the engine's own tokens: `Emitter[n] { Emitter "name" { word values ... } ... }`, with an optional `NameSpace "x"` first. It has nothing to do with 3D Studio's ASE, despite the extension. 221 files on the disc hold 364 emitters between them. The 47 words are at 0x002B1F20; `ParticleRotationSpeed` sits out of the order of its id there, and the table keeps it so.
+
+Words the real files use: DeltaInitialSpeed, DiffuseColor, EmissionCone, EmissionConeInnerAngle, EmissionConeScale, EmissionEventChance, EmissionLine, EmissionPoint, EmissionRectangle, EmitterLifetime, LinearColorChange, LinearColorChangeKeys, LinearMotionBlurKeys, LinearRectChange, LinearSquareSizeKeys, LineSegIntersectTesting, LocalAcceleration, LocalBoundingSphere, MatAssignment, MaxEmissionEventRate, MaxParticles, MaxParticlesPerEvent, MotionBlur, ParticleChance, ParticleInitialSpeed, ParticleLifetime, ParticleRotationSpeed, QuadraticColorChangeKeys, QuadraticMotionBlurKeys, QuadraticRectSizeKeys, QuadraticSquareSizeKeys, RectWidthHeight, SquareSize. The rest are reached only by written text.
+
+## Collision shapes (.ASB)
+
+Text, a sibling of `.ASN` in form but with a table and a reader of its own: named collision shapes. This comes from the reader at 0x00040AA0, the keyword table at 0x002B21A0 (14 words), the original's message "Node type must be jointed for bounding geometry", and the 239 distinct real files.
+
+```
+NameSpace "x"                  optional
+BoxBoundingGeometry[n]         any order, each optional, counts only
+SphereBoundingGeometry[n]
+GroupBoundingGeometry[n]
+BoundingGeometry[count]        the list proper. End of file before it is accepted: empty
+{
+    BoxBoundingGeometry "name"    or Sphere..., Group...
+    {
+        Parent "name"             earlier in the file
+        RotTransCoordSys 1        a joint of the node's skeleton, from 1; none or 0 is the node's own coordinate system
+        Box cx cy cz hx hy hz     half sizes; absolute values are taken
+        BoxMinMax x y z x y z     or corners
+        Sphere cx cy cz r         on a sphere; absolute radius
+    }
+}
+```
+
+ConeBoundingGeometry, CylinderBoundingGeometry, Cone and Cylinder are in the table, and nothing reads them: they are reported. No real file uses NameSpace, BoxMinMax, Cone or Cylinder. 172 of the 180 `RotTransCoordSys` in real files say 1; the highest is 4. Real files hold 271 boxes, 40 spheres and 240 groups, and the groups are the roots the rest hang from.
+
+```
+.ANA
+[NameSpace "space"]
+AbstractController[n]
+{
+    AbstractController "name"
+    {
+        Buttons i | Axes i | POVs i | EventHandlers i | DeadZone r | Saturation r
+    }
+}
+Each word optional, any order; a saturation of 100 and everything else 0 by default. Keyword table 0x002B2828. Inputs get ids 0x30000000, 0x40000000, 0x50000000 up.
 ```

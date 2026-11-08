@@ -428,3 +428,17 @@ Every suite ran with no mutants on the merged source with no difference and all 
 * `asn`: `NO DIFFERENCE OBSERVED: 652 files, 14453 nodes seen, 5704 actors; 8736656 comparisons, 0 differences`; entries 85 / 85; mutants 413 / 413.
 
 `tools/verify.py`: 124 MATCH, 99 MISMATCH, 755 SIZE, no MISSING or UNRESOLVED, all 78 vftables MATCH (host compiler, no claim about the original). x64 host tests 22 of 22; Python tests 87 OK. A written `.AGA` case with an empty name was removed: 0x00024C20 reads the second byte of the name, confirmed in its disassembly, which is uninitialised stack, so a search on it finds or misses by chance. Real-file runs have doubles standing in for whatever each suite's worklog names; read those limits with these numbers.
+
+## Third parallel batch, on merged source
+
+Every suite ran with no mutants on the merged source with no difference and all entries reached; x64 host tests 28 of 28; Python tests 87 OK; `tools/verify.py` 168 MATCH, 118 MISMATCH, 1056 SIZE, no MISSING or UNRESOLVED, all 113 vftables MATCH (host compiler, no claim about the original). Mutants on merged source:
+
+* `asm`: `NO DIFFERENCE OBSERVED: 17 .ASM, 16 .ASG files; 10246189 comparisons, 0 differences`; entries 119 / 119; mutants 495 / 495.
+* `actor`: `NO DIFFERENCE OBSERVED: 652 files, 14674 nodes seen, 6057 actors; 3185788 comparisons, 0 differences`; entries 60 / 60; mutants 336 / 336.
+* `asn`: `NO DIFFERENCE OBSERVED: 652 files, 14435 nodes seen, 5695 actors; 8791546 comparisons, 0 differences`; entries 85 / 85; mutants 413 / 413.
+* `agd`: `NO DIFFERENCE OBSERVED: 423 files, 20 names, 25178 opens, 76 animations; 276329 comparisons, 0 differences`; entries 57 / 57; mutants 354 / 354.
+* `ana`: `NO DIFFERENCE OBSERVED: 1 files, 19 mappers, 312 button and 114 axis maps, each file on two fills and read twice on each; 60746 comparisons, 0 differences`; entries 40 / 40; mutants 274 / 274.
+* `anaf`: `NO DIFFERENCE OBSERVED: 1 .ANA files, 16 controllers, 493 inputs, each file on two fills and read twice on each; with 1 .ANM files, 190 binds on real links; 325317 comparisons, 0 differences`; entries 69 / 69; mutants 411 / 411.
+* `ase` 359 / 359, `asb` 754 / 754, `particle` 181 / 181: run by the folding pass on the merged source before `.ANA` was merged, which touched none of their files.
+
+The `.ANA` merge's shared edits were confined to the input family. Real-file runs have doubles standing in for whatever each suite's worklog names; read those limits with these numbers.

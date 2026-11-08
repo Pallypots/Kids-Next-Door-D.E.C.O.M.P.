@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-07, dev cycle 22 (second parallel batch: AGN family, AKC, sound databases, input mappers, Flash text, actors). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-08, dev cycle 23 (third parallel batch: modifiers and space graphs, database lists, particle systems, emitters, collision shapes, input controllers). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-07, dev cycle 22 (second parallel batch: AGN family, AKC, 
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 978 functions and 78 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
+All source is in `src/`, types in `include/`. 1342 functions and 113 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -44,6 +44,12 @@ All source is in `src/`, types in `include/`. 978 functions and 78 vftables are 
 * `at/ana` (40 functions, 4 vftables): input mappers `.ANM` and the input router. **`.ANA` is not recovered.** Binding is not recovered, so no real file reaches the unbinding code.
 * `at/afx` (21 functions, 4 vftables): Flash text formats `.AFX` and level files `.AFL`. The AFD reader 0x00011770 and most of `AtFlashLevel` are not recovered.
 * `at/actor` (60 functions, 3 vftables): actor base, ModelActor, JointedModelActor, animation set, blend, channels, database copy. Replaces seams that stood for them. Running-game slots stop with a diagnostic. **A real x64 build, by the agent's scan, loaded 430 of 652 distinct `.ASN` texts and cleared them with nothing reported; the other 222 stopped at a node class not recovered. That is not a level loading in a game: the device and its tables are stand-ins, and nothing is updated or drawn.**
+* `at/asm` (119 functions, 14 vftables): modifiers `.ASM` and space graphs `.ASG` (a binary partition of space). `AtSceneModifierSet` was this graph class and is now `AtSpaceGraph`. Drawing and moving stop with a diagnostic; ASI and AST are not recovered.
+* `at/agd` (57 functions, 5 vftables): `.AGD`, lists of other files to load, and the `.AKA`, `.AGG`, `.AGV`, `.AGP` text readers. No file of those four kinds is on the disc. The concrete loader (vftable 0x0028A7D0) is not recovered, so nothing in a real build reaches `Load` yet.
+* `at/particle` (17 functions, 1 vftable): the particle system actor. **A real x64 build, by the agent's scan, loads and clears 652 of 652 distinct `.ASN` texts.** Emitters and drawers are stand-ins and nothing is updated or drawn, so this is not a level loading in a game. The 2,048-word table at 0x002AF0B0 is computed by Microsoft's `rand()` formula in `src/at/AtRandom.cpp`; the oracle compares every word with the XBE. The seed cannot be pinned down. In the original it is data.
+* `at/ase` (41 functions, 5 vftables): emitters `.ASE`, the engine's own text, not 3D Studio's. All 221 real files load through recovered code. Nothing uses an emitter yet.
+* `at/asb` (61 functions, 6 vftables): collision shapes `.ASB` (box, sphere, group), the bounding box arithmetic, and the segment hit list, folded at integration with the class the emitters knew as `AtQuery`. All 239 real files load; nothing calls the run-time half yet.
+* `at/controller` (69 functions, 5 vftables): input controllers `.ANA` and binding. Physical controllers are harness fakes; reading input stops with a diagnostic.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
@@ -118,8 +124,8 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. Integrate branches waiting: ASM/ASG, then the third batch (particle system actor, ASE, ASB, AGD, ADR, `.ANA` and the core every loader reaches).
-2. `LIBRARY.ADD` (0x0009BD50), ASD 0x0002F7F0, AFD 0x00011770, the remaining node classes, image and font bodies (0x000586A0, 0x000415A0), the factory 0x000E9E90, the concrete database loader at vftable 0x0028A7D0.
-3. Whether `AtSceneDevice`, `AtMaterialOwner` and the class in 0x00027B70-0x0002AC10 are one class, and whether `AtNameTableOwner` is really the class of vftable 0x00274A78.
+1. Integrate branches waiting: ADR (design data), `LIBRARY.ADD` (fold its descriptor and value classes into ADR's), GON (sound notes), then ASD, AFD, the concrete database loader and the manifest item parser.
+2. Everything a loader reaches through a failed open goes to `AtFatal` 0x00011070, which stops rumble, draws an error screen and launches out. Plan closures with that cut.
+3. Whether `AtSceneDevice`, `AtMaterialOwner` and the class in 0x00027B70-0x0002AC10 are one class, and whether `AtNameTableOwner` is really the class of vftable 0x00274A78. The pool vftables 0x002770D8 and 0x002764D4 have 7 slots, not the 5 recorded.
 
 Waiting on the owner, does not block the above: an authorised original-era MSVC to unblock M2.
