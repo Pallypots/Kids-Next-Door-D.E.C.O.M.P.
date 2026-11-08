@@ -1,0 +1,288 @@
+# Images and fonts, the bodies .AGI and .AGF reach. See include/at/AtImage.h.
+
+[[function]]
+va = 0x000412C0
+size = 15
+symbol = "?SetBlack@AtColor@@QAEXXZ"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000414D0
+size = 149
+symbol = "?ReadWord@AtFont@@UAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000415A0
+size = 107
+symbol = "?Read@AtFont@@UAEXPAUAtMaterialOwner@@PAVAtFontDatabase@@PBDPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00041610
+size = 106
+symbol = "?Allocate@AtFont@@UAEXPAUAtMaterialOwner@@PAVAtFontDatabase@@PBDPAVAtGrCharacterSource@@I@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00042050
+size = 58
+symbol = "??0AtFont@@QAE@XZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00042090
+size = 38
+symbol = "?Free@AtFont@@UAEXXZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000420C0
+size = 44
+symbol = "??1AtFont@@UAE@XZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000420F0
+size = 68
+symbol = "??_GAtFont@@UAEPAXI@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00042140
+size = 46
+symbol = "?Read@AtColorRect@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00042170
+size = 36
+symbol = "??0AtColorRect@@QAE@XZ"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057DC0
+size = 72
+symbol = "?SplitStrips@AtImage@@UAEIIIIIPAI@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057E10
+size = 5
+symbol = "?ClearTransparentColor@AtImage@@UAEXXZ"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057E30
+size = 67
+symbol = "??0AtImage@@QAE@XZ"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057E80
+size = 68
+symbol = "?Init@AtImage@@UAEXPAUAtMaterialOwner@@PAVAtImageDatabase@@PBDI@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057ED0
+size = 38
+symbol = "?FreeData@AtImage@@UAEXXZ"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057F00
+size = 68
+symbol = "?Free@AtImage@@UAEXXZ"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057FB0
+size = 32
+symbol = "?PassName@AtImage@@UAEHPAVAtGrDevice@@PBV1@H@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00057FD0
+size = 354
+symbol = "?ReadWord@AtImage@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00058620
+size = 34
+symbol = "?SetTransparentColor@AtImage@@UAEXPBUAtColor@@@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00058650
+size = 74
+symbol = "??1AtImage@@UAE@XZ"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000586A0
+size = 112
+symbol = "?Read@AtImage@@UAEXPAUAtMaterialOwner@@PAVAtImageDatabase@@PBDPAVAtIoTokenizer@@@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00058A30
+size = 95
+symbol = "??_GAtImage@@UAEPAXI@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FE870
+size = 10
+symbol = "?SetHeap@AtGrI2DFont@@SAXPAX@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FE880
+size = 194
+symbol = "?BuildCharacterSet@AtGrI2DFont@@UAEXPAVAtGrCharacterSource@@@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FE950
+size = 102
+symbol = "?FindCharacter@AtGrI2DFont@@UAEHG@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FE9F0
+size = 8
+symbol = "?ClearTransparentColor@AtGrI2DFont@@UAEXXZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FEA00
+size = 48
+symbol = "??0AtGrI2DFont@@QAE@XZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FEA30
+size = 31
+symbol = "?FreeData@AtGrI2DFont@@UAEXXZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FEA50
+size = 53
+symbol = "?Free@AtGrI2DFont@@UAEXXZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FEA90
+size = 578
+symbol = "?ReadWord@AtGrI2DFont@@UAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FFF30
+size = 37
+symbol = "?SetTransparentColor@AtGrI2DFont@@UAEXPBUAtColor@@@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x000FFF60
+size = 113
+symbol = "??1AtGrI2DFont@@UAE@XZ"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[function]]
+va = 0x00100140
+size = 30
+symbol = "??_GAtGrI2DFont@@UAEPAXI@Z"
+source = "src/at/AtFont.cpp"
+subsystem = "at/imgfont"
+evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
+
+[[vtable]]
+va = 0x0027711C
+slots = 15
+symbol = "??_7AtImage@@6B@"
+source = "src/at/AtImage.cpp"
+
+[[vtable]]
+va = 0x00276208
+slots = 11
+symbol = "??_7AtFont@@6B@"
+source = "src/at/AtFont.cpp"
+
+[[vtable]]
+va = 0x00289820
+slots = 16
+symbol = "??_7AtGrI2DFont@@6B@"
+source = "src/at/AtFont.cpp"
+
+[symbols]
+"?s_heap@AtGrI2DFont@@2PAXA" = 0x003B1FCC
+"?Slot3@AtGrI2DFont@@UAEXXZ" = 0x000FF510  # vftable slot: not recovered, stops with a diagnostic
+"?PassName@AtGrI2DFont@@UAEHPAVAtGrDevice@@PBV1@H@Z" = 0x00057FB0  # one body with AtImage::PassName, recorded there

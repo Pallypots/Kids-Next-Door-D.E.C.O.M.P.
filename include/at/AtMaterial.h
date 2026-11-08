@@ -7,6 +7,7 @@
 
 struct AtColor {
     void SetWhite();                           // 0x000412B0 all 255
+    void SetBlack();                           // 0x000412C0 0, 0, 0 and alpha 255; in src/at/AtImage.cpp
     void Read(AtIoTokenizer* tokenizer);       // 0x00041270 four integers
     unsigned char r, g, b, a;
 };
