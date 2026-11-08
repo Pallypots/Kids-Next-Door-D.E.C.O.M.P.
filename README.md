@@ -6,6 +6,16 @@ This is not a static recompilation or an emulator wrapper. See [CLAUDE.md](CLAUD
 
 **No game data is included.** You need your own disc image; see [docs/provenance.md](docs/provenance.md).
 
+## Progress
+
+![Map of the game's code: each square is a slice of the executable, lit by area where source has been recovered and grey where it has not](docs/progress-map.svg)
+
+Each square is a slice of the game's code in address order. Coloured squares hold recovered source, grey squares are
+still to do, and dim squares are Xbox SDK, C runtime and middleware code, which is not counted. The totals are
+estimates, because which code belongs to the game is mostly inferred. Recovered code is behaviour-tested against the
+original; nothing matches the original compiler byte for byte yet, since that compiler is not available. The map is
+redrawn from the project's records by `python -I tools/progress_map.py` before each publish.
+
 * Status: [docs/STATE.md](docs/STATE.md) · measured progress: [docs/PROGRESS.md](docs/PROGRESS.md)
 * How claims are verified: [docs/verification.md](docs/verification.md) · compiler: [docs/toolchain.md](docs/toolchain.md)
 
