@@ -1,8 +1,8 @@
 // Coordinate systems: a tree of transforms, each with a local and a world matrix, and the table of them that a scene or a skeleton (.AKC) owns. Original address clusters 0x00026820-0x00026E49, 0x000271F0-0x0002732F,
 // 0x00032270-0x000329FF and 0x00032A80-0x00032DEA. All names are inferred, from the words of the .ASN format that fill them (RotTransCoordSys, ScaleCoordSys) and from what each does.
 //
-// Matrices are not read here. The original reaches its matrix functions through a table of pointers in memory, set up by the graphics layer at 0x000EC670, which is not recovered; so a matrix is opaque, and what each pointer does is
-// inferred from its arguments only. They stop with a diagnostic until something sets them. The exception is Read, whose function is recovered and is the table's from the start.
+// Matrices are not read here. The original reaches its matrix functions through a table of pointers in memory, filled by 0x000EC2B0, called from 0x000EC670; neither is recovered as a function. Here a matrix is
+// opaque, and g_atMatrix starts with the recovered functions the original's filler puts in these slots: include/at/AtMatrix.h.
 #pragma once
 
 #include "at/AtQuaternion.h"
@@ -29,6 +29,31 @@ struct AtMatrixTable {
     void (*GetPosition)(const AtMatrix* m, AtVector3* position);                       // 0x002C61F8
     void (*GetAxes)(const AtMatrix* m, AtVector3* x, AtVector3* y, AtVector3* z);      // 0x002C61FC
     void (*TransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);  // 0x002C625C
+    // Slots the game calls that no recovered code does yet: see include/at/AtMatrix.h.
+    void (*SetScale3x3)(AtMatrix* m, const AtVector3* scale);                          // 0x002C60D8
+    void (*SetAxisAngle)(AtMatrix* m, const AtVector3* axis, float angle);             // 0x002C60DC
+    void (*SetAxes)(AtMatrix* m, const AtVector3* x, const AtVector3* y, const AtVector3* z);  // 0x002C60E4
+    void (*SetLookAtZY)(AtMatrix* m, const AtVector3* direction, const AtVector3* up); // 0x002C60F8
+    void (*SetLookAtXY)(AtMatrix* m, const AtVector3* direction, const AtVector3* up); // 0x002C60FC
+    void (*MakeTranslation)(AtMatrix* m, const AtVector3* position);                   // 0x002C6100
+    void (*MakeAxisAngle)(AtMatrix* m, const AtVector3* axis, float angle);            // 0x002C6104
+    void (*MakeRotation)(AtMatrix* m, const AtQuaternion* rotation);                   // 0x002C6108
+    void (*MakeFromAxes)(AtMatrix* m, const AtVector3* x, const AtVector3* y, const AtVector3* z);  // 0x002C610C
+    void (*ScaleAxes)(AtMatrix* m, const AtVector3* scale);                            // 0x002C6168
+    void (*TranslateAfter)(AtMatrix* m, const AtVector3* by);                          // 0x002C6184
+    void (*ScaleColumnX)(AtMatrix* m, float scale);                                    // 0x002C61A4
+    void (*ScaleColumnY)(AtMatrix* m, float scale);                                    // 0x002C61A8
+    void (*Invert)(AtMatrix* m);                                                       // 0x002C61D0
+    void (*Transpose)(AtMatrix* m);                                                    // 0x002C61E0
+    void (*SetElement)(AtMatrix* m, int row, int column, float value);                 // 0x002C61E8
+    float (*GetElement)(const AtMatrix* m, int row, int column);                       // 0x002C61EC
+    void (*GetXAxis)(const AtMatrix* m, AtVector3* axis);                              // 0x002C620C
+    void (*GetYAxis)(const AtMatrix* m, AtVector3* axis);                              // 0x002C6210
+    void (*GetZAxis)(const AtMatrix* m, AtVector3* axis);                              // 0x002C6214
+    void (*MultiplyRight)(AtMatrix* m, const AtMatrix* by);                            // 0x002C622C
+    double (*TransformPointZ)(const AtMatrix* m, const AtVector3* point);              // 0x002C6254
+    void (*InverseTransformPoint)(const AtMatrix* m, const AtVector3* from, AtVector3* to);      // 0x002C6258
+    void (*InverseTransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);  // 0x002C6260
 };
 extern AtMatrixTable g_atMatrix;
 
