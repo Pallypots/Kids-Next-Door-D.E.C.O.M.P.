@@ -1,0 +1,972 @@
+# The design data registry, .ADR. Names inferred; see include/at/AtDataRegistry.h. Recorded sizes are the inventory's. The deleting forms are compiler made; those the original's vftables hold for arrays are recorded by the host's scalar symbol, as 0x0002E510 is.
+
+[[function]]
+va = 0x00068880
+size = 302
+symbol = "?Load@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@PBDHPADPAV1@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067D80
+size = 2290
+symbol = "?Read@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@PADPAV1@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067540
+size = 108
+symbol = "?Clear@AtDataRegistry@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066780
+size = 115
+symbol = "?Reset@AtDataRegistry@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067980
+size = 83
+symbol = "?FindChild@AtDataRegistry@@QAEPAVAtDataLink@@PBDPAV2@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066800
+size = 82
+symbol = "?NameMatches@AtDataRegistry@@QAEHPBD0@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067A60
+size = 454
+symbol = "?Clamp@AtDataRegistry@@QAEXIPAVAtDataComponent@@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066100
+size = 10
+symbol = "?SetHeap@AtDataRegistry@@SAXPAX@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000674E0
+size = 86
+symbol = "??0AtDataRegistry@@QAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067C50
+size = 90
+symbol = "??1AtDataRegistry@@UAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000687B0
+size = 30
+symbol = "??_GAtDataRegistry@@UAEPAXI@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066110
+size = 85
+symbol = "?ElementAt@AtDataComponentPool@@QAEPAVAtDataComponent@@I@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066B30
+size = 1683
+symbol = "?Allocate@AtDataComponentPool@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066930
+size = 240
+symbol = "?Clear@AtDataComponentPool@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066A70
+size = 192
+symbol = "?FindByName@AtDataComponentPool@@QAEPAVAtDataLink@@PBDH@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067430
+size = 167
+symbol = "?New@AtDataComponentPool@@QAEPAVAtDataLink@@H@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000666E0
+size = 110
+symbol = "?Grow@AtDataComponentPool@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BFD0
+size = 29
+symbol = "??0AtDataLink@@QAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006C240
+size = 11
+symbol = "??1AtDataLink@@UAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BFF0
+size = 14
+symbol = "?Registry@AtDataLink@@UAEPAVAtDataRegistry@@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006C160
+size = 220
+symbol = "?Set@AtDataLink@@QAEHPBDPAVAtDataComponent@@PAV1@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006C110
+size = 65
+symbol = "?Clear@AtDataLink@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006C000
+size = 39
+symbol = "?AttachTo@AtDataLink@@QAEXPAV1@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006C030
+size = 73
+symbol = "?Detach@AtDataLink@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BFC0
+size = 10
+symbol = "?SetHeap@AtDataLink@@SAXPAX@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066750
+size = 5
+symbol = "??1AtDataLinkRoot@@UAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066760
+size = 30
+symbol = "??_GAtDataLinkRoot@@UAEPAXI@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0010F4C0
+size = 4
+symbol = "?Registry@AtDataLinkRoot@@UAEPAVAtDataRegistry@@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BC10
+size = 67
+symbol = "??0AtDataDescriptor@@QAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BFB0
+size = 11
+symbol = "??1AtDataDescriptor@@UAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BC60
+size = 79
+symbol = "?Clear@AtDataDescriptor@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BCB0
+size = 38
+symbol = "?SetType@AtDataDescriptor@@QAEHII@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BB20
+size = 19
+symbol = "?SetIntBounds@AtDataDescriptor@@QAEHHH@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BB40
+size = 38
+symbol = "?SetRealBounds@AtDataDescriptor@@QAEHMM@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BAD0
+size = 23
+symbol = "?GetIntBounds@AtDataDescriptor@@QAEHPAH0@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BB70
+size = 151
+symbol = "?SetFormat@AtDataDescriptor@@QAEHPBD@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BAC0
+size = 10
+symbol = "?SetHeap@AtDataDescriptor@@SAXPAX@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000603A0
+size = 16
+symbol = "??0AtDataRegistryGroup@@QAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000B3F70
+size = 14
+symbol = "?Reset@AtDataRegistryGroup@@QAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000602C0
+size = 17
+symbol = "?SetName@AtDataRegistryGroup@@QAEXPBD@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000603B0
+size = 47
+symbol = "?Add@AtDataRegistryGroup@@QAEXPAVAtDataRegistry@@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000602E0
+size = 82
+symbol = "?Remove@AtDataRegistryGroup@@QAEXPAVAtDataRegistry@@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0005FFF0
+size = 32
+symbol = "??0AtDataRegistryNameSpaces@@QAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00060230
+size = 109
+symbol = "??1AtDataRegistryNameSpaces@@UAE@XZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000602A0
+size = 30
+symbol = "??_GAtDataRegistryNameSpaces@@UAEPAXI@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000B40E0
+size = 44
+symbol = "?Clear@AtDataRegistryNameSpaces@@UAEXXZ"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00060010
+size = 244
+symbol = "?Init@AtDataRegistryNameSpaces@@QAEXI@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0005FFC0
+size = 35
+symbol = "?Release@AtDataRegistryNameSpaces@@QAEXPAVAtDataRegistryGroup@@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00060110
+size = 94
+symbol = "?Add@AtDataRegistryNameSpaces@@QAEXPBDPAVAtDataRegistry@@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00060170
+size = 26
+symbol = "?Remove@AtDataRegistryNameSpaces@@SAXPAVAtDataRegistry@@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0005FFB0
+size = 10
+symbol = "?SetHeap@AtDataRegistryNameSpaces@@SAXPAX@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0005F0B0
+size = 49
+symbol = "?Add@AtDataRegistryOwner@@QAEXPAVAtDataRegistry@@PBD@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0005F1F0
+size = 102
+symbol = "?Remove@AtDataRegistryOwner@@QAEXPAVAtDataRegistry@@@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069DE0
+size = 10
+symbol = "?SetHeap@AtDataComponent@@SAXPAX@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069DF0
+size = 17
+symbol = "??0AtDataComponent@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069E10
+size = 7
+symbol = "??1AtDataComponent@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069E20
+size = 12
+symbol = "?Read@AtDataComponent@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069E30
+size = 12
+symbol = "?SetDescriptor@AtDataComponent@@UAEHPAVAtDataDescriptor@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000E7880
+size = 9
+symbol = "?Reset@AtDataComponent@@UAEXXZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A040
+size = 25
+symbol = "??0AtDataBoolean@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069E70
+size = 11
+symbol = "??1AtDataBoolean@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A080
+size = 31
+symbol = "?Read@AtDataBoolean@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069F50
+size = 5
+symbol = "?Reset@AtDataBoolean@@UAEXXZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069E80
+size = 18
+symbol = "??0AtDataInt@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069EA0
+size = 11
+symbol = "??1AtDataInt@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069ED0
+size = 18
+symbol = "??0AtDataReal@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069EF0
+size = 11
+symbol = "??1AtDataReal@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A0C0
+size = 31
+symbol = "?Read@AtDataReal@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069F20
+size = 18
+symbol = "??0AtDataShortName@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069F40
+size = 11
+symbol = "??1AtDataShortName@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069F60
+size = 32
+symbol = "?Read@AtDataShortName@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A170
+size = 96
+symbol = "??0AtDataString@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A660
+size = 141
+symbol = "??1AtDataString@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A6F0
+size = 104
+symbol = "?Read@AtDataString@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A200
+size = 71
+symbol = "?Reset@AtDataString@@UAEXXZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A330
+size = 413
+symbol = "?Assign@AtDataString@@QAEHPAVAtDataDescriptor@@PBD@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A810
+size = 25
+symbol = "??0AtDataBooleanArray@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B710
+size = 104
+symbol = "??1AtDataBooleanArray@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A920
+size = 67
+symbol = "?Read@AtDataBooleanArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A840
+size = 34
+symbol = "?Reset@AtDataBooleanArray@@UAEXXZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A870
+size = 170
+symbol = "?Resize@AtDataBooleanArray@@UAEHI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A9C0
+size = 25
+symbol = "??0AtDataByteArray@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B780
+size = 104
+symbol = "??1AtDataByteArray@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AB40
+size = 67
+symbol = "?Read@AtDataByteArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A9F0
+size = 172
+symbol = "?Resize@AtDataByteArray@@UAEHI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AC40
+size = 25
+symbol = "??0AtDataIntArray@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B7F0
+size = 104
+symbol = "??1AtDataIntArray@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AC60
+size = 25
+symbol = "??0AtDataRealArray@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B860
+size = 104
+symbol = "??1AtDataRealArray@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AD20
+size = 67
+symbol = "?Read@AtDataRealArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AE30
+size = 25
+symbol = "??0AtDataShortNameArray@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B8D0
+size = 104
+symbol = "??1AtDataShortNameArray@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AFB0
+size = 95
+symbol = "?Read@AtDataShortNameArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AE60
+size = 173
+symbol = "?Resize@AtDataShortNameArray@@UAEHI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B0D0
+size = 26
+symbol = "??0AtDataStringArray@@QAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B940
+size = 79
+symbol = "??1AtDataStringArray@@UAE@XZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B990
+size = 70
+symbol = "?Read@AtDataStringArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B100
+size = 111
+symbol = "?Reset@AtDataStringArray@@UAEXXZ"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B170
+size = 445
+symbol = "?Resize@AtDataStringArray@@UAEHI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B4F0
+size = 202
+symbol = "?SetText@AtDataStringArray@@QAEHIPBD@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00039970
+size = 93
+symbol = "?SetNarrow@AtText@@QAEXPBD@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000661A0
+size = 84
+symbol = "??_GAtDataComponent@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066200
+size = 84
+symbol = "??_GAtDataBoolean@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066260
+size = 84
+symbol = "??_GAtDataInt@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000662C0
+size = 84
+symbol = "??_GAtDataReal@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066320
+size = 84
+symbol = "??_GAtDataShortName@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066380
+size = 84
+symbol = "??_GAtDataString@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000663E0
+size = 84
+symbol = "??_GAtDataBooleanArray@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066440
+size = 84
+symbol = "??_GAtDataByteArray@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000664A0
+size = 84
+symbol = "??_GAtDataIntArray@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066500
+size = 84
+symbol = "??_GAtDataRealArray@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066560
+size = 84
+symbol = "??_GAtDataShortNameArray@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000665C0
+size = 84
+symbol = "??_GAtDataStringArray@@UAEPAXI@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066620
+size = 84
+symbol = "??_GAtDataDescriptor@@UAEPAXI@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066680
+size = 84
+symbol = "??_GAtDataLink@@UAEPAXI@Z"
+source = "src/at/AtDataRegistry.cpp"
+subsystem = "at/adr"
+evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[vtable]]
+va = 0x00277614
+slots = 1
+symbol = "??_7AtDataRegistry@@6B@"
+source = "src/at/AtDataRegistry.cpp"
+
+[[vtable]]
+va = 0x0027760C
+slots = 2
+symbol = "??_7AtDataLinkRoot@@6B@"
+source = "src/at/AtDataRegistry.cpp"
+
+[[vtable]]
+va = 0x00277940
+slots = 2
+symbol = "??_7AtDataLink@@6B@"
+source = "src/at/AtDataRegistry.cpp"
+
+[[vtable]]
+va = 0x0027793C
+slots = 1
+symbol = "??_7AtDataDescriptor@@6B@"
+source = "src/at/AtDataRegistry.cpp"
+
+[[vtable]]
+va = 0x00277424
+slots = 2
+symbol = "??_7AtDataRegistryNameSpaces@@6B@"
+source = "src/at/AtDataRegistry.cpp"
+
+[symbols]
+"?s_heap@AtDataRegistry@@2PAXA" = 0x002CB094
+"?s_poolHeap@AtDataRegistry@@2PAXA" = 0x002CB098
+"?s_heap@AtDataComponent@@2PAXA" = 0x002CB09C
+"?s_heap@AtDataDescriptor@@2PAXA" = 0x002CB0A0
+"?s_heap@AtDataLink@@2PAXA" = 0x002CB0A4
+"?s_heap@AtDataRegistryNameSpaces@@2PAXA" = 0x002C9F9C
+# Where these classes' vftables are. Not recorded as vftables: slots 5 to 9 are not recovered.
+"??_7AtDataComponent@@6B@" = 0x00277754
+"??_7AtDataBoolean@@6B@" = 0x0027777C
+"??_7AtDataInt@@6B@" = 0x002777A4
+"??_7AtDataReal@@6B@" = 0x002777CC
+"??_7AtDataShortName@@6B@" = 0x002777F4
+"??_7AtDataString@@6B@" = 0x0027781C
+"??_7AtDataBooleanArray@@6B@" = 0x0027784C
+"??_7AtDataByteArray@@6B@" = 0x00277874
+"??_7AtDataIntArray@@6B@" = 0x0027789C
+"??_7AtDataRealArray@@6B@" = 0x002778C4
+"??_7AtDataShortNameArray@@6B@" = 0x002778EC
+"??_7AtDataStringArray@@6B@" = 0x00277914

@@ -21,6 +21,7 @@ public:
     AtText();                                 // 0x000398F0
     void ClearFields();                       // 0x00031BA0
     unsigned int ComputeEnd();                // 0x000398B0 the first terminator from m_start, or m_capacity - 1
+    void SetNarrow(const char* text);         // 0x00039970 as much as fits, then a terminator at that index even if that is m_capacity; src/at/AtDataComponent.cpp
 
     virtual unsigned int CharAt(unsigned int index) = 0;            // slot 0
     virtual void SetChar(unsigned int index, unsigned int c) = 0;   // slot 1
@@ -65,6 +66,7 @@ class AtTextAscii : public AtText {
 public:
     AtTextAscii();                            // 0x0002E000
     void Init(char* data, unsigned int capacity);  // 0x0002E040
+    void Release();                           // 0x0002DFB0 folded with AtTextUnicode's; src/at/AtDataComponent.cpp
 
     unsigned int CharAt(unsigned int index) override;           // 0x0002DFC0
     void SetChar(unsigned int index, unsigned int c) override;  // 0x0002DFE0
