@@ -1,6 +1,6 @@
 // A time-sliced loader of a text file: each call to Update spends a budget of milliseconds on opening the file, parsing it, then running a queue of items, one at a time.
 // The file's extension is MNG. Start-up waits on one 30 milliseconds at a time. All names are inferred.
-// The one concrete class known, with its seven kinds of item, begins at 0x0015CD10 and is not recovered; on the disc its files are lists of what a level loads.
+// The one concrete class known is GmLevelManifest (include/gm/GmLevelManifest.h), built on GmDatabaseManifest (0x0015CD10); on the disc its files are lists of what a level loads.
 #pragma once
 #include "at/AtHeap.h"
 #include "at/AtIoTokenizer.h"
@@ -53,7 +53,7 @@ public:
     int m_state;                         // +0x18
     AtIoTokenFile m_file;                // +0x1C
     AtHeap* m_heap;                      // +0x54 the manager's override while an item runs
-    char m_path[0x44];                   // +0x58 the size is inferred: the concrete class begins its fields after it
+    char m_path[0x40];                   // +0x58 no bound is checked. The size is inferred: GmDatabaseManifest clears a field at +0x98 (0x0015C860) that Reset leaves
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
@@ -65,6 +65,6 @@ static_assert(offsetof(GmManifestRequest, m_heap) == 0xC, "GmManifestRequest::m_
 static_assert(offsetof(GmManifestLoader, m_state) == 0x18, "GmManifestLoader::m_state");
 static_assert(offsetof(GmManifestLoader, m_file) == 0x1C, "GmManifestLoader::m_file");
 static_assert(offsetof(GmManifestLoader, m_heap) == 0x54, "GmManifestLoader::m_heap");
-static_assert(sizeof(GmManifestLoader) == 0x9C, "GmManifestLoader");
+static_assert(sizeof(GmManifestLoader) == 0x98, "GmManifestLoader");
 #pragma pop_macro("offsetof")
 #endif
