@@ -12,11 +12,11 @@ public:
     virtual void Read(AtIoTokenizer* tokenizer);  // slot 0, folded empty body at 0x000CBF30
     void ResetLinks();                 // 0x00023400 what the destructor does too
 
-    void* m_unknown04;                 // +0x04 not touched
-    void* m_unknown08;                 // +0x08 not touched
+    void* m_groupNext;                 // +0x04 a group's list runs through here; RecycleGroup finds the resource from it
+    void* m_groupPrev;                 // +0x08
     int m_index;                       // +0x0C -1 until read
     int m_references;                  // +0x10
-    int m_unknown14;                   // +0x14
+    int m_uses;                        // +0x14 what the group holds of it
     void* m_table;                     // +0x18
 };
 
@@ -50,7 +50,7 @@ public:
     void* m_heap;                      // +0x68
 };
 
-// Vftable 0x00271F78. Resources by index, with their storage in groups. Its siblings use the groups, and 0x00016F50-0x00017290 for them: only what a text format table reaches is recovered.
+// Vftable 0x00271F78. Resources by index, with their storage in groups. What adds to a group, 0x00016F50, 0x00017030 and 0x00017050, is not recovered.
 class AtFlashResourceTable {
 public:
     struct Group {
@@ -64,9 +64,16 @@ public:
     virtual void Allocate(unsigned int count);   // slot 0, 0x00016FB0 a cleared list of that many
     virtual ~AtFlashResourceTable();   // slot 1; 0x000173A0 deleting, 0x00017360 complete
     virtual void Release(unsigned int index);    // slot 2, 0x00017040 one reference fewer
-    virtual void Slot3(int unused);    // slot 3, 0x00017290 not recovered: stops with a diagnostic
+    virtual void Slot3(int unused);    // slot 3, 0x00017290 RecycleGroup(1)
 
     void Clear();                      // 0x000172E0 nothing unless m_initialised
+    void Init();                       // 0x00017370 clears, if initialised, and makes the 6 groups
+    // 0x000170E0. The first group gives up its members, each Released as often as it was counted in, and goes last if keep, or is freed. A table with no groups crashes.
+    void RecycleGroup(int keep);
+    void SetGroupCount(unsigned int count);      // 0x000171B0 adds at the end, frees from the front
+    void SetHeap(void* heap);          // 0x00058AF0 folded with others that store at +0x24
+
+    static void SetDefaultHeap(void* heap);      // 0x00016F40
 
     int m_initialised;                 // +0x04
     Group* m_firstGroup;               // +0x08
