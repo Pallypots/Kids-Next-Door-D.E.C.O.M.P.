@@ -1,0 +1,388 @@
+# The data library (.ADD) and the database manager (.ADB) it can name. Names inferred; see include/at/AtDataLibrary.h. Recorded sizes are the inventory's, or measured from the code where it has none.
+
+[[function]]
+va = 0x0009B8D0
+size = 10
+symbol = "?SetHeap@AtDataLibrary@@SAXPAX@Z"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x0009B8E0
+size = 279
+symbol = "?MakeRegistries@AtDataLibrary@@QAEXXZ"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; the registries are the harness's doubles"
+
+[[function]]
+va = 0x0009BA00
+size = 261
+symbol = "?MakeDatabases@AtDataLibrary@@QAEXXZ"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x0009BB10
+size = 36
+symbol = "??0AtDataLibrary@@QAE@XZ"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x0009BB40
+size = 203
+symbol = "?Clear@AtDataLibrary@@QAEXXZ"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x0009BC10
+size = 289
+symbol = "?LoadEntries@AtDataLibrary@@QAEXHPAVAtDataRegistry@@@Z"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x0009BD40
+size = 11
+symbol = "??1AtDataLibrary@@QAE@XZ"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x0009BD50
+size = 1109
+symbol = "?Load@AtDataLibrary@@QAEXPAUAtDataOwner@@PBDHPAVAtDataRegistry@@@Z"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; LIBRARY.ADD, the one .ADD on the disc, and written text"
+
+[[function]]
+va = 0x000992D0
+size = 49
+symbol = "?AddDatabase@AtDataOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtDataLibrary.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x0006BDB0
+size = 432
+symbol = "?Read@AtDataDescriptorFields@@QAEHPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only"
+
+[[function]]
+va = 0x000B1C20
+size = 10
+symbol = "?SetHeap@AtDatabaseManager@@SAXPAX@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B1C90
+size = 153
+symbol = "??0AtDatabaseManager@@QAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B1D30
+size = 243
+symbol = "?Clear@AtDatabaseManager@@UAEXXZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B1E30
+size = 1105
+symbol = "?Read@AtDatabaseManager@@QAEHPAUAtDataOwner@@PAVAtIoTokenizer@@PADIH@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only: no .ADB on the disc"
+
+[[function]]
+va = 0x000B2290
+size = 56
+symbol = "?FindEverywhere@AtDatabaseManager@@QAEPAXPBD@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B22D0
+size = 92
+symbol = "??1AtDatabaseManager@@UAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B2330
+size = 295
+symbol = "?Load@AtDatabaseManager@@QAEHPAUAtDataOwner@@PBDHPADIH@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only: no .ADB on the disc"
+
+[[function]]
+va = 0x000B2460
+size = 30
+symbol = "??_GAtDatabaseManager@@UAEPAXI@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; slot 0 of the vftable at 0x00284708, calling 0x000B22D0"
+
+[[function]]
+va = 0x000B1C30
+size = 84
+symbol = "??_EAtRecordLayout@@UAEPAXI@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; slot 0 of the vftable at 0x002855D8, calling 0x000B9D10"
+
+[[function]]
+va = 0x000B9AA0
+size = 10
+symbol = "?SetHeap@AtRecordLayout@@SAXPAX@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9AB0
+size = 13
+symbol = "?FieldAt@AtRecordLayout@@QAEPAUAtDataDescriptorFields@@I@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9AC0
+size = 32
+symbol = "??0AtRecordLayout@@QAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9AE0
+size = 58
+symbol = "?Clear@AtRecordLayout@@UAEXXZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9B20
+size = 496
+symbol = "?Read@AtRecordLayout@@QAEHPAVAtIoTokenizer@@PAVGmNameMap@@@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9D10
+size = 123
+symbol = "??1AtRecordLayout@@UAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9D90
+size = 10
+symbol = "?SetHeap@AtDataRecordDatabase@@SAXPAX@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9DA0
+size = 24
+symbol = "?Reset@AtDataRecordDatabase@@UAEXXZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9DC0
+size = 40
+symbol = "?Load@AtDataRecordDatabase@@UAEHPAVAtDatabaseManager@@PAVAtRecordLayout@@PAVAtIoTokenizer@@IHH@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; slot 2, reached by the harness only"
+
+[[function]]
+va = 0x000B9E50
+size = 16
+symbol = "?RecordAt@AtDataRecordDatabase@@UAEPAVAtDataRecord@@I@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9E60
+size = 41
+symbol = "??0AtDataRecordDatabase@@QAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9E90
+size = 211
+symbol = "?Clear@AtDataRecordDatabase@@UAEXXZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000B9F70
+size = 2453
+symbol = "?Read@AtDataRecordDatabase@@UAEHPAVAtDatabaseManager@@PAVAtIoTokenizer@@IHH@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; the value classes are the original's on both sides"
+
+[[function]]
+va = 0x000BA960
+size = 64
+symbol = "?TakeUnused@AtDataRecordDatabase@@UAEPAVAtDataRecord@@PAI@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; slot 8, not reached by loading"
+
+[[function]]
+va = 0x000BA9A0
+size = 83
+symbol = "?FindByValue@AtDataRecordDatabase@@UAEPAVAtDataRecord@@IPBX@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; slot 6, not reached by loading"
+
+[[function]]
+va = 0x000BAA00
+size = 79
+symbol = "??1AtDataRecordDatabase@@UAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000BAA50
+size = 30
+symbol = "??_GAtDataRecordDatabase@@UAEPAXI@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; slot 0 of the vftable at 0x002855E0, calling 0x000BAA00"
+
+[[function]]
+va = 0x000B9DF0
+size = 84
+symbol = "??_EAtDataRecord@@UAEPAXI@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; slot 0 of the vftable at 0x00285608, calling 0x000BACD0"
+
+[[function]]
+va = 0x000BAA70
+size = 17
+symbol = "??0AtDataRecord@@QAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000BAA90
+size = 41
+symbol = "?Set@AtDataRecord@@QAEHIPAVAtRecordLayout@@PAPAVAtDataValue@@@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[function]]
+va = 0x000BAAC0
+size = 193
+symbol = "?FieldAt@AtDataRecord@@QAEPAVAtDataValue@@I@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; not reached by loading"
+
+[[function]]
+va = 0x000BABB0
+size = 132
+symbol = "?DescriptorAt@AtDataRecord@@QAEPAUAtDataDescriptorFields@@I@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; not reached by loading"
+
+[[function]]
+va = 0x000BAC60
+size = 102
+symbol = "?FieldNamed@AtDataRecord@@QAEPAVAtDataValue@@PBD@Z"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; not reached by loading"
+
+[[function]]
+va = 0x000BACD0
+size = 15
+symbol = "??1AtDataRecord@@UAE@XZ"
+source = "src/at/AtDatabaseManager.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
+
+[[vtable]]
+va = 0x002855D8
+slots = 2
+symbol = "??_7AtRecordLayout@@6B@"
+source = "src/at/AtDatabaseManager.cpp"
+
+[[vtable]]
+va = 0x002855E0
+slots = 10
+symbol = "??_7AtDataRecordDatabase@@6B@"
+source = "src/at/AtDatabaseManager.cpp"
+
+[[vtable]]
+va = 0x00284708
+slots = 2
+symbol = "??_7AtDatabaseManager@@6B@"
+source = "src/at/AtDatabaseManager.cpp"
+
+[[vtable]]
+va = 0x00285608
+slots = 1
+symbol = "??_7AtDataRecord@@6B@"
+source = "src/at/AtDatabaseManager.cpp"
+
+[symbols]
+"?Unknown7@AtDataRecordDatabase@@UAEHH@Z" = 0x000B15B0  # folded: returns 0
+"?OnReady@AtDataRecordDatabase@@UAEXXZ" = 0x001CC9F0  # folded: empty
+"?s_heap@AtDataLibrary@@2PAXA" = 0x0030593C
+"?s_registryNames@AtDataLibrary@@2PAPADA" = 0x00305938
+"?s_databaseNames@AtDataLibrary@@2PAPADA" = 0x00305934
+"?s_keywords@AtDataLibrary@@2QBUAtIoKeyword@@B" = 0x002B47F0
+"?s_heap@AtDatabaseManager@@2PAXA" = 0x003ADE28
+"?s_first@AtDatabaseManager@@2PAV1@A" = 0x003ADE2C
+"?s_keywords@AtDatabaseManager@@2QBUAtIoKeyword@@B" = 0x002B5310
+"?s_heap@AtRecordLayout@@2PAXA" = 0x003ADE90
+"?s_heap@AtDataRecordDatabase@@2PAXA" = 0x003ADE94
+"?AtDataRegistryClear@@YAXPAVAtDataRegistry@@@Z" = 0x00067540  # seam
+"?AtDataRegistryLoad@@YAXPAVAtDataRegistry@@PAUAtDataOwner@@PBDHPAD0@Z" = 0x00068880  # seam
+"?AtDataDescriptorClear@@YAXPAUAtDataDescriptorFields@@@Z" = 0x0006BC60  # seam
+"?AtDataStringReset@@YAXPAVAtDataValue@@@Z" = 0x0006A1D0  # seam, not recovered
+"?AtDataStringBindAndRead@@YAXPAVAtDataValue@@PAUAtDataDescriptorFields@@PAVAtIoTokenizer@@PADI@Z" = 0x0006A4D0  # seam, not recovered
+"?AtDataStringBind@@YAXPAVAtDataValue@@PAUAtDataDescriptorFields@@PADI@Z" = 0x00069FD0  # seam, not recovered

@@ -243,6 +243,10 @@ public:
 
     void Load(AtNameTableOwner* owner, const char* name, int unused);  // 0x0003CD60 name + ".ASN"
     void Read(AtNameTableOwner* owner, AtIoTokenizer* tokenizer);      // 0x0003BCD0
+    // NOT recovered: each passes the graph to four functions over the scene's arrays (0x0003D920, 0x0003DDB0, 0x0003E2B0, 0x0003E7C0, and 0x0003DBB0, 0x0003E070, 0x0003E580, 0x0003E810).
+    // The names are inferred from the pairing; the manifest's dynamic nodes are their callers. Stop with a diagnostic in src/gm/GmLevelManifestHost.cpp.
+    void InsertInto(AtSpaceGraph* graph);                              // 0x0003E860
+    void RemoveFrom(AtSpaceGraph* graph);                              // 0x0003E890
 
     AtRotTransCoordSys* NextRotTrans(AtIoTokenizer* tokenizer);    // 0x0003D8C0 reports running out, and hands one back regardless
     AtScaleCoordSys* NextScale(AtIoTokenizer* tokenizer);          // 0x0003D8F0 likewise

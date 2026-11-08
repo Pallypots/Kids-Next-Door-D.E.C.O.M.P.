@@ -1,0 +1,804 @@
+# The level manifest: the .MNG parser, its two loader classes and the twelve kinds of item. Names inferred; see include/gm/GmLevelManifest.h. Sizes are the inventory's where it has
+# the function, otherwise up to the padding that follows it.
+
+[[function]]
+va = 0x00142110
+size = 147
+symbol = "?ClearLevelArrays@GmLevelManifest@@QAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001421B0
+size = 16
+symbol = "?Clear@GmLevelManifest@@UAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028DFB8 slot 5; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001421C0
+size = 87
+symbol = "??_GGmAnimationListItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295040 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142220
+size = 87
+symbol = "??_GGmSoundListItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0029504C slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142280
+size = 87
+symbol = "??_GGmScriptItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295058 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x001422E0
+size = 87
+symbol = "??_GGmTriggerItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295068 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142340
+size = 87
+symbol = "??_GGmSubscriberItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295078 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x001423A0
+size = 87
+symbol = "??_GGmVfxItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295088 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142400
+size = 87
+symbol = "??_GGmDynamicNodeItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295094 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142460
+size = 87
+symbol = "??_GGmSoundNodeItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950A0 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142520
+size = 87
+symbol = "??_GGmMusicChainItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950B8 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142580
+size = 87
+symbol = "??_GGmInstanceSoundItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950C4 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x001425E0
+size = 87
+symbol = "??_GGmCollisionSoundItem@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950D4 slot 2, for arrays too (flags 0 and 1 direct, 3 through the manifest's Free, in tests/oracle/oracle_manifest.cpp)"
+
+[[function]]
+va = 0x00142640
+size = 619
+symbol = "?AfterParse@GmLevelManifest@@UAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028DFB8 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001428B0
+size = 25
+symbol = "??0GmLevelManifest@@QAE@XZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001428D0
+size = 84
+symbol = "??1GmLevelManifest@@UAE@XZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x00142930
+size = 1227
+symbol = "?Free@GmLevelManifest@@UAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028DFB8 slot 6; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x00142E00
+size = 130
+symbol = "?Parse@GmLevelManifest@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028DFB8 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x00142E90
+size = 3588
+symbol = "?OnToken@GmLevelManifest@@UAEXHPAVAtIoTokenizer@@@Z"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028DFB8 slot 2; tests/oracle/oracle_manifest.cpp, on every real .MNG file"
+
+[[function]]
+va = 0x00143CE0
+size = 195
+symbol = "?Finished@GmLevelManifest@@UAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028DFB8 slot 3; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x00143DB0
+size = 30
+symbol = "??_GGmLevelManifest@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028DFB8 slot 4; flags 0 and 1 in tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x0015C860
+size = 93
+symbol = "?ClearDatabaseArrays@GmDatabaseManifest@@QAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x0015C8C0
+size = 23
+symbol = "?Clear@GmDatabaseManifest@@UAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028F340 slot 5; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x0015C8E0
+size = 21
+symbol = "?Parse@GmDatabaseManifest@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028F340 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x0015CBA0
+size = 361
+symbol = "?AfterParse@GmDatabaseManifest@@UAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028F340 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x0015CD10
+size = 25
+symbol = "??0GmDatabaseManifest@@QAE@XZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x0015CD30
+size = 92
+symbol = "??1GmDatabaseManifest@@UAE@XZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x0015CD90
+size = 624
+symbol = "?Free@GmDatabaseManifest@@UAEXXZ"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028F340 slot 6; tests/oracle/oracle_manifest.cpp, with fake items of the base's kinds"
+
+[[function]]
+va = 0x0015D9E0
+size = 30
+symbol = "??_GGmDatabaseManifest@@UAEPAXI@Z"
+source = "src/gm/GmLevelManifest.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0028F340 slot 4; flags 0 and 1 in tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B2BB0
+size = 74
+symbol = "?Run@GmAnimationListItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295040 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B2C00
+size = 64
+symbol = "?Configure@GmAnimationListItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2C40
+size = 55
+symbol = "??0GmAnimationListItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2C80
+size = 38
+symbol = "??1GmAnimationListItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2CB0
+size = 74
+symbol = "?Run@GmSoundListItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x0029504C slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B2D00
+size = 64
+symbol = "?Configure@GmSoundListItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2D40
+size = 32
+symbol = "?Unknown0@GmAnimationListItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295040 slot 0; tests/oracle/oracle_manifest.cpp; folded: also the slot 0 of GmSoundListItem, GmScriptItem"
+
+[[function]]
+va = 0x001B2D60
+size = 55
+symbol = "??0GmSoundListItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2DA0
+size = 38
+symbol = "??1GmSoundListItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2DD0
+size = 63
+symbol = "?Run@GmScriptItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295058 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B2E10
+size = 64
+symbol = "?Configure@GmScriptItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2E50
+size = 55
+symbol = "??0GmScriptItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2E90
+size = 38
+symbol = "??1GmScriptItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2EC0
+size = 57
+symbol = "?Run@GmTriggerItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295068 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B2F00
+size = 50
+symbol = "?Configure@GmTriggerItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2F40
+size = 37
+symbol = "?Unknown0@GmTriggerItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295068 slot 0; tests/oracle/oracle_manifest.cpp; folded: also the slot 0 of GmSubscriberItem"
+
+[[function]]
+va = 0x001B2F70
+size = 56
+symbol = "??0GmTriggerItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B2FB0
+size = 110
+symbol = "??1GmTriggerItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3020
+size = 57
+symbol = "?Run@GmSubscriberItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295078 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3060
+size = 50
+symbol = "?Configure@GmSubscriberItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B30A0
+size = 56
+symbol = "??0GmSubscriberItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B30E0
+size = 110
+symbol = "??1GmSubscriberItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3150
+size = 63
+symbol = "?Run@GmVfxItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295088 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3190
+size = 64
+symbol = "?Configure@GmVfxItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B31D0
+size = 32
+symbol = "?Unknown0@GmVfxItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295088 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B31F0
+size = 55
+symbol = "??0GmVfxItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3230
+size = 38
+symbol = "??1GmVfxItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3260
+size = 104
+symbol = "?Run@GmDynamicNodeItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295094 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B32D0
+size = 76
+symbol = "?Configure@GmDynamicNodeItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3320
+size = 32
+symbol = "?Unknown0@GmDynamicNodeItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x00295094 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3340
+size = 70
+symbol = "??0GmDynamicNodeItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3390
+size = 52
+symbol = "??1GmDynamicNodeItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B33D0
+size = 50
+symbol = "?Configure@GmSoundNodeItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3410
+size = 92
+symbol = "?Unknown0@GmSoundNodeItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950A0 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3470
+size = 127
+symbol = "?Run@GmSoundNodeItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950A0 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B34F0
+size = 55
+symbol = "??0GmSoundNodeItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3530
+size = 11
+symbol = "??1GmSoundNodeItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B36D0
+size = 50
+symbol = "?Configure@GmMusicChainItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3710
+size = 83
+symbol = "?Unknown0@GmMusicChainItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950B8 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3770
+size = 112
+symbol = "?Run@GmMusicChainItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950B8 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B37E0
+size = 49
+symbol = "??0GmMusicChainItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3820
+size = 11
+symbol = "??1GmMusicChainItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3830
+size = 50
+symbol = "?Configure@GmInstanceSoundItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3870
+size = 74
+symbol = "?Unknown0@GmInstanceSoundItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950C4 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B38C0
+size = 93
+symbol = "?Run@GmInstanceSoundItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950C4 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3920
+size = 23
+symbol = "?Register@GmInstanceSoundItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950C4 slot 3; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3940
+size = 55
+symbol = "??0GmInstanceSoundItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3980
+size = 80
+symbol = "??1GmInstanceSoundItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B39D0
+size = 50
+symbol = "?Configure@GmCollisionSoundItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3A10
+size = 74
+symbol = "?Unknown0@GmCollisionSoundItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950D4 slot 0; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3A60
+size = 93
+symbol = "?Run@GmCollisionSoundItem@@UAEXXZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "vftable 0x002950D4 slot 1; tests/oracle/oracle_manifest.cpp"
+
+[[function]]
+va = 0x001B3AC0
+size = 55
+symbol = "??0GmCollisionSoundItem@@QAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[function]]
+va = 0x001B3B00
+size = 80
+symbol = "??1GmCollisionSoundItem@@UAE@XZ"
+source = "src/gm/GmLevelManifestItems.cpp"
+subsystem = "gm/manifest"
+evidence = "tests/oracle/oracle_manifest.cpp; address noted beside the declaration in include/gm/GmLevelManifest.h"
+
+[[vtable]]
+va = 0x0028DFB8
+slots = 7
+symbol = "??_7GmLevelManifest@@6B@"
+source = "src/gm/GmLevelManifest.cpp"
+
+[[vtable]]
+va = 0x0028F340
+slots = 7
+symbol = "??_7GmDatabaseManifest@@6B@"
+source = "src/gm/GmLevelManifest.cpp"
+
+[[vtable]]
+va = 0x00295040
+slots = 3
+symbol = "??_7GmAnimationListItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x0029504C
+slots = 3
+symbol = "??_7GmSoundListItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x00295058
+slots = 3
+symbol = "??_7GmScriptItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x00295068
+slots = 3
+symbol = "??_7GmTriggerItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x00295078
+slots = 3
+symbol = "??_7GmSubscriberItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x00295088
+slots = 3
+symbol = "??_7GmVfxItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x00295094
+slots = 3
+symbol = "??_7GmDynamicNodeItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x002950A0
+slots = 3
+symbol = "??_7GmSoundNodeItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x002950B8
+slots = 3
+symbol = "??_7GmMusicChainItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x002950C4
+slots = 4
+symbol = "??_7GmInstanceSoundItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[[vtable]]
+va = 0x002950D4
+slots = 3
+symbol = "??_7GmCollisionSoundItem@@6B@"
+source = "src/gm/GmLevelManifestItems.cpp"
+
+[symbols]
+"?Unknown0@GmScriptItem@@UAEXXZ" = 0x001B2D40  # folded with GmAnimationListItem's
+"?Unknown0@GmSoundListItem@@UAEXXZ" = 0x001B2D40  # folded with GmAnimationListItem's
+"?Unknown0@GmSubscriberItem@@UAEXXZ" = 0x001B2F40  # folded with GmTriggerItem's
+"?OnToken@GmDatabaseManifest@@UAEXHPAVAtIoTokenizer@@@Z" = 0x0015D000  # NOT recovered: src/gm/GmLevelManifestHost.cpp
+"?Finished@GmDatabaseManifest@@UAEXXZ" = 0x0015D920  # NOT recovered: src/gm/GmLevelManifestHost.cpp
+"?s_keywords@GmDatabaseManifest@@2QBUAtIoKeyword@@B" = 0x002B9350
+"?s_keywords@GmLevelManifest@@2QBUAtIoKeyword@@B" = 0x002B9200
+"?s_heap@GmDatabaseManifest@@2PAXA" = 0x003B3610
+"?s_instance@GmBehaviorSystem@@2PAU1@A" = 0x003B35D4
+"?s_instance@GmVfxManager@@2PAV1@A" = 0x003B3C28
+"?s_instance@GmDynamicNodeLoader@@2PAV1@A" = 0x003B3984
+"?s_instance@GmSpaceGraphOwner@@2PAU1@A" = 0x003B3604
+"?s_instance@GmDynamicNodeState@@2PAU1@A" = 0x003B357C
+"?s_instance@GmMusicManager@@2PAV1@A" = 0x003B3568
+"?AtFormat@@YAHPADPBDZZ" = 0x00125559  # the C library's sprintf
+"__ehhandler$??1GmDatabaseManifest@@UAE@XZ" = 0x001FE428  # pushed by 0x0015CD30
+"??_C@_07NJGNKBOD@?$CF3s?$FN?$FL?$CFs@" = 0x00295038  # "%3s][%s"
+"??_C@_03NLNLLPHI@ANL@" = 0x00293494
+"??_C@_03CMFMKFLK@SDL@" = 0x00293458
+"??_C@_03MPCFIPFL@ASL@" = 0x002760C4
+"??_C@_03FFJFMIMA@AET@" = 0x00295064
+"??_C@_03BKNEFOAH@AES@" = 0x00295074
+"??_C@_03DGKIFGLD@VFX@" = 0x00295084
+"??_C@_03GAMBBELI@DAC@" = 0x0028EB70
+"??_C@_03NEFPNJFA@GOO@" = 0x0028D7D0
+"??_C@_03OGGJLLNC@GOM@" = 0x0028D950
+"??_C@_03ICAFHONG@GOI@" = 0x0028D784
+"??_C@_03HIOKJGFM@GOC@" = 0x0028D780
+"?Prepare@GmBehaviorList@@QAEXXZ" = 0x00198C90  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?LoadAnimations@GmBehaviorListOwner@@QAEPAVGmBehaviorList@@PBD@Z" = 0x0019C5E0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?LoadSounds@GmBehaviorListOwner@@QAEPAVGmBehaviorList@@PBD@Z" = 0x0019C100  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Release@GmBehaviorListOwner@@QAEXPAVGmBehaviorList@@@Z" = 0x00198E70  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Load@GmScriptOwner@@QAEPAVGmScript@@PBD@Z" = 0x00070310  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Release@GmScriptOwner@@QAEXPAVGmScript@@@Z" = 0x00070150  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"??0GmTriggerTable@@QAE@XZ" = 0x001963B0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"??1GmTriggerTable@@QAE@XZ" = 0x00196480  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Load@GmTriggerTable@@QAEXPBD@Z" = 0x00196500  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"??0GmSubscriberTable@@QAE@XZ" = 0x001968B0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"??1GmSubscriberTable@@QAE@XZ" = 0x00196980  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Load@GmSubscriberTable@@QAEXPBD@Z" = 0x00196A00  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Load@GmVfxManager@@QAEPAVGmVfxDatabase@@PBD@Z" = 0x001616A0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Delete@GmVfxManager@@QAEXPAVGmVfxDatabase@@@Z" = 0x000EB9D0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Load@GmDynamicNodeLoader@@QAEXPBDHPAVAtScene@@@Z" = 0x0014FF60  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Unload@GmDynamicNodeLoader@@QAEXPAVAtScene@@H@Z" = 0x00150020  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?InsertInto@AtScene@@QAEXPAVAtSpaceGraph@@@Z" = 0x0003E860  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?RemoveFrom@AtScene@@QAEXPAVAtSpaceGraph@@@Z" = 0x0003E890  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioAllocateNodeBank@@YAPAXXZ" = 0x001367E0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioLoadNodes@@YAXPAXPBD@Z" = 0x0013AA80  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioFreeNodes@@YAXPAX@Z" = 0x00138E50  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioReleaseNodeBank@@YAXPAX@Z" = 0x00136810  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioRegisterNodes@@YAXPAX@Z" = 0x00138A10  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioLoadInstanceSounds@@YAPAXPBD@Z" = 0x00139C40  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioFreeInstanceSounds@@YAXPAX@Z" = 0x00136B30  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioRegisterInstanceSounds@@YAXPAX@Z" = 0x00136A10  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioLoadCollisionSounds@@YAPAXPBD@Z" = 0x00139610  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioFreeCollisionSounds@@YAXPAX@Z" = 0x00139B50  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmAudioFreeDatabase@@YAXPAX@Z" = 0x00139F90  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmSceneItemLeave@@YAXPAXPAVAtSpaceGraph@@@Z" = 0x0002EDD0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmRegistryRelease@@YAXPAX@Z" = 0x00071DC0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Load@GmMusicChain@@QAEXPBDH@Z" = 0x0013D2A0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Clear@GmMusicChain@@QAEXXZ" = 0x0013CFF0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Allocate@GmMusicManager@@QAEPAVGmMusicChain@@XZ" = 0x0013D0C0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Stop@GmMusicManager@@QAEXPAVGmMusicChain@@@Z" = 0x0013D3A0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?Free@GmMusicManager@@QAEXPAVGmMusicChain@@@Z" = 0x0013D360  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmSoundNoteItemConfigure@@YAXPAVGmManifestItem@@PBUGmManifestItemRequest@@@Z" = 0x001B3540  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
+"?GmSoundNoteItemRegister@@YAXPAVGmManifestItem@@@Z" = 0x00139550  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp or GmLevelManifestNotes.cpp; the free functions stand for thiscall members
