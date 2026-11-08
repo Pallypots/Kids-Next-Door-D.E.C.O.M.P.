@@ -53,6 +53,18 @@ public:
     virtual void Slot15() = 0;
     virtual void Slot16() = 0;
     virtual AtMatrixDevice* MatrixDevice() = 0;  // slot 17
+    virtual void Slot18() {}
+    virtual void Slot19() {}
+    virtual void Slot20() {}
+    virtual void Slot21() {}
+    virtual void Slot22() {}
+    virtual void Slot23() {}
+    virtual void Slot24() {}
+    // Slot 25. Two reals, scales for flat drawn things. Concrete in the graphics layer, which is not recovered. In src/at/AtDrawItem.cpp.
+    virtual void DrawScale(float* out);
+
+    void* FindFont(const char* name, const char* ns);   // 0x00049290 ns may be empty or null. src/at/AtDrawItem.cpp
+    void* FindImage(const char* name, const char* ns);  // 0x00048E50 likewise
 
     char m_unknown04[0xEC];            // +0x04
     GmNameMapGroup m_meshes;           // +0xF0 Mesh
@@ -64,7 +76,11 @@ public:
     GmNameSpaceDb m_matAssignmentSpaces;  // +0x1BC
     GmNameMapGroup m_matAnimations;    // +0x1E0 PlayMatAnimation
     GmNameSpaceDb m_matAnimationSpaces;  // +0x1F8
-    char m_unknown21C[0xB4];           // +0x21C
+    char m_unknown21C[0x3C];           // +0x21C
+    GmNameMapGroup m_fonts;            // +0x258 TextDraw's Font
+    GmNameSpaceDb m_fontSpaces;        // +0x270
+    GmNameMapGroup m_images;           // +0x294 ImageDraw's Image
+    GmNameSpaceDb m_imageSpaces;       // +0x2AC
     GmNameMapGroup m_lightAnimations;  // +0x2D0 what a light modifier's LightAnimation word finds
     GmNameSpaceDb m_lightAnimationSpaces;  // +0x2E8
     GmNameMapGroup m_coordSysDatabases;  // +0x30C CoordSysDatabase and those like it
