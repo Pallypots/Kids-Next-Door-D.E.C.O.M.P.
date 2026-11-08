@@ -179,7 +179,7 @@ public:
     int Find(unsigned int, unsigned int, float, int) override { return 0; }
     void Load() override { slot('l'); }
     unsigned short At(unsigned int) override { return 0; }
-    void Slot9() override {} void Slot10() override {} void Slot11() override {} void Slot12() override {} void Slot13() override {}
+    void Slot9(unsigned int) override {} void Slot10(unsigned int) override {} void Slot11(unsigned int) override {} void Slot12(unsigned int) override {} void Slot13(unsigned int) override {}
     void Slot14() override {} void Slot15() override {} void Slot16() override {} void Slot17() override {} void Slot18() override {}
     void ReadRotationKeys(AtIoTokenizer* t) override { slot('R', (uint32_t)t->ExpectInt()); }
     void ReadTranslationKeys(AtIoTokenizer* t) override { slot('T', (uint32_t)t->ExpectInt()); }
