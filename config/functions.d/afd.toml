@@ -1,0 +1,642 @@
+# The Flash user interface's .AFD reader, sprites with their frames (.AFP, .XFF), shapes (.AFH), and the resource table's groups. Names inferred, but for AtFpSprite and AtFpPlaceObject2Tag, the original's own; see include/at/AtFlashLevel.h, AtFlashSprite.h, AtFlashShape.h. Sizes are the inventory's.
+
+[[function]]
+va = 0x000113B0
+size = 95
+symbol = "?Reset@AtFlashLevel@@QAEXXZ"
+source = "src/at/AtFlashLevelRead.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00011770
+size = 472
+symbol = "?ReadDefinition@AtFlashLevel@@QAEXPBDH@Z"
+source = "src/at/AtFlashLevelRead.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016F40
+size = 10
+symbol = "?SetDefaultHeap@AtFlashResourceTable@@SAXPAX@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000170E0
+size = 198
+symbol = "?RecycleGroup@AtFlashResourceTable@@QAEXH@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000171B0
+size = 214
+symbol = "?SetGroupCount@AtFlashResourceTable@@QAEXI@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017290
+size = 13
+symbol = "?Slot3@AtFlashResourceTable@@UAEXH@Z"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017370
+size = 33
+symbol = "?Init@AtFlashResourceTable@@QAEXXZ"
+source = "src/at/AtFlashTextFormat.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012280
+size = 88
+symbol = "??0AtFlashSpriteTable@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000122E0
+size = 138
+symbol = "?ClearSprites@AtFlashSpriteTable@@QAEXXZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012370
+size = 406
+symbol = "?Load@AtFlashSpriteTable@@QAEXPBDH@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012570
+size = 226
+symbol = "?Allocate@AtFlashSpriteTable@@UAEXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012660
+size = 92
+symbol = "??1AtFlashSpriteTable@@UAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000126C0
+size = 30
+symbol = "??_GAtFlashSpriteTable@@UAEPAXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000169A0
+size = 10
+symbol = "?SetHeap@AtFpSprite@@SAXPAX@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016AE0
+size = 91
+symbol = "??0AtFpSprite@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016B40
+size = 111
+symbol = "?Clear@AtFpSprite@@QAEXXZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016BB0
+size = 195
+symbol = "?Allocate@AtFpSprite@@QAEXHI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016C80
+size = 561
+symbol = "?ReadData@AtFpSprite@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016EE0
+size = 5
+symbol = "?Read@AtFpSprite@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016EF0
+size = 79
+symbol = "??1AtFpSprite@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017550
+size = 35
+symbol = "??0AtFlashFrameTable@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017580
+size = 245
+symbol = "?ClearFrames@AtFlashFrameTable@@QAEXXZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017680
+size = 1266
+symbol = "?LoadBinary@AtFlashFrameTable@@QAEXPBD@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017B80
+size = 226
+symbol = "?Allocate@AtFlashFrameTable@@UAEXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017C70
+size = 79
+symbol = "??1AtFlashFrameTable@@UAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017CC0
+size = 374
+symbol = "?Load@AtFlashFrameTable@@QAEXPBDH@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017E40
+size = 30
+symbol = "??_GAtFlashFrameTable@@UAEPAXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00023460
+size = 88
+symbol = "??0AtFlashFrame@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000234C0
+size = 105
+symbol = "?Clear@AtFlashFrame@@QAEXXZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00023860
+size = 493
+symbol = "?ReadBinary@AtFlashFrame@@QAEXPAPBEPAPAVAtFlashActionTag@@PAPAVAtFpPlaceObject2Tag@@PAPAVAtFlashRemoveTag@@PAPAVAtFlashSoundTag@@@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00023A60
+size = 79
+symbol = "??1AtFlashFrame@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00031830
+size = 23
+symbol = "??0AtFlashTag@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00031850
+size = 24
+symbol = "?Prepare@AtFlashTag@@UAEXXZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00031870
+size = 22
+symbol = "?Reset@AtFlashTag@@UAEXXZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00031890
+size = 28
+symbol = "??1AtFlashTag@@UAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00023C10
+size = 39
+symbol = "??0AtFlashActionTag@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00023C40
+size = 107
+symbol = "??1AtFlashActionTag@@UAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000173D0
+size = 84
+symbol = "??_GAtFlashActionTag@@UAEPAXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024210
+size = 25
+symbol = "??0AtFpPlaceObject2Tag@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024230
+size = 116
+symbol = "??1AtFpPlaceObject2Tag@@UAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017430
+size = 84
+symbol = "??_GAtFpPlaceObject2Tag@@UAEPAXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00023CB0
+size = 89
+symbol = "?SetColorScale@AtFpPlaceObject2Tag@@QAEXPBE@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00023D30
+size = 90
+symbol = "?ResetFields@AtFpPlaceObject2Tag@@QAEXXZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024180
+size = 141
+symbol = "?SetName@AtFpPlaceObject2Tag@@QAEXPBD@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000242B0
+size = 185
+symbol = "?ReadBinary@AtFpPlaceObject2Tag@@QAEXPAPBE@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000246C0
+size = 39
+symbol = "??0AtFlashRemoveTag@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000246F0
+size = 107
+symbol = "??1AtFlashRemoveTag@@UAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00017490
+size = 84
+symbol = "??_GAtFlashRemoveTag@@UAEPAXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024760
+size = 39
+symbol = "?ReadBinary@AtFlashIdTag@@QAEXPAPBE@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000248B0
+size = 39
+symbol = "??0AtFlashSoundTag@@QAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000248E0
+size = 107
+symbol = "??1AtFlashSoundTag@@UAE@XZ"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000174F0
+size = 84
+symbol = "??_GAtFlashSoundTag@@UAEPAXI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024950
+size = 36
+symbol = "?ReadPending@AtAudioBankFile@@QAEHPAXIPAIPAPAVAtIoFileRequest@@@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024980
+size = 32
+symbol = "?Release@AtAudioBankFile@@QAEHPAVAtIoFileRequest@@@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000249D0
+size = 123
+symbol = "?Open@AtAudioBankFile@@QAEHPBDH@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024A50
+size = 74
+symbol = "?Read@AtAudioBankFile@@QAEHPAXIPAI@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00024AA0
+size = 184
+symbol = "?OpenWithExtension@AtAudioBankFile@@QAEHPBD0H@Z"
+source = "src/at/AtFlashSprite.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012BD0
+size = 35
+symbol = "??0AtFlashShapeTable@@QAE@XZ"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012C00
+size = 233
+symbol = "?ClearShapes@AtFlashShapeTable@@QAEXXZ"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012CF0
+size = 318
+symbol = "?ReadFile@AtFlashShapeTable@@QAEPADPBD@Z"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013050
+size = 226
+symbol = "?Allocate@AtFlashShapeTable@@UAEXI@Z"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013140
+size = 79
+symbol = "??1AtFlashShapeTable@@UAE@XZ"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013190
+size = 453
+symbol = "?Load@AtFlashShapeTable@@QAEXPBDHPAUAtFlashApplication@@@Z"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013360
+size = 30
+symbol = "??_GAtFlashShapeTable@@UAEPAXI@Z"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00019560
+size = 149
+symbol = "?ReadData@AtFlashShape@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00019600
+size = 94
+symbol = "??0AtFlashShape@@QAE@XZ"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00019660
+size = 5
+symbol = "?Read@AtFlashShape@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00019670
+size = 102
+symbol = "??1AtFlashShape@@QAE@XZ"
+source = "src/at/AtFlashShape.cpp"
+subsystem = "at/afd"
+evidence = "tests/oracle/oracle_afd.cpp; address noted beside the declaration in the header"
+
+[[vtable]]
+va = 0x00271080
+slots = 4
+symbol = "??_7AtFlashSpriteTable@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00271F40
+slots = 1
+symbol = "??_7AtFpSprite@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00272108
+slots = 4
+symbol = "??_7AtFlashFrameTable@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00272D2C
+slots = 1
+symbol = "??_7AtFlashFrame@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00272D30
+slots = 7
+symbol = "??_7AtFlashActionTag@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00272DC0
+slots = 7
+symbol = "??_7AtFpPlaceObject2Tag@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00272DDC
+slots = 7
+symbol = "??_7AtFlashRemoveTag@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00272DF8
+slots = 7
+symbol = "??_7AtFlashSoundTag@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[[vtable]]
+va = 0x00271158
+slots = 4
+symbol = "??_7AtFlashShapeTable@@6B@"
+source = "src/at/AtFlashShape.cpp"
+
+[[vtable]]
+va = 0x00272210
+slots = 1
+symbol = "??_7AtFlashShape@@6B@"
+source = "src/at/AtFlashShape.cpp"
+
+[[vtable]]
+va = 0x00274A5C
+slots = 7
+symbol = "??_7AtFlashTag@@6B@"
+source = "src/at/AtFlashSprite.cpp"
+
+[symbols]
+"?SetHeap@AtFlashResourceTable@@QAEXPAX@Z" = 0x00058AF0  # one store; called at 0x000116B2 and 0x000116C4
+"?Load@AtFlashScriptTable@@QAEXPBDHPAUAtFlashApplication@@@Z" = 0x000134A0  # not recovered; stops with a diagnostic
+"?Load@AtFlashTextTable@@QAEXPBDHPAUAtMaterialOwner@@H@Z" = 0x00013CB0  # not recovered; stops with a diagnostic
+"?Release@AtFlashSpriteTable@@UAEXI@Z" = 0x00012540  # not recovered; stops with a diagnostic
+"?Release@AtFlashShapeTable@@UAEXI@Z" = 0x00012F70  # not recovered; stops with a diagnostic
+"?Read@AtFlashFrame@@UAEXPAVAtIoTokenizer@@@Z" = 0x00023A50  # not recovered; stops with a diagnostic
+"?Slot1@AtFlashTag@@UAEXXZ" = 0x000760A0  # not recovered; stops with a diagnostic
+"?Slot6@AtFlashTag@@UAEXXZ" = 0x00023BA0  # not recovered; stops with a diagnostic
+"?Prepare@AtFlashIdTag@@UAEXXZ" = 0x00023BC0  # not recovered; stops with a diagnostic
+"?Reset@AtFlashActionTag@@UAEXXZ" = 0x00023BE0  # not recovered; stops with a diagnostic
+"?ReadText@AtFlashActionTag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x00023AB0  # not recovered; stops with a diagnostic
+"?WriteText@AtFlashActionTag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x00023B50  # not recovered; stops with a diagnostic
+"?Reset@AtFlashRemoveTag@@UAEXXZ" = 0x00024690  # not recovered; stops with a diagnostic
+"?ReadText@AtFlashRemoveTag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x000245A0  # not recovered; stops with a diagnostic
+"?WriteText@AtFlashRemoveTag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x00024640  # not recovered; stops with a diagnostic
+"?Reset@AtFlashSoundTag@@UAEXXZ" = 0x00024880  # not recovered; stops with a diagnostic
+"?ReadText@AtFlashSoundTag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x00024790  # not recovered; stops with a diagnostic
+"?WriteText@AtFlashSoundTag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x00024830  # not recovered; stops with a diagnostic
+"?Prepare@AtFpPlaceObject2Tag@@UAEXXZ" = 0x00023D10  # not recovered; stops with a diagnostic
+"?Reset@AtFpPlaceObject2Tag@@UAEXXZ" = 0x00023D90  # not recovered; stops with a diagnostic
+"?ReadText@AtFpPlaceObject2Tag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x00023DC0  # not recovered; stops with a diagnostic
+"?WriteText@AtFpPlaceObject2Tag@@UAEXPAVAtIoTokenizer@@H@Z" = 0x00024370  # not recovered; stops with a diagnostic
+"?s_heap@AtFlashFrame@@2PAXA" = 0x002C6324
+"?s_heap@AtFpPlaceObject2Tag@@2PAXA" = 0x002C63D0
+"?s_heap@AtFpSprite@@2PAXA" = 0x002C626C
+"?s_context@AtAudioBankFile@@2PAVAtIoContext@@A" = 0x002C6328  # stored at 0x0001951A
+"?Close@AtAudioBankFile@@QAEXXZ" = 0x000249A0  # same code as the destructor: folded
+"__ehhandler$??0AtFlashShape@@QAE@XZ" = 0x001F62D8  # pushed by 0x00019600
+"??_GAtFlashTag@@UAEPAXI@Z" = 0x000318B0  # the base's deleting destructor, made by the compiler; nothing here calls it, so it is mapped and not counted

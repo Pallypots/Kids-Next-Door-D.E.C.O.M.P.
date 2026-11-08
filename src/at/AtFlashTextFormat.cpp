@@ -8,7 +8,6 @@ void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);
 void AtPopHeap();
 void AtCopyName8(char* to, const char* from);
-void AtFatal(const char* message, int a, int b, int c);
 
 void* AtFlashResourceTable::s_defaultHeap;
 
@@ -59,14 +58,14 @@ void* HeapOf(AtFlashResourceTable* table) {
 AtFlashResource::AtFlashResource() {
     m_index = -1;
     m_references = 0;
-    m_unknown14 = 0;
+    m_uses = 0;
     m_table = 0;
 }
 
 AtFlashResource::~AtFlashResource() {
     m_index = -1;
     m_references = 0;
-    m_unknown14 = 0;
+    m_uses = 0;
     m_table = 0;
 }
 
@@ -76,7 +75,7 @@ void AtFlashResource::Read(AtIoTokenizer*) {
 void AtFlashResource::ResetLinks() {
     m_index = -1;
     m_references = 0;
-    m_unknown14 = 0;
+    m_uses = 0;
     m_table = 0;
 }
 
@@ -271,8 +270,113 @@ void AtFlashResourceTable::Release(unsigned int index) {
     m_items[index]->m_references--;
 }
 
+
+namespace {
+
+// Off the front of a group's list. The list runs through m_groupNext, so what it holds are pointers to that member.
+AtFlashResource* TakeMember(AtFlashResourceTable::Group* group) {
+    void** link = (void**)group->m_first;
+    if (link == 0) {
+        return 0;
+    }
+    void** next = (void**)link[0];
+    group->m_first = next;
+    if (next != 0) {
+        next[1] = 0;
+    } else {
+        group->m_last = 0;
+    }
+    AtFlashResource* none = 0;
+    return (AtFlashResource*)((char*)link - ((char*)&none->m_groupNext - (char*)none));
+}
+
+}  // namespace
+
+void AtFlashResourceTable::SetDefaultHeap(void* heap) {
+    s_defaultHeap = heap;
+}
+
+void AtFlashResourceTable::SetHeap(void* heap) {
+    m_heap = heap;
+}
+
 void AtFlashResourceTable::Slot3(int) {
-    AtFatal("AtFlashResourceTable::Slot3 (0x00017290) is not recovered", 0, 0, 0);
+    RecycleGroup(1);
+}
+
+void AtFlashResourceTable::RecycleGroup(int keep) {
+    Group* group = m_firstGroup;
+    if (group != 0) {
+        m_firstGroup = group->m_next;
+        if (m_firstGroup != 0) {
+            m_firstGroup->m_prev = 0;
+        } else {
+            m_lastGroup = 0;
+        }
+    }
+    for (AtFlashResource* item = TakeMember(group); item != 0; item = TakeMember(group)) {
+        for (unsigned int uses = (unsigned int)item->m_uses; uses > 0; uses--) {
+            item->m_uses--;
+            Release((unsigned int)item->m_index);
+        }
+        item->m_table = 0;
+    }
+    if (keep != 0) {
+        group->m_prev = m_lastGroup;
+        if (m_lastGroup != 0) {
+            m_lastGroup->m_next = group;
+        } else {
+            m_firstGroup = group;
+        }
+        m_lastGroup = group;
+        group->m_next = 0;
+    } else if (group != 0) {
+        group->m_first = 0;
+        group->m_last = 0;
+        operator delete(group);
+    }
+}
+
+void AtFlashResourceTable::SetGroupCount(unsigned int count) {
+    if (count > m_groupCount) {
+        for (unsigned int i = m_groupCount; i < count; i++) {
+            void* heap = m_heap != 0 ? m_heap : s_defaultHeap;
+            if (heap == 0) {
+                AtRaise(-2, 0, 0, 0);
+            }
+            AtPushHeap(heap);
+            Group* group = (Group*)operator new(sizeof(Group));
+            if (group != 0) {
+                group->m_first = 0;
+                group->m_last = 0;
+            }
+            AtPopHeap();
+            if (group == 0) {
+                AtRaise(-4, 0, 0, 0);
+            }
+            group->m_prev = m_lastGroup;
+            if (m_lastGroup != 0) {
+                m_lastGroup->m_next = group;
+            } else {
+                m_firstGroup = group;
+            }
+            m_lastGroup = group;
+            group->m_next = 0;
+        }
+    } else {
+        for (unsigned int i = count; i < m_groupCount; i++) {
+            RecycleGroup(0);
+        }
+    }
+    m_groupCount = count;
+}
+
+void AtFlashResourceTable::Init() {
+    if (m_initialised != 0) {
+        Clear();
+    }
+    SetGroupCount(6);
+    m_initialised = 1;
 }
 
 // ---- the table of text formats --------------------------------------------------------------------------------------------
