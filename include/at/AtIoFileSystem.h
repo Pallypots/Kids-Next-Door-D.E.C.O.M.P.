@@ -85,6 +85,8 @@ public:
     AtIoFileSystem* Top();                                           // 0x000192E0
     // Searches from the top. 0 and writes *fs when one has the file; 1 otherwise, with *fs null if fs was given.
     int FindFile(const char* path, AtIoFileSystem** fs);             // 0x00019300
+    void PushPath(const char* directory);                            // 0x00019370 onto every file system's path, in stack order
+    void PopPath();                                                  // 0x000193A0 from every file system's path
 
     AtIoContext();                                                   // Not 0x000191C0, whose member at +0x08 is not recovered.
     void AddMap(GmNameMap* map, const char* space);                  // 0x00019190 null means the default group

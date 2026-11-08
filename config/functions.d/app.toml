@@ -1,0 +1,301 @@
+# App: the game's main, start-up, the main loop and App's small slots. Names inferred, except App (RTTI); see include/gm/GmApp.h. Sizes run to the padding
+# after each function's last instruction.
+
+[[function]]
+va = 0x00011030
+size = 59
+symbol = "?AppMain@@YAHIPAPAD0@Z"
+source = "src/gm/GmMain.cpp"
+subsystem = "gm/app"
+evidence = "called by the main thread 0x00085301 with (0, 0, 0); stores 0x002BF308 and 0x002BF300, then 0x0008E660, 0x0008EBE0, 0x0008ED60 on 0x002BF310; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008E660
+size = 1405
+symbol = "?Init@App@@QAEXHH@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by main on the App at 0x002BF310; ret 8; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008EBE0
+size = 369
+symbol = "?Run@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by main second; loops on App+0x6518; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x00141500
+size = 406
+symbol = "?StartUp@App@@UAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 5; called directly by 0x0008E660; sets 0x003B360C; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0009C280
+size = 106
+symbol = "?StartUpAtlas@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x00141500; App slots 60 and 61, object at +0x6450 slot 1; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008DA10
+size = 283
+symbol = "?SetDefaults@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by App's constructor 0x0008E5B0; tail of 0x0008ED60; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008CE00
+size = 427
+symbol = "?CreateMountManager@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; constructs 0x48 bytes by 0x00140350 at App+0x6914; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008E240
+size = 102
+symbol = "?LoadDirtyDiskScreen@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; string DataXbox\\UI\\DirtyDsk\\loader; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008DC70
+size = 371
+symbol = "?CreateFrameworks@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; constructors 0x0009B6B0, 0x0009B1E0, 0x00099520 (RTTI FaMo*Framework); tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008DDF0
+size = 167
+symbol = "?SetFrameworkTable@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; writes App+0x64D8, read by 0x0008EBE0; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008DEA0
+size = 364
+symbol = "?LoadRegistries@App@@QAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; strings Generic.ADR, Library.ADD; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008E420
+size = 136
+symbol = "?FindLevel@GmLevelManager@@QAEHPBD@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660 on 0x003B3570; reads +0x18 and +0x1A0; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x00019370
+size = 47
+symbol = "?PushPath@AtIoContext@@QAEXPBD@Z"
+source = "src/gm/GmAppIo.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008DEA0 on the mount manager's context; 0x00018630 on each file system; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x000193A0
+size = 43
+symbol = "?PopPath@AtIoContext@@QAEXXZ"
+source = "src/gm/GmAppIo.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008DEA0; 0x00018720 on each file system; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x000703B0
+size = 13
+symbol = "?GmScriptsInitNames@@YAXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; GmNameMap::Init(50) on 0x002CD0F8; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x00083490
+size = 10
+symbol = "?GmSetHeap00083490@@YAXPAX@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; stores 0x00301B70; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x00143DD0
+size = 10
+symbol = "?GmAcPlayerGameStateDataSetHeap@@YAXPAX@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; stores 0x003B3614; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x000980F0
+size = 10
+symbol = "?GmSetHeap000980F0@@YAXPAX@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called by 0x0008E660; stores 0x00305914; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x00140C20
+size = 10
+symbol = "?SetHeap@GmMoFramework@@SAXPAX@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called three times by 0x0008DC70; stores 0x003B3600, read by the frameworks; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0009D540
+size = 6
+symbol = "?GmGameSaveSize@@YAIXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "called twice by 0x0008E660; returns 0xF8; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C620
+size = 35
+symbol = "?GetMemoryParams@App@@UAEXPAUAtMemoryParams@@@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 0; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C860
+size = 185
+symbol = "?CreateHeaps@App@@UAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 1; string ***Mem For Heaps; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C920
+size = 52
+symbol = "?DestroyHeaps@App@@UAEXXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 2; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C680
+size = 33
+symbol = "?GetConfig07@App@@UAEXPAUAppLayerConfig07@@@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 7; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C830
+size = 33
+symbol = "?GetAtlasConfig@App@@UAEXPAUAppAtlasConfig@@@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 60; called by 0x0009C280; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C960
+size = 24
+symbol = "?GetHeap@App@@UAEPAVAtHeap@@I@Z"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 64; called by 0x0008E240; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C9C0
+size = 75
+symbol = "?HeapsFree@App@@UAEIXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 67; tests/oracle/oracle_app.cpp"
+
+[[function]]
+va = 0x0008C980
+size = 55
+symbol = "?HeapsUsed@App@@UAEIXZ"
+source = "src/gm/GmApp.cpp"
+subsystem = "gm/app"
+evidence = "App vftable 0x0027AE44 slot 68; tests/oracle/oracle_app.cpp"
+
+[symbols]
+"?g_app@@3VApp@@A" = 0x002BF310
+"?s_instance@App@@2PAV1@A" = 0x00304D58
+"?s_heap@App@@2PAVAtHeap@@A" = 0x00304D6C
+"?s_heapMemory@App@@2IA" = 0x00304D68
+"?s_memoryTotal@App@@2IA" = 0x003B3BE0
+"?s_memoryOverhead@App@@2IA" = 0x003B3BDC
+"?s_gameState@App@@2PAVFaAcPlayerGameStateData@@A" = 0x003B3530
+"?s_heap@GmMoFramework@@2PAXA" = 0x003B3600
+"?g_scriptNames@@3VGmNameMap@@A" = 0x002CD0F8
+"?g_heap00301B70@@3PAXA" = 0x00301B70
+"?g_heap003B3614@@3PAXA" = 0x003B3614
+"?g_heap00305914@@3PAXA" = 0x00305914
+"?s_instance@GmSaveTypes@@2U1@A" = 0x00305140
+"?g_enabled3B3514@@3HA" = 0x003B3514
+"?g_enabled3056A4@@3HA" = 0x003056A4
+"?g_enabled3056C8@@3HA" = 0x003056C8
+"?g_enabled3056EC@@3HA" = 0x003056EC
+"?g_enabled305710@@3HA" = 0x00305710
+"?g_enabled305734@@3HA" = 0x00305734
+"?g_enabled305758@@3HA" = 0x00305758
+"?g_enabled30577C@@3HA" = 0x0030577C
+"?g_enabled3057A0@@3HA" = 0x003057A0
+"?g_enabled3057E8@@3HA" = 0x003057E8
+"?g_enabled30580C@@3HA" = 0x0030580C
+"?g_enabled305830@@3HA" = 0x00305830
+"?g_appShortName@@3PADA" = 0x003050E8
+"?g_appTitle@@3PADA" = 0x003050F0
+"?g_unknown305130@@3HA" = 0x00305130
+"?g_unknown304D80@@3HA" = 0x00304D80
+"?g_unknown304D54@@3HA" = 0x00304D54
+"?g_unknown3ADA50@@3HA" = 0x003ADA50
+"?g_inScripts@@3HA" = 0x003B361C
+"?g_unknown30567C@@3PADA" = 0x0030567C
+"?s_instance@GmScripts@@2PAV1@A" = 0x003B3418
+"?s_instance@GmClock@@2PAV1@A" = 0x002CD11C
+"?s_instance@GmDataRoot@@2PAU1@A" = 0x003B357C
+"?s_instance@GmRegistryUser@@2PAU1@A" = 0x003B3524
+"?s_instance@GmRegistryNames@@2PAU1@A" = 0x002CD138
+# NOT recovered: src/gm/GmAppHost.cpp
+"?AtSdkGlobalMemoryStatus@@YAXPAUAtSdkMemoryStatus@@@Z" = 0x00085451
+"?StartUpUserInterface@App@@QAEXXZ" = 0x0009C3C0
+"?SetDisplayMode@App@@QAEXXZ" = 0x0008DBA0
+"?ReadMatrixDevice@App@@QAEXXZ" = 0x001416A0
+"?CreateSubsystems@App@@QAEXXZ" = 0x0008CFB0
+"?Shutdown@App@@UAEXXZ" = 0x0008ED60
+"?Present@App@@UAEXH@Z" = 0x0009CA90
+"?AppMountManagerConstruct@@YAPAVAtIoMountManager@@PAX@Z" = 0x00140350
+"?GmHistoryLogsConstruct@@YAPAUGmHistoryLogs@@PAX@Z" = 0x0006C2A0
+"?GmHistoryLogsInit@@YAXPAUGmHistoryLogs@@PBUAppLogParams@@@Z" = 0x0006C3E0
+"?FaMoIntroFrameworkConstruct@@YAPAVGmMoFramework@@PAX@Z" = 0x0009B6B0
+"?FaMoFlashMainMenuFrameworkConstruct@@YAPAVGmMoFramework@@PAX@Z" = 0x0009B1E0
+"?FaMoGameFrameworkConstruct@@YAPAVGmMoFramework@@PAX@Z" = 0x00099520
+"?Init@GmScripts@@QAEXPAVAtHeap@@@Z" = 0x0012EEA0
+"?FindModule@GmScripts@@QAEPAVGmScriptModule@@PBD@Z" = 0x0012EFC0
+"?GmRegisterAppCallbacks@@YAXXZ" = 0x0008E4E0
+"?GmRegisterControlCallbacks@@YAXXZ" = 0x0008C450
+"?GmRegisterSaveDataCallbacks@@YAXXZ" = 0x0008CB30
+"?GmRunScripts@@YAHH@Z" = 0x00091540
+"?GmGetStringByName@@YAXPADIPBD@Z" = 0x00090950
+"?Tick@GmClock@@QAEXH@Z" = 0x00071A60
+"?Init@AppUnknown692C@@QAEXXZ" = 0x00090210
+"?Update@AppUnknown692C@@QAEXH@Z" = 0x0006DEA0
+"?SetScreenSize@AppViewport@@QAEXHH@Z" = 0x0009EA00
+"?AtDataRegistryAttachUnder@@YAHPAVAtDataRegistry@@0PBD@Z" = 0x00067D40
+"?AtDataRegistryPrepare@@YAXPAVAtDataRegistry@@PAUAtDataRegistryOwner@@@Z" = 0x000675B0
+"?AtDataRegistrySetFileName@@YAXPAVAtDataRegistry@@PBD@Z" = 0x00066860
+"?AtDataRegistryFindPath@@YAPAVAtDataLink@@PAVAtDataRegistry@@PAV1@PBDH@Z" = 0x000679E0
+"?Add@GmRegistryNames@@QAEXPAVAtDataRegistry@@@Z" = 0x00071F20
+"?AppSaveDataInit@@YAXPAX@Z" = 0x0009D9C0
+"?GmAudioReadSavedVolumes@@YAXPAVGmAudioData@@@Z" = 0x00139F10
+"?GmUnknown97EB0@@YAXPAX@Z" = 0x00097EB0
+"?AtIoSpaceManagerAdd@@YAPAXPAVAtIoSpaceManager@@PAXIH@Z" = 0x0007D070
+"?AppUnknown90580@@YAXXZ" = 0x00090580

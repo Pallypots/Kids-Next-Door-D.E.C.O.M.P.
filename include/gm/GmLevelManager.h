@@ -41,6 +41,7 @@ public:
     virtual void Unload();              // slot 2, 0x0013E670
 
     void Reset();                       // 0x0013D950
+    int FindLevel(const char* name);    // 0x0008E420 the index of the first level named so, compared over eight characters, or -1; src/gm/GmApp.cpp
     void ReleaseLevelData();            // 0x0013E530 NOT recovered: stops with a diagnostic in GmLevelPending.cpp
 
     static void SetHeap(void* heap);    // 0x0013D8E0
