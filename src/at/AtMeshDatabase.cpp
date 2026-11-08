@@ -213,7 +213,7 @@ void AtMesh::Finish() {
 
 AtMeshDatabase::AtMeshDatabase() {
     m_meshCount = 0;
-    m_unknown18 = 0;
+    m_more = 0;
     m_vertexArrayCount = 0;
     m_indexArrayCount = 0;
 }
@@ -221,7 +221,7 @@ AtMeshDatabase::AtMeshDatabase() {
 void AtMeshDatabase::Clear() {
     GmNameMap::Clear();
     m_meshCount = 0;
-    m_unknown18 = 0;
+    m_more = 0;
     m_vertexArrayCount = 0;
     m_indexArrayCount = 0;
 }
