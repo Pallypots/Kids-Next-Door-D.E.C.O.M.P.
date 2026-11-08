@@ -2,36 +2,23 @@
 #include "at/AtCoordSys.h"
 
 #include "at/AtIoTokenizer.h"
+#include "at/AtMatrix.h"
 
 #include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);
 void AtPopHeap();
-void AtFatal(const char* message, int a, int b, int c);
 
 void* AtCoordSysDatabase::s_heap;
 
-namespace {
-
-void NoCopy(AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoIdentity(AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoTranslation(AtMatrix*, const AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoRotation(AtMatrix*, const AtQuaternion*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoLookAt(AtMatrix*, const AtVector3*, const AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoScale(AtMatrix*, const AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoInverse(AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoMultiply(AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoProduct(AtMatrix*, const AtMatrix*, const AtMatrix*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoTransform(const AtMatrix*, const AtVector3*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoUniformScale(AtMatrix*, float) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoGetPosition(const AtMatrix*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoGetAxes(const AtMatrix*, AtVector3*, AtVector3*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-void NoTransformDirection(const AtMatrix*, const AtVector3*, AtVector3*) { AtFatal("Atlas: no matrix table", 0, 0, 0); }
-
-}  // namespace
-
-AtMatrixTable g_atMatrix = {NoCopy, NoIdentity, NoTranslation, NoRotation, NoLookAt, NoScale, NoInverse, NoMultiply, NoProduct, NoTransform, NoUniformScale, AtMatrixRead, NoGetPosition, NoGetAxes, NoTransformDirection};
+// The functions 0x000EC2B0 writes into these slots of the original's table: see include/at/AtMatrix.h.
+AtMatrixTable g_atMatrix = {AtMatrixCopy, AtMatrixIdentity, AtMatrixSetTranslation, AtMatrixSetRotation, AtMatrixSetLookAt, AtMatrixSetScale, AtMatrixSetInverse, AtMatrixMultiply,
+                            AtMatrixSetProduct, AtMatrixTransformPoint, AtMatrixSetUniformScale, AtMatrixRead, AtMatrixGetPosition, AtMatrixGetAxes, AtMatrixTransformDirection,
+                            AtMatrixSetScale3x3, AtMatrixSetAxisAngle, AtMatrixSetAxes, AtMatrixSetLookAtZY, AtMatrixSetLookAtXY, AtMatrixMakeTranslation, AtMatrixMakeAxisAngle,
+                            AtMatrixMakeRotation, AtMatrixMakeFromAxes, AtMatrixScaleAxes, AtMatrixTranslateAfter, AtMatrixScaleColumnX, AtMatrixScaleColumnY, AtMatrixInvert,
+                            AtMatrixTranspose, AtMatrixSetElement, AtMatrixGetElement, AtMatrixGetXAxis, AtMatrixGetYAxis, AtMatrixGetZAxis, AtMatrixMultiplyRight,
+                            AtMatrixTransformPointZ, AtMatrixInverseTransformPoint, AtMatrixInverseTransformDirection};
 
 void AtQuaternion::Read(AtIoTokenizer* tokenizer) {
     x = tokenizer->ExpectReal();
