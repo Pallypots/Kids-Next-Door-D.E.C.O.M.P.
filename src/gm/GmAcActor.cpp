@@ -491,7 +491,6 @@ GmAcActor* GmAcActor::CreateNode(int count) {
 }
 
 // Slots not recovered. Each stops with a diagnostic naming its original.
-int GmAcActor::Slot2() { AtFatal("Gm actor: GmAcActor slot 2, 0x0014ACF0, is not recovered", 0, 0, 0); return 0; }
 void GmAcActor::Slot4() { AtFatal("Gm actor: GmAcActor slot 4, 0x0014AC20, is not recovered", 0, 0, 0); }
 void GmAcActor::Slot10() { AtFatal("Gm actor: GmAcActor slot 10, 0x001494C0, is not recovered", 0, 0, 0); }
 void GmAcActor::Slot15() { AtFatal("Gm actor: GmAcActor slot 15, 0x0014AE90, is not recovered", 0, 0, 0); }

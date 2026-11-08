@@ -252,7 +252,6 @@ void GmAcNode::Slot41(int) {}
 int GmAcNode::Slot42() { return 0; }
 
 // Slots not recovered. Each stops with a diagnostic naming its original.
-int GmAcNode::Slot2() { AtFatal("Gm actor: GmAcNode slot 2, 0x0014D900, is not recovered", 0, 0, 0); return 0; }
 void GmAcNode::Slot4() { AtFatal("Gm actor: GmAcNode slot 4, 0x0014D2E0, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot8(int, const char*) { AtFatal("Gm actor: GmAcNode slot 8, 0x0014CEB0, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot10() { AtFatal("Gm actor: GmAcNode slot 10, 0x0014BBC0, is not recovered", 0, 0, 0); }
