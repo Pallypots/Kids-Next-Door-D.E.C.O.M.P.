@@ -1,0 +1,605 @@
+# The Xbox database loader, the .XGG and .XKA readers, and what they need. Names inferred. See include/at/AtGrD3DDatabase.h and docs/worklog/2026-11-07-loader.md.
+
+[[function]]
+va = 0x00112D60
+size = 80
+symbol = "??0AtGrD3DDatabaseLoader@@QAE@XZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "stores vftable 0x0028A7D0; made by 0x000EBB50 and by MakeLoaders"
+
+[[function]]
+va = 0x00112F70
+size = 79
+symbol = "??1AtGrD3DDatabaseLoader@@UAE@XZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "Unload, then 0x0001AD40"
+
+[[function]]
+va = 0x00112DB0
+size = 447
+symbol = "?Unload@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "vftable slot 12; ten arrays, last kind first, then 0x0001AB10"
+
+[[function]]
+va = 0x00112170
+size = 194
+symbol = "?MakeTextures@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 0: +0x80 count, 0x58 each, ctor 0x0010FFC0, to +0xB0"
+
+[[function]]
+va = 0x001122A0
+size = 194
+symbol = "?MakeMaterials@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 1: +0x84, 0x40 each, ctor 0x000F7790, to +0xB8"
+
+[[function]]
+va = 0x001123D0
+size = 194
+symbol = "?MakeShaders@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 2: +0x82, 0x1C each, ctor 0x00110260, to +0xB4"
+
+[[function]]
+va = 0x00112500
+size = 195
+symbol = "?MakeMeshes@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 3: +0x86, 0x50 each, ctor 0x001108B0, to +0xBC"
+
+[[function]]
+va = 0x00112630
+size = 194
+symbol = "?MakeLights@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 4: +0x88, 0x20 each, ctor 0x001111B0, to +0xC0"
+
+[[function]]
+va = 0x00112760
+size = 194
+symbol = "?MakeFonts@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 6: +0x9C, 0x3C each, ctor 0x001115A0, to +0xC4"
+
+[[function]]
+va = 0x00112890
+size = 194
+symbol = "?MakeImages@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 7: +0x9E, 0x34 each, ctor 0x00111BC0, to +0xC8"
+
+[[function]]
+va = 0x001129C0
+size = 196
+symbol = "?MakeVertexProcesses@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 8: +0xA0, 0x24 each, ctor 0x00111E50, to +0xCC"
+
+[[function]]
+va = 0x00112AF0
+size = 196
+symbol = "?MakePixelProcesses@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 9: +0xA2, 0x24 each, ctor 0x001120B0, to +0xD0"
+
+[[function]]
+va = 0x00112FC0
+size = 200
+symbol = "?MakeLoaders@AtGrD3DDatabaseLoader@@UAEXXZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 10: +0xA4, 0xD8 each, ctor 0x00112D60, to +0xD4"
+
+[[function]]
+va = 0x00112C20
+size = 18
+symbol = "?TextureAt@AtGrD3DDatabaseLoader@@UAEPAVAtTextureDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 13: +0xB0, stride 0x58"
+
+[[function]]
+va = 0x00112C40
+size = 18
+symbol = "?MaterialAt@AtGrD3DDatabaseLoader@@UAEPAVAtMaterialDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 14: +0xB8, stride 0x40"
+
+[[function]]
+va = 0x00112C60
+size = 18
+symbol = "?ShaderAt@AtGrD3DDatabaseLoader@@UAEPAVAtShaderDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 15: +0xB4, stride 0x1C"
+
+[[function]]
+va = 0x00112C80
+size = 21
+symbol = "?MeshAt@AtGrD3DDatabaseLoader@@UAEPAVAtMeshDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 16: +0xBC, stride 0x50"
+
+[[function]]
+va = 0x00112CA0
+size = 18
+symbol = "?LightAt@AtGrD3DDatabaseLoader@@UAEPAVAtLightDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 17: +0xC0, stride 0x20"
+
+[[function]]
+va = 0x00112CC0
+size = 18
+symbol = "?FontAt@AtGrD3DDatabaseLoader@@UAEPAVAtFontDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 18: +0xC4, stride 0x3C"
+
+[[function]]
+va = 0x00112CE0
+size = 18
+symbol = "?ImageAt@AtGrD3DDatabaseLoader@@UAEPAVAtImageDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 19: +0xC8, stride 0x34"
+
+[[function]]
+va = 0x00112D00
+size = 19
+symbol = "?VertexProcessAt@AtGrD3DDatabaseLoader@@UAEPAVAtVertexProcessDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 20: +0xCC, stride 0x24"
+
+[[function]]
+va = 0x00112D20
+size = 19
+symbol = "?PixelProcessAt@AtGrD3DDatabaseLoader@@UAEPAVAtPixelProcessDatabase@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 21: +0xD0, stride 0x24"
+
+[[function]]
+va = 0x00112D40
+size = 21
+symbol = "?LoaderAt@AtGrD3DDatabaseLoader@@UAEPAVAtDatabaseLoader@@I@Z"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "slot 22: +0xD4, stride 0xD8"
+
+[[function]]
+va = 0x000E9E90
+size = 146
+symbol = "?NewSoundDatabase@AtXboxFactory@@QAEPAVAtSoXboxDatabase@@XZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "0x28 bytes from heap 0x003AE370, ctor 0x0010E870; table entry 0x00288A98"
+
+[[function]]
+va = 0x000EBB50
+size = 149
+symbol = "?NewDatabaseLoader@AtXboxFactory@@QAEPAVAtGrD3DDatabaseLoader@@XZ"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+evidence = "0xD8 bytes from heap 0x003B13CC, ctor 0x00112D60; table entry 0x00288C54"
+
+[[function]]
+va = 0x000EF140
+size = 22
+symbol = "?AddMeshDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DMeshDatabase@@@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "head of the list at owner +0x3340, linked through +0x4C; called by 0x00110541"
+
+[[function]]
+va = 0x000EF160
+size = 44
+symbol = "?RemoveMeshDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DMeshDatabase@@@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "unlinks from owner +0x3340; called by 0x001108FE"
+
+[[function]]
+va = 0x0002B0E0
+size = 105
+symbol = "?Allocate@AtMeshDatabase@@QAEXPAUAtMaterialOwner@@IIIPBD@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "base class: Clear if meshes, counts, Init, slots 4, 5, 2, then 0x00025F30; ret 0x14"
+
+[[function]]
+va = 0x001108B0
+size = 50
+symbol = "??0AtGrD3DMeshDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "0x0002ADD0, stores vftable 0x0028A730, clears +0x24 to +0x4C but +0x38"
+
+[[function]]
+va = 0x00111140
+size = 79
+symbol = "??1AtGrD3DMeshDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "Clear, then 0x00025260"
+
+[[function]]
+va = 0x001108F0
+size = 230
+symbol = "?Clear@AtGrD3DMeshDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 1: off the owner list, four arrays, kept block, 0x00205EE0, then 0x0002B150"
+
+[[function]]
+va = 0x00110490
+size = 200
+symbol = "?MakeMeshes@AtGrD3DMeshDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 2: 0x50 each from heap 0x002C637C, ctor 0x00122460; owner to +0x24, 0x000EF140"
+
+[[function]]
+va = 0x00110E90
+size = 219
+symbol = "?MakeVertexArrays@AtGrD3DMeshDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 4: 0x64 each, ctor 0x000EC890; owner to +0x44 of each"
+
+[[function]]
+va = 0x00110F70
+size = 219
+symbol = "?MakeIndexArrays@AtGrD3DMeshDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 5: 0x24 each, ctor 0x000F8010; owner to +0x18 of each"
+
+[[function]]
+va = 0x00110680
+size = 184
+symbol = "?MakeStreams@AtGrD3DMeshDatabase@@QAEXXZ"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "+0x38 count, 0x70 each, ctor 0x000EECA0, to +0x34"
+
+[[function]]
+va = 0x001109E0
+size = 1198
+symbol = "?LoadBinaryForm@AtGrD3DMeshDatabase@@UAEXPAUAtMaterialOwner@@PBD@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 7: XGG at 0x0028A760; table of 0x58; three blocks; four readers"
+
+[[function]]
+va = 0x00111050
+size = 237
+symbol = "?Slot8@AtGrD3DMeshDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 8: a database inline from heap 0x002C637C to +0x18, then 0x0002B0E0"
+
+[[function]]
+va = 0x00110470
+size = 18
+symbol = "?MeshAt@AtGrD3DMeshDatabase@@UAEPAVAtMesh@@I@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 9: +0x28, stride 0x50"
+
+[[function]]
+va = 0x00110880
+size = 15
+symbol = "?VertexArrayAt@AtGrD3DMeshDatabase@@UAEPAVAtVertexArray@@I@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 10: +0x2C, stride 0x64"
+
+[[function]]
+va = 0x00110890
+size = 16
+symbol = "?IndexArrayAt@AtGrD3DMeshDatabase@@UAEPAVAtIndexArray@@I@Z"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+evidence = "slot 11: +0x30, stride 0x24"
+
+[[function]]
+va = 0x000249D0
+size = 123
+symbol = "?Open@AtIoBinaryFile@@QAEHPBDH@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "context 0x002C6328: Top when flags & 1, else 0x00019300"
+
+[[function]]
+va = 0x00024AA0
+size = 184
+symbol = "?OpenWithExtension@AtIoBinaryFile@@QAEHPBD0H@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "0x80 bytes; strrchr 0x00125F40 for \\ and .; then 0x000249D0"
+
+[[function]]
+va = 0x00024A50
+size = 74
+symbol = "?ReadAll@AtIoBinaryFile@@QAEHPAXIPAI@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "file slot 5; on 7, request slot 2 and file slot 9"
+
+[[function]]
+va = 0x00024950
+size = 36
+symbol = "?Read@AtIoBinaryFile@@QAEHPAXIPAIPAPAVAtIoFileRequest@@@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "file slot 5, ret 0x10"
+
+[[function]]
+va = 0x00024980
+size = 32
+symbol = "?Release@AtIoBinaryFile@@QAEHPAVAtIoFileRequest@@@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "file slot 9 when there is a file; 1 or 0"
+
+[[function]]
+va = 0x000C8920
+size = 9
+symbol = "??0AtGrD3DAnimationDevice@@QAE@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "stores vftable 0x0028663C; called by 0x000B352C"
+
+[[function]]
+va = 0x000C8930
+size = 7
+symbol = "??1AtGrD3DAnimationDevice@@QAE@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "stores vftable 0x0028663C"
+
+[[function]]
+va = 0x000C87E0
+size = 146
+symbol = "?NewKeys@AtGrD3DAnimationDevice@@UAEPAVAtAnimationKeys@@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 0: 0x48 from heap 0x003ADF7C, ctor 0x00101F60"
+
+[[function]]
+va = 0x000C8940
+size = 29
+symbol = "?FreeKeys@AtGrD3DAnimationDevice@@UAEXPAVAtAnimationKeys@@@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 1: 0x00102800 then delete"
+
+[[function]]
+va = 0x000C8880
+size = 146
+symbol = "?NewDatabase@AtGrD3DAnimationDevice@@UAEPAVAtAnimationDatabase@@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 2: 0x50 from heap 0x003ADF7C, ctor 0x001028D0"
+
+[[function]]
+va = 0x001028D0
+size = 25
+symbol = "??0AtGrD3DAnimationDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "0x0002A770, stores vftable 0x00289BB0, +0x4C"
+
+[[function]]
+va = 0x001028F0
+size = 115
+symbol = "??1AtGrD3DAnimationDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "Clear inline, then 0x0002AA80"
+
+[[function]]
+va = 0x00102890
+size = 50
+symbol = "?Clear@AtGrD3DAnimationDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 1: block +0x4C, component pointers, then 0x0002A9B0"
+
+[[function]]
+va = 0x00102970
+size = 952
+symbol = "?LoadBinaryForm@AtGrD3DAnimationDatabase@@UAEXPAVAtAnimationDevice@@PBD@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 3: XKA at 0x00289BC0; table of 0x78; two blocks; keys 0x00101690; animations 0x000359B0"
+
+[[function]]
+va = 0x00101F60
+size = 44
+symbol = "??0AtGrD3DAnimationKeys@@QAE@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "0x000364A0, stores vftable 0x00289B38, +0x28 to +0x44"
+
+[[function]]
+va = 0x00102800
+size = 131
+symbol = "??1AtGrD3DAnimationKeys@@QAE@XZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "Clear inline, then 0x00036820"
+
+[[function]]
+va = 0x00101F90
+size = 66
+symbol = "?Clear@AtGrD3DAnimationKeys@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 3: flag 0x400 forgets the lists, 0x00036630, then clears +0x28 to +0x44"
+
+[[function]]
+va = 0x00101690
+size = 145
+symbol = "?ReadBinary@AtGrD3DAnimationKeys@@QAEXPBUAtXkaHeader@@PAD@Z"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "0x000365A0 with zeros; table +0x48 to +0x74; flags | +0x10 | 0x400"
+
+[[function]]
+va = 0x00101790
+size = 11
+symbol = "?Free@AtGrD3DAnimationKeys@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 1: delete +0x28"
+
+[[function]]
+va = 0x00101800
+size = 11
+symbol = "?Slot14@AtGrD3DAnimationKeys@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 14: delete +0x2C"
+
+[[function]]
+va = 0x00101870
+size = 11
+symbol = "?Slot15@AtGrD3DAnimationKeys@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 15: delete +0x30"
+
+[[function]]
+va = 0x001018E0
+size = 11
+symbol = "?Slot16@AtGrD3DAnimationKeys@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 16: delete +0x34"
+
+[[function]]
+va = 0x00101950
+size = 11
+symbol = "?Slot17@AtGrD3DAnimationKeys@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 17: delete +0x38"
+
+[[function]]
+va = 0x001019C0
+size = 11
+symbol = "?Slot18@AtGrD3DAnimationKeys@@UAEXXZ"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+evidence = "slot 18: delete +0x3C"
+
+[[function]]
+va = 0x000364A0
+size = 35
+symbol = "??0AtAnimationKeys@@QAE@XZ"
+source = "src/at/AtAnimationKeys.cpp"
+subsystem = "at/loader"
+evidence = "0x00034F70, stores vftable 0x00274C00, +0x14 to +0x24"
+
+[[function]]
+va = 0x00036820
+size = 79
+symbol = "??1AtAnimationKeys@@QAE@XZ"
+source = "src/at/AtAnimationKeys.cpp"
+subsystem = "at/loader"
+evidence = "stores vftable 0x00274C00, 0x00036630, then 0x00035070"
+
+[[function]]
+va = 0x00036630
+size = 91
+symbol = "?Clear@AtAnimationKeys@@UAEXXZ"
+source = "src/at/AtAnimationKeys.cpp"
+subsystem = "at/loader"
+evidence = "vftable 0x00274C00 slot 3: slots 14 to 18 by count, then 0x00035040"
+
+[[function]]
+va = 0x00036480
+size = 24
+symbol = "?SetExternalName@AtAnimationKeys@@UAEXPBD@Z"
+source = "src/at/AtAnimationKeys.cpp"
+subsystem = "at/loader"
+evidence = "vftable 0x00274C00 slot 6: 0x00034F40, flags | 0x150"
+
+[[function]]
+va = 0x000365A0
+size = 132
+symbol = "?Init@AtAnimationKeys@@QAEXIIIIII@Z"
+source = "src/at/AtAnimationKeys.cpp"
+subsystem = "at/loader"
+evidence = "slot 3 if read, 0x00035010, slots 9 to 13 by count; flags | 0xA8; ret 0x18"
+
+[[function]]
+va = 0x000359B0
+size = 180
+symbol = "?ReadBinary@AtAnimation@@QAEXPAVAtAnimationDatabase@@PBUAtXkaAnimation@@@Z"
+source = "src/at/AtAnimationKeys.cpp"
+subsystem = "at/loader"
+evidence = "record of 0x60 to 0x4C; ret 8"
+
+[[vtable]]
+va = 0x0028A7D0
+slots = 23
+symbol = "??_7AtGrD3DDatabaseLoader@@6B@"
+source = "src/at/AtGrD3DDatabaseLoader.cpp"
+subsystem = "at/loader"
+
+[[vtable]]
+va = 0x0028A730
+slots = 12
+symbol = "??_7AtGrD3DMeshDatabase@@6B@"
+source = "src/at/AtGrD3DMeshDatabase.cpp"
+subsystem = "at/loader"
+
+[[vtable]]
+va = 0x00289BB0
+slots = 4
+symbol = "??_7AtGrD3DAnimationDatabase@@6B@"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+
+[[vtable]]
+va = 0x0028663C
+slots = 4
+symbol = "??_7AtGrD3DAnimationDevice@@6B@"
+source = "src/at/AtGrD3DAnimation.cpp"
+subsystem = "at/loader"
+
+[symbols]
+"??_EAtGrD3DDatabaseLoader@@UAEPAXI@Z" = 0x00113090  # vector deleting destructor, compiler-made
+"??_EAtGrD3DMeshDatabase@@UAEPAXI@Z" = 0x001125D0  # vector deleting destructor, compiler-made
+"??_GAtGrD3DMeshDatabase@@UAEPAXI@Z" = 0x001125D0  # the scalar form the candidate's table names; the original's slot 0 is the vector form, which does both
+"??_GAtGrD3DAnimationDatabase@@UAEPAXI@Z" = 0x00102D30  # scalar deleting destructor, compiler-made
+"?Slot5@AtGrD3DDatabaseLoader@@UAEXXZ" = 0x001CC9F0  # vftable 0x0028A7D0 slot 5: empty, folded
+"?HasBinaryForm@AtGrD3DMeshDatabase@@UAEHXZ" = 0x001A2B40  # returns 1, folded
+"?HasBinaryForm@AtGrD3DAnimationDatabase@@UAEHXZ" = 0x001A2B40  # returns 1, folded
+"?FreeDatabase@AtGrD3DAnimationDevice@@UAEXPAVAtAnimationDatabase@@@Z" = 0x000EB9D0  # delete through slot 0, folded with the mount manager's
+"?Close@AtIoBinaryFile@@QAEXXZ" = 0x000249A0  # the same code as AtAudioBankFile's destructor, folded
+"?s_context@AtIoBinaryFile@@2PAVAtIoContext@@A" = 0x002C6328
+"?s_heap@AtGrD3DMeshDatabase@@2PAXA" = 0x002C637C
+"?s_heap@AtGrD3DAnimationDevice@@2PAXA" = 0x003ADF7C
+"?s_soundHeap@AtXboxFactory@@2PAXA" = 0x003AE370
+"?s_loaderHeap@AtXboxFactory@@2PAXA" = 0x003B13CC

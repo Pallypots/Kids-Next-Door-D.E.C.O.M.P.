@@ -130,9 +130,15 @@ public:
     // 0x0002AE10. An optional NameSpace first, VertexArray and IndexArray lists in any order, then one Mesh list, which ends the reading. A word that is none of these is reported and taken as Mesh.
     void Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer);
     void Finish();                           // 0x0002AD60 vertex arrays, index arrays, meshes
+    // 0x0002B0E0. Makes room as a file with these counts would, with no file: clears first if it has meshes, then the name map, vertex and index arrays if any, meshes, and the owner's table under ns. Recovered in
+    // src/at/AtGrD3DMeshDatabase.cpp, with the binary reader that calls it.
+    void Allocate(AtMaterialOwner* owner, unsigned int meshes, unsigned int vertexArrays, unsigned int indexArrays, const char* ns);
 
     unsigned int m_meshCount;                // +0x14
-    int m_unknown18;                         // +0x18
+    union {
+        int m_unknown18;                     // +0x18
+        AtMeshDatabase* m_more;              // +0x18 what a concrete database's slot 8 makes. Clear forgets it, and nothing frees it
+    };
     unsigned int m_vertexArrayCount;         // +0x1C
     unsigned int m_indexArrayCount;          // +0x20
 };

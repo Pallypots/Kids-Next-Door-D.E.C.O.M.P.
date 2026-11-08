@@ -13,11 +13,19 @@ public:
     // 0x000364D0. "{", then any of the five kinds of key and FrameNumber, up to "}". Clears itself first if it has been read.
     void ReadKeys(AtIoTokenizer* tokenizer);
 
-    virtual void Slot9() = 0;
-    virtual void Slot10() = 0;
-    virtual void Slot11() = 0;
-    virtual void Slot12() = 0;
-    virtual void Slot13() = 0;
+    // The base's own, vftable 0x00274C00: recovered in src/at/AtAnimationKeys.cpp, with the binary keys. Every other slot of that table is the C library's pure-call handler.
+    AtAnimationKeys();                        // 0x000364A0
+    ~AtAnimationKeys();                       // 0x00036820
+    void Clear() override;                    // slot 3, 0x00036630 frees each kind it has a count of, then the base set's Clear
+    void SetExternalName(const char* name) override;  // slot 6, 0x00036480 the base's, and marked 0x150
+    // 0x000365A0. Clears if read, reserves frames, then allocates each kind with a count: the counts are kept first. Marked 0xA8.
+    void Init(unsigned int rotations, unsigned int translations, unsigned int scales, unsigned int notes, unsigned int cameras, unsigned int frames);
+
+    virtual void Slot9(unsigned int count) = 0;
+    virtual void Slot10(unsigned int count) = 0;
+    virtual void Slot11(unsigned int count) = 0;
+    virtual void Slot12(unsigned int count) = 0;
+    virtual void Slot13(unsigned int count) = 0;
     virtual void Slot14() = 0;
     virtual void Slot15() = 0;
     virtual void Slot16() = 0;
@@ -28,6 +36,12 @@ public:
     virtual void ReadScaleKeys(AtIoTokenizer* tokenizer) = 0;        // slot 21
     virtual void ReadNoteKeys(AtIoTokenizer* tokenizer) = 0;         // slot 22
     virtual void ReadCameraKeys(AtIoTokenizer* tokenizer) = 0;       // slot 23
+
+    unsigned int m_rotationKeyCount;      // +0x14
+    unsigned int m_translationKeyCount;   // +0x18
+    unsigned int m_scaleKeyCount;         // +0x1C
+    unsigned int m_noteKeyCount;          // +0x20
+    unsigned int m_cameraKeyCount;        // +0x24
 };
 
 // Where animations come from: the object at +0x38 of the owner. In the graphics layer.
@@ -58,6 +72,8 @@ public:
 
     // 0x00036240. Its body, a left curly through its right curly. A given loop period stands however Length follows it; with none Length sets it to one more than itself. Reads over what is there.
     void Read(AtAnimationDatabase* database, AtIoTokenizer* tokenizer);
+    // 0x000359B0. From an .XKA's record of 0x60 bytes, include/at/AtGrD3DDatabase.h: every field as it is, its 32-bit runs cut to 16. Recovered in src/at/AtAnimationKeys.cpp.
+    void ReadBinary(AtAnimationDatabase* database, const struct AtXkaAnimation* record);
 
     AtAnimationDatabase* m_database;  // +0x00
     float m_rate;                     // +0x04
@@ -119,6 +135,8 @@ public:
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
 static_assert(sizeof(AtAnimationComponent) == 0xC, "AtAnimationComponent");
+static_assert(offsetof(AtAnimationKeys, m_rotationKeyCount) == 0x14, "AtAnimationKeys::m_rotationKeyCount");
+static_assert(sizeof(AtAnimationKeys) == 0x28, "AtAnimationKeys");
 static_assert(offsetof(AtAnimation, m_rotation) == 0x20, "AtAnimation::m_rotation");
 static_assert(offsetof(AtAnimation, m_flags) == 0x38, "AtAnimation::m_flags");
 static_assert(sizeof(AtAnimation) == 0x4C, "AtAnimation");

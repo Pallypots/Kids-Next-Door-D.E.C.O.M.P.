@@ -210,7 +210,7 @@ MUTANTS = [
 
     # ---- the mesh database
     ("mesh ctor: count", M, "AtMeshDatabase::AtMeshDatabase() {\n    m_meshCount = 0;\n", "AtMeshDatabase::AtMeshDatabase() {\n"),
-    ("mesh ctor: 18", M, "AtMeshDatabase::AtMeshDatabase() {\n    m_meshCount = 0;\n    m_unknown18 = 0;\n", "AtMeshDatabase::AtMeshDatabase() {\n    m_meshCount = 0;\n"),
+    ("mesh ctor: 18", M, "AtMeshDatabase::AtMeshDatabase() {\n    m_meshCount = 0;\n    m_more = 0;\n", "AtMeshDatabase::AtMeshDatabase() {\n    m_meshCount = 0;\n"),
     ("mesh clear: base", M, "void AtMeshDatabase::Clear() {\n    GmNameMap::Clear();\n", "void AtMeshDatabase::Clear() {\n"),
     ("mesh clear: lists", M, "    m_vertexArrayCount = 0;\n    m_indexArrayCount = 0;\n}\n\nvoid AtMeshDatabase::Read", "    m_vertexArrayCount = 0;\n}\n\nvoid AtMeshDatabase::Read"),
     ("mesh read: clear", M, "    if (m_meshCount > 0) {\n        Clear();\n    }\n", ""),
