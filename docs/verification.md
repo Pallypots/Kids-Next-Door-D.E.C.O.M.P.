@@ -442,3 +442,9 @@ Every suite ran with no mutants on the merged source with no difference and all 
 * `ase` 359 / 359, `asb` 754 / 754, `particle` 181 / 181: run by the folding pass on the merged source before `.ANA` was merged, which touched none of their files.
 
 The `.ANA` merge's shared edits were confined to the input family. Real-file runs have doubles standing in for whatever each suite's worklog names; read those limits with these numbers.
+
+## Fourth batch, on merged source
+
+Every suite ran with no mutants on the merged source with no difference and all entries reached; x64 host tests 32 of 32; Python tests 92 OK; `tools/verify.py` 187 MATCH, 137 MISMATCH, 1278 SIZE, no MISSING or UNRESOLVED, all 136 vftables MATCH (host compiler, no claim about the original). Mutants on merged source, by the folding pass: `add` 253 / 253, `adr` 577 / 577, `gon` 131 / 131, `manifest` 129 / 129. The 20 suites whose only change was the include line of `AtArray.h` ran without mutants.
+
+The `add` oracle now loads the disc's `LIBRARY.ADD` with its 11 real registries on both sides, with no doubles for the registry. While a library case runs, freed blocks are not given back on either side, because the owner keeps a stale pointer to a deleted registry and which block it then names depends on each side's heap.

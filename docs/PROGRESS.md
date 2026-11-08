@@ -29,13 +29,13 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 
 | Owner | Functions | Unique bytes | Direct evidence | Signature hint only | Inferred from neighbours | No evidence |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| game | 10741 | 1580899 | 1820 | 0 | 8921 | 0 |
+| game | 10741 | 1580899 | 2070 | 0 | 8671 | 0 |
 | crt | 279 | 35723 | 9 | 0 | 270 | 0 |
 | xdk | 1300 | 208507 | 1189 | 24 | 87 | 0 |
 | cri | 1509 | 229116 | 70 | 0 | 1439 | 0 |
 | unknown | 541 | 57133 | 0 | 0 | 0 | 541 |
 
-**Estimate**, because most of the game row is inferred: 1332 of about 10741 game functions are recorded in config/functions.toml and config/functions.d/. This counts source written, whatever its verification state, not a playable fraction.
+**Estimate**, because most of the game row is inferred: 1582 of about 10741 game functions are recorded in config/functions.toml and config/functions.d/. This counts source written, whatever its verification state, not a playable fraction.
 
 ## Verification results (tools/verify.py)
 
@@ -616,6 +616,165 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x0005FD60 | 28 | `?SetAnimation@AtSceneAnimPlayback@@QAEXPAUAtSceneAnimation@@@Z` | at/actor | SIZE |
 | 0x0005FF90 | 17 | `?Clear@AtSceneMatPlayback@@QAEXXZ` | at/actor | SIZE |
 | 0x00082690 | 9 | `?SetDatabase@AtSceneAnimSet@@QAEXPAVAtCoordSysDatabase@@@Z` | at/actor | MATCH |
+| 0x0009B8D0 | 10 | `?SetHeap@AtDataLibrary@@SAXPAX@Z` | at/add | MATCH |
+| 0x0009B8E0 | 279 | `?MakeRegistries@AtDataLibrary@@QAEXXZ` | at/add | SIZE |
+| 0x0009BA00 | 261 | `?MakeDatabases@AtDataLibrary@@QAEXXZ` | at/add | SIZE |
+| 0x0009BB10 | 36 | `??0AtDataLibrary@@QAE@XZ` | at/add | SIZE |
+| 0x0009BB40 | 203 | `?Clear@AtDataLibrary@@QAEXXZ` | at/add | SIZE |
+| 0x0009BC10 | 289 | `?LoadEntries@AtDataLibrary@@QAEXHPAVAtDataRegistry@@@Z` | at/add | SIZE |
+| 0x0009BD40 | 11 | `??1AtDataLibrary@@QAE@XZ` | at/add | SIZE |
+| 0x0009BD50 | 1109 | `?Load@AtDataLibrary@@QAEXPAUAtDataRegistryOwner@@PBDHPAVAtDataRegistry@@@Z` | at/add | SIZE |
+| 0x000992D0 | 49 | `?AddDatabase@AtDataRegistryOwner@@QAEXPAVGmNameMap@@PBD@Z` | at/add | SIZE |
+| 0x0006BDB0 | 432 | `?Read@AtDataDescriptor@@QAEHPAVAtIoTokenizer@@@Z` | at/add | SIZE |
+| 0x000B1C20 | 10 | `?SetHeap@AtDatabaseManager@@SAXPAX@Z` | at/add | MATCH |
+| 0x000B1C90 | 153 | `??0AtDatabaseManager@@QAE@XZ` | at/add | SIZE |
+| 0x000B1D30 | 243 | `?Clear@AtDatabaseManager@@UAEXXZ` | at/add | SIZE |
+| 0x000B1E30 | 1105 | `?Read@AtDatabaseManager@@QAEHPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@PADIH@Z` | at/add | SIZE |
+| 0x000B2290 | 56 | `?FindEverywhere@AtDatabaseManager@@QAEPAXPBD@Z` | at/add | MATCH |
+| 0x000B22D0 | 92 | `??1AtDatabaseManager@@UAE@XZ` | at/add | SIZE |
+| 0x000B2330 | 295 | `?Load@AtDatabaseManager@@QAEHPAUAtDataRegistryOwner@@PBDHPADIH@Z` | at/add | SIZE |
+| 0x000B2460 | 30 | `??_GAtDatabaseManager@@UAEPAXI@Z` | at/add | SIZE |
+| 0x000B1C30 | 84 | `??_EAtRecordLayout@@UAEPAXI@Z` | at/add | SIZE |
+| 0x000B9AA0 | 10 | `?SetHeap@AtRecordLayout@@SAXPAX@Z` | at/add | MATCH |
+| 0x000B9AB0 | 13 | `?FieldAt@AtRecordLayout@@QAEPAVAtDataDescriptor@@I@Z` | at/add | MISMATCH |
+| 0x000B9AC0 | 32 | `??0AtRecordLayout@@QAE@XZ` | at/add | SIZE |
+| 0x000B9AE0 | 58 | `?Clear@AtRecordLayout@@UAEXXZ` | at/add | SIZE |
+| 0x000B9B20 | 496 | `?Read@AtRecordLayout@@QAEHPAVAtIoTokenizer@@PAVGmNameMap@@@Z` | at/add | SIZE |
+| 0x000B9D10 | 123 | `??1AtRecordLayout@@UAE@XZ` | at/add | SIZE |
+| 0x000B9D90 | 10 | `?SetHeap@AtDataRecordDatabase@@SAXPAX@Z` | at/add | MATCH |
+| 0x000B9DA0 | 24 | `?Reset@AtDataRecordDatabase@@UAEXXZ` | at/add | SIZE |
+| 0x000B9DC0 | 40 | `?Load@AtDataRecordDatabase@@UAEHPAVAtDatabaseManager@@PAVAtRecordLayout@@PAVAtIoTokenizer@@IHH@Z` | at/add | SIZE |
+| 0x000B9E50 | 16 | `?RecordAt@AtDataRecordDatabase@@UAEPAVAtDataRecord@@I@Z` | at/add | MISMATCH |
+| 0x000B9E60 | 41 | `??0AtDataRecordDatabase@@QAE@XZ` | at/add | SIZE |
+| 0x000B9E90 | 211 | `?Clear@AtDataRecordDatabase@@UAEXXZ` | at/add | SIZE |
+| 0x000B9F70 | 2453 | `?Read@AtDataRecordDatabase@@UAEHPAVAtDatabaseManager@@PAVAtIoTokenizer@@IHH@Z` | at/add | SIZE |
+| 0x000BA960 | 64 | `?TakeUnused@AtDataRecordDatabase@@UAEPAVAtDataRecord@@PAI@Z` | at/add | SIZE |
+| 0x000BA9A0 | 83 | `?FindByValue@AtDataRecordDatabase@@UAEPAVAtDataRecord@@IPBX@Z` | at/add | SIZE |
+| 0x000BAA00 | 79 | `??1AtDataRecordDatabase@@UAE@XZ` | at/add | SIZE |
+| 0x000BAA50 | 30 | `??_GAtDataRecordDatabase@@UAEPAXI@Z` | at/add | SIZE |
+| 0x000B9DF0 | 84 | `??_EAtDataRecord@@UAEPAXI@Z` | at/add | SIZE |
+| 0x000BAA70 | 17 | `??0AtDataRecord@@QAE@XZ` | at/add | SIZE |
+| 0x000BAA90 | 41 | `?Set@AtDataRecord@@QAEHIPAVAtRecordLayout@@PAPAVAtDataComponent@@@Z` | at/add | SIZE |
+| 0x000BAAC0 | 193 | `?FieldAt@AtDataRecord@@QAEPAVAtDataComponent@@I@Z` | at/add | SIZE |
+| 0x000BABB0 | 132 | `?DescriptorAt@AtDataRecord@@QAEPAVAtDataDescriptor@@I@Z` | at/add | SIZE |
+| 0x000BAC60 | 102 | `?FieldNamed@AtDataRecord@@QAEPAVAtDataComponent@@PBD@Z` | at/add | SIZE |
+| 0x000BACD0 | 15 | `??1AtDataRecord@@UAE@XZ` | at/add | SIZE |
+| 0x0006A0A0 | 18 | `?Equals@AtDataBoolean@@UAEHPBVAtDataComponent@@@Z` | at/add | MISMATCH |
+| 0x00068880 | 302 | `?Load@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@PBDHPADPAV1@@Z` | at/adr | SIZE |
+| 0x00067D80 | 2290 | `?Read@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@PADPAV1@@Z` | at/adr | SIZE |
+| 0x00067540 | 108 | `?Clear@AtDataRegistry@@QAEXXZ` | at/adr | SIZE |
+| 0x00066780 | 115 | `?Reset@AtDataRegistry@@QAEXXZ` | at/adr | SIZE |
+| 0x00067980 | 83 | `?FindChild@AtDataRegistry@@QAEPAVAtDataLink@@PBDPAV2@@Z` | at/adr | SIZE |
+| 0x00066800 | 82 | `?NameMatches@AtDataRegistry@@QAEHPBD0@Z` | at/adr | SIZE |
+| 0x00067A60 | 454 | `?Clamp@AtDataRegistry@@QAEXIPAVAtDataComponent@@@Z` | at/adr | SIZE |
+| 0x00066100 | 10 | `?SetHeap@AtDataRegistry@@SAXPAX@Z` | at/adr | MATCH |
+| 0x000674E0 | 86 | `??0AtDataRegistry@@QAE@XZ` | at/adr | SIZE |
+| 0x00067C50 | 90 | `??1AtDataRegistry@@UAE@XZ` | at/adr | SIZE |
+| 0x000687B0 | 30 | `??_GAtDataRegistry@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066110 | 85 | `?ElementAt@AtDataComponentPool@@QAEPAVAtDataComponent@@I@Z` | at/adr | SIZE |
+| 0x00066B30 | 1683 | `?Allocate@AtDataComponentPool@@QAEXXZ` | at/adr | SIZE |
+| 0x00066930 | 240 | `?Clear@AtDataComponentPool@@QAEXXZ` | at/adr | SIZE |
+| 0x00066A70 | 192 | `?FindByName@AtDataComponentPool@@QAEPAVAtDataLink@@PBDH@Z` | at/adr | SIZE |
+| 0x00067430 | 167 | `?New@AtDataComponentPool@@QAEPAVAtDataLink@@H@Z` | at/adr | SIZE |
+| 0x000666E0 | 110 | `?Grow@AtDataComponentPool@@QAEXXZ` | at/adr | SIZE |
+| 0x0006BFD0 | 29 | `??0AtDataLink@@QAE@XZ` | at/adr | SIZE |
+| 0x0006C240 | 11 | `??1AtDataLink@@UAE@XZ` | at/adr | MATCH |
+| 0x0006BFF0 | 14 | `?Registry@AtDataLink@@UAEPAVAtDataRegistry@@XZ` | at/adr | MATCH |
+| 0x0006C160 | 220 | `?Set@AtDataLink@@QAEHPBDPAVAtDataComponent@@PAV1@@Z` | at/adr | SIZE |
+| 0x0006C110 | 65 | `?Clear@AtDataLink@@QAEXXZ` | at/adr | SIZE |
+| 0x0006C000 | 39 | `?AttachTo@AtDataLink@@QAEXPAV1@@Z` | at/adr | SIZE |
+| 0x0006C030 | 73 | `?Detach@AtDataLink@@QAEXXZ` | at/adr | SIZE |
+| 0x0006BFC0 | 10 | `?SetHeap@AtDataLink@@SAXPAX@Z` | at/adr | MATCH |
+| 0x00066750 | 5 | `??1AtDataLinkRoot@@UAE@XZ` | at/adr | SIZE |
+| 0x00066760 | 30 | `??_GAtDataLinkRoot@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x0010F4C0 | 4 | `?Registry@AtDataLinkRoot@@UAEPAVAtDataRegistry@@XZ` | at/adr | MATCH |
+| 0x0006BC10 | 67 | `??0AtDataDescriptor@@QAE@XZ` | at/adr | SIZE |
+| 0x0006BFB0 | 11 | `??1AtDataDescriptor@@UAE@XZ` | at/adr | MATCH |
+| 0x0006BC60 | 79 | `?Clear@AtDataDescriptor@@QAEXXZ` | at/adr | SIZE |
+| 0x0006BCB0 | 38 | `?SetType@AtDataDescriptor@@QAEHII@Z` | at/adr | MISMATCH |
+| 0x0006BB20 | 19 | `?SetIntBounds@AtDataDescriptor@@QAEHHH@Z` | at/adr | MISMATCH |
+| 0x0006BB40 | 38 | `?SetRealBounds@AtDataDescriptor@@QAEHMM@Z` | at/adr | MISMATCH |
+| 0x0006BAD0 | 23 | `?GetIntBounds@AtDataDescriptor@@QAEHPAH0@Z` | at/adr | MISMATCH |
+| 0x0006BB70 | 151 | `?SetFormat@AtDataDescriptor@@QAEHPBD@Z` | at/adr | SIZE |
+| 0x0006BAC0 | 10 | `?SetHeap@AtDataDescriptor@@SAXPAX@Z` | at/adr | MATCH |
+| 0x000603A0 | 16 | `??0AtDataRegistryGroup@@QAE@XZ` | at/adr | SIZE |
+| 0x000B3F70 | 14 | `?Reset@AtDataRegistryGroup@@QAEXXZ` | at/adr | SIZE |
+| 0x000602C0 | 17 | `?SetName@AtDataRegistryGroup@@QAEXPBD@Z` | at/adr | SIZE |
+| 0x000603B0 | 47 | `?Add@AtDataRegistryGroup@@QAEXPAVAtDataRegistry@@@Z` | at/adr | MATCH |
+| 0x000602E0 | 82 | `?Remove@AtDataRegistryGroup@@QAEXPAVAtDataRegistry@@@Z` | at/adr | SIZE |
+| 0x0005FFF0 | 32 | `??0AtDataRegistryNameSpaces@@QAE@XZ` | at/adr | SIZE |
+| 0x00060230 | 109 | `??1AtDataRegistryNameSpaces@@UAE@XZ` | at/adr | SIZE |
+| 0x000602A0 | 30 | `??_GAtDataRegistryNameSpaces@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x000B40E0 | 44 | `?Clear@AtDataRegistryNameSpaces@@UAEXXZ` | at/adr | SIZE |
+| 0x00060010 | 244 | `?Init@AtDataRegistryNameSpaces@@QAEXI@Z` | at/adr | SIZE |
+| 0x0005FFC0 | 35 | `?Release@AtDataRegistryNameSpaces@@QAEXPAVAtDataRegistryGroup@@@Z` | at/adr | SIZE |
+| 0x00060110 | 94 | `?Add@AtDataRegistryNameSpaces@@QAEXPBDPAVAtDataRegistry@@@Z` | at/adr | SIZE |
+| 0x00060170 | 26 | `?Remove@AtDataRegistryNameSpaces@@SAXPAVAtDataRegistry@@@Z` | at/adr | SIZE |
+| 0x0005FFB0 | 10 | `?SetHeap@AtDataRegistryNameSpaces@@SAXPAX@Z` | at/adr | MATCH |
+| 0x0005F0B0 | 49 | `?Add@AtDataRegistryOwner@@QAEXPAVAtDataRegistry@@PBD@Z` | at/adr | SIZE |
+| 0x0005F1F0 | 102 | `?Remove@AtDataRegistryOwner@@QAEXPAVAtDataRegistry@@@Z` | at/adr | SIZE |
+| 0x00069DE0 | 10 | `?SetHeap@AtDataComponent@@SAXPAX@Z` | at/adr | MATCH |
+| 0x00069DF0 | 17 | `??0AtDataComponent@@QAE@XZ` | at/adr | SIZE |
+| 0x00069E10 | 7 | `??1AtDataComponent@@UAE@XZ` | at/adr | MATCH |
+| 0x00069E20 | 12 | `?Read@AtDataComponent@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | MATCH |
+| 0x00069E30 | 12 | `?SetDescriptor@AtDataComponent@@UAEHPAVAtDataDescriptor@@@Z` | at/adr | MATCH |
+| 0x000E7880 | 9 | `?Reset@AtDataComponent@@UAEXXZ` | at/adr | SIZE |
+| 0x0006A040 | 25 | `??0AtDataBoolean@@QAE@XZ` | at/adr | SIZE |
+| 0x00069E70 | 11 | `??1AtDataBoolean@@UAE@XZ` | at/adr | SIZE |
+| 0x0006A080 | 31 | `?Read@AtDataBoolean@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x00069F50 | 5 | `?Reset@AtDataBoolean@@UAEXXZ` | at/adr | SIZE |
+| 0x00069E80 | 18 | `??0AtDataInt@@QAE@XZ` | at/adr | SIZE |
+| 0x00069EA0 | 11 | `??1AtDataInt@@UAE@XZ` | at/adr | SIZE |
+| 0x00069ED0 | 18 | `??0AtDataReal@@QAE@XZ` | at/adr | SIZE |
+| 0x00069EF0 | 11 | `??1AtDataReal@@UAE@XZ` | at/adr | SIZE |
+| 0x0006A0C0 | 31 | `?Read@AtDataReal@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x00069F20 | 18 | `??0AtDataShortName@@QAE@XZ` | at/adr | SIZE |
+| 0x00069F40 | 11 | `??1AtDataShortName@@UAE@XZ` | at/adr | SIZE |
+| 0x00069F60 | 32 | `?Read@AtDataShortName@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x0006A170 | 96 | `??0AtDataString@@QAE@XZ` | at/adr | SIZE |
+| 0x0006A660 | 141 | `??1AtDataString@@UAE@XZ` | at/adr | SIZE |
+| 0x0006A6F0 | 104 | `?Read@AtDataString@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x0006A200 | 71 | `?Reset@AtDataString@@UAEXXZ` | at/adr | SIZE |
+| 0x0006A330 | 413 | `?Assign@AtDataString@@QAEHPAVAtDataDescriptor@@PBD@Z` | at/adr | SIZE |
+| 0x0006A810 | 25 | `??0AtDataBooleanArray@@QAE@XZ` | at/adr | SIZE |
+| 0x0006B710 | 104 | `??1AtDataBooleanArray@@UAE@XZ` | at/adr | SIZE |
+| 0x0006A920 | 67 | `?Read@AtDataBooleanArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x0006A840 | 34 | `?Reset@AtDataBooleanArray@@UAEXXZ` | at/adr | SIZE |
+| 0x0006A870 | 170 | `?Resize@AtDataBooleanArray@@UAEHI@Z` | at/adr | SIZE |
+| 0x0006A9C0 | 25 | `??0AtDataByteArray@@QAE@XZ` | at/adr | SIZE |
+| 0x0006B780 | 104 | `??1AtDataByteArray@@UAE@XZ` | at/adr | SIZE |
+| 0x0006AB40 | 67 | `?Read@AtDataByteArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x0006A9F0 | 172 | `?Resize@AtDataByteArray@@UAEHI@Z` | at/adr | SIZE |
+| 0x0006AC40 | 25 | `??0AtDataIntArray@@QAE@XZ` | at/adr | SIZE |
+| 0x0006B7F0 | 104 | `??1AtDataIntArray@@UAE@XZ` | at/adr | SIZE |
+| 0x0006AC60 | 25 | `??0AtDataRealArray@@QAE@XZ` | at/adr | SIZE |
+| 0x0006B860 | 104 | `??1AtDataRealArray@@UAE@XZ` | at/adr | SIZE |
+| 0x0006AD20 | 67 | `?Read@AtDataRealArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x0006AE30 | 25 | `??0AtDataShortNameArray@@QAE@XZ` | at/adr | SIZE |
+| 0x0006B8D0 | 104 | `??1AtDataShortNameArray@@UAE@XZ` | at/adr | SIZE |
+| 0x0006AFB0 | 95 | `?Read@AtDataShortNameArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | MISMATCH |
+| 0x0006AE60 | 173 | `?Resize@AtDataShortNameArray@@UAEHI@Z` | at/adr | SIZE |
+| 0x0006B0D0 | 26 | `??0AtDataStringArray@@QAE@XZ` | at/adr | SIZE |
+| 0x0006B940 | 79 | `??1AtDataStringArray@@UAE@XZ` | at/adr | SIZE |
+| 0x0006B990 | 70 | `?Read@AtDataStringArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z` | at/adr | SIZE |
+| 0x0006B100 | 111 | `?Reset@AtDataStringArray@@UAEXXZ` | at/adr | SIZE |
+| 0x0006B170 | 445 | `?Resize@AtDataStringArray@@UAEHI@Z` | at/adr | SIZE |
+| 0x0006B4F0 | 202 | `?SetText@AtDataStringArray@@QAEHIPBD@Z` | at/adr | SIZE |
+| 0x00039970 | 93 | `?SetNarrow@AtText@@QAEXPBD@Z` | at/adr | SIZE |
+| 0x000661A0 | 84 | `??_GAtDataComponent@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066200 | 84 | `??_GAtDataBoolean@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066260 | 84 | `??_GAtDataInt@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x000662C0 | 84 | `??_GAtDataReal@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066320 | 84 | `??_GAtDataShortName@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066380 | 84 | `??_GAtDataString@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x000663E0 | 84 | `??_GAtDataBooleanArray@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066440 | 84 | `??_GAtDataByteArray@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x000664A0 | 84 | `??_GAtDataIntArray@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066500 | 84 | `??_GAtDataRealArray@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066560 | 84 | `??_GAtDataShortNameArray@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x000665C0 | 84 | `??_GAtDataStringArray@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066620 | 84 | `??_GAtDataDescriptor@@UAEPAXI@Z` | at/adr | SIZE |
+| 0x00066680 | 84 | `??_GAtDataLink@@UAEPAXI@Z` | at/adr | SIZE |
 | 0x00016FB0 | 124 | `?Allocate@AtFlashResourceTable@@UAEXI@Z` | at/afx | SIZE |
 | 0x00017040 | 14 | `?Release@AtFlashResourceTable@@UAEXI@Z` | at/afx | SIZE |
 | 0x000172A0 | 61 | `??0AtFlashResourceTable@@QAE@XZ` | at/afx | SIZE |
@@ -1366,6 +1525,107 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x0004F5A0 | 40 | `??0AtSceneMotionState@@QAE@XZ` | at/asn | MISMATCH |
 | 0x0004F5D0 | 77 | `?Set@AtSceneMotionState@@QAEXABU1@@Z` | at/asn | MISMATCH |
 | 0x000559B0 | 55 | `?AsJointed@AtSceneNode@@SAPAV1@PAV1@@Z` | at/asn | MATCH |
+| 0x00136740 | 90 | `??1GmSoundNoteBank@@QAE@XZ` | gm/gon | SIZE |
+| 0x00136930 | 47 | `?AllocateNoteBank@GmAudioData@@QAEPAVGmSoundNoteBank@@XZ` | gm/gon | MISMATCH |
+| 0x00136960 | 45 | `?ReleaseNoteBank@GmAudioData@@QAEXPAVGmSoundNoteBank@@@Z` | gm/gon | SIZE |
+| 0x00136990 | 127 | `?FreeNotes@GmAudioData@@QAEXPAVGmSoundNoteBank@@@Z` | gm/gon | SIZE |
+| 0x00136CC0 | 99 | `??0GmSoundNoteBank@@QAE@XZ` | gm/gon | SIZE |
+| 0x00136D30 | 18 | `??0GmSoundChoice@@QAE@XZ` | gm/gon | MISMATCH |
+| 0x00136D50 | 71 | `??0GmSoundNote@@QAE@XZ` | gm/gon | SIZE |
+| 0x00137D20 | 185 | `?FindSegment@GmAudioData@@QAEPAVAtAudioSegment@@PBD@Z` | gm/gon | SIZE |
+| 0x00137DE0 | 205 | `?GetSegmentName@GmAudioData@@QAEXPBVAtAudioSegment@@PAD@Z` | gm/gon | SIZE |
+| 0x00137EB0 | 77 | `?FindNote@GmAudioData@@QAEPAUGmSoundNote@@PBD0@Z` | gm/gon | SIZE |
+| 0x00137F00 | 77 | `?FindNoteByTrigger@GmAudioData@@QAEPAUGmSoundNote@@PBD0@Z` | gm/gon | SIZE |
+| 0x00139090 | 1166 | `?LoadNotes@GmAudioData@@QAEXPAVGmSoundNoteBank@@PBD@Z` | gm/gon | SIZE |
+| 0x00139550 | 188 | `?RegisterNotes@GmAudioData@@QAEXPAVGmSoundNoteBank@@@Z` | gm/gon | SIZE |
+| 0x001424C0 | 87 | `??_GGmSoundNoteItem@@UAEPAXI@Z` | gm/gon | SIZE |
+| 0x001B3540 | 50 | `?Configure@GmSoundNoteItem@@QAEXPBURequest@1@@Z` | gm/gon | SIZE |
+| 0x001B3580 | 72 | `?Unknown0@GmSoundNoteItem@@UAEXXZ` | gm/gon | SIZE |
+| 0x001B35D0 | 107 | `?Run@GmSoundNoteItem@@UAEXXZ` | gm/gon | SIZE |
+| 0x001B3640 | 49 | `??0GmSoundNoteItem@@QAE@XZ` | gm/gon | SIZE |
+| 0x001B3680 | 78 | `??1GmSoundNoteItem@@UAE@XZ` | gm/gon | SIZE |
+| 0x00142110 | 147 | `?ClearLevelArrays@GmLevelManifest@@QAEXXZ` | gm/manifest | SIZE |
+| 0x001421B0 | 16 | `?Clear@GmLevelManifest@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001421C0 | 87 | `??_GGmAnimationListItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142220 | 87 | `??_GGmSoundListItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142280 | 87 | `??_GGmScriptItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x001422E0 | 87 | `??_GGmTriggerItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142340 | 87 | `??_GGmSubscriberItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x001423A0 | 87 | `??_GGmVfxItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142400 | 87 | `??_GGmDynamicNodeItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142460 | 87 | `??_GGmSoundNodeItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142520 | 87 | `??_GGmMusicChainItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142580 | 87 | `??_GGmInstanceSoundItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x001425E0 | 87 | `??_GGmCollisionSoundItem@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x00142640 | 619 | `?AfterParse@GmLevelManifest@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001428B0 | 25 | `??0GmLevelManifest@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001428D0 | 84 | `??1GmLevelManifest@@UAE@XZ` | gm/manifest | SIZE |
+| 0x00142930 | 1227 | `?Free@GmLevelManifest@@UAEXXZ` | gm/manifest | SIZE |
+| 0x00142E00 | 130 | `?Parse@GmLevelManifest@@UAEXPAVAtIoTokenizer@@@Z` | gm/manifest | SIZE |
+| 0x00142E90 | 3588 | `?OnToken@GmLevelManifest@@UAEXHPAVAtIoTokenizer@@@Z` | gm/manifest | SIZE |
+| 0x00143CE0 | 195 | `?Finished@GmLevelManifest@@UAEXXZ` | gm/manifest | SIZE |
+| 0x00143DB0 | 30 | `??_GGmLevelManifest@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x0015C860 | 93 | `?ClearDatabaseArrays@GmDatabaseManifest@@QAEXXZ` | gm/manifest | SIZE |
+| 0x0015C8C0 | 23 | `?Clear@GmDatabaseManifest@@UAEXXZ` | gm/manifest | MATCH |
+| 0x0015C8E0 | 21 | `?Parse@GmDatabaseManifest@@UAEXPAVAtIoTokenizer@@@Z` | gm/manifest | MISMATCH |
+| 0x0015CBA0 | 361 | `?AfterParse@GmDatabaseManifest@@UAEXXZ` | gm/manifest | SIZE |
+| 0x0015CD10 | 25 | `??0GmDatabaseManifest@@QAE@XZ` | gm/manifest | SIZE |
+| 0x0015CD30 | 92 | `??1GmDatabaseManifest@@UAE@XZ` | gm/manifest | MISMATCH |
+| 0x0015CD90 | 624 | `?Free@GmDatabaseManifest@@UAEXXZ` | gm/manifest | SIZE |
+| 0x0015D9E0 | 30 | `??_GGmDatabaseManifest@@UAEPAXI@Z` | gm/manifest | SIZE |
+| 0x001B2BB0 | 74 | `?Run@GmAnimationListItem@@UAEXXZ` | gm/manifest | MISMATCH |
+| 0x001B2C00 | 64 | `?Configure@GmAnimationListItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B2C40 | 55 | `??0GmAnimationListItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B2C80 | 38 | `??1GmAnimationListItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B2CB0 | 74 | `?Run@GmSoundListItem@@UAEXXZ` | gm/manifest | MISMATCH |
+| 0x001B2D00 | 64 | `?Configure@GmSoundListItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B2D40 | 32 | `?Unknown0@GmAnimationListItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B2D60 | 55 | `??0GmSoundListItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B2DA0 | 38 | `??1GmSoundListItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B2DD0 | 63 | `?Run@GmScriptItem@@UAEXXZ` | gm/manifest | MISMATCH |
+| 0x001B2E10 | 64 | `?Configure@GmScriptItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B2E50 | 55 | `??0GmScriptItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B2E90 | 38 | `??1GmScriptItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B2EC0 | 57 | `?Run@GmTriggerItem@@UAEXXZ` | gm/manifest | MISMATCH |
+| 0x001B2F00 | 50 | `?Configure@GmTriggerItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B2F40 | 37 | `?Unknown0@GmTriggerItem@@UAEXXZ` | gm/manifest | MISMATCH |
+| 0x001B2F70 | 56 | `??0GmTriggerItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B2FB0 | 110 | `??1GmTriggerItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B3020 | 57 | `?Run@GmSubscriberItem@@UAEXXZ` | gm/manifest | MISMATCH |
+| 0x001B3060 | 50 | `?Configure@GmSubscriberItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B30A0 | 56 | `??0GmSubscriberItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B30E0 | 110 | `??1GmSubscriberItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B3150 | 63 | `?Run@GmVfxItem@@UAEXXZ` | gm/manifest | MISMATCH |
+| 0x001B3190 | 64 | `?Configure@GmVfxItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B31D0 | 32 | `?Unknown0@GmVfxItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B31F0 | 55 | `??0GmVfxItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B3230 | 38 | `??1GmVfxItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B3260 | 104 | `?Run@GmDynamicNodeItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B32D0 | 76 | `?Configure@GmDynamicNodeItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B3320 | 32 | `?Unknown0@GmDynamicNodeItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B3340 | 70 | `??0GmDynamicNodeItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B3390 | 52 | `??1GmDynamicNodeItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B33D0 | 50 | `?Configure@GmSoundNodeItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B3410 | 92 | `?Unknown0@GmSoundNodeItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B3470 | 127 | `?Run@GmSoundNodeItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B34F0 | 55 | `??0GmSoundNodeItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B3530 | 11 | `??1GmSoundNodeItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B36D0 | 50 | `?Configure@GmMusicChainItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B3710 | 83 | `?Unknown0@GmMusicChainItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B3770 | 112 | `?Run@GmMusicChainItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B37E0 | 49 | `??0GmMusicChainItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B3820 | 11 | `??1GmMusicChainItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B3830 | 50 | `?Configure@GmInstanceSoundItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B3870 | 74 | `?Unknown0@GmInstanceSoundItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B38C0 | 93 | `?Run@GmInstanceSoundItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B3920 | 23 | `?Register@GmInstanceSoundItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B3940 | 55 | `??0GmInstanceSoundItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B3980 | 80 | `??1GmInstanceSoundItem@@UAE@XZ` | gm/manifest | SIZE |
+| 0x001B39D0 | 50 | `?Configure@GmCollisionSoundItem@@QAEXPBUGmManifestItemRequest@@@Z` | gm/manifest | SIZE |
+| 0x001B3A10 | 74 | `?Unknown0@GmCollisionSoundItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B3A60 | 93 | `?Run@GmCollisionSoundItem@@UAEXXZ` | gm/manifest | SIZE |
+| 0x001B3AC0 | 55 | `??0GmCollisionSoundItem@@QAE@XZ` | gm/manifest | SIZE |
+| 0x001B3B00 | 80 | `??1GmCollisionSoundItem@@UAE@XZ` | gm/manifest | SIZE |
 | 0x0003B920 | 87 | `??_GAtSceneParticleSystemActor@@UAEPAXI@Z` | at/particle | SIZE |
 | 0x00035820 | 18 | `?SetIdentity@AtQuaternion@@QAEXXZ` | at/particle | SIZE |
 | 0x0004C180 | 10 | `?SetHeap@AtSceneParticleSystemActor@@SAXPAX@Z` | at/particle | MATCH |
@@ -1384,8 +1644,8 @@ By kind across all sections: eh_catch 0, eh_thunk 1195, eh_unwind 1957, source 1
 | 0x0005B2E0 | 295 | `?Start@AtSceneParticleLayer@@QAEXPAUAtNameTableOwner@@PAVAtEmitter@@PBVAtQuaternion@@@Z` | at/particle | SIZE |
 | 0x0005FF30 | 52 | `??0AtSceneParticle@@QAE@XZ` | at/particle | MISMATCH |
 
-Relocation-aware matches with the host compiler: 168 functions, 2506 unique bytes.
-Share of `.text` raw bytes: 0.1226% (denominator includes unclassified library code).
+Relocation-aware matches with the host compiler: 187 functions, 2793 unique bytes.
+Share of `.text` raw bytes: 0.1366% (denominator includes unclassified library code).
 Matches with the ORIGINAL toolchain: 0 (toolchain unavailable — docs/toolchain.md).
 Exact linked match (whole XBE): not attempted.
 
@@ -1433,6 +1693,15 @@ Exact linked match (whole XBE): not attempted.
 | 0x00276FA8 | 43 | `??_7AtSceneActor@@6B@` | MATCH |
 | 0x00276620 | 44 | `??_7AtSceneModelActor@@6B@` | MATCH |
 | 0x002766D0 | 44 | `??_7AtSceneJointedModelActor@@6B@` | MATCH |
+| 0x002855D8 | 2 | `??_7AtRecordLayout@@6B@` | MATCH |
+| 0x002855E0 | 10 | `??_7AtDataRecordDatabase@@6B@` | MATCH |
+| 0x00284708 | 2 | `??_7AtDatabaseManager@@6B@` | MATCH |
+| 0x00285608 | 1 | `??_7AtDataRecord@@6B@` | MATCH |
+| 0x00277614 | 1 | `??_7AtDataRegistry@@6B@` | MATCH |
+| 0x0027760C | 2 | `??_7AtDataLinkRoot@@6B@` | MATCH |
+| 0x00277940 | 2 | `??_7AtDataLink@@6B@` | MATCH |
+| 0x0027793C | 1 | `??_7AtDataDescriptor@@6B@` | MATCH |
+| 0x00277424 | 2 | `??_7AtDataRegistryNameSpaces@@6B@` | MATCH |
 | 0x00271F78 | 4 | `??_7AtFlashResourceTable@@6B@` | MATCH |
 | 0x0027294C | 4 | `??_7AtFlashTextFormatTable@@6B@` | MATCH |
 | 0x00272D28 | 1 | `??_7AtFlashResource@@6B@` | MATCH |
@@ -1505,6 +1774,20 @@ Exact linked match (whole XBE): not attempted.
 | 0x00275A44 | 2 | `??_7AtScene@@6B@` | MATCH |
 | 0x002765A0 | 32 | `??_7AtSceneNode@@6B@` | MATCH |
 | 0x00276C68 | 32 | `??_7AtSceneModifierNode@@6B@` | MATCH |
+| 0x002950AC | 3 | `??_7GmSoundNoteItem@@6B@` | MATCH |
+| 0x0028DFB8 | 7 | `??_7GmLevelManifest@@6B@` | MATCH |
+| 0x0028F340 | 7 | `??_7GmDatabaseManifest@@6B@` | MATCH |
+| 0x00295040 | 3 | `??_7GmAnimationListItem@@6B@` | MATCH |
+| 0x0029504C | 3 | `??_7GmSoundListItem@@6B@` | MATCH |
+| 0x00295058 | 3 | `??_7GmScriptItem@@6B@` | MATCH |
+| 0x00295068 | 3 | `??_7GmTriggerItem@@6B@` | MATCH |
+| 0x00295078 | 3 | `??_7GmSubscriberItem@@6B@` | MATCH |
+| 0x00295088 | 3 | `??_7GmVfxItem@@6B@` | MATCH |
+| 0x00295094 | 3 | `??_7GmDynamicNodeItem@@6B@` | MATCH |
+| 0x002950A0 | 3 | `??_7GmSoundNodeItem@@6B@` | MATCH |
+| 0x002950B8 | 3 | `??_7GmMusicChainItem@@6B@` | MATCH |
+| 0x002950C4 | 4 | `??_7GmInstanceSoundItem@@6B@` | MATCH |
+| 0x002950D4 | 3 | `??_7GmCollisionSoundItem@@6B@` | MATCH |
 | 0x002767C0 | 43 | `??_7AtSceneParticleSystemActor@@6B@` | MATCH |
 
 ## Differential oracle against the original code (tools/oracle_run.py)
@@ -1543,11 +1826,15 @@ Suite `aud`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 2 f
 
 Suite `tok`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 5864 files (60 binary samples), 12749375 bytes, 1372044 tokens, 22236514 comparisons, 0 differences, 0 x87 precision differences, 145 rumble keywords). Recorded function entries reached in every run: 99 / 99. Source mutants detected (by an earlier run): 172 / 172. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `actor`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 14674 nodes seen, 6057 actors; 3185788 comparisons, 0 differences). Recorded function entries reached in every run: 60 / 60. Source mutants detected: 336 / 336. Positive control exit: 0. Harness mutation exit: 1.
+Suite `actor`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 14674 nodes seen, 6057 actors; 3185788 comparisons, 0 differences). Recorded function entries reached in every run: 60 / 60. Source mutants detected (by an earlier run): 336 / 336. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `add`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 1 real files, 11 registries named, 11 real .ADR registries loaded under the real GENERIC.ADR with 3076 links in use; 434 .ADR files opened, 15872 links compared; 732882 comparisons, 0 differences). Recorded function entries reached in every run: 44 / 44. Source mutants detected (by an earlier run): 253 / 253. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `adr`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 103 .ADR files, 103 chained, 0 crashed alike; 457 texts or files loaded, 165851 links and 171081 values compared; 4303304 comparisons, 0 differences). Recorded function entries reached in every run: 115 / 115. Source mutants detected (by an earlier run): 577 / 577. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `afx`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 20 .AFX files, 132 text formats; 2 .AFL files; 4845 comparisons, 0 differences). Recorded function entries reached in every run: 21 / 21. Source mutants detected (by an earlier run): 212 / 212. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `agd`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 423 files, 20 names, 25178 opens, 76 animations; 276329 comparisons, 0 differences). Recorded function entries reached in every run: 57 / 57. Source mutants detected: 354 / 354. Positive control exit: 0. Harness mutation exit: 1.
+Suite `agd`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 423 files, 20 names, 25178 opens, 76 animations; 276329 comparisons, 0 differences). Recorded function entries reached in every run: 57 / 57. Source mutants detected (by an earlier run): 354 / 354. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `agn`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: files AGN 61, AGA 7, AGI 102, AGF 2, AGL 17, ASL 3, 1704 items; 124593 comparisons, 0 differences). Recorded function entries reached in every run: 85 / 85. Source mutants detected (by an earlier run): 362 / 362. Positive control exit: 0. Harness mutation exit: 1.
 
@@ -1557,9 +1844,9 @@ Suite `agt`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 579
 
 Suite `akc`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 544 files, 2130 rotations, 65 scales, 1220 drawing transforms, 544 with a root; 1409276 comparisons, 0 differences). Recorded function entries reached in every run: 7 / 7. Source mutants detected (by an earlier run): 116 / 116. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `ana`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 1 files, 19 mappers, 312 button and 114 axis maps, each file on two fills and read twice on each; 60746 comparisons, 0 differences). Recorded function entries reached in every run: 40 / 40. Source mutants detected: 274 / 274. Positive control exit: 0. Harness mutation exit: 1.
+Suite `ana`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 1 files, 19 mappers, 312 button and 114 axis maps, each file on two fills and read twice on each; 60746 comparisons, 0 differences). Recorded function entries reached in every run: 40 / 40. Source mutants detected (by an earlier run): 274 / 274. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `anaf`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 1 .ANA files, 16 controllers, 493 inputs, each file on two fills and read twice on each; with 1 .ANM files, 190 binds on real links; 325317 comparisons, 0 differences). Recorded function entries reached in every run: 69 / 69. Source mutants detected: 411 / 411. Positive control exit: 0. Harness mutation exit: 1.
+Suite `anaf`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 1 .ANA files, 16 controllers, 493 inputs, each file on two fills and read twice on each; with 1 .ANM files, 190 binds on real links; 325317 comparisons, 0 differences). Recorded function entries reached in every run: 69 / 69. Source mutants detected (by an earlier run): 411 / 411. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `aob`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 160 .AOB and 160 .AOS files, 160 banks, 1517 segments; 152766 comparisons, 0 differences). Recorded function entries reached in every run: 40 / 40. Source mutants detected (by an earlier run): 244 / 244. Positive control exit: 0. Harness mutation exit: 1.
 
@@ -1569,9 +1856,13 @@ Suite `asb`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 239
 
 Suite `ase`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: files ASE 221, 1456 emitter comparisons in files, 9377 in written text; 7642005 comparisons, 0 differences). Recorded function entries reached in every run: 41 / 41. Source mutants detected (by an earlier run): 359 / 359. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `asm`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 17 .ASM, 16 .ASG files; 10246189 comparisons, 0 differences). Recorded function entries reached in every run: 119 / 119. Source mutants detected: 495 / 495. Positive control exit: 0. Harness mutation exit: 1.
+Suite `asm`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 17 .ASM, 16 .ASG files; 10246189 comparisons, 0 differences). Recorded function entries reached in every run: 119 / 119. Source mutants detected (by an earlier run): 495 / 495. Positive control exit: 0. Harness mutation exit: 1.
 
-Suite `asn`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 14435 nodes seen, 5695 actors; 8791546 comparisons, 0 differences). Recorded function entries reached in every run: 85 / 85. Source mutants detected: 413 / 413. Positive control exit: 0. Harness mutation exit: 1.
+Suite `asn`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 14435 nodes seen, 5695 actors; 8791546 comparisons, 0 differences). Recorded function entries reached in every run: 85 / 85. Source mutants detected (by an earlier run): 413 / 413. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `gon`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 49 files, 583 notes, 543 choices (19 with a scaled weight), 451 segments found, 105 absent, 11 emitters, 6 conditionals, 6 stops, 21 singletons, 4 VFX triggers, 6 events, 1100 lookups found, 36 stops at a crash; 49105 comparisons, 0 differences (0 in written cases)). Recorded function entries reached in every run: 19 / 19. Source mutants detected (by an earlier run): 131 / 131. Positive control exit: 0. Harness mutation exit: 1.
+
+Suite `manifest`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 51 files; 206078 comparisons, 0 differences). Recorded function entries reached in every run: 82 / 82. Source mutants detected (by an earlier run): 129 / 129. Positive control exit: 0. Harness mutation exit: 1.
 
 Suite `particle`: runs with no observed difference 1 / 1 (NO DIFFERENCE OBSERVED: 652 files, 13792 nodes seen, 5616 actors; 2702509 comparisons, 0 differences). Recorded function entries reached in every run: 17 / 17. Source mutants detected (by an earlier run): 181 / 181. Positive control exit: 0. Harness mutation exit: 1.
 

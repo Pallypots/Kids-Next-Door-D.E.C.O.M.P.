@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-08, dev cycle 23 (third parallel batch: modifiers and space graphs, database lists, particle systems, emitters, collision shapes, input controllers). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-08, dev cycle 24 (fourth batch: design data registries, the library that mounts them, sound notes, level manifests). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-08, dev cycle 23 (third parallel batch: modifiers and spac
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 1342 functions and 113 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
+All source is in `src/`, types in `include/`. 1602 functions and 136 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -50,6 +50,10 @@ All source is in `src/`, types in `include/`. 1342 functions and 113 vftables ar
 * `at/ase` (41 functions, 5 vftables): emitters `.ASE`, the engine's own text, not 3D Studio's. All 221 real files load through recovered code. Nothing uses an emitter yet.
 * `at/asb` (61 functions, 6 vftables): collision shapes `.ASB` (box, sphere, group), the bounding box arithmetic, and the segment hit list, folded at integration with the class the emitters knew as `AtQuery`. All 239 real files load; nothing calls the run-time half yet.
 * `at/controller` (69 functions, 5 vftables): input controllers `.ANA` and binding. Physical controllers are harness fakes; reading input stops with a diagnostic.
+* `at/adr` (115 functions, 5 vftables): design data registries `.ADR`, the game's tunable values and prototypes, as trees of named values in pools by type. All 103 real files load. Value slots 5 to 9 and the lookups by path are not recovered, so nothing reads the values yet.
+* `at/add` (44 functions, 4 vftables): `LIBRARY.ADD`, and the `.ADB` record databases (none on the disc; written text only). **The disc's `LIBRARY.ADD` loads its 11 real registries under the real `GENERIC.ADR`, through recovered code, compared link by link with the original.** No recovered start-up calls it yet.
+* `gm/gon` (19 functions, 1 vftable): sound notes `.GON`, which sound an animation trigger plays, into banks of the sound manager. Playing a note (0x001386D0) is not recovered.
+* `gm/manifest` (82 functions, 13 vftables): the level manifest parser 0x00142E90 and its eleven item kinds. **Real `.MNG` files stop at their first word of the base class** (0x0015D000, not recovered), including `PERSIST.MNG`, which start-up waits on.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
@@ -124,7 +128,7 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. Integrate branches waiting: ADR (design data), `LIBRARY.ADD` (fold its descriptor and value classes into ADR's), GON (sound notes), then ASD, AFD, the concrete database loader and the manifest item parser.
+1. Integrate branches waiting: ASD, AFD, the concrete database loader, images and fonts, matrix maths, the game actor base, App init and main; then the work still running.
 2. Everything a loader reaches through a failed open goes to `AtFatal` 0x00011070, which stops rumble, draws an error screen and launches out. Plan closures with that cut.
 3. Whether `AtSceneDevice`, `AtMaterialOwner` and the class in 0x00027B70-0x0002AC10 are one class, and whether `AtNameTableOwner` is really the class of vftable 0x00274A78. The pool vftables 0x002770D8 and 0x002764D4 have 7 slots, not the 5 recorded.
 
