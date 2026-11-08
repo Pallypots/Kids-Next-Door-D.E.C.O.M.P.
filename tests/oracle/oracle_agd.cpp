@@ -306,14 +306,14 @@ public:
     typedef AtFontDatabase Base;
     void OnReady(AtMaterialOwner*) override { slot('1'); }
     void MakeFonts2D() override {}
-    AtFontItem* Font2DAt(unsigned int) override { return nullptr; }
+    AtGrI2DFont* Font2DAt(unsigned int) override { return nullptr; }
 };
 class TestImage : public AtImageDatabase {
 public:
     typedef AtImageDatabase Base;
     void MakeItems() override {}
     void OnReady(AtMaterialOwner*) override { slot('1'); }
-    AtImageItem* ImageAt(unsigned int) override { return nullptr; }
+    AtImage* ImageAt(unsigned int) override { return nullptr; }
 };
 
 // ---- the loader -------------------------------------------------------------------------------------------------------
