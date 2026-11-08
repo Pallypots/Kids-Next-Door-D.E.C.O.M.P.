@@ -1,0 +1,259 @@
+# The matrix device and its pool (include/at/AtMatrixDevice.h), and the last five matrix-table slots the game reads (src/at/AtMatrixAxis.cpp). Names inferred.
+
+[[function]]
+va = 0x000EC270
+size = 57
+symbol = "??0AtMatrixObject@@QAE@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; constructor of each matrix the device and pool make"
+
+[[function]]
+va = 0x0010F800
+size = 16
+symbol = "??0AtMatrixDevice@@QAE@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; base constructor; callers 0x000F213E and 0x000EBE49 only"
+
+[[function]]
+va = 0x0011C1B0
+size = 7
+symbol = "??1AtMatrixPool@@QAE@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; base destructor; puts back vftable 0x002892CC"
+
+[[function]]
+va = 0x000F5FC0
+size = 10
+symbol = "?SetHeap@AtMatrixPoolXbox@@SAXPAVAtHeap@@@Z"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; called by the startup 0x000C7CA0"
+
+[[function]]
+va = 0x000F6180
+size = 17
+symbol = "??0AtMatrixPoolXbox@@QAE@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; installs vftable 0x002892E4; called by DoNewPool and the graphics device"
+
+[[function]]
+va = 0x000F6000
+size = 104
+symbol = "??1AtMatrixPoolXbox@@QAE@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; complete destructor, run directly"
+
+[[function]]
+va = 0x000F61A0
+size = 30
+symbol = "?Slot0@AtMatrixPoolXbox@@UAEXXZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; pool slot 0, the scalar deleting destructor; the flags argument is not modelled, its one caller passes 1"
+
+[[function]]
+va = 0x000F6070
+size = 264
+symbol = "?Reserve@AtMatrixPoolXbox@@UAEXI@Z"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; pool slot 1"
+
+[[function]]
+va = 0x001A81E0
+size = 31
+symbol = "?Clear@AtMatrixPoolXbox@@UAEXXZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; pool slot 2"
+
+[[function]]
+va = 0x00154540
+size = 4
+symbol = "?Count@AtMatrixPoolXbox@@UAEIXZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; pool slot 3; folded with every getter of +8 (also ?AxisCount@AtAbstractController in anaf [symbols])"
+
+[[function]]
+va = 0x000F5FF0
+size = 15
+symbol = "?At@AtMatrixPoolXbox@@UAEPAUAtMatrix@@I@Z"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; pool slot 4, and slot 6 (Matrix), folded"
+
+[[function]]
+va = 0x000F5FE0
+size = 11
+symbol = "?IsReserved@AtMatrixPoolXbox@@UAEHXZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; pool slot 5"
+
+[[function]]
+va = 0x000F7BD0
+size = 10
+symbol = "?SetHeap@AtMatrixDeviceXbox@@SAXPAX@Z"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; called by the startup 0x000C7CA0"
+
+[[function]]
+va = 0x000F7D40
+size = 5
+symbol = "?NewMatrix@AtMatrixDeviceXbox@@UAEPAUAtMatrix@@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 0, forwards to slot 8"
+
+[[function]]
+va = 0x000F7D50
+size = 5
+symbol = "?NewPool@AtMatrixDeviceXbox@@UAEPAVAtMatrixPool@@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 1, forwards to slot 9"
+
+[[function]]
+va = 0x000F7D60
+size = 5
+symbol = "?Slot2@AtMatrixDeviceXbox@@UAEXXZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 2, forwards to slot 10; run on the recovered device, whose slot 10 stops"
+
+[[function]]
+va = 0x000F7D70
+size = 5
+symbol = "?Slot3@AtMatrixDeviceXbox@@UAEXXZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 3, forwards to slot 11; as slot 2"
+
+[[function]]
+va = 0x000F7D80
+size = 14
+symbol = "?FreeMatrix@AtMatrixDeviceXbox@@UAEXPAUAtMatrix@@@Z"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 4, and slot 12 (ReleaseMatrix), folded"
+
+[[function]]
+va = 0x000EBB30
+size = 24
+symbol = "?FreeItemA@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemA@@@Z"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 6, and slot 14 (ReleaseItemA), folded; a harness item stands for the 0x64-byte object"
+
+[[function]]
+va = 0x000F7D20
+size = 24
+symbol = "?FreeItemB@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemB@@@Z"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 7, and slot 15 (ReleaseItemB), folded; a harness item stands for the 0x24-byte object"
+
+[[function]]
+va = 0x000F7BE0
+size = 146
+symbol = "?DoNewMatrix@AtMatrixDeviceXbox@@UAEPAUAtMatrix@@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 8"
+
+[[function]]
+va = 0x000F7C80
+size = 146
+symbol = "?DoNewPool@AtMatrixDeviceXbox@@UAEPAVAtMatrixPool@@XZ"
+source = "src/at/AtMatrixDevice.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 9"
+
+[[function]]
+va = 0x00117EE0
+size = 95
+symbol = "?AtMatrixPreRotateX@@YAXPAUAtMatrix@@M@Z"
+source = "src/at/AtMatrixAxis.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; slot 0x002C6158, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00117F40
+size = 95
+symbol = "?AtMatrixPreRotateY@@YAXPAUAtMatrix@@M@Z"
+source = "src/at/AtMatrixAxis.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; slot 0x002C615C, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00117FA0
+size = 95
+symbol = "?AtMatrixPreRotateZ@@YAXPAUAtMatrix@@M@Z"
+source = "src/at/AtMatrixAxis.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; slot 0x002C6160, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00118100
+size = 95
+symbol = "?AtMatrixPostRotateZ@@YAXPAUAtMatrix@@M@Z"
+source = "src/at/AtMatrixAxis.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; slot 0x002C6198, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001155F0
+size = 389
+symbol = "?AtMatrixPreMultiply3x3@@YAXPAUAtMatrix@@PBM@Z"
+source = "src/at/AtMatrixAxis.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; in no slot; called by the three pre rotations, compared directly"
+
+[[function]]
+va = 0x00115850
+size = 399
+symbol = "?AtMatrixPostMultiply3x3@@YAXPAUAtMatrix@@PBM@Z"
+source = "src/at/AtMatrixAxis.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; in no slot; called by PostRotateZ, compared directly"
+
+[[function]]
+va = 0x001163D0
+size = 368
+symbol = "?AtMatrixGetRotation@@YAXPBUAtMatrix@@PAVAtQuaternion@@@Z"
+source = "src/at/AtMatrixAxis.cpp"
+subsystem = "at/matdev"
+evidence = "tests/oracle/oracle_matdev.cpp; slot 0x002C61F4, written by 0x000EC2B0"
+
+[[vtable]]
+va = 0x002892E4
+slots = 7
+symbol = "??_7AtMatrixPoolXbox@@6B@"
+source = "src/at/AtMatrixDevice.cpp"
+
+[[vtable]]
+va = 0x00288B48
+slots = 16
+symbol = "??_7AtMatrixDeviceXbox@@6B@"
+source = "src/at/AtMatrixDevice.cpp"
+
+[symbols]
+"?s_heap@AtMatrixPoolXbox@@2PAVAtHeap@@A" = 0x003B1F58
+"?s_heap@AtMatrixDeviceXbox@@2PAXA" = 0x003B1F94
+"??_7AtMatrixPool@@6B@" = 0x002892CC  # the base pool's vftable: six slots, all pure in the original; five declared here, so not recorded as a vftable
+"??_7AtMatrixDevice@@6B@" = 0x0028A658  # the base device's vftable: sixteen slots, all pure in the original; six declared here, so not recorded as a vftable
+"?Matrix@AtMatrixPoolXbox@@UAEPAUAtMatrix@@I@Z" = 0x000F5FF0  # pool slot 6, folded with At
+"?FreePool@AtMatrixDeviceXbox@@UAEXPAVAtMatrixPool@@@Z" = 0x000EB9D0  # device slot 5; folded, recorded as AtIoDeleteObject (at/mount)
+"?ReleaseMatrix@AtMatrixDeviceXbox@@UAEXPAUAtMatrix@@@Z" = 0x000F7D80  # device slot 12, folded with FreeMatrix
+"?ReleasePool@AtMatrixDeviceXbox@@UAEXPAVAtMatrixPool@@@Z" = 0x000EB9D0  # device slot 13, folded
+"?ReleaseItemA@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemA@@@Z" = 0x000EBB30  # device slot 14, folded with FreeItemA
+"?ReleaseItemB@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemB@@@Z" = 0x000F7D20  # device slot 15, folded with FreeItemB
+"?NewItemA@AtMatrixDeviceXbox@@UAEPAVAtMatrixDeviceItemA@@XZ" = 0x000F7D90  # device slot 10: NOT recovered, stops with a diagnostic
+"?NewItemB@AtMatrixDeviceXbox@@UAEPAVAtMatrixDeviceItemB@@XZ" = 0x000F7E30  # device slot 11: NOT recovered, stops with a diagnostic

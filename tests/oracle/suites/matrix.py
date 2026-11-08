@@ -156,7 +156,7 @@ MUTANTS = [
     ("table: point and direction swapped", C, "AtMatrixSetProduct, AtMatrixTransformPoint, AtMatrixSetUniformScale, AtMatrixRead, AtMatrixGetPosition, AtMatrixGetAxes, AtMatrixTransformDirection,",
      "AtMatrixSetProduct, AtMatrixTransformDirection, AtMatrixSetUniformScale, AtMatrixRead, AtMatrixGetPosition, AtMatrixGetAxes, AtMatrixTransformPoint,"),
     ("table: x and z axes swapped", C, "AtMatrixGetXAxis, AtMatrixGetYAxis, AtMatrixGetZAxis,", "AtMatrixGetZAxis, AtMatrixGetYAxis, AtMatrixGetXAxis,"),
-    ("table: the two inverse transforms swapped", C, "AtMatrixInverseTransformPoint, AtMatrixInverseTransformDirection}", "AtMatrixInverseTransformDirection, AtMatrixInverseTransformPoint}"),
+    ("table: the two inverse transforms swapped", C, "AtMatrixInverseTransformPoint, AtMatrixInverseTransformDirection,", "AtMatrixInverseTransformDirection, AtMatrixInverseTransformPoint,"),
     ("table: translation and scale swapped", C, "AtMatrixSetTranslation, AtMatrixSetRotation, AtMatrixSetLookAt, AtMatrixSetScale,", "AtMatrixSetScale, AtMatrixSetRotation, AtMatrixSetLookAt, AtMatrixSetTranslation,"),
     # Copy for CopyWords in the table would be equivalent: both move every word as it is. Not a mutant.
 ]
