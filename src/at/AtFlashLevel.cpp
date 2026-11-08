@@ -96,9 +96,9 @@ void AtFlashLevel::Load(const char* name, int) {
     }
     m_heapInUse = heap;
     m_heap = heap;
-    m_heap204 = heap;
-    m_first.SetHeap(heap);
-    m_second.SetHeap(m_heapInUse);
+    m_sprites.m_heap = heap;
+    m_shapes.SetHeap(heap);
+    m_texts.SetHeap(m_heapInUse);
     m_heap1DC = m_heapInUse;
-    m_heap150 = m_heapInUse;
+    m_scripts.m_heap = m_heapInUse;
 }

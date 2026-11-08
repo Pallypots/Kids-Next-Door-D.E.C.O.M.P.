@@ -24,9 +24,17 @@ class AtAudioBankFile {
 public:
     AtAudioBankFile();   // 0x00018810 folded with AtIoFileRef's
     ~AtAudioBankFile();  // 0x000249A0, also used by things not recovered
+    void Close();        // 0x000249A0 (same code: folded)
+    int Open(const char* path, int flags);  // 0x000249D0 as AtIoFileRef::Open, by way of s_context
+    int OpenWithExtension(const char* path, const char* ext, int flags);  // 0x00024AA0 ext is added if the leaf has no dot
+    int Read(void* out, unsigned int size, unsigned int* done);  // 0x00024A50 waits for a pending read
+    int ReadPending(void* out, unsigned int size, unsigned int* done, AtIoFileRequest** request);  // 0x00024950 may leave it pending
+    int Release(AtIoFileRequest* request);  // 0x00024980 0 with no file, otherwise 1
 
     AtIoFileSystem* m_fs;  // +0x00
     AtIoFile* m_file;      // +0x04
+
+    static AtIoContext* s_context;  // 0x002C6328 stored at 0x0001951A
 };
 
 // What the .AOB entry for one bank says, handed to the concrete database.

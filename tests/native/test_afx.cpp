@@ -8,8 +8,6 @@
 static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
 
-// The seam: see include/at/AtFlashLevel.h.
-void AtFlashHeapUser::SetHeap(void* heap) { m_heap = heap; }
 
 namespace {
 

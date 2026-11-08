@@ -193,6 +193,4 @@ source = "src/at/AtFlashTextFormat.cpp"
 
 [symbols]
 "?Read@AtFlashResource@@UAEXPAVAtIoTokenizer@@@Z" = 0x000CBF30  # empty, folded
-"?Slot3@AtFlashResourceTable@@UAEXH@Z" = 0x00017290  # not recovered; stops with a diagnostic
 "?s_defaultHeap@AtFlashResourceTable@@2PAXA" = 0x002C6270
-"?SetHeap@AtFlashHeapUser@@QAEXPAX@Z" = 0x00058AF0  # a seam: defined by the class that holds it, in a range another worker has

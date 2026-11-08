@@ -1,23 +1,22 @@
 # The Flash text formats' and level files' mutants, .AFX and .AFL. Dropped as equivalent, each with its reason:
 #   * Anything inside `if (m_heapSize > 0)` in AtFlashLevel::Load: m_heapSize is set to 0 on the line before, so the branch does not run, on either side.
-#   * AtFlashResourceTable::Slot3: not recovered, it stops with a diagnostic; nothing here reaches it.
 #   * The first of the two zeroings of m_heapSize in Load, on its own: the file's word or the second zeroing overwrites it before anything reads it, and nothing is compared until the end.
 #   * Removing file.Close() from AtFlashTextFormatTable::Read: the token file's destructor, which runs at once, does the same close.
 #   * m_heapSize's value from the word: read and thrown away, as above; the word's being read at all is tested.
 F = "AtFlashTextFormat.cpp"
 L = "AtFlashLevel.cpp"
 
-_RCTOR = "AtFlashResource::AtFlashResource() {\n    m_index = -1;\n    m_references = 0;\n    m_unknown14 = 0;\n    m_table = 0;\n"
-_RDTOR = "AtFlashResource::~AtFlashResource() {\n    m_index = -1;\n    m_references = 0;\n    m_unknown14 = 0;\n    m_table = 0;\n"
-_RRST = "void AtFlashResource::ResetLinks() {\n    m_index = -1;\n    m_references = 0;\n    m_unknown14 = 0;\n    m_table = 0;\n"
-_RFIELDS = (("m_index", "    m_index = -1;\n"), ("m_references", "    m_references = 0;\n"), ("m_unknown14", "    m_unknown14 = 0;\n"), ("m_table", "    m_table = 0;\n"))
+_RCTOR = "AtFlashResource::AtFlashResource() {\n    m_index = -1;\n    m_references = 0;\n    m_uses = 0;\n    m_table = 0;\n"
+_RDTOR = "AtFlashResource::~AtFlashResource() {\n    m_index = -1;\n    m_references = 0;\n    m_uses = 0;\n    m_table = 0;\n"
+_RRST = "void AtFlashResource::ResetLinks() {\n    m_index = -1;\n    m_references = 0;\n    m_uses = 0;\n    m_table = 0;\n"
+_RFIELDS = (("m_index", "    m_index = -1;\n"), ("m_references", "    m_references = 0;\n"), ("m_uses", "    m_uses = 0;\n"), ("m_table", "    m_table = 0;\n"))
 _RESET = "    ResetLinks();\n    m_heap = 0;\n    m_read = 0;\n    m_wordWrap = 0;\n    m_multiLine = 0;\n    m_password = 0;\n    m_readOnly = 0;\n    m_noSelect = 0;\n    m_border = 0;\n    m_fontHeight = 12.0f;\n    m_textMaxLength = -1;\n    m_alignment = kAlignmentLeft;\n    m_leftMargin = 0.0f;\n    m_rightMargin = 0.0f;\n    m_indent = 0.0f;\n    m_leading = 0.0f;\n    m_bounds[0] = 0.0f;\n    m_bounds[1] = 0.0f;\n    m_bounds[2] = 0.0f;\n    m_bounds[3] = 0.0f;\n    m_color[0] = 255;\n    m_color[1] = 255;\n    m_color[2] = 255;\n    m_color[3] = 255;\n"
 _CTOR = "AtFlashResourceTable::AtFlashResourceTable() {\n    m_initialised = 0;\n    m_firstGroup = 0;\n    m_lastGroup = 0;\n    m_items = 0;\n    m_itemCount = 0;\n    m_groupCount = 0;\n    AtCopyName8(m_name, \"NotInitd\");\n    m_heap = 0;\n"
 _CLEAR = "    m_initialised = 0;\n    m_items = 0;\n    m_itemCount = 0;\n    m_groupCount = 0;\n    m_firstGroup = 0;\n    m_lastGroup = 0;\n    AtCopyName8(m_name, \"NotInitd\");\n    m_heap = 0;\n}\n\nvoid AtFlashResourceTable::Allocate"
 _FIELDS = ("m_initialised", "m_items", "m_itemCount", "m_groupCount", "m_firstGroup", "m_lastGroup", "m_heap")
 _GROUP = "            m_firstGroup = group->m_next;\n            if (m_firstGroup != 0) {\n                m_firstGroup->m_prev = 0;\n            } else {\n                m_lastGroup = 0;\n            }\n            group->m_first = 0;\n            group->m_last = 0;\n            operator delete(group);\n"
 _ALIGN = "            if (alignment == kWordAlignmentLeft) {\n                m_alignment = kAlignmentLeft;\n            } else if (alignment == kWordAlignmentRight) {\n                m_alignment = kAlignmentRight;\n            } else if (alignment == kWordAlignmentCenter) {\n                m_alignment = kAlignmentCenter;\n            } else if (alignment == kWordAlignmentJustify) {\n                m_alignment = kAlignmentJustify;\n            } else {\n                tokenizer->Error(kBadField);\n            }\n"
-_LOADEND = "    m_heapInUse = heap;\n    m_heap = heap;\n    m_heap204 = heap;\n    m_first.SetHeap(heap);\n    m_second.SetHeap(m_heapInUse);\n    m_heap1DC = m_heapInUse;\n    m_heap150 = m_heapInUse;\n"
+_LOADEND = "    m_heapInUse = heap;\n    m_heap = heap;\n    m_sprites.m_heap = heap;\n    m_shapes.SetHeap(heap);\n    m_texts.SetHeap(m_heapInUse);\n    m_heap1DC = m_heapInUse;\n    m_scripts.m_heap = m_heapInUse;\n"
 
 
 def _drop(head, line):
@@ -87,7 +86,7 @@ MUTANTS = [
     ("base allocate: no raise without room", F, "    if (m_items == 0) {\n        AtRaise(-4, 0, 0, 0);\n    }\n", ""),
     ("base allocate: not cleared", F, "    for (unsigned int i = 0; i < count; i++) {\n        m_items[i] = 0;\n    }\n", ""),
     ("base release: a reference more", F, "m_items[index]->m_references--;", "m_items[index]->m_references++;"),
-    ("base release: another item", F, "m_items[index]->m_references--;", "m_items[0]->m_unknown14--;"),
+    ("base release: another item", F, "m_items[index]->m_references--;", "m_items[0]->m_uses--;"),
     # The table of formats.
     ("table ctor: loaded", F, "AtFlashTextFormatTable::AtFlashTextFormatTable() {\n    m_loaded = 0;\n", "AtFlashTextFormatTable::AtFlashTextFormatTable() {\n"),
     ("table dtor: no release", F, "AtFlashTextFormatTable::~AtFlashTextFormatTable() {\n    ReleaseFormats();\n", "AtFlashTextFormatTable::~AtFlashTextFormatTable() {\n"),
