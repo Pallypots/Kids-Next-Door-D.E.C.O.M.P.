@@ -60,7 +60,7 @@ MUTANTS = [
      "    for (unsigned int i = 0; i < m_vfxCount; i++) {\n        Enqueue(&m_vfx[i], 0);\n    }\n    for (unsigned int i = 0; i < m_triggerCount; i++) {\n        Enqueue(&m_triggers[i], 0);\n    }\n",
      "    for (unsigned int i = 0; i < m_triggerCount; i++) {\n        Enqueue(&m_triggers[i], 0);\n    }\n    for (unsigned int i = 0; i < m_vfxCount; i++) {\n        Enqueue(&m_vfx[i], 0);\n    }\n"),
     ("level queue: one short", L, "for (unsigned int i = 0; i < m_musicChainCount; i++) {\n        Enqueue", "for (unsigned int i = 0; i + 1 < m_musicChainCount; i++) {\n        Enqueue"),
-    ("level queue: notes", L, "        Enqueue(GmSoundNoteItemAt(m_soundNotes, i), 0);\n", ""),
+    ("level queue: notes", L, "        Enqueue(&m_soundNotes[i], 0);\n", ""),
     # The words.
     ("ANL: context", L, "request.m_context = GmBehaviorSystem::s_instance->m_animationLists;", "request.m_context = GmBehaviorSystem::s_instance->m_soundLists;"),
     ("SDL: context", L, "request.m_context = GmBehaviorSystem::s_instance->m_soundLists;", "request.m_context = GmBehaviorSystem::s_instance->m_animationLists;"),
@@ -82,11 +82,11 @@ MUTANTS = [
     ("heap: not popped", L, "    AtPopHeap();\n    if (items == 0)", "    if (items == 0)"),
     ("new: count word", L, "    *block = count;\n    T* first", "    *block = count + 1;\n    T* first"),
     ("delete: order", L, "        first[i - 1].~T();", "        first[*block - i].~T();"),
-    ("GON: heap", L, "        PushItemHeap();\n        m_soundNotes = GmSoundNoteItemsNew(m_soundNoteCount);\n", "        m_soundNotes = GmSoundNoteItemsNew(m_soundNoteCount);\n"),
+    ("GON: heap", L, "        PushItemHeap();\n        m_soundNotes = NewItems<GmSoundNoteItem>(m_soundNoteCount);\n", "        m_soundNotes = NewItems<GmSoundNoteItem>(m_soundNoteCount);\n"),
     # Finished.
     ("Finished: base", L, "    GmDatabaseManifest::Finished();\n    for", "    for"),
     ("Finished: null banks", L, "        GmAudioRegisterNodes(m_soundNodes[i].m_bank);", "        if (m_soundNodes[i].m_bank != 0) GmAudioRegisterNodes(m_soundNodes[i].m_bank);"),
-    ("Finished: notes", L, "        GmSoundNoteItemRegister(GmSoundNoteItemAt(m_soundNotes, i));\n", ""),
+    ("Finished: notes", L, "        GmAudioData::s_instance->RegisterNotes(m_soundNotes[i].m_bank);\n", ""),
     ("Finished: instances", L, "        m_instanceSounds[i].Register();\n", ""),
     # The level's Free.
     ("Free ANL: null test", L, "            if (m_animationLists[i].m_list != 0) {\n                GmBehaviorSystem", "            if (true) {\n                GmBehaviorSystem"),
@@ -100,7 +100,7 @@ MUTANTS = [
     ("Free GOI: slot 0", L, "            m_instanceSounds[i].Unknown0();\n", ""),
     ("Free AET: count", L, "        m_triggers = 0;\n        m_triggerCount = 0;\n", "        m_triggers = 0;\n"),
     ("Free GOM: kept", L, "        DeleteItems(m_musicChains);\n", ""),
-    ("Free GON: kept", L, "        GmSoundNoteItemsDelete(m_soundNotes);\n", ""),
+    ("Free GON: kept", L, "        DeleteItems(m_soundNotes);\n", ""),
     ("Free: base", L, "    GmDatabaseManifest::Free();\n}", "}"),
     # Items.
     ("ANL ctor: list", I, "    m_owner = 0;\n    m_list = 0;\n    AtFormat(m_extension, \"\");\n}\n\nGmAnimationListItem::~", "    m_owner = 0;\n    AtFormat(m_extension, \"\");\n}\n\nGmAnimationListItem::~"),

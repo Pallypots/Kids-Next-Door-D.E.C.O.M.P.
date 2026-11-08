@@ -59,7 +59,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x0009BD50
 size = 1109
-symbol = "?Load@AtDataLibrary@@QAEXPAUAtDataOwner@@PBDHPAVAtDataRegistry@@@Z"
+symbol = "?Load@AtDataLibrary@@QAEXPAUAtDataRegistryOwner@@PBDHPAVAtDataRegistry@@@Z"
 source = "src/at/AtDataLibrary.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; LIBRARY.ADD, the one .ADD on the disc, and written text"
@@ -67,7 +67,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000992D0
 size = 49
-symbol = "?AddDatabase@AtDataOwner@@QAEXPAVGmNameMap@@PBD@Z"
+symbol = "?AddDatabase@AtDataRegistryOwner@@QAEXPAVGmNameMap@@PBD@Z"
 source = "src/at/AtDataLibrary.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
@@ -75,7 +75,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x0006BDB0
 size = 432
-symbol = "?Read@AtDataDescriptorFields@@QAEHPAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtDataDescriptor@@QAEHPAVAtIoTokenizer@@@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only"
@@ -107,7 +107,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000B1E30
 size = 1105
-symbol = "?Read@AtDatabaseManager@@QAEHPAUAtDataOwner@@PAVAtIoTokenizer@@PADIH@Z"
+symbol = "?Read@AtDatabaseManager@@QAEHPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@PADIH@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only: no .ADB on the disc"
@@ -131,7 +131,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000B2330
 size = 295
-symbol = "?Load@AtDatabaseManager@@QAEHPAUAtDataOwner@@PBDHPADIH@Z"
+symbol = "?Load@AtDatabaseManager@@QAEHPAUAtDataRegistryOwner@@PBDHPADIH@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only: no .ADB on the disc"
@@ -163,7 +163,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000B9AB0
 size = 13
-symbol = "?FieldAt@AtRecordLayout@@QAEPAUAtDataDescriptorFields@@I@Z"
+symbol = "?FieldAt@AtRecordLayout@@QAEPAVAtDataDescriptor@@I@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
@@ -307,7 +307,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000BAA90
 size = 41
-symbol = "?Set@AtDataRecord@@QAEHIPAVAtRecordLayout@@PAPAVAtDataValue@@@Z"
+symbol = "?Set@AtDataRecord@@QAEHIPAVAtRecordLayout@@PAPAVAtDataComponent@@@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h"
@@ -315,7 +315,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000BAAC0
 size = 193
-symbol = "?FieldAt@AtDataRecord@@QAEPAVAtDataValue@@I@Z"
+symbol = "?FieldAt@AtDataRecord@@QAEPAVAtDataComponent@@I@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; not reached by loading"
@@ -323,7 +323,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000BABB0
 size = 132
-symbol = "?DescriptorAt@AtDataRecord@@QAEPAUAtDataDescriptorFields@@I@Z"
+symbol = "?DescriptorAt@AtDataRecord@@QAEPAVAtDataDescriptor@@I@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; not reached by loading"
@@ -331,7 +331,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000BAC60
 size = 102
-symbol = "?FieldNamed@AtDataRecord@@QAEPAVAtDataValue@@PBD@Z"
+symbol = "?FieldNamed@AtDataRecord@@QAEPAVAtDataComponent@@PBD@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; not reached by loading"
@@ -368,7 +368,16 @@ slots = 1
 symbol = "??_7AtDataRecord@@6B@"
 source = "src/at/AtDatabaseManager.cpp"
 
+[[function]]
+va = 0x0006A0A0
+size = 18
+symbol = "?Equals@AtDataBoolean@@UAEHPBVAtDataComponent@@@Z"
+source = "src/at/AtDataComponent.cpp"
+subsystem = "at/add"
+evidence = "tests/oracle/oracle_add.cpp (FindByValue on a column of integers); slot 7 of AtDataBoolean 0x0027777C and AtDataInt 0x002777A4, address noted beside the declaration in include/at/AtDataRegistry.h"
+
 [symbols]
+"?Equals@AtDataInt@@UAEHPBVAtDataComponent@@@Z" = 0x0006A0A0  # folded with AtDataBoolean's
 "?Unknown7@AtDataRecordDatabase@@UAEHH@Z" = 0x000B15B0  # folded: returns 0
 "?OnReady@AtDataRecordDatabase@@UAEXXZ" = 0x001CC9F0  # folded: empty
 "?s_heap@AtDataLibrary@@2PAXA" = 0x0030593C
@@ -380,9 +389,6 @@ source = "src/at/AtDatabaseManager.cpp"
 "?s_keywords@AtDatabaseManager@@2QBUAtIoKeyword@@B" = 0x002B5310
 "?s_heap@AtRecordLayout@@2PAXA" = 0x003ADE90
 "?s_heap@AtDataRecordDatabase@@2PAXA" = 0x003ADE94
-"?AtDataRegistryClear@@YAXPAVAtDataRegistry@@@Z" = 0x00067540  # seam
-"?AtDataRegistryLoad@@YAXPAVAtDataRegistry@@PAUAtDataOwner@@PBDHPAD0@Z" = 0x00068880  # seam
-"?AtDataDescriptorClear@@YAXPAUAtDataDescriptorFields@@@Z" = 0x0006BC60  # seam
-"?AtDataStringReset@@YAXPAVAtDataValue@@@Z" = 0x0006A1D0  # seam, not recovered
-"?AtDataStringBindAndRead@@YAXPAVAtDataValue@@PAUAtDataDescriptorFields@@PAVAtIoTokenizer@@PADI@Z" = 0x0006A4D0  # seam, not recovered
-"?AtDataStringBind@@YAXPAVAtDataValue@@PAUAtDataDescriptorFields@@PADI@Z" = 0x00069FD0  # seam, not recovered
+"?AtDataStringReset@@YAXPAVAtDataString@@@Z" = 0x0006A1D0  # seam, not recovered
+"?AtDataStringBindAndRead@@YAXPAVAtDataString@@PAVAtDataDescriptor@@PAVAtIoTokenizer@@PADI@Z" = 0x0006A4D0  # seam, not recovered
+"?AtDataStringBind@@YAXPAVAtDataString@@PAVAtDataDescriptor@@PADI@Z" = 0x00069FD0  # seam, not recovered

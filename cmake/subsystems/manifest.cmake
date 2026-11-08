@@ -2,7 +2,6 @@
 target_sources(knd_gm PRIVATE
     ${KND_GM_SRC}/GmLevelManifest.cpp
     ${KND_GM_SRC}/GmLevelManifestItems.cpp
-    ${KND_GM_SRC}/GmLevelManifestHost.cpp
-    ${KND_GM_SRC}/GmLevelManifestNotes.cpp)
+    ${KND_GM_SRC}/GmLevelManifestHost.cpp)
 knd_native_test(test_manifest)
 knd_oracle(oracle_manifest)

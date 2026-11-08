@@ -84,7 +84,7 @@ void FreeNames(char** names, unsigned int count) {
 
 }  // namespace
 
-void AtDataOwner::AddDatabase(GmNameMap* map, const char* space) {
+void AtDataRegistryOwner::AddDatabase(GmNameMap* map, const char* space) {
     if (space != 0 && space[0] != 0) {
         m_databaseSpaces.Add(space, map);
     } else {
@@ -128,7 +128,7 @@ void AtDataLibrary::MakeRegistries() {
             AtRaise(-2, 0, 0, 0);
         }
         AtPushHeap(s_heap);
-        m_registries[i] = AtDataRegistryNew();
+        m_registries[i] = new AtDataRegistry;
         AtPopHeap();
         if (m_registries[i] == 0) {
             AtRaise(-4, 0, 0, 0);
@@ -164,10 +164,10 @@ void AtDataLibrary::Clear() {
         for (unsigned int i = 0; i < m_registryCount; i++) {
             AtDataRegistry* registry = m_registries[i];
             if (registry != 0) {
-                if (AtDataRegistryIsLoaded(registry) != 0) {
-                    AtDataRegistryClear(registry);
+                if (registry->m_loaded != 0) {
+                    registry->Clear();
                 }
-                AtDataRegistryDelete(registry);
+                delete registry;
                 m_registries[i] = 0;
             }
         }
@@ -200,7 +200,7 @@ void AtDataLibrary::LoadEntries(int unused, AtDataRegistry* parent) {
     for (unsigned int i = 0; i < m_registryCount; i++) {
         char space[8];
         space[0] = 0;
-        AtDataRegistryLoad(m_registries[i], m_owner, s_registryNames[i], unused, space, parent);
+        m_registries[i]->Load(m_owner, s_registryNames[i], unused, space, parent);
     }
     for (unsigned int i = 0; i < m_databaseCount; i++) {
         char space[8];
@@ -217,7 +217,7 @@ void AtDataLibrary::LoadEntries(int unused, AtDataRegistry* parent) {
     }
 }
 
-void AtDataLibrary::Load(AtDataOwner* owner, const char* name, int unused, AtDataRegistry* parent) {
+void AtDataLibrary::Load(AtDataRegistryOwner* owner, const char* name, int unused, AtDataRegistry* parent) {
     AtIoTokenFile file;
     if (m_loaded != 0) {
         Clear();

@@ -4,7 +4,7 @@
 #include "at/AtSceneActor.h"
 #include "at/AtSpaceGraph.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);

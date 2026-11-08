@@ -1,10 +1,12 @@
-// Host test of the level manifest through the real text tokenizer, on any pointer size. Not evidence of a byte match. Every function of src/gm/GmLevelManifestHost.cpp and
-// src/gm/GmLevelManifestNotes.cpp is this file's, and writes what it was asked into a log, which is checked. No game data.
+// Host test of the level manifest through the real text tokenizer, on any pointer size. Not evidence of a byte match. Every function of src/gm/GmLevelManifestHost.cpp is this file's, and writes what
+// it was asked into a log, which is checked. The sound notes' items are the real GmSoundNoteItem, loading a written .GON through the real file code into a real GmAudioData. No game data.
 #include <cstdio>
 #include <cstring>
 #include <string>
 
 #include "at/AtHeap.h"
+#include "at/AtIoFileSystem.h"
+#include "gm/GmAudioData.h"
 #include "gm/GmLevelManifest.h"
 
 static int g_fail = 0;
@@ -75,25 +77,62 @@ GmMusicChain* GmMusicManager::Allocate() { return (GmMusicChain*)&g_object; }
 void GmMusicManager::Stop(GmMusicChain*) { note("stop-music"); }
 void GmMusicManager::Free(GmMusicChain*) { note("free-music"); }
 
-// The sound notes: a stand-in item of the same size, which logs.
-class GmSoundNoteItem : public GmManifestItem {
-public:
-    GmSoundNoteItem() { m_extension[0] = 0; m_path[0] = 0; m_next = 0; }
-    void Unknown0() override {}
-    void Run() override { note("notes", m_path); }
-    int m_bank = 0;
-};
-GmSoundNoteItem* GmSoundNoteItemsNew(unsigned int count) { return new GmSoundNoteItem[count]; }
-GmManifestItem* GmSoundNoteItemAt(GmSoundNoteItem* items, unsigned int index) { return &items[index]; }
-void GmSoundNoteItemConfigure(GmManifestItem* item, const GmManifestItemRequest* request) { std::strcpy(item->m_path, request->m_path); std::strcpy(item->m_extension, "GON"); }
-void GmSoundNoteItemRegister(GmManifestItem*) { note("register-notes"); }
-void GmSoundNoteItemsDelete(GmSoundNoteItem* items) { note("delete-notes"); delete[] items; }
-
 namespace {
 
 class Memory : public AtIoStream {
 public:
     int Refill() override { return 0; }
+};
+
+// A file system with one text in memory: the .GON every sound notes item loads.
+class File : public AtIoFile {
+public:
+    const char* data = nullptr;
+    size_t size = 0;
+    int Close() override { return 0; }
+    int Open(const char*, const char*, int) override { return 0; }
+    int Clear() override { return 0; }
+    int Seek(unsigned int offset) override { m_position = offset; return 0; }
+    int Read(void* out, unsigned int n, unsigned int* done, AtIoFileRequest**) override {
+        const size_t have = size - m_position;
+        if (n > have) n = (unsigned int)have;
+        if (n) std::memcpy(out, data + m_position, n);
+        m_position += n;
+        if (done) *done = n;
+        return n ? 0 : (int)AtIoFile::kEndOfFile;
+    }
+    int Write(const void*, unsigned int, unsigned int*) override { return 0; }
+    int Flush() override { return 0; }
+    int Unknown8(void*) override { return 0; }
+    int Release(AtIoFileRequest*) override { return 0; }
+};
+
+const char kNotes[] = "SoundNotes[ 2 ] { Note \"Step\" { AnimationTrigger \"foot\" Segments[ 1 ] { \"seg\" } } Note \"Jump\" { Singleton } }\n";
+
+class Fs : public AtIoFileSystem {
+public:
+    File file;
+    std::string opened;
+    int Open(const char* path, int flags, AtIoFile** out) override {
+        opened += path;
+        opened += " ";
+        file.data = kNotes;
+        file.size = sizeof kNotes - 1;
+        file.m_position = 0;
+        file.m_flags = (flags & 0x21) ? 0x0C : 2;
+        file.m_path[0] = 0;
+        *out = &file;
+        return 0;
+    }
+    int Close(AtIoFile*) override { return 0; }
+    int IsDirectoryMissing(const char*) override { return 1; }
+    int IsFileMissing(const char*) override { return 0; }
+    int GetEntryType(const char*, int*) override { return 1; }
+    int Unknown7(void*) override { return 0; }
+    void* List(const char*) override { return nullptr; }
+    void FreeList(void*) override {}
+    int Unknown11(void*) override { return 0; }
+    int Unknown12() override { return 0; }
 };
 
 int g_heap;
@@ -138,6 +177,19 @@ int main() {
     GmDynamicNodeState::s_instance = &nodeState;
     int music;
     GmMusicManager::s_instance = (GmMusicManager*)&music;
+    static Fs fs;
+    static AtIoContext context;
+    static AtIoFileSystem* stack[4] = {&fs};
+    context.m_stack = stack;
+    context.m_stackCount = 1;
+    context.m_stackSize = 4;
+    AtIoFileRef::s_context = &context;
+    AtIoTokenFile::s_heap = &g_heap;
+    AtIoStream::s_heap = &g_heap;
+    GmNameMap::s_heap = &g_heap;
+    static GmAudioData audio;  // zeroed: no sound lists, so no segment is found
+    GmAudioData::s_instance = &audio;
+    GmAudioData::s_heap = &g_heap;
 
     char text[sizeof kText];
     std::memcpy(text, kText, sizeof kText);
@@ -170,17 +222,27 @@ int main() {
         while (manifest.m_head != 0) manifest.RunNext();
         // Configure unloads first, so the tables were asked once already.
         CHECK(g_log == "unload-triggers unload-subscribers animations(B\\A) prepare sounds(B\\S) script(C\\S) vfx(Art\\a.VFX) vfx(Art\\b.VFX) triggers(Design\\T) subscribers(Design\\S) node(D\\N) insert "
-                       "nodes(Audio\\N) notes(Audio\\O) music(Audio\\M) collision(Audio\\C) instance(Audio\\I) base-finished register-nodes(bank) register-notes register-instance ");
+                       "nodes(Audio\\N) music(Audio\\M) collision(Audio\\C) instance(Audio\\I) base-finished register-nodes(bank) register-instance ");
         if (g_fail) std::printf("%s\n", g_log.c_str());
         g_log.clear();
+        // The sound notes' item: its bank, loaded from the .GON and registered by Finished.
+        CHECK(fs.opened == "Audio\\O.GON ");
+        CHECK(std::strcmp(manifest.m_soundNotes[0].m_extension, "GON") == 0);
+        GmSoundNoteBank* bank = manifest.m_soundNotes[0].m_bank;
+        CHECK(bank == &audio.m_noteBanks[0] && audio.m_noteBankUsed[0] == 1);
+        CHECK(bank->m_noteCount == 2);
+        CHECK(bank->m_byName.Find("Jump") == &bank->m_notes[1]);
+        CHECK(bank->m_byTrigger.Find("foot") == &bank->m_notes[0]);
+        CHECK(bank->m_notes[0].m_choiceCount == 1 && bank->m_notes[0].m_choices[0].m_segment == 0);
         CHECK(manifest.m_soundNodes[0].m_loaded == 1);
         manifest.m_soundNodes[0].Run();  // once only
         CHECK(g_log.empty());
     }
     // Destroyed: everything given back, in the order of the arrays.
-    CHECK(g_log == "release-list release-script unload-triggers unload-subscribers delete-vfx delete-vfx remove unload-node(1) free-nodes release-bank delete-notes stop-music clear-music free-music "
+    CHECK(g_log == "release-list release-script unload-triggers unload-subscribers delete-vfx delete-vfx remove unload-node(1) free-nodes release-bank stop-music clear-music free-music "
                    "free-collision free-instance ");
     if (g_fail) std::printf("%s\n", g_log.c_str());
+    CHECK(audio.m_noteBankUsed[0] == 0 && audio.m_noteBanks[0].m_notes == 0);  // the item gave its bank back
 
     // A word given twice keeps only the second array, and a count of none makes an empty one.
     {

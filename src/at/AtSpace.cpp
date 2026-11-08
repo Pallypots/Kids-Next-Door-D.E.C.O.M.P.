@@ -1,7 +1,7 @@
 // The spaces of a graph. See include/at/AtSpaceGraph.h. In the Insert functions, `double` stands for what the original keeps in an x87 register, `float` for what it stored; the order of each sum is the original's.
 #include "at/AtSpaceGraph.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);

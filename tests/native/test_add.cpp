@@ -1,5 +1,5 @@
-// Host test of the data library and the database manager, on any pointer size. Not evidence of a byte match. The .ADR registry, the descriptor's and the value classes' other members are held by other work, so
-// the seams are supplied here, by small classes of this test's own, and file loading goes through the real archive-independent text path.
+// Host test of the data library and the database manager, on any pointer size. Not evidence of a byte match. The registries, descriptors and values are the recovered .ADR classes; the three members of
+// AtDataString no branch has recovered are supplied here, and file loading goes through the real archive-independent text path.
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -19,48 +19,18 @@ static int g_fail = 0;
 
 namespace {
 
-struct Fake {
-    int loaded = 0;
-    std::string name;
-    AtDataOwner* owner = nullptr;
-    int unused = -1;
-    AtDataRegistry* parent = nullptr;
-    int cleared = 0;
+// What the three string seams were asked, by value.
+struct Bound {
+    char* characters = nullptr;
+    unsigned int size = 0;
+    int resets = 0;
 };
-std::vector<Fake*> g_registries;
-
-class Value : public AtDataValue {
-public:
-    void Slot0(unsigned int) override {}
-    int Read(AtDataDescriptorFields* descriptor, AtIoTokenizer* tokenizer) override {
-        m_descriptor = descriptor;
-        m_read = tokenizer->Next();
-        m_int = tokenizer->m_int;
-        m_text = tokenizer->m_string;
-        return 0;
-    }
-    int SetDescriptor(AtDataDescriptorFields* descriptor) override {
-        m_descriptor = descriptor;
-        m_read = -1;
-        return 0;
-    }
-    void Slot3() override {}
-    int Slot4(unsigned int) override { return 0; }
-    void* Slot5(unsigned int) override { return nullptr; }
-    void Slot6(const void*, unsigned int, unsigned int) override {}
-    int Equals(const void* other) override { return m_int == ((const Value*)other)->m_int; }
-
-    int m_read = 0;
-    int m_int = 0;
-    std::string m_text;
-    char* m_characters = nullptr;
-    unsigned int m_size = 0;
-    int m_resets = 0;
-};
-
-struct Block { unsigned int count; Value* values; };
-std::vector<Block> g_blocks;
-int g_blocksDeleted;
+std::vector<std::pair<const void*, Bound>> g_bound;
+Bound& bound(const void* value) {
+    for (auto& b : g_bound) if (b.first == value) return b.second;
+    g_bound.push_back({value, Bound()});
+    return g_bound.back().second;
+}
 
 class Memory : public AtIoStream {
 public:
@@ -93,11 +63,11 @@ public:
 class Fs : public AtIoFileSystem {
 public:
     File file;
-    std::string add, adb;
+    std::string add, adb, adr;
     std::vector<std::string> opened;
     int Open(const char* path, int flags, AtIoFile** out) override {
         opened.push_back(path);
-        const std::string& text = std::strstr(path, ".ADB") ? adb : add;
+        const std::string& text = std::strstr(path, ".ADB") ? adb : std::strstr(path, ".ADR") ? adr : add;
         file.data = text.data();
         file.size = text.size();
         file.m_position = 0;
@@ -123,68 +93,26 @@ public:
 
 }  // namespace
 
-// ---- the seams, for this test ---------------------------------------------------------------------------------------------
-AtDataRegistry* AtDataRegistryNew() {
-    Fake* f = new Fake;
-    g_registries.push_back(f);
-    return (AtDataRegistry*)f;
+// ---- the seams, for this test --------------------------------------------------------------------------------------------
+void AtDataStringReset(AtDataString* value) {
+    value->Reset();
+    bound(value).resets++;
 }
-int AtDataRegistryIsLoaded(AtDataRegistry* registry) { return ((Fake*)registry)->loaded; }
-void AtDataRegistryClear(AtDataRegistry* registry) { ((Fake*)registry)->cleared++; }
-void AtDataRegistryDelete(AtDataRegistry* registry) {
-    Fake* f = (Fake*)registry;
-    for (Fake*& g : g_registries) if (g == f) g = nullptr;
-    delete f;
-}
-void AtDataRegistryLoad(AtDataRegistry* registry, AtDataOwner* owner, const char* name, int unused, char* space, AtDataRegistry* parent) {
-    Fake* f = (Fake*)registry;
-    f->loaded = 1;
-    f->name = name;
-    f->owner = owner;
-    f->unused = unused;
-    f->parent = parent;
-    CHECK(space[0] == 0);
-    space[0] = 'Z';
-}
-
-AtDataDescriptorFields* AtDataDescriptorArrayNew(unsigned int count) {
-    AtDataDescriptorFields* d = new AtDataDescriptorFields[count];
-    for (unsigned int i = 0; i < count; i++) {
-        std::memset(&d[i], 0, sizeof d[i]);
-        d[i].m_type = 13;
-        d[i].m_count = 1;
-        d[i].m_intCeiling = 0x7FFFFFFF;
-    }
-    return d;
-}
-void AtDataDescriptorArrayDelete(AtDataDescriptorFields* descriptors) {
-    delete[] descriptors;
-}
-void AtDataDescriptorClear(AtDataDescriptorFields*) {}
-
-AtDataValue* AtDataValueArrayNew(unsigned int, unsigned int count) {
-    Value* v = new Value[count ? count : 1];
-    g_blocks.push_back({count, v});
-    return v;
-}
-void AtDataValueArrayDelete(AtDataValue* values) {
-    delete[] (Value*)values;
-    g_blocksDeleted++;
-}
-unsigned int AtDataValueSize(unsigned int) { return (unsigned int)sizeof(Value); }
-void AtDataStringReset(AtDataValue* value) { ((Value*)value)->m_resets++; }
-void AtDataStringBindAndRead(AtDataValue* value, AtDataDescriptorFields* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size) {
+void AtDataStringBindAndRead(AtDataString* value, AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size) {
     value->Read(descriptor, tokenizer);
-    Value* v = (Value*)value;
-    v->m_characters = characters;
-    v->m_size = size;
+    bound(value).characters = characters;
+    bound(value).size = size;
 }
-void AtDataStringBind(AtDataValue* value, AtDataDescriptorFields* descriptor, char* characters, unsigned int size) {
+void AtDataStringBind(AtDataString* value, AtDataDescriptor* descriptor, char* characters, unsigned int size) {
     value->SetDescriptor(descriptor);
-    Value* v = (Value*)value;
-    v->m_characters = characters;
-    v->m_size = size;
+    bound(value).characters = characters;
+    bound(value).size = size;
 }
+
+// One registry, the same text for every name.
+static const char kAdr[] =
+    "DataComponentTypes[ 1 ] { DataComponent { Type Int NumComponents 2 } }\n"
+    "DataRegistry[ 1 ] { DataLink { Name \"Speed\" Type Int Data 5 } }\n";
 
 static const char kAdb[] =
     "NameSpace \"sp\"\n"
@@ -194,7 +122,7 @@ static const char kAdb[] =
     " DataComponentDesc { Name \"s\" Type String Ceiling 7 }\n"
     "}\n"
     "RecordLayoutDatabases[ 1 ] { RecordLayoutDatabase { Name \"Lay\" Desc \"about\" DataComponents[ 3 ] { \"i\" \"r\" \"s\" } } }\n"
-    "DataRecordDatabases[ 1 ] { DataRecordDatabase { Name \"Tab\" Desc \"rows\" RecordLayout \"Lay\" DataRecords[ 2 ] { 1 2 \"a\" 3 4 \"b\" } } }\n";
+    "DataRecordDatabases[ 1 ] { DataRecordDatabase { Name \"Tab\" Desc \"rows\" RecordLayout \"Lay\" DataRecords[ 2 ] { 1 2.0 \"a\" 3 4.0 \"b\" } } }\n";
 
 int main() {
     Fs fs;
@@ -213,29 +141,47 @@ int main() {
     AtDatabaseManager::SetHeap(&heap);
     AtRecordLayout::SetHeap(&heap);
     AtDataRecordDatabase::SetHeap(&heap);
+    AtDataRegistry::SetHeap(&heap);
+    AtDataComponent::SetHeap(&heap);
+    AtDataDescriptor::SetHeap(&heap);
+    AtDataLink::SetHeap(&heap);
+    AtDataRegistryNameSpaces::SetHeap(&heap);
 
     // A library of the shape on the disc.
-    AtDataOwner* owner = new AtDataOwner;
+    AtDataRegistryOwner* owner = new AtDataRegistryOwner;
     owner->m_databaseSpaces.Init(8);
+    owner->m_spaces.Init(8);
     fs.add = "DataRegistry[ 2 ]\n{\n \"Design\\Registry\\Actor\"\n \"Design\\Registry\\NPC\"\n}\n";
-    int parentToken;
+    fs.adr = kAdr;
+    AtDataRegistry* parent = new AtDataRegistry;
+    {
+        char space[8] = {0};
+        parent->Load(owner, "Generic", 0, space, nullptr);
+        CHECK(parent->m_loaded == 1);
+    }
     const int top = fs.m_path.m_top;
     {
         AtDataLibrary library;
         CHECK(library.m_loaded == 0);
-        library.Load(owner, "Library", 7, (AtDataRegistry*)&parentToken);
+        library.Load(owner, "Library", 7, parent);
         CHECK(library.m_loaded == 1);
         CHECK(library.m_owner == owner);
         CHECK(library.m_registryCount == 2);
         CHECK(library.m_databaseCount == 0);
         CHECK(AtDataLibrary::s_registryNames == nullptr);
-        CHECK(fs.opened.back() == "Library.ADD");
+        CHECK(fs.opened[fs.opened.size() - 3] == "Library.ADD");  // then the two registries
         CHECK(fs.m_path.m_top == top);
-        Fake* a = (Fake*)library.m_registries[0];
-        Fake* b = (Fake*)library.m_registries[1];
-        CHECK(a->name == "Design\\Registry\\Actor");
-        CHECK(b->name == "Design\\Registry\\NPC");
-        CHECK(a->owner == owner && a->unused == 7 && a->parent == (AtDataRegistry*)&parentToken);
+        AtDataRegistry* a = library.m_registries[0];
+        AtDataRegistry* b = library.m_registries[1];
+        CHECK(fs.opened[fs.opened.size() - 2] == "Design\\Registry\\Actor.ADR");
+        CHECK(fs.opened.back() == "Design\\Registry\\NPC.ADR");
+        CHECK(a->m_loaded == 1 && b->m_loaded == 1);
+        CHECK(a->m_owner == owner && a->m_parent == parent && b->m_parent == parent);
+        CHECK(a->m_pools[AtDataRegistry::kInt].m_count == 2);
+        CHECK(a->m_pools[AtDataRegistry::kInt].m_links[0].m_inUse == 1);
+        CHECK(std::strcmp(a->m_pools[AtDataRegistry::kInt].m_links[0].m_name, "Speed") == 0);
+        CHECK(((AtDataInt*)a->m_pools[AtDataRegistry::kInt].ElementAt(0))->m_value == 5);
+        CHECK(owner->m_plain.m_first == b);
         library.Clear();
         CHECK(library.m_loaded == 0 && library.m_registries == nullptr && library.m_registryCount == 0 && library.m_owner == nullptr);
     }
@@ -243,7 +189,6 @@ int main() {
     // With a database.
     fs.add = "DatabaseManager[ 1 ] { \"Thing\" }\nDataRegistry[ 1 ] { \"One\" }\n";
     fs.adb = kAdb;
-    g_blocks.clear();
     {
         AtDataLibrary library;
         library.Load(owner, "Library", 0, nullptr);
@@ -272,24 +217,21 @@ int main() {
         CHECK(m->FindEverywhere("None") == nullptr);
         CHECK(t->m_count == 2 && t->m_layout == l);
         CHECK(t->m_characterSize == 16 && t->m_characterUsed == 16);
-        CHECK(g_blocks.size() == 3);
         AtDataRecord* r = t->RecordAt(1);
         CHECK(r->m_index == 1 && r->m_inUse == 1);
-        CHECK(r->FieldAt(0) == &((Value*)t->m_columns[0])[1]);
-        CHECK(((Value*)r->FieldNamed("i"))->m_int == 3);
+        CHECK(r->FieldAt(0) == &((AtDataInt*)t->m_columns[0])[1]);
+        CHECK(((AtDataInt*)r->FieldNamed("i"))->m_value == 3);
         CHECK(r->DescriptorAt(0) == &m->m_descriptors[0]);
-        CHECK(((Value*)r->FieldNamed("s"))->m_text == "b");
-        CHECK(((Value*)r->FieldNamed("s"))->m_characters == t->m_characters + 8);
-        CHECK(((Value*)r->FieldNamed("s"))->m_size == 8);
-        CHECK(t->FindByValue(0, r->FieldAt(0)) == r);
+        CHECK(r->FieldNamed("s")->m_descriptor == &m->m_descriptors[2]);
+        CHECK(bound(r->FieldNamed("s")).characters == t->m_characters + 8);
+        CHECK(bound(r->FieldNamed("s")).size == 8);
         unsigned int index = 77;
         CHECK(t->TakeUnused(&index) == nullptr && index == 77);
         CHECK(t->Unknown7(1) == 0);
-        Value* strings = (Value*)t->m_columns[2];
+        const void* firstString = t->m_columns[2];
         library.Clear();
-        (void)strings;
         CHECK(AtDatabaseManager::s_first == nullptr);
-        CHECK(g_blocksDeleted == 3);
+        CHECK(bound(firstString).resets == 1);
     }
 
     // Rows no file gave, on a manager of its own.
@@ -302,7 +244,7 @@ int main() {
         AtDataRecordDatabase* t = manager.m_tables[0];
         CHECK(t->m_count == 4);
         CHECK(t->m_records[1].m_inUse == 1 && t->m_records[2].m_inUse == 0);
-        CHECK(((Value*)t->m_records[3].FieldAt(0))->m_read == -1);
+        CHECK(t->m_records[3].FieldAt(0)->m_descriptor == &manager.m_descriptors[0]);
         unsigned int index = 77;
         CHECK(t->TakeUnused(&index) == &t->m_records[2] && index == 2);
         CHECK(t->m_records[2].m_inUse == 1);

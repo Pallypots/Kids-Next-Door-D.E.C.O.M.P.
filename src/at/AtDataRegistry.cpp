@@ -1,7 +1,7 @@
 // The .ADR loader, its pools and tree, and where a registry is filed. See include/at/AtDataRegistry.h.
 #include "at/AtDataRegistry.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtFatal(const char* message, int file, int line, int unused);
@@ -119,8 +119,8 @@ void AtDataDescriptor::SetHeap(void* heap) {
 }
 
 AtDataDescriptor::AtDataDescriptor() {
-    m_unknown04 = 0;
-    m_unknown08 = 0;
+    *(int*)&m_name[0] = 0;
+    *(int*)&m_name[4] = 0;
     m_type = AtDataRegistry::kTypeCount;
     m_flags = 0;
     m_count = 1;
@@ -139,8 +139,8 @@ void AtDataDescriptor::Clear() {
     if (m_format != 0) {
         operator delete(m_format);
     }
-    m_unknown04 = 0;
-    m_unknown08 = 0;
+    *(int*)&m_name[0] = 0;
+    *(int*)&m_name[4] = 0;
     m_type = AtDataRegistry::kTypeCount;
     m_flags = 0;
     m_count = 1;

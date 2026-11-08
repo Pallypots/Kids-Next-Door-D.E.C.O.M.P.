@@ -6,7 +6,7 @@
 //   GmDatabaseManifest  0x0015CD10, vftable 0x0028F340. Seven words: SoundDatabaseLoaders, GraphicsDatabasesLoaders, SceneDatabasesLoaders, CinemaDatabaseLoaders, BoundingGeometryDatabase,
 //                       EventDatabases, InstanceRegistries. PARTIAL: its word parser 0x0015D000 and Finished 0x0015D920 are NOT recovered, nor its seven kinds of item; both stop with a
 //                       diagnostic in src/gm/GmLevelManifestHost.cpp.
-//   GmLevelManifest     0x001428B0, vftable 0x0028DFB8. Twelve more words, each with its kind of item, all recovered here except the sound notes (.GON), which another branch recovered.
+//   GmLevelManifest     0x001428B0, vftable 0x0028DFB8. Twelve more words, each with its kind of item, all recovered here except the sound notes (.GON), which are gm/gon's (include/gm/GmSoundNotes.h).
 // Start-up makes a GmLevelManifest at App+0x6D48 (0x0008EA81) for PERSIST.MNG; GmLevelManager holds another at +0x64 (its constructor, 0x0013E176). Original address clusters
 // 0x00142110-0x001431FF less 0x00142220-0x001425FF's deleting destructors (recorded with their classes), 0x0015C860-0x0015C8F4, 0x0015CBA0-0x0015CFFF, 0x0015D9E0-0x0015D9FB,
 // 0x001B2BB0-0x001B3B4F less 0x001B3540-0x001B36CF.
@@ -14,6 +14,7 @@
 #include "at/AtIoTokenizer.h"
 #include "at/AtScene.h"
 #include "gm/GmManifestLoader.h"
+#include "gm/GmSoundNotes.h"
 
 // ---- Outside this subsystem: what the items load into. NOT recovered; every function below stops with a diagnostic in src/gm/GmLevelManifestHost.cpp. ---------------------------------------
 
@@ -106,8 +107,8 @@ struct GmDynamicNodeState {
     static GmDynamicNodeState* s_instance;   // 0x003B357C
 };
 
-// The sound manager's work on the sound items: members of GmAudioData (0x003B354C), declared here as functions because include/gm/GmAudioData.h is being changed on another branch. Each takes
-// the manager from its static, as the original does at each call. Bank and data types are not recovered.
+// The sound manager's work on the sound items: members of GmAudioData (0x003B354C) that neither this work nor gm/gon recovered or declared, so
+// left as free functions, seams in src/gm/GmLevelManifestHost.cpp. Each takes the manager from its static, as the original does at each call. Bank and data types are not recovered.
 void* GmAudioAllocateNodeBank();                     // 0x001367E0 the first free, or null; as AllocateNoteBank is for notes
 void GmAudioLoadNodes(void* bank, const char* path); // 0x0013AA80 the .GOO file
 void GmAudioFreeNodes(void* bank);                   // 0x00138E50
@@ -288,14 +289,7 @@ public:
     void* m_data;                            // +0x90
 };
 
-// SoundNoteDatabases: GmSoundNoteItem, vftable 0x002950AC, 0x90 bytes, recovered on branch worktree-agent-ab39b088b154f53ed (include/gm/GmSoundNotes.h), which this branch does not merge.
-// These five stand for what this file needs of it; src/gm/GmLevelManifestNotes.cpp stops with a diagnostic, and is to be replaced by the real calls when the two branches meet.
-class GmSoundNoteItem;
-GmSoundNoteItem* GmSoundNoteItemsNew(unsigned int count);                                    // new GmSoundNoteItem[count]: 0x001B3640 for each; null if there was no memory
-GmManifestItem* GmSoundNoteItemAt(GmSoundNoteItem* items, unsigned int index);               // &items[index]
-void GmSoundNoteItemConfigure(GmManifestItem* item, const GmManifestItemRequest* request);   // GmSoundNoteItem::Configure 0x001B3540; its Request is the first 0x84 bytes of this one
-void GmSoundNoteItemRegister(GmManifestItem* item);                                          // GmAudioData::s_instance->RegisterNotes(item's m_bank), 0x00139550
-void GmSoundNoteItemsDelete(GmSoundNoteItem* items);                                         // delete[] through 0x001424C0
+// SoundNoteDatabases: GmSoundNoteItem, vftable 0x002950AC, 0x90 bytes, in include/gm/GmSoundNotes.h. Its Request is the first 0x84 bytes of GmManifestItemRequest.
 
 // ---- The base's own items, NOT recovered: only what GmDatabaseManifest::Free reads of them. Their sizes are those new[] is given in 0x0015D000. -------------------------------------------
 

@@ -4,7 +4,7 @@
 #include "at/AtHeap.h"
 #include "at/AtText.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);

@@ -2,6 +2,7 @@
 // Original address clusters 0x00142110-0x001421BF, 0x00142640-0x00143DCB, 0x0015C860-0x0015C8F4, 0x0015CBA0-0x0015CFFF, 0x0015D9E0-0x0015D9FB.
 // Verification status per function: config/functions.d/manifest.toml.
 #include "gm/GmLevelManifest.h"
+#include "gm/GmAudioData.h"
 #include "at/AtMemory.h"
 
 extern "C" {
@@ -304,7 +305,7 @@ void GmLevelManifest::AfterParse() {
         Enqueue(&m_soundNodes[i], 0);
     }
     for (unsigned int i = 0; i < m_soundNoteCount; i++) {
-        Enqueue(GmSoundNoteItemAt(m_soundNotes, i), 0);
+        Enqueue(&m_soundNotes[i], 0);
     }
     for (unsigned int i = 0; i < m_musicChainCount; i++) {
         Enqueue(&m_musicChains[i], 0);
@@ -430,11 +431,11 @@ void GmLevelManifest::OnToken(int token, AtIoTokenizer* tokenizer) {
         request.m_context = 0;
         m_soundNoteCount = tokenizer->ExpectCount();
         PushItemHeap();
-        m_soundNotes = GmSoundNoteItemsNew(m_soundNoteCount);
+        m_soundNotes = NewItems<GmSoundNoteItem>(m_soundNoteCount);
         PopItemHeap(m_soundNotes);
         for (unsigned int i = 0; i < m_soundNoteCount; i++) {
             strcpy(request.m_path, tokenizer->ExpectString());
-            GmSoundNoteItemConfigure(GmSoundNoteItemAt(m_soundNotes, i), &request);
+            m_soundNotes[i].Configure((const GmSoundNoteItem::Request*)&request);
         }
         tokenizer->ExpectRightCurly();
         break;
@@ -486,7 +487,7 @@ void GmLevelManifest::Finished() {
         GmAudioRegisterNodes(m_soundNodes[i].m_bank);
     }
     for (unsigned int i = 0; i < m_soundNoteCount; i++) {
-        GmSoundNoteItemRegister(GmSoundNoteItemAt(m_soundNotes, i));
+        GmAudioData::s_instance->RegisterNotes(m_soundNotes[i].m_bank);
     }
     for (unsigned int i = 0; i < m_instanceSoundCount; i++) {
         m_instanceSounds[i].Register();
@@ -576,7 +577,7 @@ void GmLevelManifest::Free() {
         m_soundNodeCount = 0;
     }
     if (m_soundNotes != 0) {
-        GmSoundNoteItemsDelete(m_soundNotes);
+        DeleteItems(m_soundNotes);
         m_soundNotes = 0;
         m_soundNoteCount = 0;
     }

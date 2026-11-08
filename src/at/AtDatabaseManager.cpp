@@ -2,6 +2,7 @@
 #include "at/AtDataLibrary.h"
 
 #include "AtIoJamCommon.h"
+#include "AtArray.h"
 #include "at/AtText.h"
 
 void AtRaise(int code, int a, int b, int c);
@@ -80,13 +81,65 @@ bool IsValueType(unsigned int type) {
     return type >= 1 && type <= kTypeStringArray;
 }
 
+// The size of each value class, by type: what the original's switches step a column by.
+unsigned int ValueSize(unsigned int type) {
+    switch (type) {
+        case 1: return sizeof(AtDataBoolean);
+        case 2: return sizeof(AtDataInt);
+        case 3: return sizeof(AtDataReal);
+        case 4: return sizeof(AtDataShortName);
+        case 5: return sizeof(AtDataString);
+        case 6: return sizeof(AtDataBooleanArray);
+        case 7: return sizeof(AtDataByteArray);
+        case 8: return sizeof(AtDataIntArray);
+        case 9: return sizeof(AtDataRealArray);
+        case 10: return sizeof(AtDataShortNameArray);
+        default: return sizeof(AtDataStringArray);
+    }
+}
+
+// new AtDataBoolean[count] and so on, the eleven cases of 0x000B9F70; null if there was no memory. The heap's push and pop are the caller's.
+AtDataComponent* NewColumn(unsigned int type, unsigned int count) {
+    switch (type) {
+        case 1: return AtNewArray<AtDataBoolean>(count);
+        case 2: return AtNewArray<AtDataInt>(count);
+        case 3: return AtNewArray<AtDataReal>(count);
+        case 4: return AtNewArray<AtDataShortName>(count);
+        case 5: return AtNewArray<AtDataString>(count);
+        case 6: return AtNewArray<AtDataBooleanArray>(count);
+        case 7: return AtNewArray<AtDataByteArray>(count);
+        case 8: return AtNewArray<AtDataIntArray>(count);
+        case 9: return AtNewArray<AtDataRealArray>(count);
+        case 10: return AtNewArray<AtDataShortNameArray>(count);
+        default: return AtNewArray<AtDataStringArray>(count);
+    }
+}
+
+// The original's is one delete[] through the first value's vftable, which C++ does not promise for a base pointer (see AtDataComponentPool::Clear). Here it goes by the type the column was made for:
+// its field's, which nothing changes while the table holds it. A column of no rows is freed without asking a value, as delete[] does.
+void DeleteColumn(unsigned int type, AtDataComponent* values) {
+    switch (type) {
+        case 1: AtDeleteArray(static_cast<AtDataBoolean*>(values)); break;
+        case 2: AtDeleteArray(static_cast<AtDataInt*>(values)); break;
+        case 3: AtDeleteArray(static_cast<AtDataReal*>(values)); break;
+        case 4: AtDeleteArray(static_cast<AtDataShortName*>(values)); break;
+        case 5: AtDeleteArray(static_cast<AtDataString*>(values)); break;
+        case 6: AtDeleteArray(static_cast<AtDataBooleanArray*>(values)); break;
+        case 7: AtDeleteArray(static_cast<AtDataByteArray*>(values)); break;
+        case 8: AtDeleteArray(static_cast<AtDataIntArray*>(values)); break;
+        case 9: AtDeleteArray(static_cast<AtDataRealArray*>(values)); break;
+        case 10: AtDeleteArray(static_cast<AtDataShortNameArray*>(values)); break;
+        default: AtDeleteArray(static_cast<AtDataStringArray*>(values)); break;
+    }
+}
+
 }  // namespace
 
 // ---- a field's description --------------------------------------------------------------------------------------------
 
-int AtDataDescriptorFields::Read(AtIoTokenizer* tokenizer) {
+int AtDataDescriptor::Read(AtIoTokenizer* tokenizer) {
     if ((m_flags & kTyped) != 0) {
-        AtDataDescriptorClear(this);
+        Clear();
     }
     Expect(tokenizer, kDescriptor);
     while (tokenizer->Next() != AtIoTokenizer::kLeftCurly) {
@@ -176,7 +229,7 @@ AtRecordLayout::~AtRecordLayout() {
     AtRecordLayout::Clear();
 }
 
-AtDataDescriptorFields* AtRecordLayout::FieldAt(unsigned int index) {
+AtDataDescriptor* AtRecordLayout::FieldAt(unsigned int index) {
     return m_fields[index];
 }
 
@@ -196,10 +249,10 @@ int AtRecordLayout::Read(AtIoTokenizer* tokenizer, GmNameMap* descriptors) {
     Expect(tokenizer, kDataComponents);
     m_count = (unsigned int)tokenizer->ExpectCount();
     Init(m_count);
-    m_fields = (AtDataDescriptorFields**)NewFrom(s_heap, m_count * sizeof(AtDataDescriptorFields*));
+    m_fields = (AtDataDescriptor**)NewFrom(s_heap, m_count * sizeof(AtDataDescriptor*));
     for (unsigned int i = 0; i < m_count; i++) {
         tokenizer->ExpectName(name);
-        m_fields[i] = (AtDataDescriptorFields*)descriptors->Find(name);
+        m_fields[i] = (AtDataDescriptor*)descriptors->Find(name);
         Insert(name, &m_fields[i]);
     }
     tokenizer->ExpectRightCurly();
@@ -220,7 +273,7 @@ AtDataRecord::~AtDataRecord() {
     m_inUse = 0;
 }
 
-int AtDataRecord::Set(unsigned int index, AtRecordLayout* layout, AtDataValue** columns) {
+int AtDataRecord::Set(unsigned int index, AtRecordLayout* layout, AtDataComponent** columns) {
     if (m_inUse != 0) {
         m_layout = 0;
         m_inUse = 0;
@@ -231,23 +284,23 @@ int AtDataRecord::Set(unsigned int index, AtRecordLayout* layout, AtDataValue** 
     return 0;
 }
 
-AtDataValue* AtDataRecord::FieldAt(unsigned int column) {
+AtDataComponent* AtDataRecord::FieldAt(unsigned int column) {
     const unsigned int type = m_layout->FieldAt(column)->m_type;
     if (!IsValueType(type)) {
         return 0;
     }
-    return (AtDataValue*)((char*)m_columns[column] + m_index * AtDataValueSize(type));
+    return (AtDataComponent*)((char*)m_columns[column] + m_index * ValueSize(type));
 }
 
-AtDataDescriptorFields* AtDataRecord::DescriptorAt(unsigned int column) {
+AtDataDescriptor* AtDataRecord::DescriptorAt(unsigned int column) {
     const unsigned int type = m_layout->FieldAt(column)->m_type;
     if (!IsValueType(type)) {
         return 0;
     }
-    return ((AtDataValue*)((char*)m_columns[column] + m_index * AtDataValueSize(type)))->m_descriptor;
+    return ((AtDataComponent*)((char*)m_columns[column] + m_index * ValueSize(type)))->m_descriptor;
 }
 
-AtDataValue* AtDataRecord::FieldNamed(const char* name) {
+AtDataComponent* AtDataRecord::FieldNamed(const char* name) {
     const unsigned int count = m_layout->m_count;
     unsigned int column = 0;
     for (; column < count; column++) {
@@ -289,16 +342,16 @@ AtDataRecordDatabase::AtDataRecordDatabase() {
 void AtDataRecordDatabase::Clear() {
     const unsigned int columns = m_layout->m_count;
     for (unsigned int column = 0; column < columns; column++) {
-        AtDataValue* values = m_columns[column];
+        AtDataComponent* values = m_columns[column];
         if (values != 0) {
             if (values->m_descriptor->m_type == kTypeString) {
                 char* value = (char*)values;
                 for (unsigned int i = 0; i < m_count; i++) {
-                    AtDataStringReset((AtDataValue*)value);
-                    value += AtDataValueSize(kTypeString);
+                    AtDataStringReset((AtDataString*)value);
+                    value += ValueSize(kTypeString);
                 }
             }
-            AtDataValueArrayDelete(m_columns[column]);
+            DeleteColumn(m_layout->FieldAt(column)->m_type, m_columns[column]);
         }
     }
     if (m_columns != 0) {
@@ -329,7 +382,7 @@ AtDataRecord* AtDataRecordDatabase::RecordAt(unsigned int index) {
 
 AtDataRecord* AtDataRecordDatabase::FindByValue(unsigned int column, const void* value) {
     for (unsigned int i = 0; i < m_count; i++) {
-        if (RecordAt(i)->FieldAt(column)->Equals(value) != 0) {
+        if (RecordAt(i)->FieldAt(column)->Equals((const AtDataComponent*)value) != 0) {
             return RecordAt(i);
         }
     }
@@ -388,7 +441,7 @@ int AtDataRecordDatabase::Read(AtDatabaseManager* manager, AtIoTokenizer* tokeni
     const unsigned int columns = m_layout->m_count;
     m_characterSize = 0;
     for (unsigned int column = 0; column < columns; column++) {
-        const AtDataDescriptorFields* field = m_layout->FieldAt(column);
+        const AtDataDescriptor* field = m_layout->FieldAt(column);
         if (field->m_type == kTypeString) {
             m_characterSize += (field->m_intCeiling + 1) * manager->m_characterScale;
         } else if (field->m_type == kTypeStringArray) {
@@ -400,7 +453,7 @@ int AtDataRecordDatabase::Read(AtDatabaseManager* manager, AtIoTokenizer* tokeni
         m_characters = (char*)NewFrom(s_heap, m_characterSize);
     }
 
-    m_columns = (AtDataValue**)NewFrom(s_heap, columns * sizeof(AtDataValue*));
+    m_columns = (AtDataComponent**)NewFrom(s_heap, columns * sizeof(AtDataComponent*));
     for (unsigned int column = 0; column < columns; column++) {
         const unsigned int type = m_layout->FieldAt(column)->m_type;
         if (IsValueType(type)) {
@@ -408,7 +461,7 @@ int AtDataRecordDatabase::Read(AtDatabaseManager* manager, AtIoTokenizer* tokeni
                 AtRaise(-2, 0, 0, 0);
             }
             AtPushHeap(s_heap);
-            m_columns[column] = AtDataValueArrayNew(type, m_count);
+            m_columns[column] = NewColumn(type, m_count);
             AtPopHeap();
             if (m_columns[column] == 0) {
                 AtRaise(-4, 0, 0, 0);
@@ -422,21 +475,21 @@ int AtDataRecordDatabase::Read(AtDatabaseManager* manager, AtIoTokenizer* tokeni
         const int given = i < m_count - extra ? 1 : 0;
         record.m_inUse = given;
         for (unsigned int column = 0; column < columns; column++) {
-            AtDataDescriptorFields* field = m_layout->FieldAt(column);
+            AtDataDescriptor* field = m_layout->FieldAt(column);
             const unsigned int type = field->m_type;
             if (!IsValueType(type)) {
                 AtFatal("AtDataRecordDatabase: a field of no type a table can hold; the original crashes here", 0, 0, 0);
                 continue;
             }
-            AtDataValue* value = (AtDataValue*)((char*)m_columns[column] + i * AtDataValueSize(type));
+            AtDataComponent* value = (AtDataComponent*)((char*)m_columns[column] + i * ValueSize(type));
             if (type == kTypeString) {
                 char* characters = m_characters + m_characterUsed;
                 const unsigned int size = field->m_intCeiling + 1;
                 m_characterUsed += size * manager->m_characterScale;
                 if (given != 0) {
-                    AtDataStringBindAndRead(value, field, tokenizer, characters, size);
+                    AtDataStringBindAndRead((AtDataString*)value, field, tokenizer, characters, size);
                 } else {
-                    AtDataStringBind(value, field, characters, size);
+                    AtDataStringBind((AtDataString*)value, field, characters, size);
                 }
             } else if (given != 0) {
                 value->Read(field, tokenizer);
@@ -506,7 +559,7 @@ void AtDatabaseManager::Clear() {
     }
     delete[] m_layouts;
     if (m_descriptors != 0) {
-        AtDataDescriptorArrayDelete(m_descriptors);
+        AtDeleteArray(m_descriptors);
     }
     if (m_fileName != 0) {
         operator delete(m_fileName);
@@ -538,7 +591,7 @@ void* AtDatabaseManager::FindEverywhere(const char* name) {
     return found;
 }
 
-int AtDatabaseManager::Load(AtDataOwner* owner, const char* name, int, char* spaceOut, unsigned int extra, int fromFile) {
+int AtDatabaseManager::Load(AtDataRegistryOwner* owner, const char* name, int, char* spaceOut, unsigned int extra, int fromFile) {
     AtIoTokenFile file;
     const int status = file.Open(name, "ADB", 2, 0);
     if (status != 0) {
@@ -551,7 +604,7 @@ int AtDatabaseManager::Load(AtDataOwner* owner, const char* name, int, char* spa
     return 0;
 }
 
-int AtDatabaseManager::Read(AtDataOwner* owner, AtIoTokenizer* tokenizer, char* spaceOut, unsigned int extra, int fromFile) {
+int AtDatabaseManager::Read(AtDataRegistryOwner* owner, AtIoTokenizer* tokenizer, char* spaceOut, unsigned int extra, int fromFile) {
     if (m_loaded != 0) {
         Clear();
     }
@@ -576,7 +629,7 @@ int AtDatabaseManager::Read(AtDataOwner* owner, AtIoTokenizer* tokenizer, char* 
             AtRaise(-2, 0, 0, 0);
         }
         AtPushHeap(s_heap);
-        m_descriptors = AtDataDescriptorArrayNew(m_descriptorCount);
+        m_descriptors = AtNewArray<AtDataDescriptor>(m_descriptorCount);
         AtPopHeap();
         if (m_descriptors == 0) {
             AtRaise(-4, 0, 0, 0);
