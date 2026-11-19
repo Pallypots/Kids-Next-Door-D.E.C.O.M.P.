@@ -1,0 +1,556 @@
+# The level manifest's base class: its word parser 0x0015D000, Finished 0x0015D920, seven kinds of item, the cinema and event databases' life cycles, and the scene loader's two walks.
+# Names inferred; see include/gm/GmDatabaseManifestItems.h. Sizes are the inventory's, or up to the return. The scene loader's constructor, Clear and so on are at/asd's, not recorded here.
+
+[[function]]
+va = 0x0015D000
+size = 2301
+symbol = "?OnToken@GmDatabaseManifest@@UAEXHPAVAtIoTokenizer@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x0028F340 slot 2; jump table 0x0015D900; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015D920
+size = 178
+symbol = "?Finished@GmDatabaseManifest@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x0028F340 slot 3; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0013D9D0
+size = 82
+symbol = "?FindSpaceGraph@GmLevelManager@@QAEPAVAtSpaceGraph@@PAVAtSceneDatabaseLoader@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D954 on the object at 0x003B3570 (GmLevelManager::s_instance); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x00137AD0
+size = 33
+symbol = "?RegisterDatabase@GmAudioData@@QAEXPAVAtAudioDatabase@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x001B4133 on 0x003B354C; writes +0x38 + 4i, i < 0x3C; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0002ED70
+size = 86
+symbol = "?InsertInto@AtSceneDatabaseLoader@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D9B8; recursive on +0x30 stride 0x78, 0x0003E860 on +0x08 stride 0xF8; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0002EDD0
+size = 86
+symbol = "?RemoveFrom@AtSceneDatabaseLoader@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015CE04 (GmDatabaseManifest::Free) through GmSceneItemLeave; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4150
+size = 69
+symbol = "??0GmSoundDatabaseItem@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "new[] in 0x0015D000 (0x00125D44); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B41A0
+size = 11
+symbol = "??1GmSoundDatabaseItem@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called by 0x0015c900; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015C900
+size = 87
+symbol = "??_GGmSoundDatabaseItem@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950e0 slot 2, for arrays too (flags 0 and 1 direct, 3 through GmDatabaseManifest::Free); compiler-made; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4070
+size = 77
+symbol = "?Unknown0@GmSoundDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950e0 slot 0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B40C0
+size = 139
+symbol = "?Run@GmSoundDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950e0 slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B3FF0
+size = 114
+symbol = "?Configure@GmSoundDatabaseItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D000; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B42C0
+size = 63
+symbol = "??0GmGraphicsDatabaseItem@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "new[] in 0x0015D000 (0x00125D44); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4300
+size = 80
+symbol = "??1GmGraphicsDatabaseItem@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called by 0x0015c960; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015C960
+size = 87
+symbol = "??_GGmGraphicsDatabaseItem@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950ec slot 2, for arrays too (flags 0 and 1 direct, 3 through GmDatabaseManifest::Free); compiler-made; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4270
+size = 74
+symbol = "?Unknown0@GmGraphicsDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950ec slot 0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B41B0
+size = 101
+symbol = "?Run@GmGraphicsDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950ec slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4220
+size = 76
+symbol = "?Configure@GmGraphicsDatabaseItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D000; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4430
+size = 70
+symbol = "??0GmSceneDatabaseItem@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "new[] in 0x0015D000 (0x00125D44); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4480
+size = 130
+symbol = "??1GmSceneDatabaseItem@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called by 0x0015c9c0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015C9C0
+size = 87
+symbol = "??_GGmSceneDatabaseItem@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950f8 slot 2, for arrays too (flags 0 and 1 direct, 3 through GmDatabaseManifest::Free); compiler-made; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B43F0
+size = 51
+symbol = "?Unknown0@GmSceneDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950f8 slot 0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4350
+size = 66
+symbol = "?Run@GmSceneDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x002950f8 slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B43A0
+size = 76
+symbol = "?Configure@GmSceneDatabaseItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D000; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B45D0
+size = 70
+symbol = "??0GmCinemaDatabaseItem@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "new[] in 0x0015D000 (0x00125D44); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4620
+size = 120
+symbol = "??1GmCinemaDatabaseItem@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called by 0x0015ca20; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015CA20
+size = 87
+symbol = "??_GGmCinemaDatabaseItem@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295104 slot 2, for arrays too (flags 0 and 1 direct, 3 through GmDatabaseManifest::Free); compiler-made; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B45A0
+size = 47
+symbol = "?Unknown0@GmCinemaDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295104 slot 0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4510
+size = 66
+symbol = "?Run@GmCinemaDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295104 slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4560
+size = 64
+symbol = "?Configure@GmCinemaDatabaseItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D000; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4760
+size = 70
+symbol = "??0GmBoundingGeometryItem@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "new[] in 0x0015D000 (0x00125D44); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B47B0
+size = 120
+symbol = "??1GmBoundingGeometryItem@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called by 0x0015ca80; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015CA80
+size = 87
+symbol = "??_GGmBoundingGeometryItem@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295110 slot 2, for arrays too (flags 0 and 1 direct, 3 through GmDatabaseManifest::Free); compiler-made; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4730
+size = 47
+symbol = "?Unknown0@GmBoundingGeometryItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295110 slot 0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B46A0
+size = 66
+symbol = "?Run@GmBoundingGeometryItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295110 slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B46F0
+size = 64
+symbol = "?Configure@GmBoundingGeometryItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D000; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B48F0
+size = 64
+symbol = "??0GmEventDatabaseItem@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "new[] in 0x0015D000 (0x00125D44); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4930
+size = 114
+symbol = "??1GmEventDatabaseItem@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called by 0x0015cae0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015CAE0
+size = 87
+symbol = "??_GGmEventDatabaseItem@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x0029511c slot 2, for arrays too (flags 0 and 1 direct, 3 through GmDatabaseManifest::Free); compiler-made; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B48C0
+size = 41
+symbol = "?Unknown0@GmEventDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x0029511c slot 0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4830
+size = 66
+symbol = "?Run@GmEventDatabaseItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x0029511c slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4880
+size = 62
+symbol = "?Configure@GmEventDatabaseItem@@QAEXPBUGmManifestItemRequest@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D000; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4AA0
+size = 70
+symbol = "??0GmRegistryItem@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "new[] in 0x0015D000 (0x00125D44); tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4AF0
+size = 126
+symbol = "??1GmRegistryItem@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called by 0x0015cb40; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x0015CB40
+size = 87
+symbol = "??_GGmRegistryItem@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295128 slot 2, for arrays too (flags 0 and 1 direct, 3 through GmDatabaseManifest::Free); compiler-made; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4A70
+size = 47
+symbol = "?Unknown0@GmRegistryItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295128 slot 0; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B49B0
+size = 91
+symbol = "?Run@GmRegistryItem@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00295128 slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x001B4A10
+size = 88
+symbol = "?Configure@GmRegistryItem@@QAEXPBUGmRegistryItemRequest@@@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "called from 0x0015D000; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C5780
+size = 49
+symbol = "??0AtCinemaDatabase@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "from 0x001B45F4; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C57C0
+size = 217
+symbol = "?Clear@AtCinemaDatabase@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00286474 slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C5A00
+size = 11
+symbol = "??1AtCinemaDatabase@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "from 0x001B4682; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C5AD0
+size = 90
+symbol = "??_GAtCinemaDatabase@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00286474 slot 0, compiler-made, called directly in tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C9660
+size = 104
+symbol = "??0AtEventDatabase@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "from 0x001B4914; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C96D0
+size = 65
+symbol = "?Clear@AtEventDatabase@@UAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00286688 slot 1; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C9960
+size = 146
+symbol = "??1AtEventDatabase@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "from 0x001B498C; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C5720
+size = 84
+symbol = "??_GAtEventDatabase@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00286688 slot 0, compiler-made, called directly in tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C94B0
+size = 17
+symbol = "??0AtEventList@@QAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "from 0x000C9696; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C9470
+size = 56
+symbol = "?Free@AtEventList@@QAEXXZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "from 0x000C96E0 and 0x000C9998; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C94D0
+size = 73
+symbol = "??1AtEventList@@UAE@XZ"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "from 0x000C99CE; tests/oracle/oracle_dbmanifest.cpp"
+
+[[function]]
+va = 0x000C9600
+size = 79
+symbol = "??_GAtEventList@@UAEPAXI@Z"
+source = "src/gm/GmDatabaseManifest.cpp"
+subsystem = "gm/dbmanifest"
+evidence = "vftable 0x00286674 slot 0, scalar deleting, compiler-made, called directly in tests/oracle/oracle_dbmanifest.cpp"
+
+[[vtable]]
+va = 0x002950E0
+slots = 3
+symbol = "??_7GmSoundDatabaseItem@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x002950EC
+slots = 3
+symbol = "??_7GmGraphicsDatabaseItem@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x002950F8
+slots = 3
+symbol = "??_7GmSceneDatabaseItem@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x00295104
+slots = 3
+symbol = "??_7GmCinemaDatabaseItem@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x00295110
+slots = 3
+symbol = "??_7GmBoundingGeometryItem@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x0029511C
+slots = 3
+symbol = "??_7GmEventDatabaseItem@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x00295128
+slots = 3
+symbol = "??_7GmRegistryItem@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x00286474
+slots = 2
+symbol = "??_7AtCinemaDatabase@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x00286688
+slots = 2
+symbol = "??_7AtEventDatabase@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[[vtable]]
+va = 0x00286674
+slots = 1
+symbol = "??_7AtEventList@@6B@"
+source = "src/gm/GmDatabaseManifest.cpp"
+
+[symbols]
+"?Reset@AtEventList@@QAEXXZ" = 0x000E7880  # folded with AtDataComponent::Reset (at/adr) and others
+"?s_instance@GmAudioDatabaseMaker@@2PAV1@A" = 0x003B3550
+"?s_instance@GmEventHome@@2PAU1@A" = 0x003B358C
+"?s_instance@GmRegistryNames@@2PAU1@A" = 0x002CD138
+"?g_audioLanguage@@3PBDB" = 0x003B3BE4
+"?Load@AtSceneDatabaseLoader@@QAEXPAUAtNameTableOwner@@PBDH@Z" = 0x0002F7F0  # at/asd's; here a seam, src/gm/GmDatabaseManifestHost.cpp
+"?SpaceGraphAt@AtSceneDatabaseLoader@@QAEPAVAtSpaceGraph@@I@Z" = 0x0002ED40  # at/asd's; here a stand-in, src/gm/GmDatabaseManifestAsd.cpp
+"?LoaderAt@AtSceneDatabaseLoader@@QAEPAV1@I@Z" = 0x0002ED60  # at/asd's; here a stand-in, src/gm/GmDatabaseManifestAsd.cpp
+"?Load@AtCinemaDatabase@@QAEXPAUGmCinemaOwner@@PBDH@Z" = 0x000C5B30  # NOT recovered: a seam, src/gm/GmDatabaseManifestHost.cpp
+"?Load@AtEventDatabase@@QAEXPAUGmEventOwner@@PBDH@Z" = 0x000C9A00  # NOT recovered: a seam, src/gm/GmDatabaseManifestHost.cpp
+"?Add@GmRegistryNames@@QAEXPAVAtDataRegistry@@@Z" = 0x00071F20  # NOT recovered: a seam, src/gm/GmDatabaseManifestHost.cpp
+"?SetGraph@GmSpaceGraphOwner@@QAEXPAVAtSpaceGraph@@@Z" = 0x00140E40  # NOT recovered: a seam, src/gm/GmDatabaseManifestHost.cpp

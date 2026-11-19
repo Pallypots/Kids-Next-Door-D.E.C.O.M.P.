@@ -34,19 +34,19 @@ MUTANTS = [
     ("level destructor: nothing", L, "GmLevelManifest::~GmLevelManifest() {\n    Clear();\n}", "GmLevelManifest::~GmLevelManifest() {\n}"),
     ("level Clear: no base", L, "    GmDatabaseManifest::Clear();\n    ClearLevelArrays();\n", "    ClearLevelArrays();\n"),
     # The base's queue and Free.
-    ("base queue: stride", L, "Enqueue(ItemAt(m_events, i, kEventItemSize), 0);", "Enqueue(ItemAt(m_events, i, kRegistryItemSize), 0);"),
+    ("base queue: index", L, "Enqueue(&static_cast<GmEventDatabaseItem*>(m_events)[i], 0);", "Enqueue(&static_cast<GmEventDatabaseItem*>(m_events)[0], 0);"),
     ("base queue: cinema count", L, "for (unsigned int i = 0; i < m_cinemaDatabaseCount; i++) {", "for (unsigned int i = 0; i < m_cinemaDatabaseCount && i < 1; i++) {"),
     ("base queue: order", L,
-     "    for (unsigned int i = 0; i < m_graphicsDatabaseCount; i++) {\n        Enqueue(ItemAt(m_graphicsDatabases, i, kGraphicsDatabaseItemSize), 0);\n    }\n"
-     "    for (unsigned int i = 0; i < m_boundingGeometryCount; i++) {\n        Enqueue(ItemAt(m_boundingGeometry, i, kBoundingGeometryItemSize), 0);\n    }\n",
-     "    for (unsigned int i = 0; i < m_boundingGeometryCount; i++) {\n        Enqueue(ItemAt(m_boundingGeometry, i, kBoundingGeometryItemSize), 0);\n    }\n"
-     "    for (unsigned int i = 0; i < m_graphicsDatabaseCount; i++) {\n        Enqueue(ItemAt(m_graphicsDatabases, i, kGraphicsDatabaseItemSize), 0);\n    }\n"),
-    ("base Free: graph test", L, "if (*(int*)(item + 0x108) != 0 && GmSpaceGraphOwner::s_instance->m_graph != 0) {", "if (*(int*)(item + 0x108) != 0) {"),
-    ("base Free: flag test", L, "if (*(int*)(item + 0x108) != 0 && GmSpaceGraphOwner::s_instance->m_graph != 0) {", "if (GmSpaceGraphOwner::s_instance->m_graph != 0) {"),
-    ("base Free: scene part", L, "GmSceneItemLeave(item + 0x8C, GmSpaceGraphOwner::s_instance->m_graph);", "GmSceneItemLeave(item + 0x90, GmSpaceGraphOwner::s_instance->m_graph);"),
-    ("base Free: database field", L, "GmAudioFreeDatabase(*(void**)((char*)item + 0x90));", "GmAudioFreeDatabase(*(void**)((char*)item + 0x8C));"),
-    ("base Free: slot 0", L, "            GmAudioFreeDatabase(*(void**)((char*)item + 0x90));\n            item->Unknown0();\n", "            GmAudioFreeDatabase(*(void**)((char*)item + 0x90));\n"),
-    ("base Free: registry part", L, "GmRegistryRelease((char*)ItemAt(m_registries, i, kRegistryItemSize) + 0x90);", "GmRegistryRelease((char*)ItemAt(m_registries, i, kRegistryItemSize) + 0x8C);"),
+     "    for (unsigned int i = 0; i < m_graphicsDatabaseCount; i++) {\n        Enqueue(&static_cast<GmGraphicsDatabaseItem*>(m_graphicsDatabases)[i], 0);\n    }\n"
+     "    for (unsigned int i = 0; i < m_boundingGeometryCount; i++) {\n        Enqueue(&static_cast<GmBoundingGeometryItem*>(m_boundingGeometry)[i], 0);\n    }\n",
+     "    for (unsigned int i = 0; i < m_boundingGeometryCount; i++) {\n        Enqueue(&static_cast<GmBoundingGeometryItem*>(m_boundingGeometry)[i], 0);\n    }\n"
+     "    for (unsigned int i = 0; i < m_graphicsDatabaseCount; i++) {\n        Enqueue(&static_cast<GmGraphicsDatabaseItem*>(m_graphicsDatabases)[i], 0);\n    }\n"),
+    ("base Free: graph test", L, "if (item->m_inSpaceGraph != 0 && GmSpaceGraphOwner::s_instance->m_graph != 0) {", "if (item->m_inSpaceGraph != 0) {"),
+    ("base Free: flag test", L, "if (item->m_inSpaceGraph != 0 && GmSpaceGraphOwner::s_instance->m_graph != 0) {", "if (GmSpaceGraphOwner::s_instance->m_graph != 0) {"),
+    ("base Free: scene part", L, "GmSceneItemLeave(&item->m_database, GmSpaceGraphOwner::s_instance->m_graph);", "GmSceneItemLeave(&item->m_owner, GmSpaceGraphOwner::s_instance->m_graph);"),
+    ("base Free: database field", L, "GmAudioFreeDatabase(item->m_database);", "GmAudioFreeDatabase(item->m_maker);"),
+    ("base Free: slot 0", L, "            GmAudioFreeDatabase(item->m_database);\n            item->Unknown0();\n", "            GmAudioFreeDatabase(item->m_database);\n"),
+    ("base Free: registry part", L, "GmRegistryRelease(&static_cast<GmRegistryItem*>(m_registries)[i].m_registry);", "GmRegistryRelease(&static_cast<GmRegistryItem*>(m_registries)[i].m_manager);"),
     ("base Free: cinema count", L, "        m_cinemaDatabases = 0;\n        m_cinemaDatabaseCount = 0;\n", "        m_cinemaDatabases = 0;\n"),
     ("base Free: graphics kept", L, "        GmDatabaseItemsDelete(kGraphicsDatabaseItems, m_graphicsDatabases);\n        m_graphicsDatabases = 0;\n", "        m_graphicsDatabases = 0;\n"),
     ("base Free: events pointer", L, "        m_events = 0;\n        m_eventCount = 0;\n    }\n    if (m_registries", "        m_eventCount = 0;\n    }\n    if (m_registries"),

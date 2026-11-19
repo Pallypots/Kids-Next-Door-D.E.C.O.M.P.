@@ -30,6 +30,8 @@ public:
 };
 
 // vftable 0x0028DAB4.
+class AtSceneDatabaseLoader;  // include/gm/GmDatabaseManifestItems.h
+class AtSpaceGraph;
 class GmLevelManager {
 public:
     // Values of m_kinds. The Type keyword and the other cinema keywords leave an entry's kind unset.
@@ -43,6 +45,9 @@ public:
     void Reset();                       // 0x0013D950
     int FindLevel(const char* name);    // 0x0008E420 the index of the first level named so, compared over eight characters, or -1; src/gm/GmApp.cpp
     void ReleaseLevelData();            // 0x0013E530 NOT recovered: stops with a diagnostic in GmLevelPending.cpp
+    // 0x0013D9D0. The first of a scene database loader's own space graphs; else the first found in its nested loaders, depth first; else null. this is not read. gm/dbmanifest,
+    // src/gm/GmDatabaseManifest.cpp
+    AtSpaceGraph* FindSpaceGraph(AtSceneDatabaseLoader* database);
 
     static void SetHeap(void* heap);    // 0x0013D8E0
 
