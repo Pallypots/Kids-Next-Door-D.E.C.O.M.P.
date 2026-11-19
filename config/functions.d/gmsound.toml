@@ -101,7 +101,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x001414F0
 size = 6
-symbol = "?Get@GmAppAudioOptions@@SAPAU1@XZ"
+symbol = "?GetGmApp@App@@SAPAV1@XZ"
 source = "src/gm/GmSoundPlay.cpp"
 subsystem = "gm/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
@@ -325,7 +325,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x00032EA0
 size = 74
-symbol = "?SetWorldTransform@AtCoordSys@@QAEXPBVAtVector3@@M0PBX@Z"
+symbol = "?Place@AtCoordSys@@QAEXPBVAtVector3@@M00@Z"
 source = "src/at/AtAudioVoices.cpp"
 subsystem = "at/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtCoordSys.h"
@@ -333,7 +333,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x000332B0
 size = 61
-symbol = "?GetWorldPosition@AtCoordSys@@QAEXPAVAtVector3@@@Z"
+symbol = "?WorldPosition@AtCoordSys@@QAEXPAVAtVector3@@@Z"
 source = "src/at/AtAudioVoices.cpp"
 subsystem = "at/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtCoordSys.h"

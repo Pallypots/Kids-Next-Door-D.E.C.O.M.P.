@@ -5,6 +5,7 @@
 #include "at/AtCoordSys.h"
 #include "at/AtNameTableOwner.h"
 #include "at/AtScene.h"
+#include "gm/GmApp.h"
 #include "gm/GmAppSettings.h"
 #include "gm/GmAudioData.h"
 #include "gm/GmLevelManager.h"
@@ -14,8 +15,8 @@ int AtFormat(char* out, const char* format, ...);  // Stands in for the library'
 
 AtCoordSys* GmAudioData::s_listener;
 
-GmAppAudioOptions* GmAppAudioOptions::Get() {
-    return s_instance;
+App* App::GetGmApp() {
+    return s_gmApp;
 }
 
 void AtSceneNode::GetWorldSphere(AtSceneSphere* out) {
@@ -36,7 +37,7 @@ void PlaceEmitter(AtAudioEmitter* emitter, const AtVector3* position) {
     axis.x = 1.0f;
     axis.y = 0;
     axis.z = 0;
-    emitter->SetWorldTransform(&axis, 0, position, 0);
+    emitter->Place(&axis, 0, position, 0);
 }
 
 }  // namespace
@@ -90,7 +91,7 @@ void GmAudioData::PlayOnEmitter(AtAudioEmitter* emitter, AtAudioSegment* segment
     if (emitter == 0 || segment == 0) {
         return;
     }
-    if (GmAppAudioOptions::Get() != 0 && GmAppAudioOptions::Get()->m_noAudio != 0) {
+    if (App::GetGmApp() != 0 && App::GetGmApp()->m_noAudio != 0) {
         return;
     }
     emitter->Play(segment, 0);
@@ -102,7 +103,7 @@ void GmAudioData::PlayByName(const char* emitterName, const char* segmentName) {
     if (emitter == 0 || segment == 0) {
         return;
     }
-    if (GmAppAudioOptions::Get() != 0 && GmAppAudioOptions::Get()->m_noAudio != 0) {
+    if (App::GetGmApp() != 0 && App::GetGmApp()->m_noAudio != 0) {
         return;
     }
     emitter->Play(segment, 0);
@@ -110,7 +111,7 @@ void GmAudioData::PlayByName(const char* emitterName, const char* segmentName) {
 
 void GmAudioData::PlayAtActor(GmActor* actor, AtAudioSegment* segment) {
     // Unlike PlayOnEmitter, no test for there being an App object.
-    if (GmAppAudioOptions::Get()->m_noAudio != 0) {
+    if (App::GetGmApp()->m_noAudio != 0) {
         return;
     }
     unsigned int i = 0;
@@ -215,7 +216,7 @@ void GmAudioData::PlayNode(GmSoundNode* node, AtAudioSegment* segment) {
     if (node->m_source != 0) {
         node->m_source->GetWorldSphere(&sphere);
         AtVector3 listener;
-        s_listener->GetWorldPosition(&listener);
+        s_listener->WorldPosition(&listener);
         const double distance = listener.Distance(sphere.center);
         near = distance <= (double)s_soundOwner->m_unknown14 * node->m_range;
     }
@@ -259,7 +260,7 @@ void GmActorSoundNodes::Play(AtAudioSegment* segment, int index, const AtVector3
     if (singleton != 0 && m_nodes[index]->m_emitter != 0 && m_nodes[index]->m_emitter->IsPlaying(segment) != 0) {
         return;
     }
-    if (GmAppAudioOptions::Get()->m_noAudio != 0) {
+    if (App::GetGmApp()->m_noAudio != 0) {
         return;
     }
     m_manager->PlayNode(m_nodes[index], segment);

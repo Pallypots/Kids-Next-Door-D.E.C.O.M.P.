@@ -703,5 +703,3 @@ source = "src/gm/GmAcActor.cpp"
 "?GmDynamicNodeRelease@@YAXPAVGmAcNode@@H@Z" = 0x0014FB40
 "?GmVfxManagerHas@@YAHPAVGmVfxManager@@PBD@Z" = 0x001616C0
 "?GmAudioDataPlayNote@@YAXPAVGmAudioData@@PAVGmAcActor@@PAUGmSoundNote@@@Z" = 0x001386D0
-"?WorldPosition@AtCoordSys@@QAEXPAVAtVector3@@@Z" = 0x000332B0
-"?Place@AtCoordSys@@QAEXPBVAtVector3@@H0H@Z" = 0x00032EA0

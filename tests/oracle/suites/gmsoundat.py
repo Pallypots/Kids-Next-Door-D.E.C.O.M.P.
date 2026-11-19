@@ -17,14 +17,14 @@ MUTANTS = [
     ("local: parent inverse", F, "    m_parent->UpdateInverse();\n", ""),
     ("local: product", F, "g_atMatrix.SetProduct(m_local, m_world, m_parent->m_world);", "g_atMatrix.SetProduct(m_local, m_world, m_parent->m_local);"),
     ("local: parent test", F, "    if (m_parent == 0) {\n        m_dirty &=", "    if (m_parent == 0 || m_firstChild != 0) {\n        m_dirty &="),
-    ("set world: axis", F, "g_atMatrix.SetAxisAngle(m_world, axis, angle);", "g_atMatrix.SetAxisAngle(m_local, axis, angle);"),
+    ("set world: axis", F, "g_atMatrix.MakeAxisAngle(m_world, axis, angle);", "g_atMatrix.MakeAxisAngle(m_local, axis, angle);"),
     ("set world: translation", F, "g_atMatrix.SetTranslation(m_world, position);", "g_atMatrix.SetTranslation(m_world, axis);"),
-    ("set world: with", F, "    if (with != 0) {\n        g_atMatrix.Unknown168(m_world, with);\n    }\n", "    g_atMatrix.Unknown168(m_world, with);\n"),
-    ("set world: local", F, "        g_atMatrix.Unknown168(m_world, with);\n    }\n    LocalFromWorld();", "        g_atMatrix.Unknown168(m_world, with);\n    }"),
+    ("set world: with", F, "    if (with != 0) {\n        g_atMatrix.ScaleAxes(m_world, with);\n    }\n", "    g_atMatrix.ScaleAxes(m_world, with);\n"),
+    ("set world: local", F, "        g_atMatrix.ScaleAxes(m_world, with);\n    }\n    LocalFromWorld();", "        g_atMatrix.ScaleAxes(m_world, with);\n    }"),
     ("position: root", F, "        g_atMatrix.GetPosition(m_local, out);", "        g_atMatrix.GetPosition(m_world, out);"),
     ("position: update", F, "    UpdateWorld();\n    g_atMatrix.GetPosition(m_world, out);", "    g_atMatrix.GetPosition(m_world, out);"),
     ("position: child", F, "    UpdateWorld();\n    g_atMatrix.GetPosition(m_world, out);", "    UpdateWorld();\n    g_atMatrix.GetPosition(m_local, out);"),
-    ("node position: coords", F, "    if (m_coordSys != 0) {\n        m_coordSys->GetWorldPosition(out);\n        return;", "    if (m_coordSys != 0) {\n        m_coordSys->GetWorldPosition(out);"),
+    ("node position: coords", F, "    if (m_coordSys != 0) {\n        m_coordSys->WorldPosition(out);\n        return;", "    if (m_coordSys != 0) {\n        m_coordSys->WorldPosition(out);"),
     ("node position: zero", F, "    out->y = 0;\n", "    out->y = 1;\n"),
 ]
 

@@ -589,6 +589,7 @@ public:
 
     static App* s_instance;                      // 0x00304D58 set by Init
     static App* s_gmApp;                         // 0x003B360C set by GmApp's start-up (0x00141500), read by 0x001414F0; the settings write its audio words
+    static App* GetGmApp();                      // 0x001414F0 s_gmApp. src/gm/GmSoundPlay.cpp (gm/gmsound)
     static AtHeap* s_heap;                       // 0x00304D6C the first heap, copied by Init
     static unsigned int s_heapMemory;            // 0x00304D68 what the four heaps take: 0x2280000
     static unsigned int s_memoryTotal;           // 0x003B3BE0

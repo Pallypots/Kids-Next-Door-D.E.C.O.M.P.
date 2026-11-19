@@ -43,14 +43,14 @@ MUTANTS = [
     ("random: returning seed", R, "    return m_seed;\n}", "    return kDefaultSeed + 1;\n}"),
 
     # ---- GmSoundPlay.cpp: small pieces ----
-    ("app: other", P, "GmAppAudioOptions* GmAppAudioOptions::Get() {\n    return s_instance;", "GmAppAudioOptions* GmAppAudioOptions::Get() {\n    return 0;"),
+    ("app: other", P, "App* App::GetGmApp() {\n    return s_gmApp;", "App* App::GetGmApp() {\n    return 0;"),
     ("sphere: no finish", P, "        FinishBody();\n", ""),
     ("sphere: flag", P, "if ((m_flags & kMoved) != 0) {", "if ((m_flags & kCollision) != 0) {"),
     ("sphere: radius", P, "out->radius = m_worldSphere.radius;", "out->radius = m_worldSphere.center.x;"),
     ("sphere: center", P, "out->center = m_worldSphere.center;", "out->center = m_sphere.center;"),
     ("place: axis", P, "axis.x = 1.0f;", "axis.x = 0.5f;"),
-    ("place: angle", P, "emitter->SetWorldTransform(&axis, 0, position, 0);", "emitter->SetWorldTransform(&axis, 1, position, 0);"),
-    ("place: with", P, "emitter->SetWorldTransform(&axis, 0, position, 0);", "emitter->SetWorldTransform(&axis, 0, position, &axis);"),
+    ("place: angle", P, "emitter->Place(&axis, 0, position, 0);", "emitter->Place(&axis, 1, position, 0);"),
+    ("place: with", P, "emitter->Place(&axis, 0, position, 0);", "emitter->Place(&axis, 0, position, &axis);"),
     # FindEmitters.
     ("emitters: ui", P, 'm_ui = (AtAudioEmitter*)owner->m_nodes.Find("ui");', 'm_ui = (AtAudioEmitter*)owner->m_nodes.Find("sfx");'),
     ("emitters: sfx", P, 'Find("sfx");', 'Find("voice");'),
@@ -74,13 +74,13 @@ MUTANTS = [
     # PlayOnEmitter, PlayByName.
     ("on emitter: null emitter", P, "void GmAudioData::PlayOnEmitter(AtAudioEmitter* emitter, AtAudioSegment* segment) {\n    if (emitter == 0 || segment == 0) {",
      "void GmAudioData::PlayOnEmitter(AtAudioEmitter* emitter, AtAudioSegment* segment) {\n    if (segment == 0) {"),
-    ("on emitter: no app", P, "    if (GmAppAudioOptions::Get() != 0 && GmAppAudioOptions::Get()->m_noAudio != 0) {\n        return;\n    }\n    emitter->Play(segment, 0);\n}\n\nvoid GmAudioData::PlayByName",
-     "    if (GmAppAudioOptions::Get() == 0 || GmAppAudioOptions::Get()->m_noAudio != 0) {\n        return;\n    }\n    emitter->Play(segment, 0);\n}\n\nvoid GmAudioData::PlayByName"),
+    ("on emitter: no app", P, "    if (App::GetGmApp() != 0 && App::GetGmApp()->m_noAudio != 0) {\n        return;\n    }\n    emitter->Play(segment, 0);\n}\n\nvoid GmAudioData::PlayByName",
+     "    if (App::GetGmApp() == 0 || App::GetGmApp()->m_noAudio != 0) {\n        return;\n    }\n    emitter->Play(segment, 0);\n}\n\nvoid GmAudioData::PlayByName"),
     ("by name: emitter", P, "AtAudioEmitter* emitter = (AtAudioEmitter*)s_soundOwner->m_nodes.Find(emitterName);", "AtAudioEmitter* emitter = (AtAudioEmitter*)s_soundOwner->m_nodes.Find(segmentName);"),
     ("by name: segment", P, "AtAudioSegment* segment = FindSegment(segmentName);", "AtAudioSegment* segment = FindSegment(emitterName);"),
     ("by name: noaudio", P, "        return;\n    }\n    emitter->Play(segment, 0);\n}\n\nvoid GmAudioData::PlayAtActor", "    }\n    emitter->Play(segment, 0);\n}\n\nvoid GmAudioData::PlayAtActor"),
     # PlayAtActor.
-    ("at actor: noaudio", P, "    if (GmAppAudioOptions::Get()->m_noAudio != 0) {\n        return;\n    }\n    unsigned int i = 0;", "    unsigned int i = 0;"),
+    ("at actor: noaudio", P, "    if (App::GetGmApp()->m_noAudio != 0) {\n        return;\n    }\n    unsigned int i = 0;", "    unsigned int i = 0;"),
     ("at actor: slot state", P, "while (m_voiceSlots[i].m_state != GmSoundVoiceSlot::kFree || m_voiceSlots[i].m_emitter == 0) {", "while (m_voiceSlots[i].m_emitter == 0) {"),
     ("at actor: slot emitter", P, "|| m_voiceSlots[i].m_emitter == 0) {", ") {"),
     ("at actor: bound", P, "if (++i >= kVoiceSlots) {", "if (++i >= kVoiceSlots - 1) {"),
@@ -134,7 +134,7 @@ MUTANTS = [
     ("node: range test", P, "if (segment->Unknown31BF0() > node->m_range) {", "if (segment->Unknown31BF0() >= node->m_range + 1) {"),
     ("node: range store", P, "node->m_range = segment->Unknown31BF0();", "node->m_range = segment->Length();"),
     ("node: sphere", P, "node->m_source->GetWorldSphere(&sphere);", "sphere.center = node->m_source->m_worldSphere.center;"),
-    ("node: listener", P, "s_listener->GetWorldPosition(&listener);", "listener.x = listener.y = listener.z = 0;"),
+    ("node: listener", P, "s_listener->WorldPosition(&listener);", "listener.x = listener.y = listener.z = 0;"),
     ("node: distance", P, "const double distance = listener.Distance(sphere.center);", "const double distance = listener.DistanceSquared(sphere.center);"),
     ("node: compare", P, "near = distance <= (double)s_soundOwner->m_unknown14 * node->m_range;", "near = distance < (double)s_soundOwner->m_unknown14 * node->m_range;"),
     ("node: scale", P, "(double)s_soundOwner->m_unknown14 * node->m_range;", "(double)node->m_range;"),
@@ -156,7 +156,7 @@ MUTANTS = [
     ("actor play: take", P, "m_nodes[index] = m_manager->TakeDynamicNode(m_actor, m_actor->Unknown52());", "m_nodes[index] = m_manager->TakeDynamicNode(m_actor, 0);"),
     ("actor play: taken", P, "    if (m_nodes[index] == 0) {\n        return;\n    }\n    if (singleton", "    if (singleton"),
     ("actor play: singleton", P, "if (singleton != 0 && m_nodes[index]->m_emitter != 0 && m_nodes[index]->m_emitter->IsPlaying(segment) != 0) {", "if (singleton != 0 && m_nodes[index]->m_emitter != 0) {"),
-    ("actor play: noaudio", P, "    if (GmAppAudioOptions::Get()->m_noAudio != 0) {\n        return;\n    }\n    m_manager->PlayNode", "    m_manager->PlayNode"),
+    ("actor play: noaudio", P, "    if (App::GetGmApp()->m_noAudio != 0) {\n        return;\n    }\n    m_manager->PlayNode", "    m_manager->PlayNode"),
     # Stopping.
     ("stop bank: nulls", P, "    if (emitter == 0 || bank == 0) {\n        return;\n    }\n    for (;;) {", "    if (emitter == 0) {\n        return;\n    }\n    for (;;) {"),
     ("stop bank: which", P, "if (voice->m_segment->m_bank == bank) {", "if (voice->m_segment->m_bank != bank) {"),

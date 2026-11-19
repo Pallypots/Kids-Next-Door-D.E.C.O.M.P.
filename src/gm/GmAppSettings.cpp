@@ -11,8 +11,7 @@ char* strncpy(char* to, const char* from, decltype(sizeof(0)) n);
 int toupper(int c);
 }
 
-GmHistoryLogs* GmHistoryLogs::s_instance;
-App* App::s_gmApp;  // 0x003B360C defined here, beside the settings that write through it, so a program of the settings alone does not need App
+// GmHistoryLogs::s_instance and App::s_gmApp are defined in src/gm/GmAppStatics.cpp, so that neither the settings nor the sound code pulls in the other.
 unsigned int GmAppSettings::s_argc;
 char** GmAppSettings::s_argv;
 unsigned int GmAppSettings::s_levelUppercaseCount;

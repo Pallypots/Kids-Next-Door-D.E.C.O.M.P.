@@ -58,16 +58,16 @@ void AtCoordSys::LocalFromWorld() {
     g_atMatrix.SetProduct(m_local, m_world, m_parent->m_world);
 }
 
-void AtCoordSys::SetWorldTransform(const AtVector3* axis, float angle, const AtVector3* position, const void* with) {
-    g_atMatrix.SetAxisAngle(m_world, axis, angle);
+void AtCoordSys::Place(const AtVector3* axis, float angle, const AtVector3* position, const AtVector3* with) {
+    g_atMatrix.MakeAxisAngle(m_world, axis, angle);
     g_atMatrix.SetTranslation(m_world, position);
     if (with != 0) {
-        g_atMatrix.Unknown168(m_world, with);
+        g_atMatrix.ScaleAxes(m_world, with);
     }
     LocalFromWorld();
 }
 
-void AtCoordSys::GetWorldPosition(AtVector3* out) {
+void AtCoordSys::WorldPosition(AtVector3* out) {
     if (m_parent == 0) {
         g_atMatrix.GetPosition(m_local, out);
         return;
@@ -80,7 +80,7 @@ void AtCoordSys::GetWorldPosition(AtVector3* out) {
 
 void AtSceneNode::GetWorldPosition(AtVector3* out) {
     if (m_coordSys != 0) {
-        m_coordSys->GetWorldPosition(out);
+        m_coordSys->WorldPosition(out);
         return;
     }
     out->x = 0;

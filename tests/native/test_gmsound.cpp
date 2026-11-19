@@ -2,6 +2,7 @@
 // Not evidence of a byte match. The emitters are doubles that record what they are asked to play: nothing makes a sound here.
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <map>
 #include <new>
@@ -11,6 +12,7 @@
 #include "at/AtAudioDatabase.h"
 #include "at/AtIoTokenizer.h"
 #include "at/AtNameTableOwner.h"
+#include "gm/GmApp.h"
 #include "gm/GmAppSettings.h"
 #include "gm/GmAudioData.h"
 #include "gm/GmRandom.h"
@@ -172,9 +174,8 @@ int main() {
     audio->m_impulseThresholds[0] = 9.0f;
     GmAudioData::s_instance = audio;
 
-    GmAppAudioOptions* app = new GmAppAudioOptions;
-    std::memset(app, 0, sizeof *app);
-    GmAppAudioOptions::s_instance = app;
+    App* app = (App*)std::calloc(1, sizeof(App));  // only its audio words are read
+    App::s_gmApp = app;
     GmHistoryLogs logs = {};
     logs.m_random = random;
     GmHistoryLogs::s_instance = &logs;

@@ -26,6 +26,7 @@
 #include "at/AtIoTokenizer.h"
 #include "at/AtNameTableOwner.h"
 #include "at/AtScene.h"
+#include "gm/GmApp.h"
 #include "gm/GmAppSettings.h"
 #include "gm/GmAudioData.h"
 #include "gm/GmRandom.h"
@@ -96,7 +97,7 @@ static void __cdecl m_inverse(AtMatrix* to, const AtMatrix* from) { lg('I', mid(
 static void __cdecl m_multiply(AtMatrix* m, const AtMatrix* by) { lg('U', mid(m) * 1000 + mid(by)); }
 static void __cdecl m_position(const AtMatrix* m, AtVector3* out) { lg('G', mid(m)); std::memcpy(out, ((const FakeMatrix*)m)->pos, 12); }
 static void __cdecl m_axis(AtMatrix* m, const AtVector3* axis, float angle) { lg('A', mid(m)); lg('a', bits(axis->x) ^ (bits(axis->y) << 1) ^ (bits(axis->z) << 2)); lg('n', bits(angle)); }
-static void __cdecl m_168(AtMatrix* m, const void* with) { lg('H', mid(m)); lg('h', (uint32_t)(uintptr_t)with); }
+static void __cdecl m_168(AtMatrix* m, const AtVector3* with) { lg('H', mid(m)); lg('h', (uint32_t)(uintptr_t)with); }
 
 static void install_matrices() {
     *(void**)(uintptr_t)0x002C60C8 = (void*)m_copy;
@@ -113,8 +114,8 @@ static void install_matrices() {
     g_atMatrix.Multiply = m_multiply;
     g_atMatrix.SetProduct = m_product;
     g_atMatrix.GetPosition = m_position;
-    g_atMatrix.SetAxisAngle = m_axis;
-    g_atMatrix.Unknown168 = m_168;
+    g_atMatrix.MakeAxisAngle = m_axis;
+    g_atMatrix.ScaleAxes = m_168;
 }
 
 // ---- voices, emitters, banks, segments ----------------------------------------------------------------------------------
@@ -263,7 +264,7 @@ struct World {
     GmActorSoundNodes* comps[kActors];
     AtCoordSys* listener;
     TestLoader loader;
-    GmAppAudioOptions* app;
+    App* app;
     GmHistoryLogs logs;
     GmRandom* random;
     GmSoundNote* notes;
@@ -452,7 +453,7 @@ static World* build_world(int side) {
         }
         w->actors[i] = a;
     }
-    w->app = (GmAppAudioOptions*)std::calloc(1, sizeof(GmAppAudioOptions));
+    w->app = (App*)std::calloc(1, sizeof(App));
     w->random = (GmRandom*)std::calloc(1, sizeof(GmRandom));
     w->logs.m_random = w->random;
     return w;
@@ -471,13 +472,13 @@ static void install(int side) {
         *(GmAudioData**)(uintptr_t)0x003B354C = w->mgr;
         *(AtNameTableOwner**)(uintptr_t)0x003B3558 = w->owner;
         *(AtCoordSys**)(uintptr_t)0x003B3554 = w->listener;
-        *(GmAppAudioOptions**)(uintptr_t)0x003B360C = w->app;
+        *(App**)(uintptr_t)0x003B360C = w->app;
         *(GmHistoryLogs**)(uintptr_t)0x002CB0A8 = &w->logs;
     } else {
         GmAudioData::s_instance = w->mgr;
         GmAudioData::s_soundOwner = w->owner;
         GmAudioData::s_listener = w->listener;
-        GmAppAudioOptions::s_instance = w->app;
+        App::s_gmApp = w->app;
         GmHistoryLogs::s_instance = &w->logs;
     }
 }
@@ -768,9 +769,9 @@ static void run_atlas() {
             AtVector3 axis = {0.25f, -1.0f, 2.0f};
             AtVector3 position = {3.0f, 4.0f, -5.5f};
             int extra = 7;
-            const void* w = with ? &extra : nullptr;
+            const AtVector3* w = with ? (const AtVector3*)&extra : nullptr;
             both("set world", [&] { at<FnPlace>(0x00032EA0)(O(emitters[e]), nullptr, &axis, 0.75f, &position, w); },
-                 [&] { R(emitters[e])->SetWorldTransform(&axis, 0.75f, &position, w); });
+                 [&] { R(emitters[e])->Place(&axis, 0.75f, &position, w); });
             compare_worlds("set world");
         }
     }
@@ -782,7 +783,7 @@ static void run_atlas() {
         if (co) {
             co->m_dirty |= AtCoordSys::kWorld;
             cr->m_dirty |= AtCoordSys::kWorld;
-            both("coord position", [&] { at<Fn1>(0x000332B0)(co, nullptr, &x); }, [&] { cr->GetWorldPosition(&y); });
+            both("coord position", [&] { at<Fn1>(0x000332B0)(co, nullptr, &x); }, [&] { cr->WorldPosition(&y); });
             eq("coord position", std::memcmp(&x, &y, 12), 0);
         }
         x = y = AtVector3{9, 9, 9};
@@ -802,7 +803,7 @@ static void run_atlas() {
     g_context = "atlas: app";
     void* x = nullptr;
     void* y = nullptr;
-    both("app", [&] { x = at<void*(__cdecl*)()>(0x001414F0)(); }, [&] { y = GmAppAudioOptions::Get(); });
+    both("app", [&] { x = at<void*(__cdecl*)()>(0x001414F0)(); }, [&] { y = App::GetGmApp(); });
     eq("app", x == O(app), y == R(app));
 }
 
@@ -940,7 +941,7 @@ static void run_play() {
         for (int s = 0; s < 2; s++) {
             g_world[s]->app->m_noAudio = app == 1;
             install(s);
-            if (app == 2) { if (s == 0) *(void**)(uintptr_t)0x003B360C = nullptr; else GmAppAudioOptions::s_instance = nullptr; }
+            if (app == 2) { if (s == 0) *(void**)(uintptr_t)0x003B360C = nullptr; else App::s_gmApp = nullptr; }
         }
         g_context = "play on emitter, app " + std::to_string(app);
         for (int e : {-1, 1, 30}) {
