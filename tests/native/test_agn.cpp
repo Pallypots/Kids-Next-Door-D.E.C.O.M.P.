@@ -76,7 +76,6 @@ public:
 };
 class TestLight : public AtLight {
 public:
-    void Slot0() override {}
     void Reset() override {}
 };
 class Lights : public AtLightDatabase {
