@@ -1,4 +1,5 @@
-// What the level manifest reaches outside itself and is not recovered: the base's word parser and its Finished, its own items, and what each item loads into. Each stops with a diagnostic.
+// What the level manifest reaches outside itself and is not recovered: what each item loads into, and two of the base's frees. Each stops with a diagnostic. The base's words, Finished and items
+// are gm/dbmanifest's (src/gm/GmDatabaseManifest.cpp), whose own seams are in src/gm/GmDatabaseManifestHost.cpp.
 // In a file of its own, so that a test can supply them instead. Not recovered code. Recovered code is in src/gm/GmLevelManifest.cpp and src/gm/GmLevelManifestItems.cpp.
 #include "gm/GmLevelManifest.h"
 
@@ -10,11 +11,7 @@ void StopHere(const char* what) {
 }
 }
 
-void GmDatabaseManifest::OnToken(int, AtIoTokenizer*) { StopHere("Level manifest: the database words (0x0015D000) are not recovered"); }
-void GmDatabaseManifest::Finished() { StopHere("Level manifest: the databases' Finished (0x0015D920) is not recovered"); }
-void GmDatabaseItemsDelete(int, GmManifestItem*) { StopHere("Level manifest: the database items are not recovered"); }
 void GmAudioFreeDatabase(void*) { StopHere("Level manifest: 0x00139F90 is not recovered"); }
-void GmSceneItemLeave(void*, AtSpaceGraph*) { StopHere("Level manifest: 0x0002EDD0 is not recovered"); }
 void GmRegistryRelease(void*) { StopHere("Level manifest: 0x00071DC0 is not recovered"); }
 
 void GmBehaviorList::Prepare() { StopHere("Behaviour lists (0x00198C90) are not recovered"); }

@@ -2,6 +2,7 @@
 // Original address clusters 0x00142110-0x001421BF, 0x00142640-0x00143DCB, 0x0015C860-0x0015C8F4, 0x0015CBA0-0x0015CFFF, 0x0015D9E0-0x0015D9FB.
 // Verification status per function: config/functions.d/manifest.toml.
 #include "gm/GmLevelManifest.h"
+#include "gm/GmDatabaseManifestItems.h"
 #include "gm/GmAudioData.h"
 #include "at/AtMemory.h"
 
@@ -60,10 +61,6 @@ template <class T> T* ReadItemArray(unsigned int count) {
     T* items = NewItems<T>(count);
     PopItemHeap(items);
     return items;
-}
-
-GmManifestItem* ItemAt(GmManifestItem* first, unsigned int index, unsigned int size) {
-    return (GmManifestItem*)((char*)first + index * size);
 }
 
 }  // namespace
@@ -148,25 +145,25 @@ void GmDatabaseManifest::Parse(AtIoTokenizer* tokenizer) {
 
 void GmDatabaseManifest::AfterParse() {
     for (unsigned int i = 0; i < m_eventCount; i++) {
-        Enqueue(ItemAt(m_events, i, kEventItemSize), 0);
+        Enqueue(&static_cast<GmEventDatabaseItem*>(m_events)[i], 0);
     }
     for (unsigned int i = 0; i < m_registryCount; i++) {
-        Enqueue(ItemAt(m_registries, i, kRegistryItemSize), 0);
+        Enqueue(&static_cast<GmRegistryItem*>(m_registries)[i], 0);
     }
     for (unsigned int i = 0; i < m_soundDatabaseCount; i++) {
-        Enqueue(ItemAt(m_soundDatabases, i, kSoundDatabaseItemSize), 0);
+        Enqueue(&static_cast<GmSoundDatabaseItem*>(m_soundDatabases)[i], 0);
     }
     for (unsigned int i = 0; i < m_graphicsDatabaseCount; i++) {
-        Enqueue(ItemAt(m_graphicsDatabases, i, kGraphicsDatabaseItemSize), 0);
+        Enqueue(&static_cast<GmGraphicsDatabaseItem*>(m_graphicsDatabases)[i], 0);
     }
     for (unsigned int i = 0; i < m_boundingGeometryCount; i++) {
-        Enqueue(ItemAt(m_boundingGeometry, i, kBoundingGeometryItemSize), 0);
+        Enqueue(&static_cast<GmBoundingGeometryItem*>(m_boundingGeometry)[i], 0);
     }
     for (unsigned int i = 0; i < m_sceneDatabaseCount; i++) {
-        Enqueue(ItemAt(m_sceneDatabases, i, kSceneDatabaseItemSize), 0);
+        Enqueue(&static_cast<GmSceneDatabaseItem*>(m_sceneDatabases)[i], 0);
     }
     for (unsigned int i = 0; i < m_cinemaDatabaseCount; i++) {
-        Enqueue(ItemAt(m_cinemaDatabases, i, kCinemaDatabaseItemSize), 0);
+        Enqueue(&static_cast<GmCinemaDatabaseItem*>(m_cinemaDatabases)[i], 0);
     }
 }
 
@@ -178,10 +175,9 @@ void GmDatabaseManifest::Free() {
     }
     if (m_sceneDatabases != 0) {
         for (unsigned int i = 0; i < m_sceneDatabaseCount; i++) {
-            char* item = (char*)ItemAt(m_sceneDatabases, i, kSceneDatabaseItemSize);
-            // +0x108 is set for a path marked InSpaceGraph, by the item's class.
-            if (*(int*)(item + 0x108) != 0 && GmSpaceGraphOwner::s_instance->m_graph != 0) {
-                GmSceneItemLeave(item + 0x8C, GmSpaceGraphOwner::s_instance->m_graph);
+            GmSceneDatabaseItem* item = &static_cast<GmSceneDatabaseItem*>(m_sceneDatabases)[i];
+            if (item->m_inSpaceGraph != 0 && GmSpaceGraphOwner::s_instance->m_graph != 0) {
+                GmSceneItemLeave(&item->m_database, GmSpaceGraphOwner::s_instance->m_graph);
             }
         }
         if (m_sceneDatabases != 0) {
@@ -197,8 +193,8 @@ void GmDatabaseManifest::Free() {
     }
     if (m_soundDatabases != 0) {
         for (unsigned int i = 0; i < m_soundDatabaseCount; i++) {
-            GmManifestItem* item = ItemAt(m_soundDatabases, i, kSoundDatabaseItemSize);
-            GmAudioFreeDatabase(*(void**)((char*)item + 0x90));
+            GmSoundDatabaseItem* item = &static_cast<GmSoundDatabaseItem*>(m_soundDatabases)[i];
+            GmAudioFreeDatabase(item->m_database);
             item->Unknown0();
         }
         if (m_soundDatabases != 0) {
@@ -219,7 +215,7 @@ void GmDatabaseManifest::Free() {
     }
     if (m_registries != 0) {
         for (unsigned int i = 0; i < m_registryCount; i++) {
-            GmRegistryRelease((char*)ItemAt(m_registries, i, kRegistryItemSize) + 0x90);
+            GmRegistryRelease(&static_cast<GmRegistryItem*>(m_registries)[i].m_registry);
         }
         if (m_registries != 0) {
             GmDatabaseItemsDelete(kRegistryItems, m_registries);

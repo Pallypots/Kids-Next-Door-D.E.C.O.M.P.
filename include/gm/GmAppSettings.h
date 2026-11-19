@@ -33,11 +33,14 @@ public:
     virtual void SetLength(int lines) = 0;   // slot 5
 };
 
+struct App;  // include/gm/GmDatabaseManifestItems.h
 struct GmHistoryLogs {
     void SetTraceHistory(int lines);   // 0x0006C2D0
     void SetErrorHistory(int lines);   // 0x0006C2F0
 
-    char m_unknown[0x18];
+    char m_unknown00[0xC];
+    App* m_app;                // +0x0C the level manifest's base words take their items' owners from it (0x0015D23C)
+    char m_unknown10[8];
     GmHistoryLog* m_errors;    // +0x18
     GmHistoryLog* m_traces;    // +0x1C both setters test this one
 

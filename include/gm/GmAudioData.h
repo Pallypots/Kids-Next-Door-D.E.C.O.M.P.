@@ -59,6 +59,7 @@ public:
     void LoadNotes(GmSoundNoteBank* bank, const char* path);
     void RegisterNotes(GmSoundNoteBank* bank);      // 0x00139550 finds each choice's segment, and enters the notes in the bank's maps. Once all a level's sound lists are in. A second call enters them twice
     GmSoundNoteBank* AllocateNoteBank();            // 0x00136930 the first free, or null
+    void RegisterDatabase(AtAudioDatabase* database);  // 0x00137AD0 into the first empty place of m_databases; when all 60 are taken, nowhere and no report. src/gm/GmDatabaseManifest.cpp
     void ReleaseNoteBank(GmSoundNoteBank* bank);    // 0x00136960
     void FreeNotes(GmSoundNoteBank* bank);          // 0x00136990 what a Segments block with a count of 0 allocated is not freed
     AtAudioSegment* FindSegment(const char* name);  // 0x00137D20 the first list that has it, of the first databases, then the rest

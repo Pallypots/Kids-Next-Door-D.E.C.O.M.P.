@@ -4,14 +4,15 @@
 //
 // Two classes, one built on the other, and only ever used together (0x0015CD10 is called only from 0x001428B3):
 //   GmDatabaseManifest  0x0015CD10, vftable 0x0028F340. Seven words: SoundDatabaseLoaders, GraphicsDatabasesLoaders, SceneDatabasesLoaders, CinemaDatabaseLoaders, BoundingGeometryDatabase,
-//                       EventDatabases, InstanceRegistries. PARTIAL: its word parser 0x0015D000 and Finished 0x0015D920 are NOT recovered, nor its seven kinds of item; both stop with a
-//                       diagnostic in src/gm/GmLevelManifestHost.cpp.
+//                       EventDatabases, InstanceRegistries. Its word parser 0x0015D000, its Finished 0x0015D920 and its seven kinds of item are gm/dbmanifest's:
+//                       include/gm/GmDatabaseManifestItems.h, src/gm/GmDatabaseManifest.cpp.
 //   GmLevelManifest     0x001428B0, vftable 0x0028DFB8. Twelve more words, each with its kind of item, all recovered here except the sound notes (.GON), which are gm/gon's (include/gm/GmSoundNotes.h).
 // Start-up makes a GmLevelManifest at App+0x6D48 (0x0008EA81) for PERSIST.MNG; GmLevelManager holds another at +0x64 (its constructor, 0x0013E176). Original address clusters
 // 0x00142110-0x001431FF less 0x00142220-0x001425FF's deleting destructors (recorded with their classes), 0x0015C860-0x0015C8F4, 0x0015CBA0-0x0015CFFF, 0x0015D9E0-0x0015D9FB,
 // 0x001B2BB0-0x001B3B4F less 0x001B3540-0x001B36CF.
 #pragma once
 #include "at/AtIoTokenizer.h"
+#include "at/AtDataRegistry.h"
 #include "at/AtScene.h"
 #include "gm/GmManifestLoader.h"
 #include "gm/GmSoundNotes.h"
@@ -92,17 +93,23 @@ public:
 
 // 0x003B3604: only the space graph a dynamic node's scene enters is known.
 struct GmSpaceGraphOwner {
+    void SetGraph(AtSpaceGraph* graph);      // 0x00140E40 NOT recovered (gm/dbmanifest seam): sets m_graph and two other objects' copies of it
+
     char m_unknown00[0x28];
     AtSpaceGraph* m_graph;                   // +0x28
 
     static GmSpaceGraphOwner* s_instance;    // 0x003B3604
 };
 
-// 0x003B357C: two words that decide the flag GmDynamicNodeLoader::Unload is given.
+// 0x003B357C: two words that decide the flag GmDynamicNodeLoader::Unload is given, and what InstanceRegistries hands its items (gm/dbmanifest).
+struct GmDataOwners;
 struct GmDynamicNodeState {
-    char m_unknown00[0x24];
+    int m_unknown00;
+    GmDataOwners* m_dataOwners;              // +0x04 its +0x394 is the registry owner (include/gm/GmDatabaseManifestItems.h)
+    char m_unknown08[0x1C];
     int m_unknown24;                         // +0x24
     int m_unknown28;                         // +0x28
+    AtDataRegistry m_registry;               // +0x2C each instance registry's parent
 
     static GmDynamicNodeState* s_instance;   // 0x003B357C
 };
@@ -291,16 +298,16 @@ public:
 
 // SoundNoteDatabases: GmSoundNoteItem, vftable 0x002950AC, 0x90 bytes, in include/gm/GmSoundNotes.h. Its Request is the first 0x84 bytes of GmManifestItemRequest.
 
-// ---- The base's own items, NOT recovered: only what GmDatabaseManifest::Free reads of them. Their sizes are those new[] is given in 0x0015D000. -------------------------------------------
+// ---- The base's own items, as GmDatabaseManifest::Free sees them. Their sizes are those new[] is given in 0x0015D000; the classes are in include/gm/GmDatabaseManifestItems.h. ---------
 
 enum GmDatabaseItemKind { kEventItems, kRegistryItems, kSoundDatabaseItems, kBoundingGeometryItems, kGraphicsDatabaseItems, kSceneDatabaseItems, kCinemaDatabaseItems };
 enum {
     kEventItemSize = 0xB8, kRegistryItemSize = 0x288, kSoundDatabaseItemSize = 0x9C, kBoundingGeometryItemSize = 0xBC, kGraphicsDatabaseItemSize = 0x98, kSceneDatabaseItemSize = 0x10C,
     kCinemaDatabaseItemSize = 0xB8
 };
-void GmDatabaseItemsDelete(int kind, GmManifestItem* first);   // delete[] through the first item's slot 2, with flags 3: the classes are not recovered
-void GmAudioFreeDatabase(void* database);                       // GmAudioData 0x00139F90, on a SoundDatabaseLoaders item's +0x90
-void GmSceneItemLeave(void* part, AtSpaceGraph* graph);         // 0x0002EDD0 on a SceneDatabasesLoaders item's +0x8C, when its +0x108 is set
+void GmDatabaseItemsDelete(int kind, GmManifestItem* first);   // the original's delete[] through the first item's slot 2, with flags 3; by kind in src/gm/GmDatabaseManifest.cpp
+void GmAudioFreeDatabase(void* database);                       // GmAudioData 0x00139F90, on a SoundDatabaseLoaders item's +0x90. NOT recovered: a seam
+void GmSceneItemLeave(void* part, AtSpaceGraph* graph);         // AtSceneDatabase::RemoveFrom 0x0002EDD0 on a SceneDatabasesLoaders item's +0x8C, when its +0x108 is set
 void GmRegistryRelease(void* registryPart);                     // 0x00071DC0 on the object at 0x002CD138, given an InstanceRegistries item's +0x90
 
 // ---- The loaders ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -320,8 +327,8 @@ public:
     ~GmDatabaseManifest() override;          // slot 4; 0x0015D9E0 deleting, 0x0015CD30 complete
     void Parse(AtIoTokenizer* tokenizer) override;               // slot 0, 0x0015C8E0 installs the ten words
     void AfterParse() override;                                  // slot 1, 0x0015CBA0 queues the seven arrays
-    void OnToken(int token, AtIoTokenizer* tokenizer) override;  // slot 2, 0x0015D000 NOT recovered: stops with a diagnostic. Any other token goes by in the original
-    void Finished() override;                                    // slot 3, 0x0015D920 NOT recovered: stops with a diagnostic
+    void OnToken(int token, AtIoTokenizer* tokenizer) override;  // slot 2, 0x0015D000 the seven words; any other token goes by. src/gm/GmDatabaseManifest.cpp
+    void Finished() override;                                    // slot 3, 0x0015D920 the scenes into the first space graph found. src/gm/GmDatabaseManifest.cpp
     virtual void Clear();                    // slot 5, 0x0015C8C0 frees, then resets
     virtual void Free();                     // slot 6, 0x0015CD90
 
@@ -415,6 +422,8 @@ static_assert(sizeof(GmMusicChainItem) == 0x90, "GmMusicChainItem");
 static_assert(sizeof(GmInstanceSoundItem) == 0x94, "GmInstanceSoundItem");
 static_assert(sizeof(GmCollisionSoundItem) == 0x94, "GmCollisionSoundItem");
 static_assert(offsetof(GmBehaviorSystem, m_scripts) == 0x18, "GmBehaviorSystem::m_scripts");
+static_assert(offsetof(GmDynamicNodeState, m_unknown24) == 0x24, "GmDynamicNodeState::m_unknown24");
+static_assert(offsetof(GmDynamicNodeState, m_registry) == 0x2C, "GmDynamicNodeState::m_registry");
 static_assert(offsetof(GmDatabaseManifest, m_unknown098) == 0x98, "GmDatabaseManifest::m_unknown098");
 static_assert(offsetof(GmDatabaseManifest, m_registryCount) == 0xD0, "GmDatabaseManifest::m_registryCount");
 static_assert(offsetof(GmLevelManifest, m_animationLists) == 0xDC, "GmLevelManifest::m_animationLists");
