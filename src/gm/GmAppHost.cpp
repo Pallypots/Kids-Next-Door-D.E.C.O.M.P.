@@ -8,35 +8,22 @@ void StopHere(const char* what) {
 }
 }
 
-// The SDK.
-void AtSdkGlobalMemoryStatus(AtSdkMemoryStatus*) { StopHere("App start-up: GlobalMemoryStatus (0x00085451, SDK) is not in this build"); }
+// The SDK's memory query is in src/gm/GmAppSdk.cpp, apart, so that a port's answer (platform/host_sdk.cpp) can replace it.
 
 // App's slots and members that are not recovered.
 void App::DeletingDestructor(unsigned int) { StopHere("App: the deleting destructor (0x0008F4D0) is not recovered"); }
 void App::Shutdown() { StopHere("App: Shutdown (0x0008ED60) is not recovered"); }
-void App::Slot11() { StopHere("App: slot 11 (0x000CBF30) is not recovered"); }
-void App::Slot15() { StopHere("App: slot 15 (0x0008C650) is not recovered"); }
-void App::Slot19() { StopHere("App: slot 19 (0x0008C6B0) is not recovered"); }
-void App::Slot23() { StopHere("App: slot 23 (0x0008C6E0) is not recovered"); }
-void App::Slot27() { StopHere("App: slot 27 (0x0008C800) is not recovered"); }
-void App::Slot31() { StopHere("App: slot 31 (0x0008C710) is not recovered"); }
-void App::Slot35() { StopHere("App: slot 35 (0x0008C740) is not recovered"); }
 void App::Present(int) { StopHere("App: slot 39 (0x0009CA90), graphics, is not recovered"); }
-void App::Slot40() { StopHere("App: slot 40 (0x0008C770) is not recovered"); }
-void App::Slot44() { StopHere("App: slot 44 (0x0008C7A0) is not recovered"); }
-void App::Slot48() { StopHere("App: slot 48 (0x000CBF30) is not recovered"); }
-void App::Slot52() { StopHere("App: slot 52 (0x0008C7D0) is not recovered"); }
-void App::Slot56() { StopHere("App: slot 56 (0x0008DB30) is not recovered"); }
+void App::GetUserInterfaceConfig(AppUserInterfaceConfig*) { StopHere("App start-up: the user interface layer's config (slot 56, 0x0008DB30) is not recovered"); }
 void App::Slot65() { StopHere("App: slot 65 (0x0010F4B0) is not recovered"); }
 void App::Slot66() { StopHere("App: slot 66 (0x0008E1F0) is not recovered"); }
-void App::StartUpUserInterface() { StopHere("App start-up: the AtAp layer chain below the atlas layer (0x0009C3C0) is not recovered"); }
 void App::SetDisplayMode() { StopHere("App start-up: the display mode (0x0008DBA0), graphics, is not recovered"); }
 void App::ReadMatrixDevice() { StopHere("App start-up: the matrix device (0x001416A0), graphics, is not recovered"); }
 void App::CreateSubsystems() { StopHere("App start-up: the subsystems (0x0008CFB0) are not recovered"); }
 
 // The parts of App with classes of their own.
 void AppDevice::Slot0() { StopHere("App device: slot 0 is not recovered"); }
-void AppDevice::Slot1() { StopHere("App device: slot 1 is not recovered"); }
+void AppDevice::Init(const void*, void*, void*) { StopHere("App start-up: the graphics layer's Init (0x000B3000) is not recovered"); }
 void AppDevice::Slot2() { StopHere("App device: slot 2 is not recovered"); }
 void AppDevice::Slot3() { StopHere("App device: slot 3 is not recovered"); }
 void AppDevice::Slot4() { StopHere("App device: slot 4 is not recovered"); }
@@ -73,6 +60,26 @@ void AppGraphics::Slot26() { StopHere("App graphics: not recovered"); }
 void AppGraphics::Slot27() { StopHere("App graphics: not recovered"); }
 void AppGraphics::Slot28() { StopHere("App graphics: not recovered"); }
 AtDatabaseLoader* AppGraphics::DatabaseLoader() { StopHere("App graphics: the database loader (slot 29) is not recovered"); return 0; }
+
+// The AtAp layers' objects above the I/O layer.
+void AppMathLayer::Slot0() { StopHere("App math layer: slot 0 is not recovered"); }
+void AppMathLayer::Init(const void*, void*, void*) { StopHere("App start-up: the math layer's Init (0x000B38D0) is not recovered"); }
+void AppDataManagementLayer::Slot0() { StopHere("App data management layer: slot 0 is not recovered"); }
+void AppDataManagementLayer::Init(const void*, void*, void*) { StopHere("App start-up: the data management layer's Init (0x000B3790) is not recovered"); }
+void AppScriptLayer::Slot0() { StopHere("App script layer: slot 0 is not recovered"); }
+void AppScriptLayer::Init(const void*, void*, void*) { StopHere("App start-up: the script layer's Init (0x0009EE80) is not recovered"); }
+void AppKinematicsLayer::Slot0() { StopHere("App kinematics layer: slot 0 is not recovered"); }
+void AppKinematicsLayer::Init(const void*, void*, void*) { StopHere("App start-up: the kinematics layer's Init (0x000B34D0) is not recovered"); }
+void AppControllerLayer::Slot0() { StopHere("App controller layer: slot 0 is not recovered"); }
+void AppControllerLayer::Init(const void*, void*, void*) { StopHere("App start-up: the controller layer's Init (0x000B2E00) is not recovered"); }
+void AppSoundLayer::Slot0() { StopHere("App sound layer: slot 0 is not recovered"); }
+void AppSoundLayer::Init(const void*, void*) { StopHere("App start-up: the sound layer's Init (0x000B2BE0) is not recovered"); }
+void AppVideoLayer::Slot0() { StopHere("App video layer: slot 0 is not recovered"); }
+void AppVideoLayer::Init(const void*, void*, void*) { StopHere("App start-up: the video layer's Init (0x000B2AA0) is not recovered"); }
+void AppSceneLayer::Slot0() { StopHere("App scene layer: slot 0 is not recovered"); }
+void AppSceneLayer::Init(const void*, void*, void*) { StopHere("App start-up: the scene layer's Init (0x000B2970) is not recovered"); }
+void AppUserInterfaceLayer::Slot0() { StopHere("App user interface layer: slot 0 is not recovered"); }
+void AppUserInterfaceLayer::Init(const void*, void*) { StopHere("App start-up: the user interface layer's Init (0x000B28B0) is not recovered"); }
 
 void AppAtlasLayer::Slot0() { StopHere("App atlas layer: slot 0 is not recovered"); }
 void AppAtlasLayer::Init(const AppAtlasConfig*, void*, void*) { StopHere("App atlas layer: Init (slot 1) is not recovered"); }

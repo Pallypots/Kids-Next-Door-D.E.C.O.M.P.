@@ -35,6 +35,7 @@ public:
     GmNameMap* m_next;         // +0x0C in its group
     class GmNameMapGroup* m_group;  // +0x10
 
+    static void SetHeap(void* heap);   // 0x00024B60 (at/atap)
     static void* s_heap;       // 0x002C632C
 };
 

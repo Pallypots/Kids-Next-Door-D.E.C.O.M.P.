@@ -88,6 +88,7 @@ public:
     AtTextTable();                            // 0x0001F6B0
     ~AtTextTable() override;                  // slot 0; 0x0001FB70 complete, 0x0002E510 the vector deleting form
     void Clear() override;                    // slot 1, 0x0001FB10
+    static void SetHeap(void* heap);          // 0x0001F550 (at/atap)
 
     AtText* StringAt(unsigned int index);     // 0x0001F680
     void AllocateAscii(unsigned int strings, unsigned int chars);    // 0x0001F6E0

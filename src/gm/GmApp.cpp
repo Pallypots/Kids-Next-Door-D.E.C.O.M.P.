@@ -130,12 +130,18 @@ void App::DestroyHeaps() {
 }
 
 void App::GetConfig07(AppLayerConfig07* config) {
-    config->m_unknown00 = 0;
-    config->m_unknown04 = 0;
+    config->m_spaces = 0;
+    config->m_spaces2 = 0;
     config->m_heap = 0;
-    for (int i = 0; i < 9; i++) {
-        config->m_unknown0C[i] = 0;
-    }
+    config->m_unknown0C = 0;
+    config->m_heap10 = 0;
+    config->m_heap14 = 0;
+    config->m_heap18 = 0;
+    config->m_heap1C = 0;
+    config->m_heap20 = 0;
+    config->m_heap24 = 0;
+    config->m_nameMapHeap = 0;
+    config->m_nameSpaceHeap = 0;
     config->m_heap = m_heaps[0];
 }
 
@@ -182,7 +188,28 @@ GmAppAudioOptions* App::AudioOptionsView() {
 // ---- construction --------------------------------------------------------------------------------------------------
 
 App::App() {
+    // The layers above the I/O layer: their seam objects, and the running flags their constructors clear (0x000B38B0 and the rest, not recovered).
+    new (m_math.m_bytes, InPlace()) AppMathLayer();
+    new (m_dataManagement.m_bytes, InPlace()) AppDataManagementLayer();
+    new (m_script.m_bytes, InPlace()) AppScriptLayer();
+    new (m_kinematics.m_bytes, InPlace()) AppKinematicsLayer();
+    new (m_controller.m_bytes, InPlace()) AppControllerLayer();
+    new (m_sound.m_bytes, InPlace()) AppSoundLayer();
+    new (m_video.m_bytes, InPlace()) AppVideoLayer();
+    new (m_scene.m_bytes, InPlace()) AppSceneLayer();
+    new (m_userInterface.m_bytes, InPlace()) AppUserInterfaceLayer();
+    m_mathRunning = 0;
+    m_dataManagementRunning = 0;
+    m_scriptRunning = 0;
+    m_kinematicsRunning = 0;
+    m_controllerRunning = 0;
+    m_soundFlags = 0;
+    m_videoRunning = 0;
+    m_sceneRunning = 0;
+    m_userInterfaceRunning = 0;
+    m_atlasRunning = 0;
     new (m_device.m_bytes, InPlace()) AppDevice();
+    m_device->m_flags = 0;
     new (m_atlas.m_bytes, InPlace()) AppAtlasLayer();
     new (m_gameState.m_bytes, InPlace()) FaAcPlayerGameStateData();
     SetDefaults();
@@ -273,7 +300,7 @@ void App::StartUpAtlas() {
     }
     StartUpUserInterface();
     GetAtlasConfig(&config);
-    m_atlas->Init(&config, m_userInterface.m_bytes, m_unknown004);
+    m_atlas->Init(&config, m_userInterface.m_bytes, &m_memory);
     AfterAtlas();
 }
 
@@ -297,7 +324,7 @@ void App::CreateMountManager() {
     }
     AtIoMountParams mount;  // ORIGINAL: +0x00, +0x08 and +0x0C are left as the stack had them
     mount.m_heap = m_heaps[0];
-    mount.m_context = m_contextArea.Get();
+    mount.m_context = &m_io.m_context;
     mount.m_owner = (AtIoMountOwner*)this;
     m_mountManager->Init(&mount);
     if (s_heap == 0) {

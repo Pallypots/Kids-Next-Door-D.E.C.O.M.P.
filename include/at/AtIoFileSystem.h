@@ -77,6 +77,39 @@ public:
     int m_unknown6B8;          // +0x6B8 an archive copies this from its device
 };
 
+class AtIoFileSystemFactory;
+
+// A block of the context's read buffer, 0x18 bytes. Its constructor and destructor clear it (0x000320A0 and 0x00032140, both folded with unrelated
+// code). Names inferred (at/atap).
+struct AtIoBuffer {
+    void Init(unsigned char* data, unsigned int size);  // 0x00032160 clears the block first if it was in use
+
+    int m_unknown00;             // +0x00
+    unsigned char* m_data;       // +0x04
+    unsigned char m_flags;       // +0x08 4 once it holds a part of the buffer
+    unsigned char m_unknown09[3];
+    int m_unknown0C;             // +0x0C
+    unsigned int m_size;         // +0x10
+    int m_unknown14;             // +0x14
+};
+
+// The context's read buffer, cut into blocks of the factory's size: at +0x08 of AtIoContext, 0x14 bytes. Names inferred (at/atap).
+struct AtIoBufferPool {
+    // 0x000FE520, folded with other five-word clears: inline, so that AtIoContext's constructor (now the same as 0x000191C0) does not need this subsystem.
+    AtIoBufferPool() : m_blocks(0), m_data(0), m_size(0), m_blockSize(0), m_count(0) {}
+    void Init(AtIoFileSystemFactory* factory, unsigned int bytes);  // 0x00025CE0 at least the factory's minimum count of blocks
+    void Clear();                                                   // 0x00025C20
+
+    AtIoBuffer* m_blocks;        // +0x00 m_count of them, the count stored in the word before, as an array new does
+    unsigned char* m_data;       // +0x04 m_size bytes
+    unsigned int m_size;         // +0x08
+    unsigned int m_blockSize;    // +0x0C
+    unsigned int m_count;        // +0x10
+
+    static void SetHeap(void* heap);   // 0x00025C10
+    static void* s_heap;               // 0x002C6340
+};
+
 // Only the part that manages file systems. The class is larger; see 0x00019220. m_stackCount is at +0x58.
 class AtIoContext {
 public:
@@ -90,10 +123,15 @@ public:
 
     AtIoContext();                                                   // Not 0x000191C0, whose member at +0x08 is not recovered.
     void AddMap(GmNameMap* map, const char* space);                  // 0x00019190 null means the default group
+    // What the I/O layer's start-up does with its config (at/atap): the stack, the namespaces, the device and the read buffer, and the context becomes
+    // the one everything uses. A second Init clears the first.
+    void Init(AtIoFileSystemFactory* factory, unsigned int stackSize, unsigned int bufferBytes, unsigned int spaces, unsigned int requests);  // 0x00019440
+    void Clear();                                                    // 0x00019220
+    static void SetHeap(void* heap);                                 // 0x00019180
 
-    void* m_device;              // +0x00 see AtIoContextDevice
-    void* m_unknown04;           // +0x04
-    char m_unknown08[0x14];      // +0x08 not recovered
+    void* m_device;              // +0x00 see AtIoContextDevice; made by the factory in Init
+    void* m_unknown04;           // +0x04 the AtIoFileSystemFactory, set by Init
+    AtIoBufferPool m_buffers;    // +0x08
     GmNameMapGroup m_defaultGroup;  // +0x1C
     GmNameSpaceDb m_spaces;      // +0x34
     unsigned int m_stackCount;   // +0x58
@@ -102,6 +140,11 @@ public:
 
     static AtIoContext* s_instance;  // 0x002C62F0
     static void (*s_openHook)();     // 0x002C62F4
+    static void* s_heap;             // 0x002C6290 the stack's heap (at/atap)
+    // Two more pointers to the context, which Init sets beside s_instance and AtIoFileRef::s_context. Their classes are not identified: users at
+    // 0x000249DF and 0x00025BE2. Clear clears the second and not the first.
+    static AtIoContext* s_context2C6328;  // 0x002C6328
+    static AtIoContext* s_context2C633C;  // 0x002C633C
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
@@ -115,6 +158,10 @@ static_assert(sizeof(AtIoPath) == 0x6A0, "AtIoPath");
 static_assert(offsetof(AtIoFileSystem, m_kind) == 0x6A4, "AtIoFileSystem::m_kind");
 static_assert(offsetof(AtIoFileSystem, m_unknown6B8) == 0x6B8, "AtIoFileSystem::m_unknown6B8");
 static_assert(sizeof(AtIoFileSystem) == 0x6BC, "AtIoFileSystem");
+static_assert(sizeof(AtIoBuffer) == 0x18, "AtIoBuffer");
+static_assert(sizeof(AtIoBufferPool) == 0x14, "AtIoBufferPool");
+static_assert(offsetof(AtIoContext, m_buffers) == 0x08, "AtIoContext::m_buffers");
+static_assert(sizeof(AtIoContext) == 0x64, "AtIoContext");
 static_assert(offsetof(AtIoContext, m_defaultGroup) == 0x1C, "AtIoContext::m_defaultGroup");
 static_assert(offsetof(AtIoContext, m_spaces) == 0x34, "AtIoContext::m_spaces");
 static_assert(offsetof(AtIoContext, m_stack) == 0x60, "AtIoContext::m_stack");
