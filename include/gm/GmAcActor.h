@@ -65,6 +65,10 @@ public:
     // of it is compiled, so this is here for that.
     static GmBaObject* NewArray(unsigned int count);
 
+    // 0x0014E590. The first element of the value named `name` under this object's record, in this object's own registry only; null without either. The second argument is not read. The registry's
+    // search is told to look in the record's parents too. See include/gm/GmAcCharacter.h: m_unknown10 is the registry and m_descriptor the record, an AtDataLink.
+    void* FindValue(const char* name, int unused);
+
     int m_unknown04;                    // +0x04
     int m_unknown08;                    // +0x08
     int m_initialized;                  // +0x0C
@@ -149,7 +153,7 @@ public:
 
     GmAcNode();                         // 0x0014CE40
     ~GmAcNode() override;               // slot 0; 0x0014E4B0 deleting; 0x0014E250 complete
-    int Slot2() override;               // slot 2, 0x0014D900 reads a data record (rUpdateDistance ...): stops with a diagnostic
+    int Slot2() override;               // slot 2, 0x0014D900 reads the record: update distances and levels, collision groups, material assignments. src/gm/GmAcRecords.cpp
     void Shutdown() override;           // slot 3, 0x0014DC60
     void Slot4() override;              // slot 4, 0x0014D2E0 reads nCollisionGroups: stops with a diagnostic
     virtual int Slot7(int unused);      // slot 7, 0x0014BAA0 Initialize, the argument unused
@@ -196,6 +200,10 @@ public:
     void SetUnknown140(int value);      // 0x0014BA90
     GmAcAnimController* Animation();    // 0x0014BAB0
     int SetupAndConfigure(void* a, Descriptor* descriptor);   // 0x0014BB00 keeps both, then slot 2, whose answer it returns
+    // 0x0014CAA0. FindValue, then the same name under the game's default record (0x003B3524), searched without parents. An empty name finds nothing. The second argument is not read.
+    void* FindValueOrDefault(const char* name, int unused);
+    void ApplyMatAssignment(int which);  // 0x0014D590 the scene: not recovered, stops with a diagnostic. 1, 2, 3 pick +0x12C, +0x130, +0x134
+    int IsVisible();                    // 0x0014C1B0 the scene and the camera: not recovered, stops with a diagnostic
 
     int m_unknown18[3];                 // +0x18
     int m_unknown24[3];                 // +0x24 not touched here
@@ -211,10 +219,10 @@ public:
     unsigned int m_flagsA4;             // +0xA4
     GmAcNodeLink* m_link;               // +0xA8
     GmAcAnimController m_animation;     // +0xAC
-    int m_unknownE0[7];                 // +0xE0
+    void* m_unknownE0[7];               // +0xE0 the record's rUpdateDistance, rCriticalUpdateDistanceSquared, rHighUpdateDistanceSquared, rMediumUpdateDistanceSquared, nMinUpdateLevel, nMaxUpdateLevel, nCulledUpdateLevel
     float m_unknownFC[3];               // +0xFC 254 when reset
     float m_unknown108[5];              // +0x108 255 when reset
-    int m_unknown11C[7];                // +0x11C
+    void* m_unknown11C[7];              // +0x11C words; the last three, +0x12C, +0x130 and +0x134, are the Normal, Blend and ZOnly material assignments slot 2 finds
     AtMatAssignment* m_matAssignment;   // +0x138
     GmAcOwned* m_unknown13C;            // +0x13C
     int m_unknown140;                   // +0x140 1 when reset
@@ -324,11 +332,13 @@ public:
     static GmEventManager* s_instance;  // 0x003B3990
 };
 
-// One of the actor's records at +0x234, 0x44 bytes: three of them unless +0x238 says otherwise. Only the words ClearRecords clears are named.
+// One of the actor's records at +0x234, 0x44 bytes: three of them unless +0x238 says otherwise. Only the words ClearRecords clears are named. A waiting list of effects, by the record's words that size it.
 struct GmAcActorRecord {
+    GmAcActorRecord();                  // 0x001480C0 every word 0 but +0x20, 1. src/gm/GmAcRecords.cpp
     int m_unknown00[2];                 // +0x00
     int m_unknown08[3];                 // +0x08
-    int m_unknown14[4];                 // +0x14
+    int m_unknown14[3];                 // +0x14
+    float m_unknown20;                  // +0x20 1 when constructed
     int m_unknown24;                    // +0x24
     int m_unknown28;                    // +0x28
     int m_unknown2C[2];                 // +0x2C
@@ -371,7 +381,7 @@ class GmAcActor : public GmAcNode {
 public:
     GmAcActor();                        // 0x0014B5D0
     ~GmAcActor() override;              // slot 0; 0x0014B8E0 deleting, for arrays too; 0x0014B680 complete
-    int Slot2() override;               // slot 2, 0x0014ACF0 reads a data record (TYPE, Flags, Mass ...): stops with a diagnostic
+    int Slot2() override;               // slot 2, 0x0014ACF0 reads the record (TYPE, Flags, Mass ...), then the node's. src/gm/GmAcRecords.cpp
     void Shutdown() override;           // slot 3, 0x0014B150
     void Slot4() override;              // slot 4, 0x0014AC20 reads Flags: stops with a diagnostic
     const char* Name() override;        // slot 6, 0x00091960 the descriptor's alias's name, unless m_unknown1FC
@@ -407,6 +417,7 @@ public:
     int HasUnknown254();                // 0x000918C0
     void ReleaseItems(int flag);        // 0x0014A630
     void ClearRecords();                // 0x00148EF0 the words of each record that it clears; the array stays
+    void AllocateRecords();             // 0x0014A7D0 once, when ConserveVfx says so: VfxWaitingListSize records, or 3; none for a size of 0. src/gm/GmAcRecords.cpp
     void ResetActor();                  // 0x001481A0 every word of the actor's own but the members with classes, and m_flags98 gains kActorReset
     void SpawnEffect(const char* name, int b, const char* c, int d, int e, int f);  // 0x0014A260 not recovered: stops with a diagnostic
     void GetNoteBank(char* out);        // 0x000A1E10 not recovered: stops with a diagnostic
@@ -418,7 +429,7 @@ public:
     static GmAcActor* CreateNode(int count);
     static void SetHeap(void* heap);    // 0x0014B940
 
-    int m_unknown14C[5];                // +0x14C
+    int m_unknown14C[5];                // +0x14C the last, +0x15C, is the record's Flags
     int m_unknown160;                   // +0x160
     GmAcTriggerTable* m_triggers;       // +0x164
     GmAcAnimationCallback m_callback;   // +0x168
@@ -430,7 +441,7 @@ public:
     GmAcNode* m_attached;               // +0x1F8 its slots 28 and 29 follow this actor's; handed to 0x0014FB40 at shutdown
     int m_unknown1FC;                   // +0x1FC
     int m_unknown200;                   // +0x200
-    int m_unknown204;                   // +0x204
+    int m_unknown204;                   // +0x204 the record's RecyclableWhileActive, when it has one
     int m_unknown208;                   // +0x208
     GmAcComponent* m_component;         // +0x20C
     unsigned int m_motionCount;         // +0x210
@@ -438,26 +449,26 @@ public:
     GmAcUnknown218* m_unknown218;       // +0x218
     GmLinkedListOf<GmAcLinkedItem*> m_items;  // +0x21C
     GmAcActorRecord* m_records;         // +0x234
-    unsigned int* m_recordCount;        // +0x238 null means 3
-    int m_unknown23C;                   // +0x23C
-    int m_unknown240[3];                // +0x240
+    unsigned int* m_recordCount;        // +0x238 null means 3; the record's VfxWaitingListSize
+    int* m_unknown23C;                  // +0x23C the record's ConserveVfx
+    void* m_unknown240[3];              // +0x240 the record's TYPE, Mass and NearRange
     float m_unknown24C;                 // +0x24C -FLT_MAX when reset
-    int m_unknown250;                   // +0x250
-    int* m_unknown254;                  // +0x254
-    int m_unknown258[3];                // +0x258
+    void* m_unknown250;                 // +0x250 the record's AllowEventsWhenDisabled
+    int* m_unknown254;                  // +0x254 the record's UpdateActorWhenDrawDisabled
+    void* m_unknown258[3];              // +0x258 the record's UpdateChartWhenDrawDisabled, RicochetShotFlags, UVAnimationDefaultVelocity
     int m_unknown264[2];                // +0x264
     int m_unknown26C;                   // +0x26C
     GmAcOwned* m_unknown270;            // +0x270
-    int* m_unknown274;                  // +0x274
-    int* m_unknown278;                  // +0x278
-    unsigned int* m_unknown27C;         // +0x27C
+    int* m_unknown274;                  // +0x274 the record's NumEmitters
+    int* m_unknown278;                  // +0x278 the record's Num2DEmitters
+    unsigned int* m_unknown27C;         // +0x27C the record's MaxDistanceOverride
     int m_unknown280;                   // +0x280 1 when reset
     GmAcActor* m_unknown284;            // +0x284
     int m_unknown288[2];                // +0x288
     float m_unknown290[3];              // +0x290 1 when reset
     int m_unknown29C;                   // +0x29C
     int m_unknown2A0[2];                // +0x2A0
-    int m_unknown2A8[5];                // +0x2A8
+    void* m_unknown2A8[5];              // +0x2A8 words; +0x2AC, +0x2B0, +0x2B4 are the record's SendOnScreenEvents, SendOOEEvents, WorldCollisionHeight
     int m_unknown2BC[3];                // +0x2BC
     int m_unknown2C8[3];                // +0x2C8
     float m_unknown2D4;                 // +0x2D4 1 when reset

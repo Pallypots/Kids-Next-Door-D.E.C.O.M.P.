@@ -1,0 +1,316 @@
+# GmAcObject, GmAcCharacter and the design record reader every actor shares. Names other than RTTI names are inferred; see include/gm/GmAcCharacter.h.
+# Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x0014E590
+size = 55
+symbol = "?FindValue@GmBaObject@@QAEPAXPBDH@Z"
+source = "src/gm/GmAcRecords.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014CAA0
+size = 89
+symbol = "?FindValueOrDefault@GmAcNode@@QAEPAXPBDH@Z"
+source = "src/gm/GmAcRecords.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014D900
+size = 613
+symbol = "?Slot2@GmAcNode@@UAEHXZ"
+source = "src/gm/GmAcRecords.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014ACF0
+size = 403
+symbol = "?Slot2@GmAcActor@@UAEHXZ"
+source = "src/gm/GmAcRecords.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014A7D0
+size = 247
+symbol = "?AllocateRecords@GmAcActor@@QAEXXZ"
+source = "src/gm/GmAcRecords.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001480C0
+size = 69
+symbol = "??0GmAcActorRecord@@QAE@XZ"
+source = "src/gm/GmAcRecords.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014EFB0
+size = 86
+symbol = "?Find@GmAcStatSet@@QAEPAUGmAcStat@@PBDH@Z"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130AB0
+size = 73
+symbol = "??0GmAcObject@@QAE@XZ"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130B00
+size = 79
+symbol = "??1GmAcObject@@UAE@XZ"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015BA20
+size = 87
+symbol = "??_EGmAcObject@@UAEPAXI@Z"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015B810
+size = 21
+symbol = "?Reset@GmAcObject@@QAEXXZ"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015B710
+size = 241
+symbol = "?Slot2@GmAcObject@@UAEHXZ"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015B870
+size = 68
+symbol = "?Shutdown@GmAcObject@@UAEXXZ"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015B6C0
+size = 27
+symbol = "?Slot10@GmAcObject@@UAEXXZ"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015B6E0
+size = 48
+symbol = "?Slot20@GmAcObject@@UAEXH@Z"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015B830
+size = 62
+symbol = "?Slot55@GmAcObject@@UAEHXZ"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0015B8C0
+size = 344
+symbol = "?Create@GmAcObject@@SAPAV1@H@Z"
+source = "src/gm/GmAcObject.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130F80
+size = 150
+symbol = "??0GmAcCharacter@@QAE@XZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00131210
+size = 79
+symbol = "??1GmAcCharacter@@UAE@XZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00131260
+size = 30
+symbol = "??_GGmAcCharacter@@UAEPAXI@Z"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00131020
+size = 301
+symbol = "?Slot2@GmAcCharacter@@UAEHXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00131150
+size = 185
+symbol = "?Shutdown@GmAcCharacter@@UAEXXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130930
+size = 28
+symbol = "?Slot4@GmAcCharacter@@UAEXXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130920
+size = 5
+symbol = "?Slot10@GmAcCharacter@@UAEXXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130950
+size = 28
+symbol = "?Slot15@GmAcCharacter@@UAEXXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130970
+size = 81
+symbol = "?Slot20@GmAcCharacter@@UAEXH@Z"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001309D0
+size = 34
+symbol = "?Slot21@GmAcCharacter@@UAEXH@Z"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130A10
+size = 28
+symbol = "?Slot32@GmAcCharacter@@UAEXXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130A30
+size = 28
+symbol = "?Slot33@GmAcCharacter@@UAEXXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130A00
+size = 5
+symbol = "?Slot49@GmAcCharacter@@UAEXPBDHH@Z"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130A50
+size = 22
+symbol = "?Slot55@GmAcCharacter@@UAEHXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130A90
+size = 18
+symbol = "?Slot59@GmAcCharacter@@UAEHXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130F50
+size = 47
+symbol = "?SetController@GmAcCharacter@@QAEXPAUGmAcCharController@@PAVGmAcActor@@@Z"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130A70
+size = 20
+symbol = "?PostEvent@GmAcCharacter@@QAEXXZ"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130B50
+size = 54
+symbol = "?GmShadowCastersAdd@@YAXPAUGmShadowCasters@@PAVGmAcCharacter@@@Z"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00130B90
+size = 88
+symbol = "?GmShadowCastersRemove@@YAXPAUGmShadowCasters@@PAVGmAcCharacter@@@Z"
+source = "src/gm/GmAcCharacter.cpp"
+subsystem = "gm/gmchar"
+evidence = "tests/oracle/oracle_gmchar.cpp; address noted beside the declaration in include/gm/GmAcCharacter.h or include/gm/GmAcActor.h"
+
+[[vtable]]
+va = 0x0028C890
+slots = 60
+symbol = "??_7GmAcObject@@6B@"
+source = "src/gm/GmAcObject.cpp"
+
+[[vtable]]
+va = 0x0028C980
+slots = 60
+symbol = "??_7GmAcCharacter@@6B@"
+source = "src/gm/GmAcCharacter.cpp"
+
+[symbols]
+"?Slot4@GmAcInteraction@@UAEXXZ" = 0x001CC9F0  # folded: empty
+"?Update@GmAcInteraction@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?s_instance@GmDesignDefaults@@2PAU1@A" = 0x003B3524
+"?AtFormat@@YAHPADPBDZZ" = 0x00125559  # the C library's sprintf
+"?AtDataRegistryFind@@YAPAVAtDataLink@@PAVAtDataRegistry@@PAV1@PBDH@Z" = 0x000679E0  # seams: a method of AtDataRegistry
+"?ApplyMatAssignment@GmAcNode@@QAEXH@Z" = 0x0014D590
+"?IsVisible@GmAcNode@@QAEHXZ" = 0x0014C1B0
+"??0GmAcInteraction@@QAE@XZ" = 0x001553C0
+"??_GGmAcInteraction@@UAEPAXI@Z" = 0x00155B50  # the deleting destructor; the seam is the complete destructor it calls
+"?Attach@GmAcInteraction@@UAEXPAVGmAcObject@@@Z" = 0x001645D0
+"?Slot2@GmAcInteraction@@UAEXXZ" = 0x00154780
+"?Slot3@GmAcInteraction@@UAEXXZ" = 0x00154BC0
