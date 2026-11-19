@@ -129,7 +129,7 @@ void AtLensFlare::Read(AtNameTableOwner* owner, AtIoTokenizer* tokenizer) {
     }
     m_owner = owner;
     m_flags = kDistanceColoring | kDepthColoring;
-    AtMaterialOwner* materials = (AtMaterialOwner*)owner->m_device;  // By its use here it has AtMaterialOwner's tables. AtSceneDevice and AtMaterialOwner may be one class.
+    AtMaterialOwner* materials = (AtMaterialOwner*)owner->m_device;  // By its use here it has AtMaterialOwner's tables. AtSceneDevice is AtMaterialOwner.
     tokenizer->ExpectLeftCurly();
     for (int token = tokenizer->Next(); token != AtIoTokenizer::kRightCurly; token = tokenizer->Next()) {
         switch (token) {

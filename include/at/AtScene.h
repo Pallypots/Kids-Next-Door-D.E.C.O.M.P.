@@ -31,47 +31,10 @@ enum AtSceneWord {
 // Codes passed to the tokenizer's Error; the meanings are inferred from where they are used.
 enum AtSceneProblem { kAtProblemIsEmpty = 0x23, kAtProblemNotFound = 0x25, kAtProblemWrongUse = 0x27 };
 
-// The graphics device, at +4 in the owner. Only its slot 17 and these tables are used here. Tables come in threes of a group and a database of name spaces, 0x3C bytes, as in AtMaterialOwner, which this may well be: its tables fit the gaps here.
-// That is not established, so they stay two names. What fills these tables is not recovered. What each holds is inferred from the word that looks in it.
-class AtSceneDevice {
-public:
-    virtual void Slot0() = 0;
-    virtual void Slot1() = 0;
-    virtual void Slot2() = 0;
-    virtual void Slot3() = 0;
-    virtual void Slot4() = 0;
-    virtual void Slot5() = 0;
-    virtual void Slot6() = 0;
-    virtual void Slot7() = 0;
-    virtual void Slot8() = 0;
-    virtual void Slot9() = 0;
-    virtual void Slot10() = 0;
-    virtual void Slot11() = 0;
-    virtual void Slot12() = 0;
-    virtual void Slot13() = 0;
-    virtual void Slot14() = 0;
-    virtual void Slot15() = 0;
-    virtual void Slot16() = 0;
-    virtual AtMatrixDevice* MatrixDevice() = 0;  // slot 17
-
-    char m_unknown04[0xEC];            // +0x04
-    GmNameMapGroup m_meshes;           // +0xF0 Mesh
-    GmNameSpaceDb m_meshSpaces;        // +0x108
-    char m_unknown12C[0x3C];           // +0x12C
-    GmNameMapGroup m_lights;           // +0x168 what a light modifier's Light word finds
-    GmNameSpaceDb m_lightSpaces;       // +0x180
-    GmNameMapGroup m_matAssignments;   // +0x1A4 MatAssignment
-    GmNameSpaceDb m_matAssignmentSpaces;  // +0x1BC
-    GmNameMapGroup m_matAnimations;    // +0x1E0 PlayMatAnimation
-    GmNameSpaceDb m_matAnimationSpaces;  // +0x1F8
-    char m_unknown21C[0xB4];           // +0x21C
-    GmNameMapGroup m_lightAnimations;  // +0x2D0 what a light modifier's LightAnimation word finds
-    GmNameSpaceDb m_lightAnimationSpaces;  // +0x2E8
-    GmNameMapGroup m_coordSysDatabases;  // +0x30C CoordSysDatabase and those like it
-    GmNameMapGroup m_mirrorDatabases;  // +0x324 CoordSysMirrorDatabase
-    GmNameMapGroup m_weightDatabases;  // +0x33C Weights, the map to look in; the name after it looks in that
-    GmNameMapGroup m_animationDatabases;  // +0x354 PlayAnimation, likewise
-};
+// The graphics device, at +4 in the owner: AtMaterialOwner (include/at/AtMaterial.h), by the name the scene code gave it first. One class: FindMesh 0x000283F0 and FindMatAssignment 0x00028430, which
+// the scene's words call on this object, are the same code as AtMaterialOwner::FindMaterial 0x00027EF0 on its neighbouring tables, all three in AtMaterialOwner's cluster; every table the scene uses
+// is one AtMaterialOwner's constructor 0x00026190 builds at that offset; and slot 17 is the same slot. See docs/worklog/2026-11-08-gfxdev.md.
+#include "at/AtMaterial.h"
 
 // A bounding sphere.
 struct AtSceneSphere {
@@ -310,8 +273,8 @@ static_assert(offsetof(AtSceneDevice, m_matAssignments) == 0x1A4, "AtSceneDevice
 static_assert(offsetof(AtSceneDevice, m_matAnimationSpaces) == 0x1F8, "AtSceneDevice::m_matAnimationSpaces");
 static_assert(offsetof(AtSceneDevice, m_lights) == 0x168, "AtSceneDevice::m_lights");
 static_assert(offsetof(AtSceneDevice, m_lightAnimationSpaces) == 0x2E8, "AtSceneDevice::m_lightAnimationSpaces");
-static_assert(offsetof(AtSceneDevice, m_coordSysDatabases) == 0x30C, "AtSceneDevice::m_coordSysDatabases");
-static_assert(offsetof(AtSceneDevice, m_animationDatabases) == 0x354, "AtSceneDevice::m_animationDatabases");
+static_assert(offsetof(AtSceneDevice, m_coordSystems) == 0x30C, "AtSceneDevice::m_coordSystems");
+static_assert(offsetof(AtSceneDevice, m_animations) == 0x354, "AtSceneDevice::m_animations");
 static_assert(sizeof(AtSceneLink) == 0x20, "AtSceneLink");
 static_assert(sizeof(AtSceneLinkItem) == 0x20, "AtSceneLinkItem");
 static_assert(sizeof(AtSceneMotionState) == 0x30, "AtSceneMotionState");

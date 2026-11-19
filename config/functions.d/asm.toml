@@ -131,7 +131,7 @@ evidence = "vftable 0x00276D48 slot 0; element size 0x48"
 [[function]]
 va = 0x000501B0
 size = 408
-symbol = "?Read@AtLightModifier@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtLightModifier@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
 source = "src/at/AtModifier.cpp"
 subsystem = "at/asm"
 evidence = "words 59 to 64 and 114; called from 0x0003ED94 with the owner's +4"

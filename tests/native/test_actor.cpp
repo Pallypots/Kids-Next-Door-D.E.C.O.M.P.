@@ -70,7 +70,7 @@ public:
     Matrices m_matrices;
     void Slot0() override {} void Slot1() override {} void Slot2() override {} void Slot3() override {} void Slot4() override {} void Slot5() override {}
     void Slot6() override {} void Slot7() override {} void Slot8() override {} void Slot9() override {} void Slot10() override {} void Slot11() override {}
-    void Slot12() override {} void Slot13() override {} void Slot14() override {} void Slot15() override {} void Slot16() override {}
+    void Slot12() override {}
     AtMatrixDevice* MatrixDevice() override { return &m_matrices; }
 };
 
@@ -159,11 +159,11 @@ struct World {
         device.m_meshes.Add(&meshes);
         device.m_matAssignments.Add(&matAssignments);
         device.m_matAnimations.Add(&matAnimations);
-        device.m_mirrorDatabases.Add(&mirrors);
-        device.m_animationDatabases.Add(&animations);
+        device.m_mirrors.Add(&mirrors);
+        device.m_animations.Add(&animations);
         owner->m_emitters.Add(&emitters);
-        device.m_weightDatabases.Add(&weights);
-        device.m_coordSysDatabases.Add(&databases);
+        device.m_weights.Add(&weights);
+        device.m_coordSystems.Add(&databases);
     }
 };
 
