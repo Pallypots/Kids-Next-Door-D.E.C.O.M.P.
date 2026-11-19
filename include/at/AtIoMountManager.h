@@ -7,18 +7,24 @@
 
 void AtFatal(const char* message, int file, int line, int unused);
 
-// Creates the file systems beneath the archives. Only two slots are known. The original's is reached at +0x318 of the owner in the Init parameters.
+class AtIoContextDevice;
+
+// Creates the file systems beneath the archives. The original's is reached at +0x318 of the owner in the Init parameters: the I/O layer's factory, the one
+// object of vftable 0x00289BC4 (at/AtApLayer.h). Slots 0-4, 7 and 8 were named by the at/atap work; their bodies here stop, for doubles that do not
+// supply them.
 class AtIoFileSystemFactory {
 public:
     enum Kind { kRoot = 6, kDevice = 7 };  // Names inferred from use: the first is pushed on the context, the second roots the list file.
 
-    virtual void Unknown0() = 0;
-    virtual void Unknown1() = 0;
-    virtual void Unknown2() = 0;
-    virtual void Unknown3() = 0;
-    virtual void Unknown4() = 0;
+    virtual AtIoContextDevice* CreateDevice(int requests) { AtFatal("AtIoFileSystemFactory: slot 0 is not supplied", requests, 0, 0); return 0; }  // slot 0
+    virtual void DestroyDevice(AtIoContextDevice* device) { AtFatal("AtIoFileSystemFactory: slot 1 is not supplied", device != 0, 0, 0); }       // slot 1
+    virtual void DeletingDestructor(unsigned int flags) { AtFatal("AtIoFileSystemFactory: slot 2 is not supplied", (int)flags, 0, 0); }         // slot 2
+    virtual void Init(const void* params) { AtFatal("AtIoFileSystemFactory: slot 3 is not supplied", params != 0, 0, 0); }                      // slot 3
+    virtual void Shutdown() { AtFatal("AtIoFileSystemFactory: slot 4 is not supplied", 0, 0, 0); }                                               // slot 4
     virtual AtIoFileSystem* Create(int kind, int a, int b) = 0;   // slot 5
     virtual void Destroy(AtIoFileSystem* fs) = 0;                 // slot 6
+    virtual unsigned int BlockSize() { AtFatal("AtIoFileSystemFactory: slot 7 is not supplied", 0, 0, 0); return 0; }                         // slot 7
+    virtual unsigned int MinimumBlocks() { AtFatal("AtIoFileSystemFactory: slot 8 is not supplied", 0, 0, 0); return 0; }                     // slot 8
 };
 
 // The first member of AtIoContext. Only slot 1 is known, and its result is passed on unread.

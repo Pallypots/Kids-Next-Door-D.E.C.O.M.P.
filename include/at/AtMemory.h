@@ -62,6 +62,7 @@ public:
 
 // The globals of the memory system together. A class of the original, at 0x001038C0 and 0x001038E0: what is called through the thunks at 0x000C93B0 and 0x000C93C0 is not established.
 struct AtMemoryGlobals {
+    AtMemoryGlobals();                  // 0x001038B0 clears m_manager and m_fatal, not m_defaultHeap (at/atap)
     AtHeapManager* m_manager;           // +0x00
     AtHeap* m_defaultHeap;              // +0x04
     void* m_fatal;                      // +0x08

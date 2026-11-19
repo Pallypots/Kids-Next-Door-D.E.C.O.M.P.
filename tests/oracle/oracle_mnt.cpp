@@ -55,11 +55,6 @@ class Factory : public AtIoFileSystemFactory {
 public:
     int side = 0;
     Device* made[2] = {};
-    void Unknown0() override {}
-    void Unknown1() override {}
-    void Unknown2() override {}
-    void Unknown3() override {}
-    void Unknown4() override {}
     AtIoFileSystem* Create(int kind, int a, int b) override {
         g_log[side].add('K', (uint32_t)kind);
         g_log[side].add('a', (uint32_t)a);

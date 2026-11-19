@@ -5,10 +5,13 @@
 // their offsets in App, with names inferred. Which of App, GmApp or an AtAp layer defines each method is not established; they are all members of App here.
 // Every name other than App, GmApp, the AtAp* names, FaAcPlayerGameStateData, GmAcPlayerGameStateData and the Fa/GmMo*Framework names (all RTTI) is inferred.
 //
-// What is not recovered is behind a seam that stops with a diagnostic (src/gm/GmAppHost.cpp): the SDK's memory query, the AtAp layer chain beneath
-// GmApp's start-up, the display, graphics, input and sound objects, the frameworks, the script system, the save-data system and the registry members that
-// belong to the .ADR work. See docs/worklog/2026-11-08-app.md for where a real build stops.
+// The AtAp layer chain beneath GmApp's start-up is recovered (at/atap: src/gm/GmAppLayers.cpp, include/at/AtApLayer.h), with the base, event, network and
+// I/O layers' objects. What is not recovered is behind a seam that stops with a diagnostic (src/gm/GmAppHost.cpp): the layer objects from math up, the
+// display, graphics, input and sound objects, the frameworks, the script system, the save-data system and the registry members that belong to the .ADR
+// work. The SDK's memory query is the platform's (platform/host_sdk.cpp) or a stop (src/gm/GmAppSdk.cpp). See docs/worklog/2026-11-08-atap.md for where a
+// real build stops.
 #pragma once
+#include "at/AtApLayer.h"
 #include "at/AtDataLibrary.h"
 #include "at/AtDataRegistry.h"
 #include "at/AtHeap.h"
@@ -26,7 +29,8 @@ struct GmHistoryLogs;
 
 // ---- what the start-up reaches and is not recovered ------------------------------------------------------------------
 
-// What the SDK's GlobalMemoryStatus fills in (0x00085451, XAPI). Only the two fields start-up reads are named.
+// What the SDK's GlobalMemoryStatus fills in (0x00085451, XAPI). Only the two fields start-up reads are named. A port answers it from the host
+// (platform/host_sdk.cpp); src/gm/GmAppSdk.cpp, which stops, is linked where nothing else answers it.
 struct AtSdkMemoryStatus {
     unsigned int m_length;          // +0x00
     unsigned int m_memoryLoad;      // +0x04
@@ -37,15 +41,16 @@ struct AtSdkMemoryStatus {
     unsigned int m_totalVirtual;    // +0x18
     unsigned int m_availableVirtual;   // +0x1C
 };
-void AtSdkGlobalMemoryStatus(AtSdkMemoryStatus* status);  // 0x00085451 SDK; stops with a diagnostic here
+void AtSdkGlobalMemoryStatus(AtSdkMemoryStatus* status);  // 0x00085451 SDK; the platform's, or a stop
 
-// The object at +0x5F7C of App, by its slots: slot 4 sets a display mode (from 0x0008DBA0), slot 6 runs one frame and returns 0 to end the loop. Its class and the
-// meaning of its flags are not known beyond what the loop tests.
+// The object at +0x5F7C of App, by its slots: the graphics layer's (at/atap). Slot 1 is its Init, from the graphics layer's start-up; slot 4 sets a display
+// mode (from 0x0008DBA0), slot 6 runs one frame and returns 0 to end the loop. Its class and the meaning of its flags are not known beyond what start-up
+// and the loop test. vftable 0x0028478C, then App's 0x0028DC48 over it (constructor 0x000B2F80).
 class AppDevice {
 public:
-    enum Flags { kNoPresent = 4, kQuit = 8 };  // names from use: 0x0009CA90 skips a call on 4, the main loop ends on 8
+    enum Flags { kRunning = 1, kNoPresent = 4, kQuit = 8 };  // names from use: start-up shuts down first on 1, 0x0009CA90 skips a call on 4, the loop ends on 8
     virtual void Slot0();
-    virtual void Slot1();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B3000 not recovered
     virtual void Slot2();
     virtual void Slot3();
     virtual void Slot4();
@@ -105,12 +110,106 @@ public:
     virtual void Init(const AppAtlasConfig* config, void* userInterface, void* app04);  // slot 1
 };
 
-// What slot 7 fills in, for a layer not identified. Only the heap is set.
-struct AppLayerConfig07 {
+// What slot 7 fills in: the event layer's config (at/atap). Only the heap is set.
+typedef AtEventConfig AppLayerConfig07;
+
+// The objects of the AtAp layers above the I/O layer, where they are not recovered (at/atap). Each layer's start-up calls slot 1, the object's Init, with the
+// layer's config, the object of the layer below and, for most, App's memory system. Each Init stops with a diagnostic (src/gm/GmAppHost.cpp). Slot 0 is a
+// deleting destructor in each. The vftables are App's own, written over the layer's by App's constructor where it has one.
+class AppMathLayer {         // +0x0384, vftable 0x002847FC, constructor 0x000B38B0
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B38D0
+};
+class AppDataManagementLayer {  // +0x0390, vftable 0x002847EC, constructor 0x000B3770
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B3790
+};
+class AppScriptLayer {       // +0x0414, vftable 0x0027D03C, constructor 0x0009EE60
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x0009EE80
+};
+class AppKinematicsLayer {   // +0x5F70, vftables 0x002847DC and 0x0028DC6C, constructor 0x000B34B0
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B34D0
+};
+class AppControllerLayer {   // +0x6020, vftables 0x0028477C and 0x0028DC38, constructor 0x000B2DE0
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B2E00
+};
+class AppSoundLayer {        // +0x60B0, vftables 0x00284768 and 0x0028DC24, constructor 0x000B2C80
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below);                // slot 1, 0x000B2BE0
+};
+class AppVideoLayer {        // +0x60CC, vftables 0x00284758 and 0x0028DC14, constructor 0x000B2A80
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B2AA0
+};
+class AppSceneLayer {        // +0x60DC, vftables 0x00284744 and 0x0028DC00, constructor 0x000B29C0
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B2970
+};
+class AppUserInterfaceLayer {  // +0x6358, vftable 0x00284724, constructor 0x000B2830
+public:
+    virtual void Slot0();
+    virtual void Init(const void* config, void* below);                // slot 1, 0x000B28B0
+};
+
+// What App's config slots fill in for those layers, as far as App sets them. Sizes are those start-up clears.
+struct AppMathConfig {               // slot 19
     int m_unknown00;
+    AtHeap* m_heap;                  // +0x04
+    int m_unknown08[2];
+};
+struct AppDataManagementConfig {     // slot 23
+    int m_unknown00;                 // 0x80
+    int m_unknown04;                 // 0x80
+    AtHeap* m_heap;                  // +0x08
+    int m_unknown0C[10];
+};
+struct AppScriptConfig {             // slot 27
+    int m_unknown00;
+    AtHeap* m_heap;                  // +0x04
+    int m_unknown08[3];
+};
+struct AppKinematicsConfig {         // slot 31
+    int m_unknown00;
+    AtHeap* m_heap;                  // +0x04
+    int m_unknown08[11];
+};
+struct AppGraphicsConfig {           // slot 35
+    int m_unknown00;                 // 1
     int m_unknown04;
-    AtHeap* m_heap;                  // +0x08 App's first heap
-    int m_unknown0C[9];
+    AtHeap* m_heap;                  // +0x08
+    int m_unknown0C[57];
+};
+struct AppControllerConfig {         // slot 40
+    int m_unknown00;                 // 1
+    AtHeap* m_heap;                  // +0x04
+    int m_unknown08[10];
+};
+struct AppSoundConfig {              // slot 44
+    AtHeap* m_heap;                  // +0x00 App's second heap
+    int m_unknown04[10];
+    int m_unknown2C;                 // 100
+};
+struct AppVideoConfig {              // slot 48, which App leaves empty
+    int m_unknown00[5];
+};
+struct AppSceneConfig {              // slot 52
+    int m_unknown00[7];
+    AtHeap* m_heap;                  // +0x1C
+    int m_unknown20[27];
+};
+struct AppUserInterfaceConfig {      // slot 56, not recovered
+    int m_unknown00[26];
 };
 
 // What App+0x6458 points to. 0x0009EA00 divides the screen size by two reals the object holds, and stores the results as floats.
@@ -313,57 +412,59 @@ public:
     virtual void DeletingDestructor(unsigned int flags);  // slot 4, 0x0008F4D0 not recovered
     virtual void StartUp();                      // slot 5, 0x00141500; GmApp's, by its address
     virtual void Shutdown();                     // slot 6, 0x0008ED60 not recovered
-    virtual void GetConfig07(AppLayerConfig07* config);  // slot 7, 0x0008C680
-    virtual void Slot08() {}                     // slots 8-10, 0x001CC9F0 empty
+    // From slot 7 on, four slots to each AtAp layer above the base, from the bottom (five to the graphics layer): its config, filled in before its start-up
+    // initialises the object, then what start-up calls after that, then two more that start-up does not call (at/atap).
+    virtual void GetConfig07(AppLayerConfig07* config);  // slot 7, 0x0008C680 the event layer's config
+    virtual void AfterEvent() {}                 // slot 8, 0x001CC9F0 empty, as are 9-10
     virtual void Slot09() {}
     virtual void Slot10() {}
-    virtual void Slot11();                       // 0x000CBF30 not recovered
-    virtual void Slot12() {}                     // slots 12-14 empty
+    virtual void GetNetworkConfig(AtNetworkConfig* config) {}  // slot 11, 0x000CBF30 empty (folded): the config stays clear
+    virtual void AfterNetwork() {}               // slot 12, empty, as are 13-14
     virtual void Slot13() {}
     virtual void Slot14() {}
-    virtual void Slot15();                       // 0x0008C650 not recovered
-    virtual void Slot16() {}
+    virtual void GetIoConfig(AtIoConfig* config);  // slot 15, 0x0008C650
+    virtual void AfterIo() {}                    // slot 16
     virtual void Slot17() {}
     virtual void Slot18() {}
-    virtual void Slot19();                       // 0x0008C6B0 not recovered
-    virtual void Slot20() {}
+    virtual void GetMathConfig(AppMathConfig* config);  // slot 19, 0x0008C6B0
+    virtual void AfterMath() {}                  // slot 20
     virtual void Slot21() {}
     virtual void Slot22() {}
-    virtual void Slot23();                       // 0x0008C6E0 not recovered
-    virtual void Slot24() {}
+    virtual void GetDataManagementConfig(AppDataManagementConfig* config);  // slot 23, 0x0008C6E0
+    virtual void AfterDataManagement() {}        // slot 24
     virtual void Slot25() {}
     virtual void Slot26() {}
-    virtual void Slot27();                       // 0x0008C800 not recovered
-    virtual void Slot28() {}
+    virtual void GetScriptConfig(AppScriptConfig* config);  // slot 27, 0x0008C800
+    virtual void AfterScript() {}                // slot 28
     virtual void Slot29() {}
     virtual void Slot30() {}
-    virtual void Slot31();                       // 0x0008C710 not recovered
-    virtual void Slot32() {}
+    virtual void GetKinematicsConfig(AppKinematicsConfig* config);  // slot 31, 0x0008C710
+    virtual void AfterKinematics() {}            // slot 32
     virtual void Slot33() {}
     virtual void Slot34() {}
-    virtual void Slot35();                       // 0x0008C740 not recovered
-    virtual void Slot36() {}
+    virtual void GetGraphicsConfig(AppGraphicsConfig* config);  // slot 35, 0x0008C740
+    virtual void AfterGraphics() {}              // slot 36
     virtual void Slot37() {}
     virtual void Slot38() {}
     virtual void Present(int unused);            // slot 39, 0x0009CA90 not recovered: unless the device's flag 4, the material owner's slot 9
-    virtual void Slot40();                       // 0x0008C770 not recovered
-    virtual void Slot41() {}
+    virtual void GetControllerConfig(AppControllerConfig* config);  // slot 40, 0x0008C770
+    virtual void AfterController() {}            // slot 41
     virtual void Slot42() {}
     virtual void Slot43() {}
-    virtual void Slot44();                       // 0x0008C7A0 not recovered
-    virtual void Slot45() {}
+    virtual void GetSoundConfig(AppSoundConfig* config);  // slot 44, 0x0008C7A0
+    virtual void AfterSound() {}                 // slot 45
     virtual void Slot46() {}
     virtual void Slot47() {}
-    virtual void Slot48();                       // 0x000CBF30 not recovered
-    virtual void Slot49() {}
+    virtual void GetVideoConfig(AppVideoConfig* config) {}  // slot 48, 0x000CBF30 empty (folded)
+    virtual void AfterVideo() {}                 // slot 49
     virtual void Slot50() {}
     virtual void Slot51() {}
-    virtual void Slot52();                       // 0x0008C7D0 not recovered
-    virtual void Slot53() {}
+    virtual void GetSceneConfig(AppSceneConfig* config);  // slot 52, 0x0008C7D0
+    virtual void AfterScene() {}                 // slot 53
     virtual void Slot54() {}
     virtual void Slot55() {}
-    virtual void Slot56();                       // 0x0008DB30 not recovered: the user interface layer's config
-    virtual void Slot57() {}
+    virtual void GetUserInterfaceConfig(AppUserInterfaceConfig* config);  // slot 56, 0x0008DB30 not recovered: needs the material owner's slot 15
+    virtual void AfterUserInterface() {}         // slot 57
     virtual void Slot58() {}
     virtual void Slot59() {}
     virtual void GetAtlasConfig(AppAtlasConfig* config);  // slot 60, 0x0008C830
@@ -380,7 +481,23 @@ public:
     void Run();                                  // 0x0008EBE0 the main loop
     void SetDefaults();                          // 0x0008DA10 the constructor's last step
     void StartUpAtlas();                         // 0x0009C280 the AtApAtlasApplication layer's start-up, inferred from the layer order
-    void StartUpUserInterface();                 // 0x0009C3C0 not recovered: the next layer, and so on down the chain
+    // The AtAp layers' start-ups, from the top (at/atap, src/gm/GmAppLayers.cpp). Each shuts App down first if its layer is running, runs the layer
+    // below's start-up, asks App for its config, initialises its object and calls App's slot for after; so the base layer is brought up first. Which
+    // AtAp class each belongs to is inferred: see include/at/AtApLayer.h.
+    void StartUpUserInterface();                 // 0x0009C3C0
+    void StartUpScene();                         // 0x0009C510
+    void StartUpVideo();                         // 0x0009C680
+    void StartUpSound();                         // 0x0009C7D0
+    void StartUpController();                    // 0x0009C940
+    void StartUpGraphics();                      // 0x0009CAB0
+    void StartUpKinematics();                    // 0x0009CC10
+    void StartUpScript();                        // 0x0009CD50
+    void StartUpDataManagement();                // 0x0009CEB0
+    void StartUpMath();                          // 0x0009CFF0
+    void StartUpIo();                            // 0x0009D140
+    void StartUpNetwork();                       // 0x0009D2A0
+    void StartUpEvent();                         // 0x0009D3D0
+    void StartUpBase();                          // 0x0009D4F0 the memory system, then App's heaps
     void SetDisplayMode();                       // 0x0008DBA0 not recovered: graphics
     void LoadDirtyDiskScreen();                  // 0x0008E240
     void CreateMountManager();                   // 0x0008CE00 also the history logs, and the stream heap
@@ -390,15 +507,39 @@ public:
     void SetFrameworkTable();                    // 0x0008DDF0
     void LoadRegistries();                       // 0x0008DEA0 Generic.ADR, then Library.ADD
 
-    char m_unknown004[0x314];                    // +0x0004 handed to the atlas layer
-    AtIoFileSystemFactory* m_fileSystemFactory;  // +0x0318 App is the mount manager's AtIoMountOwner
-    AppPart<AtIoContext, 0x5C60> m_contextArea;  // +0x031C an AtIoContext, then what follows it up to +0x5F7C
-    AppPart<AppDevice, 0x14> m_device;           // +0x5F7C
+    // The AtAp layers' objects, from the bottom (at/atap). Each layer's running flag is a word of its object.
+    AtRegionMemorySystem m_memory;               // +0x0004 the base layer's: App's has vftable 0x0028DCA0, differing only in the destructor
+    AtEventSystem m_events;                      // +0x0268
+    AtNetworkSystem m_network;                   // +0x02F0
+    AtIoSystem m_io;                             // +0x0310 its factory at +0x0318 (App is the mount manager's AtIoMountOwner), its context at +0x031C
+    AppPart<AppMathLayer, 4> m_math;             // +0x0384
+    int m_mathRunning;                           // +0x0388
+    int m_unknown038C;                           // +0x038C
+    AppPart<AppDataManagementLayer, 0x80> m_dataManagement;  // +0x0390
+    int m_dataManagementRunning;                 // +0x0410
+    AppPart<AppScriptLayer, 4> m_script;         // +0x0414
+    int m_scriptRunning;                         // +0x0418
+    char m_unknown041C[0x5B54];                  // +0x041C the rest of the script layer's object (0x000B42B0 writes its +0x5B1C); +0x0420 is handed on
+    AppPart<AppKinematicsLayer, 8> m_kinematics; // +0x5F70
+    int m_kinematicsRunning;                     // +0x5F78
+    AppPart<AppDevice, 0x14> m_device;           // +0x5F7C the graphics layer's
     AppGraphics* m_graphics;                     // +0x5F90
     int m_unknown5F94;                           // +0x5F94
     AtMaterialOwner* m_materialOwner;            // +0x5F98
-    char m_unknown5F9C[0x3BC];                   // +0x5F9C +0x60DC and +0x60E8 are handed on
-    AppPart<void*, 0xF4> m_userInterface;        // +0x6358 the user interface layer's object
+    char m_unknown5F9C[0x84];                    // +0x5F9C the rest of the graphics layer's object
+    AppPart<AppControllerLayer, 0x84> m_controller;  // +0x6020
+    int m_controllerRunning;                     // +0x60A4
+    char m_unknown60A8[8];                       // +0x60A8
+    AppPart<AppSoundLayer, 4> m_sound;           // +0x60B0
+    unsigned int m_soundFlags;                   // +0x60B4 bit 0: running
+    char m_unknown60B8[0x14];                    // +0x60B8 +0x60C4 is handed on
+    AppPart<AppVideoLayer, 4> m_video;           // +0x60CC
+    int m_videoRunning;                          // +0x60D0
+    char m_unknown60D4[8];                       // +0x60D4
+    AppPart<AppSceneLayer, 4> m_scene;           // +0x60DC
+    int m_sceneRunning;                          // +0x60E0
+    char m_unknown60E4[0x274];                   // +0x60E4 +0x60E8 is handed on
+    AppPart<AppUserInterfaceLayer, 0xF4> m_userInterface;  // +0x6358
     int m_userInterfaceRunning;                  // +0x644C
     AppPart<AppAtlasLayer, 4> m_atlas;           // +0x6450
     int m_atlasRunning;                          // +0x6454 a second Init shuts down first
@@ -466,7 +607,6 @@ extern App g_app;                                // 0x002BF310
 #define offsetof(t, m) __builtin_offsetof(t, m)
 static_assert(sizeof(AtSdkMemoryStatus) == 0x20, "AtSdkMemoryStatus");
 static_assert(sizeof(AppAtlasConfig) == 0x30, "AppAtlasConfig");
-static_assert(sizeof(AppLayerConfig07) == 0x30, "AppLayerConfig07");
 static_assert(offsetof(AppDevice, m_flags) == 0xC, "AppDevice::m_flags");
 static_assert(offsetof(GmMoFramework, m_request) == 0xC, "GmMoFramework::m_request");
 static_assert(sizeof(AppLogParams) == 0x20, "AppLogParams");
@@ -475,8 +615,32 @@ static_assert(offsetof(GmDataRoot, m_registry) == 0x2C, "GmDataRoot::m_registry"
 static_assert(offsetof(GmRegistryUser, m_root) == 0x44, "GmRegistryUser::m_root");
 static_assert(sizeof(GmSaveType) == 0x14, "GmSaveType");
 static_assert(offsetof(GmSaveTypes, m_flags) == 0x70, "GmSaveTypes::m_flags");
-static_assert(offsetof(App, m_fileSystemFactory) == 0x318, "App::m_fileSystemFactory");
-static_assert(offsetof(App, m_contextArea) == 0x31C, "App::m_contextArea");
+static_assert(offsetof(App, m_memory) == 0x004, "App::m_memory");
+static_assert(offsetof(App, m_events) == 0x268, "App::m_events");
+static_assert(offsetof(App, m_network) == 0x2F0, "App::m_network");
+static_assert(offsetof(App, m_io) == 0x310, "App::m_io");
+static_assert(offsetof(App, m_io.m_factory) == 0x318, "App::m_io.m_factory");
+static_assert(offsetof(App, m_io.m_context) == 0x31C, "App::m_io.m_context");
+static_assert(offsetof(App, m_mathRunning) == 0x388, "App::m_mathRunning");
+static_assert(offsetof(App, m_dataManagement) == 0x390, "App::m_dataManagement");
+static_assert(offsetof(App, m_dataManagementRunning) == 0x410, "App::m_dataManagementRunning");
+static_assert(offsetof(App, m_scriptRunning) == 0x418, "App::m_scriptRunning");
+static_assert(offsetof(App, m_kinematics) == 0x5F70, "App::m_kinematics");
+static_assert(offsetof(App, m_kinematicsRunning) == 0x5F78, "App::m_kinematicsRunning");
+static_assert(offsetof(App, m_controller) == 0x6020, "App::m_controller");
+static_assert(offsetof(App, m_controllerRunning) == 0x60A4, "App::m_controllerRunning");
+static_assert(offsetof(App, m_soundFlags) == 0x60B4, "App::m_soundFlags");
+static_assert(offsetof(App, m_videoRunning) == 0x60D0, "App::m_videoRunning");
+static_assert(offsetof(App, m_scene) == 0x60DC, "App::m_scene");
+static_assert(offsetof(App, m_sceneRunning) == 0x60E0, "App::m_sceneRunning");
+static_assert(offsetof(App, m_userInterfaceRunning) == 0x644C, "App::m_userInterfaceRunning");
+static_assert(sizeof(AppDataManagementConfig) == 0x34, "AppDataManagementConfig");
+static_assert(sizeof(AppKinematicsConfig) == 0x34, "AppKinematicsConfig");
+static_assert(sizeof(AppGraphicsConfig) == 0xF0, "AppGraphicsConfig");
+static_assert(sizeof(AppControllerConfig) == 0x30, "AppControllerConfig");
+static_assert(sizeof(AppSoundConfig) == 0x30, "AppSoundConfig");
+static_assert(sizeof(AppSceneConfig) == 0x8C, "AppSceneConfig");
+static_assert(sizeof(AppUserInterfaceConfig) == 0x68, "AppUserInterfaceConfig");
 static_assert(offsetof(App, m_device) == 0x5F7C, "App::m_device");
 static_assert(offsetof(App, m_graphics) == 0x5F90, "App::m_graphics");
 static_assert(offsetof(App, m_materialOwner) == 0x5F98, "App::m_materialOwner");

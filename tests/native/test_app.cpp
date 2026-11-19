@@ -17,6 +17,7 @@
 #include "gm/GmApp.h"
 #include "gm/GmLevelManager.h"
 #include "host_file_system.h"
+#include "host_io.h"
 
 static int g_fail;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
@@ -109,7 +110,7 @@ static void test_defaults_and_table() {
     AppLayerConfig07 layer;
     std::memset(&layer, 0x5A, sizeof layer);
     app->GetConfig07(&layer);
-    CHECK(layer.m_heap == app->m_heaps[0] && layer.m_unknown04 == 0 && layer.m_unknown0C[8] == 0);
+    CHECK(layer.m_heap == app->m_heaps[0] && layer.m_spaces2 == 0 && layer.m_nameSpaceHeap == 0);
     app->DestroyHeaps();
     for (int i = 0; i < 4; i++) CHECK(manager.m_heaps[i + 1].m_size == 0);  // slot 0 is the default heap
     app->m_heapConfig[2].m_size = 0;
@@ -186,6 +187,9 @@ static void mount_directory(const char* directory) {
 
 static void test_main(const char* directory) {
     if (directory) mount_directory(directory);
+    if (directory) AtHostIoSetRoot(directory);
+    GmNameMap::s_heap = 0;  // test_setters left it pointing at its stack
+    AtIoStream::s_heap = 0;
     std::string stopped;
     try {
         char name[] = "default.xbe";
@@ -195,8 +199,15 @@ static void test_main(const char* directory) {
         stopped = s.what;
     }
     std::printf("main stopped: %s\n", stopped.c_str());
-    // The first call of App::Init is GmApp's start-up, and its first call the SDK's memory query.
-    CHECK(stopped == "App start-up: GlobalMemoryStatus (0x00085451, SDK) is not in this build");
+    // The first call of App::Init is GmApp's start-up. The host answers its memory query (platform/host_sdk.cpp), and the AtAp layers come up from the
+    // base (at/atap): memory and the heaps, events, the network (off), I/O; the math layer's object is the first that is not recovered. No disc file is
+    // read before it.
+    CHECK(stopped == "App start-up: the math layer's Init (0x000B38D0) is not recovered");
+    CHECK(App::s_memoryTotal != 0);
+    CHECK(g_app.m_memory.m_started == 1 && g_app.m_heaps[0] != nullptr && g_app.m_heaps[3] != nullptr);
+    CHECK(g_app.m_io.m_below == &g_app.m_network && AtIoContext::s_instance == &g_app.m_io.m_context && g_app.m_io.m_context.m_device != nullptr);
+    std::printf("memory reported: %u total, %u overhead; I/O context: %u file systems, %u buffer blocks of %u bytes\n", App::s_memoryTotal,
+                App::s_memoryOverhead, g_app.m_io.m_context.m_stackSize, g_app.m_io.m_context.m_buffers.m_count, g_app.m_io.m_context.m_buffers.m_blockSize);
     CHECK(App::s_instance == &g_app);
     CHECK(GmAppSettings::s_argc == 1);
     CHECK(App::s_gmApp == &g_app);

@@ -1,0 +1,597 @@
+# The AtAp layers' start-ups below the atlas layer and App's configs for them (gm/atap), and the event, network and I/O layers' objects, the context's
+# Init and read buffer, the factory and the memory globals (at/atap). Names inferred; see include/at/AtApLayer.h and include/gm/GmApp.h. Sizes run to the
+# padding after each function's last instruction.
+
+[[function]]
+va = 0x0009C3C0
+size = 102
+symbol = "?StartUpUserInterface@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable 0x0027AE44 calls: 6 if App+0x644C, then 0x0009C510, slots 56 and 57; slot 1 of App+0x6358 with (config, App+0x60DC); called by 0x0009C280; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009C510
+size = 112
+symbol = "?StartUpScene@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x60E0; 0x0009C680; slots 52, 53; App+0x60DC slot 1 (config, App+0x60CC, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009C680
+size = 110
+symbol = "?StartUpVideo@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x60D0; 0x0009C7D0; slots 48, 49; App+0x60CC slot 1 (config, App+0x60B0, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009C7D0
+size = 101
+symbol = "?StartUpSound@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "bit 0 of App+0x60B4; 0x0009C940; slots 44, 45; App+0x60B0 slot 1 (config, App+0x6020); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009C940
+size = 106
+symbol = "?StartUpController@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x60A4; 0x0009CAB0; slots 40, 41; App+0x6020 slot 1 (config, App+0x5F7C, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009CAB0
+size = 122
+symbol = "?StartUpGraphics@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "bit 0 of App+0x5F88; clears 0xF0 bytes twice; 0x0009CC10; slots 35, 36; App+0x5F7C slot 1 (config, App+0x5F70, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009CC10
+size = 103
+symbol = "?StartUpKinematics@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x5F78; 0x0009CD50; slots 31, 32; App+0x5F70 slot 1 (config, App+0x414, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009CD50
+size = 104
+symbol = "?StartUpScript@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x418; 0x0009CEB0; slots 27, 28; App+0x414 slot 1 (config, App+0x390, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009CEB0
+size = 100
+symbol = "?StartUpDataManagement@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x410; 0x0009CFF0; slots 23, 24; App+0x390 slot 1 (config, App+0x384, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009CFF0
+size = 100
+symbol = "?StartUpMath@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x388; 0x0009D140; slots 19, 20; App+0x384 slot 1 (config, App+0x310, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009D140
+size = 100
+symbol = "?StartUpIo@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x314; 0x0009D2A0; slots 15, 16; App+0x310 slot 1 (config, App+0x2F0, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009D2A0
+size = 96
+symbol = "?StartUpNetwork@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x308; 0x0009D3D0; slots 11, 12; App+0x2F0 slot 1 (config, App+0x268); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009D3D0
+size = 93
+symbol = "?StartUpEvent@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+0x2EC; 0x0009D4F0; slots 7, 8; App+0x268 slot 1 (config, App+4); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0009D4F0
+size = 68
+symbol = "?StartUpBase@App@@QAEXXZ"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "flag App+8; App slot 0, App+4 slot 2 (the memory system Startup 0x000C9B90), App slot 1; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C650
+size = 47
+symbol = "?GetIoConfig@App@@UAEXPAUAtIoConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 15; 1, 6, 0x10, 0x40000, 0x10 and App+0x6494; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C6B0
+size = 33
+symbol = "?GetMathConfig@App@@UAEXPAUAppMathConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 19; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C6E0
+size = 46
+symbol = "?GetDataManagementConfig@App@@UAEXPAUAppDataManagementConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 23; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C800
+size = 36
+symbol = "?GetScriptConfig@App@@UAEXPAUAppScriptConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 27; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C710
+size = 33
+symbol = "?GetKinematicsConfig@App@@UAEXPAUAppKinematicsConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 31; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C740
+size = 39
+symbol = "?GetGraphicsConfig@App@@UAEXPAUAppGraphicsConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 35; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C770
+size = 39
+symbol = "?GetControllerConfig@App@@UAEXPAUAppControllerConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 40; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C7A0
+size = 39
+symbol = "?GetSoundConfig@App@@UAEXPAUAppSoundConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 44; App+0x6498, 100; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0008C7D0
+size = 33
+symbol = "?GetSceneConfig@App@@UAEXPAUAppSceneConfig@@@Z"
+source = "src/gm/GmAppLayers.cpp"
+subsystem = "gm/atap"
+evidence = "App vftable slot 52; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x001038B0
+size = 16
+symbol = "??0AtMemoryGlobals@@QAE@XZ"
+source = "src/at/AtApGlobals.cpp"
+subsystem = "at/atap"
+evidence = "beside Save 0x001038C0 and Restore 0x001038E0; called by 0x000C93A0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C93A0
+size = 12
+symbol = "??0AtApGlobals@@QAE@XZ"
+source = "src/at/AtApGlobals.cpp"
+subsystem = "at/atap"
+evidence = "calls 0x001038B0; a local of 0x000B3B00 and the base of 0x000C9200; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C93B0
+size = 16
+symbol = "?Save@AtApGlobals@@QAEXXZ"
+source = "src/at/AtApGlobals.cpp"
+subsystem = "at/atap"
+evidence = "jmp 0x001038C0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C93C0
+size = 5
+symbol = "?Restore@AtApGlobals@@QAEXXZ"
+source = "src/at/AtApGlobals.cpp"
+subsystem = "at/atap"
+evidence = "jmp 0x001038E0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9200
+size = 19
+symbol = "??0AtIoGlobals@@QAE@XZ"
+source = "src/at/AtApGlobals.cpp"
+subsystem = "at/atap"
+evidence = "calls 0x000C93A0, clears +0xC; a local of 0x000B3960; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9220
+size = 5
+symbol = "?Save@AtIoGlobals@@QAEXXZ"
+source = "src/at/AtApGlobals.cpp"
+subsystem = "at/atap"
+evidence = "jmp 0x000C93B0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9230
+size = 5
+symbol = "?Restore@AtIoGlobals@@QAEXXZ"
+source = "src/at/AtApGlobals.cpp"
+subsystem = "at/atap"
+evidence = "jmp 0x000C93C0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000991F0
+size = 93
+symbol = "??0AtEventNames@@QAE@XZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x0027C1B8; groups at +8 and +0x44 (0x00017F30), databases at +0x20 and +0x5C (0x00018040); called by 0x000B3BD0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00099250
+size = 78
+symbol = "?Init@AtEventNames@@QAEXII@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x000B3C50 on +4 of the event object, and by App slot 56 0x0008DB30 on App+0x26C with 16, 16; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3BD0
+size = 31
+symbol = "??0AtEventSystem@@QAE@XZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00284830; constructs App+0x268 in 0x00141830; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3C50
+size = 61
+symbol = "?Init@AtEventSystem@@UAEXPBUAtEventConfig@@PAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00284830 slot 1; called by 0x0009D3D0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3C90
+size = 204
+symbol = "?SetHeaps@AtEventSystem@@UAEXPBUAtEventConfig@@@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00284830 slot 3; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9650
+size = 10
+symbol = "?AtSetHeap3ADF9C@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x003ADF9C; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000991E0
+size = 10
+symbol = "?AtSetHeap305918@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x00305918; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9460
+size = 10
+symbol = "?AtSetHeap3ADF98@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x003ADF98; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C93F0
+size = 10
+symbol = "?AtSetHeap3ADF94@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x003ADF94; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C93E0
+size = 10
+symbol = "?AtSetHeap3ADF90@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x003ADF90; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C93D0
+size = 10
+symbol = "?AtSetHeap3ADF8C@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x003ADF8C; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00024B60
+size = 10
+symbol = "?SetHeap@GmNameMap@@SAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x002C632C, GmNameMap::s_heap; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C92E0
+size = 20
+symbol = "??0AtNetworkSystemBase@@QAE@XZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00286664; called by 0x000B3AE0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9300
+size = 63
+symbol = "?Init@AtNetworkSystemBase@@UAEXPAUAtNetworkConfig@@PAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00286664 slot 1; called by 0x000B3B00; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3AE0
+size = 18
+symbol = "??0AtNetworkSystem@@QAE@XZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00284820; constructs App+0x2F0 in 0x00141910; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3B00
+size = 45
+symbol = "?Init@AtNetworkSystem@@UAEXPAUAtNetworkConfig@@PAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00284820 slot 1; called by 0x0009D2A0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C8FC0
+size = 36
+symbol = "??0AtIoSystemBase@@QAE@XZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00286650; the context at +0xC by 0x000191C0; called by 0x000B3940; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C8FF0
+size = 35
+symbol = "?Init@AtIoSystemBase@@UAEXPAUAtIoConfig@@PAX1@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00286650 slot 1; called by 0x000B3960; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9040
+size = 289
+symbol = "?SetHeaps@AtIoSystemBase@@UAEXPBUAtIoConfig@@@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00286650 slot 4; called by 0x000B3A40; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C8F90
+size = 36
+symbol = "?InitContext@AtIoSystemBase@@QAEXPAVAtIoSystemFactory@@PBUAtIoConfig@@@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "calls 0x00019440 on +0xC; called by 0x000B3960; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3940
+size = 18
+symbol = "??0AtIoSystem@@QAE@XZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x0028480C; constructs App+0x310 in 0x00141970; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3960
+size = 181
+symbol = "?Init@AtIoSystem@@UAEXPAUAtIoConfig@@PAX1@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x0028480C slot 1; called by 0x0009D140; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000B3A40
+size = 24
+symbol = "?SetHeaps@AtIoSystem@@UAEXPBUAtIoConfig@@@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x0028480C slot 4; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9280
+size = 92
+symbol = "?AtIoSetDeviceHeaps@@YAXPBUAtIoConfig@@@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x000B3A40; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00102F40
+size = 259
+symbol = "?AtIoSetFactoryHeaps@@YAXPBUAtIoConfig@@@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x000C9280; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00080CC0
+size = 10
+symbol = "?AtSetHeap301B64@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x00301B64; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00103050
+size = 10
+symbol = "?AtSetHeap3B23EC@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x003B23EC; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00081760
+size = 10
+symbol = "?AtSetHeap301B6C@@YAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x00301B6C; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0001F550
+size = 10
+symbol = "?SetHeap@AtTextTable@@SAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x002C62F8, AtTextTable::s_heap; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00019180
+size = 10
+symbol = "?SetHeap@AtIoContext@@SAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x002C6290, which 0x00019440 allocates from; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00019440
+size = 241
+symbol = "?Init@AtIoContext@@QAEXPAVAtIoFileSystemFactory@@IIII@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x000C8F90; sets 0x002C6278, 0x002C6328, 0x002C62F0, 0x002C633C; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00019220
+size = 97
+symbol = "?Clear@AtIoContext@@QAEXXZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x00019440 when the stack exists; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00025C10
+size = 10
+symbol = "?SetHeap@AtIoBufferPool@@SAXPAX@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "stores 0x002C6340, which 0x00025CE0 allocates from; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00025CE0
+size = 395
+symbol = "?Init@AtIoBufferPool@@QAEXPAVAtIoFileSystemFactory@@I@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x00019440 on +8; factory slots 7 and 8; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00025C20
+size = 76
+symbol = "?Clear@AtIoBufferPool@@QAEXXZ"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x00019220 and 0x00025CE0; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00032160
+size = 58
+symbol = "?Init@AtIoBuffer@@QAEXPAEI@Z"
+source = "src/at/AtApLayers.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x00025CE0 for each block; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00102EC0
+size = 16
+symbol = "??0AtIoSystemFactory@@QAE@XZ"
+source = "src/at/AtIoSystemFactory.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00289BC4; the static constructor 0x00201AF0 runs it on 0x003ADF84; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00102ED0
+size = 26
+symbol = "?Init@AtIoSystemFactory@@UAEXPBX@Z"
+source = "src/at/AtIoSystemFactory.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00289BC4 slot 3; called by 0x000C9240; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00102EF0
+size = 8
+symbol = "?Shutdown@AtIoSystemFactory@@UAEXXZ"
+source = "src/at/AtIoSystemFactory.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00289BC4 slot 4; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x00102EB0
+size = 6
+symbol = "?BlockSize@AtIoSystemFactory@@UAEIXZ"
+source = "src/at/AtIoSystemFactory.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00289BC4 slot 7; 0x8000; tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x0010F4B0
+size = 6
+symbol = "?MinimumBlocks@AtIoSystemFactory@@UAEIXZ"
+source = "src/at/AtIoSystemFactory.cpp"
+subsystem = "at/atap"
+evidence = "vftable 0x00289BC4 slot 8; 4 (the code is shared by other vftables); tests/oracle/oracle_atap.cpp"
+
+[[function]]
+va = 0x000C9240
+size = 48
+symbol = "?AtIoGetFactory@@YAPAVAtIoSystemFactory@@PAUAtIoGlobals@@PBUAtIoConfig@@@Z"
+source = "src/at/AtIoSystemFactory.cpp"
+subsystem = "at/atap"
+evidence = "called by 0x000B3960; returns 0x003ADF84; tests/oracle/oracle_atap.cpp"
+
+[symbols]
+"?s_instance@AtIoSystemFactory@@2V1@A" = 0x003ADF84  # the factory; set up by 0x00201AF0
+"?s_heap@AtIoContext@@2PAXA" = 0x002C6290  # read at 0x00019481
+"?s_context2C6328@AtIoContext@@2PAV1@A" = 0x002C6328  # set at 0x0001951A
+"?s_context2C633C@AtIoContext@@2PAV1@A" = 0x002C633C  # set at 0x00019526
+"?s_heap@AtIoBufferPool@@2PAXA" = 0x002C6340  # read at 0x00025D51
+"?s_heap3ADF9C@AtEventSystem@@2PAXA" = 0x003ADF9C  # stored by 0x000C9650
+"?s_heap305918@AtEventSystem@@2PAXA" = 0x00305918  # stored by 0x000991E0
+"?s_heap3ADF98@AtEventSystem@@2PAXA" = 0x003ADF98  # stored by 0x000C9460
+"?s_heap3ADF94@AtEventSystem@@2PAXA" = 0x003ADF94  # stored by 0x000C93F0
+"?s_heap3ADF90@AtEventSystem@@2PAXA" = 0x003ADF90  # stored by 0x000C93E0
+"?s_heap3ADF8C@AtEventSystem@@2PAXA" = 0x003ADF8C  # stored by 0x000C93D0
+"?g_heap301B64@@3PAXA" = 0x00301B64  # stored by 0x00080CC0
+"?g_heap3B23EC@@3PAXA" = 0x003B23EC  # stored by 0x00103050
+"?g_heap301B6C@@3PAXA" = 0x00301B6C  # stored by 0x00081760
+"??_7AtIoSystemFactory@@6B@" = 0x00289BC4  # the factory's vftable, written by 0x00102EC0; not claimed: slots 0, 1 and 5 are the platform's
+"__ehhandler$??0AtEventNames@@QAE@XZ" = 0x001F968B  # the handler 0x000991F0 registers; compiler-made

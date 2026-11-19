@@ -89,11 +89,6 @@ public:
 class HostFactory : public AtIoFileSystemFactory {
 public:
     explicit HostFactory(const std::string& root) : m_rootDir(root) {}
-    void Unknown0() override {}
-    void Unknown1() override {}
-    void Unknown2() override {}
-    void Unknown3() override {}
-    void Unknown4() override {}
     AtIoFileSystem* Create(int, int, int) override { return new AtIoHostFileSystem(m_rootDir); }
     void Destroy(AtIoFileSystem* fs) override { delete fs; }
     std::string m_rootDir;

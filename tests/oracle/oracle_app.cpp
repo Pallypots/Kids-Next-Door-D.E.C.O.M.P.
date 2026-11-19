@@ -362,19 +362,18 @@ static const void* g_space_device_table[3];
 
 // ---- the recovered side's seams, defined here so that src/gm/GmAppHost.cpp is not linked ------------------------------------
 void App::DeletingDestructor(unsigned int) { L('BAD', 9004); }
-void App::Slot11() { L('BAD', 9011); }
-void App::Slot15() { L('BAD', 9015); }
-void App::Slot19() { L('BAD', 9019); }
-void App::Slot23() { L('BAD', 9023); }
-void App::Slot27() { L('BAD', 9027); }
-void App::Slot31() { L('BAD', 9031); }
-void App::Slot35() { L('BAD', 9035); }
+// The layers' config slots and start-ups are at/atap's, checked by its own suite (oracle_atap); src/gm/GmAppLayers.cpp is not linked here either.
+void App::GetIoConfig(AtIoConfig*) { L('BAD', 9015); }
+void App::GetMathConfig(AppMathConfig*) { L('BAD', 9019); }
+void App::GetDataManagementConfig(AppDataManagementConfig*) { L('BAD', 9023); }
+void App::GetScriptConfig(AppScriptConfig*) { L('BAD', 9027); }
+void App::GetKinematicsConfig(AppKinematicsConfig*) { L('BAD', 9031); }
+void App::GetGraphicsConfig(AppGraphicsConfig*) { L('BAD', 9035); }
 void App::Present(int a) { d_present(this, nullptr, a); }
-void App::Slot40() { L('BAD', 9040); }
-void App::Slot44() { L('BAD', 9044); }
-void App::Slot48() { L('BAD', 9048); }
-void App::Slot52() { L('BAD', 9052); }
-void App::Slot56() { L('BAD', 9056); }
+void App::GetControllerConfig(AppControllerConfig*) { L('BAD', 9040); }
+void App::GetSoundConfig(AppSoundConfig*) { L('BAD', 9044); }
+void App::GetSceneConfig(AppSceneConfig*) { L('BAD', 9052); }
+void App::GetUserInterfaceConfig(AppUserInterfaceConfig*) { L('BAD', 9056); }
 void App::Slot65() { L('BAD', 9065); }
 void App::Slot66() { L('BAD', 9066); }
 void App::StartUpUserInterface() { d_ui(this, nullptr); }
@@ -382,7 +381,19 @@ void App::SetDisplayMode() { d_display(this, nullptr); }
 void App::ReadMatrixDevice() { d_matrix(this, nullptr); }
 void App::CreateSubsystems() { d_subsystems(this, nullptr); }
 void AppDevice::Slot0() { L('BAD', 9100); }
-void AppDevice::Slot1() { L('BAD', 9101); }
+void AppDevice::Init(const void*, void*, void*) { L('BAD', 9101); }
+#define LAYER3(C, n) void C::Slot0() { L('BAD', n); } void C::Init(const void*, void*, void*) { L('BAD', n + 1); }
+#define LAYER2(C, n) void C::Slot0() { L('BAD', n); } void C::Init(const void*, void*) { L('BAD', n + 1); }
+LAYER3(AppMathLayer, 9700) LAYER3(AppDataManagementLayer, 9702) LAYER3(AppScriptLayer, 9704) LAYER3(AppKinematicsLayer, 9706) LAYER3(AppControllerLayer, 9708)
+LAYER2(AppSoundLayer, 9710) LAYER3(AppVideoLayer, 9712) LAYER3(AppSceneLayer, 9714) LAYER2(AppUserInterfaceLayer, 9716)
+#undef LAYER3
+#undef LAYER2
+// App's constructor (g_app, in src/gm/GmMain.cpp) builds the memory system, which needs these; no case reaches them.
+void* AtPlatformAllocateRegion(unsigned int) { L('BAD', 9800); return nullptr; }
+void AtPlatformFreeRegion(void*) { L('BAD', 9801); }
+void AtPlatformInitDevices() { L('BAD', 9802); }
+// And the heap stack's query, so that src/at/AtMemory.cpp (whose push and pop are doubled here) is not linked: the doubles never push.
+AtHeap* AtCurrentHeap() { return nullptr; }
 void AppDevice::Slot2() { L('BAD', 9102); }
 void AppDevice::Slot3() { L('BAD', 9103); }
 void AppDevice::Slot4() { L('BAD', 9104); }
