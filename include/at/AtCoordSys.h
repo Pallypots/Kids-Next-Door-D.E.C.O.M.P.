@@ -11,6 +11,7 @@
 class AtIoTokenizer;
 struct AtIoKeyword;
 struct AtMatrix;
+void AtFatal(const char* message, int file, int line, int unused);
 
 // The table at 0x002C60C8-0x002C625C, those members of it this code uses. All cdecl.
 struct AtMatrixTable {
@@ -78,6 +79,10 @@ public:
     virtual void Slot3() = 0;
     virtual void FreeMatrix(AtMatrix* matrix) = 0;  // slot 4
     virtual void FreePool(AtMatrixPool* pool) = 0;  // slot 5
+    // Known only from 0x00037EB0, which takes four matrices from slot 8. Not pure, so that the doubles of other work need not fill them; each stops with a diagnostic.
+    virtual void Slot6() { AtFatal("AtMatrixDevice: slot 6 is not recovered", 0, 0, 0); }
+    virtual void Slot7() { AtFatal("AtMatrixDevice: slot 7 is not recovered", 0, 0, 0); }
+    virtual AtMatrix* NewMatrix8() { AtFatal("AtMatrixDevice: slot 8, a matrix, is not recovered", 0, 0, 0); return 0; }  // slot 8
 };
 
 // Vftable 0x00274AE8.

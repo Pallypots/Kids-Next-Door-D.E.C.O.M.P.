@@ -70,7 +70,7 @@ void AppGraphics::Slot23() { StopHere("App graphics: not recovered"); }
 void AppGraphics::Slot24() { StopHere("App graphics: not recovered"); }
 void AppGraphics::Slot25() { StopHere("App graphics: not recovered"); }
 void AppGraphics::Slot26() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot27() { StopHere("App graphics: not recovered"); }
+AtCamera* AppGraphics::Camera2D() { StopHere("App graphics: the 2D camera (slot 27) is not recovered"); return 0; }
 void AppGraphics::Slot28() { StopHere("App graphics: not recovered"); }
 AtDatabaseLoader* AppGraphics::DatabaseLoader() { StopHere("App graphics: the database loader (slot 29) is not recovered"); return 0; }
 
@@ -119,7 +119,6 @@ void GmGetStringByName(char*, unsigned int, const char*) { StopHere("Game text: 
 GmClock* GmClock::s_instance;
 void GmClock::Tick(int) { StopHere("Clock: 0x00071A60 is not recovered"); }
 void AppUnknown692C::Init() { StopHere("App+0x692C: 0x00090210 is not recovered"); }
-void AppUnknown692C::Update(int) { StopHere("App+0x692C: 0x0006DEA0 is not recovered"); }
 
 // The registry members of the .ADR work that start-up calls, and their neighbours.
 GmDataRoot* GmDataRoot::s_instance;

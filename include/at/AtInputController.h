@@ -177,6 +177,8 @@ public:
     virtual unsigned int PovCount() = 0;     // slot 12
     virtual AtInputAxisHandler* AxisHandler(unsigned int index) = 0;  // slot 13
     virtual int SetUnknown1C(int value);  // slot 14, 0x000E9920 folded
+    // Slots 15 and 16 are, by the rumble's use (0x0006D92D, 0x0006D94E), setting a motor and stopping one: (motor, the intensity as a float's bits, 5000) and (motor). Empty here; a physical
+    // controller fills them. Their names and types are kept as they were, as other work's records name them.
     virtual void Slot15(int a, int b, int c);  // slot 15, 0x001ACD70 empty, folded
     virtual void Slot16(int a);     // slot 16, 0x000CBF30 empty, folded
 
@@ -194,7 +196,7 @@ public:
     unsigned int m_buttons;         // +0x04
     unsigned int m_axes;            // +0x08
     unsigned int m_povs;            // +0x0C
-    int m_unknown10;                // +0x10
+    int m_unknown10;                // +0x10 a physical controller's count of motors, by the rumble's use (0x0006D868)
     int m_unknown14;                // +0x14 1 here, and an abstract controller makes it 5
     int m_unknown18;                // +0x18 not touched
     int m_unknown1C;                // +0x1C
@@ -268,7 +270,8 @@ public:
     virtual void PhysicalSlot0() = 0;
 };
 
-// What owns the physical controllers. Only the slots binding calls are known; no such class is recovered. Used only by AtInputRouter's binding.
+// What owns the physical controllers. Only the slots binding and the controller manager call are known; no such class is recovered. Used by AtInputRouter's binding and by
+// AtControllerManager (include/at/AtControllerManager.h), whose m_device it is.
 class AtInputDevice {
 public:
     virtual void Slot0() = 0;
@@ -285,7 +288,7 @@ public:
     virtual void Slot11() = 0;
     virtual void Slot12() = 0;
     virtual void Slot13() = 0;
-    virtual void Slot14() = 0;
+    virtual int Update(int milliseconds) = 0;  // slot 14, from the controller manager's update (0x0006CE65): what that returns
     virtual void Slot15() = 0;
     virtual void Slot16() = 0;
     virtual void Slot17() = 0;

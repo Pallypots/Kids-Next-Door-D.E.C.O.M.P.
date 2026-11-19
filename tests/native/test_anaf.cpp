@@ -66,7 +66,7 @@ public:
     void Slot11() override {}
     void Slot12() override {}
     void Slot13() override {}
-    void Slot14() override {}
+    int Update(int) override { return 0; }
     void Slot15() override {}
     void Slot16() override {}
     void Slot17() override {}

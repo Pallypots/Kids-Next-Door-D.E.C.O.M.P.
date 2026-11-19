@@ -38,10 +38,10 @@ struct Text {
 class Image : public AtImage {
 public:
     int loaded = 0;
-    void Slot0() override {}
+    AtMaterial* Material() override { return nullptr; }
     void Slot1() override {}
     void Slot2() override {}
-    void Slot3() override {}
+    void DrawStrip(AtGr2DRenderer*, unsigned int, AtMaterial*, const AtRect*, const AtRect*, const AtColorRectangle*) override {}
     void OnLoaded(AtMaterialOwner*) override { loaded++; }
     void Slot14() override {}
 };
