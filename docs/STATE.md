@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-08, dev cycle 24 (fourth batch: design data registries, the library that mounts them, sound notes, level manifests). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-18, dev cycle 25 (fifth batch: scene lists, Flash levels, the concrete database loader, images and fonts, the matrix table, the game actor base, main and App init). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-08, dev cycle 24 (fourth batch: design data registries, th
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 1602 functions and 136 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
+All source is in `src/`, types in `include/`. 1984 functions and 172 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -54,6 +54,13 @@ All source is in `src/`, types in `include/`. 1602 functions and 136 vftables ar
 * `at/add` (44 functions, 4 vftables): `LIBRARY.ADD`, and the `.ADB` record databases (none on the disc; written text only). **The disc's `LIBRARY.ADD` loads its 11 real registries under the real `GENERIC.ADR`, through recovered code, compared link by link with the original.** No recovered start-up calls it yet.
 * `gm/gon` (19 functions, 1 vftable): sound notes `.GON`, which sound an animation trigger plays, into banks of the sound manager. Playing a note (0x001386D0) is not recovered.
 * `gm/manifest` (82 functions, 13 vftables): the level manifest parser 0x00142E90 and its eleven item kinds. **Real `.MNG` files stop at their first word of the base class** (0x0015D000, not recovered), including `PERSIST.MNG`, which start-up waits on.
+* `at/asd` (78 functions): scene lists `.ASD`, which name a scene's other files and load them in a fixed order, and cell graphs `.ASC`. In the oracle the seven formats other branches own are doubles that log what they are asked to load, so these runs prove lists and order, not that those files load through it. A cell graph stops at its first portal's vertex lock (graphics layer).
+* `at/afd` (68 functions): Flash UI levels `.AFD`, with sprites, frames (`.XFF`, binary) and shapes, and the binary file class it shares with the loader. No real `.AFD` loads to the end in a real build: each stops at the material owner's graphics factory (slot 18).
+* `at/loader` (65 functions): the concrete database loader (vftable 0x0028A7D0), the factory 0x000E9E90, and the binary readers `.XKA` (complete) and `.XGG`. **Every mesh and animation on the disc is binary (442 distinct `.XGG`, 565 distinct `.XKA`); the text readers run only behind a development switch the retail game never sets.** Most real `.AGD` files stop at their first texture list, because the concrete Xbox texture and material databases are not recovered.
+* `at/imgfont` (33 functions): image and font bodies, now compared for real in the agn suite. A real build reads every word and has nothing to make of them, since the concrete graphics items are not recovered.
+* `at/matrix` (40 functions): the matrix table `g_atMatrix`. On all 544 real `.AKC` files, matrices match the original bit for bit. GCC and Clang builds now use `-ffp-contract=off` (CMakeLists.txt), because contracting multiply and add changes results.
+* `gm/gmactor` (70 functions): the game actor base `GmAcActor` (vftable 0x0028E4C8, 0x2D8 bytes) and its bases, and the animation callback that plays sound notes. Players are `FaAcPlayer`, enemies `FaAcNPC`; see the worklog for the class tree. Nothing in a build creates actors yet.
+* `gm/app` (28 functions): the game's `main`, App init and the main loop (0x0008EBE0; 0x0008ED60 is Shutdown). A real x64 build stops at the first SDK call of start-up; later branches carry it further.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
@@ -128,7 +135,7 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. Integrate branches waiting: ASD, AFD, the concrete database loader, images and fonts, matrix maths, the game actor base, App init and main; then the work still running.
+1. Integrate branches waiting: Flash text and scripts, the layer start-up chain, the matrix device, the character classes; then the work still running (Xbox texture and material databases, registry lookups, graphics device, NPCs, players, manifest base, sound playback, the ActionScript interpreter, further start-up layers).
 2. Everything a loader reaches through a failed open goes to `AtFatal` 0x00011070, which stops rumble, draws an error screen and launches out. Plan closures with that cut.
 3. Whether `AtSceneDevice`, `AtMaterialOwner` and the class in 0x00027B70-0x0002AC10 are one class, and whether `AtNameTableOwner` is really the class of vftable 0x00274A78. The pool vftables 0x002770D8 and 0x002764D4 have 7 slots, not the 5 recorded.
 

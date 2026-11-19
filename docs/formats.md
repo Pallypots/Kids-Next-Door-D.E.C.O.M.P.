@@ -540,3 +540,42 @@ Two keyword tables, the original's words: the base's ten at 0x002B9350 and the l
 | InstanceSoundNodeDatabases | 0x52 | level | GOI, 0x94 | 0 |
 
 Every word reads `[ n ] {`, allocates n items with new[] from the heap at 0x003B3610 (pushed around the allocation; null is reported with -2, no memory with -4), configures each from a request on the stack (`m_path` at +4, a context at +0x84 and +0x88), then reads `}`. After the parse, AfterParse queues the base's arrays and then the level's, in a fixed order, and the time-sliced loader runs them one at a time; Finished registers the sound nodes', the sound notes' and the instance sounds' data once all have run.
+
+## Scene lists and cell graphs (.ASD, .ASC)
+
+Established from the keyword tables at 0x002B13A0 (11 words), 0x002B2120 (12), 0x002B18A8 (11) and 0x002B1910 (14), from what the readers do with them, and from the real files; not from the extensions.
+
+**.ASD: a scene's list of files.** It is to a scene what .AGD is to graphics, and its own word for its kind is the same, `DatabaseLoader`. It holds no data of its own: every word is a list of leaf names, `NodeDatabase[n] { "name" ... }`, and the loader opens each in the directory of the .ASD. So yes, it ties the other scene formats together: for one object or location it names the .ASN nodes, .ASM modifiers, .ASG space graph, .ASB bounding geometry, .ASE emitters, .ASL lens flares, .ASC cell graphs, .AIS strings, .ASI flat images, .AST flat text, and further .ASD lists. Whatever order the file gives, they load in a fixed one: strings, text, images, geometry, modifiers, emitters, lens flares, nodes, cell graphs, space graphs, then nested lists. That order matters: a space graph names modifiers and nodes, which are by then loaded. The owner is the scene owner (`AtNameTableOwner`); the game makes the list at 0x000A1608 and loads "UI\Trans\wipe" with it, and 0x001B4384 loads others.
+
+The 409 real files use six words: NodeDatabase 409, BoundingGeometryDatabase 211, EmitterDatabase 130, SpaceGraph 13, ModifierDatabase 13, CellGraphDatabase 9. Never DatabaseLoader, LensFlareDatabase, StringDatabase, ImageDrawDatabase or TextDrawDatabase. So .ASI and .AST are reached on the disc by no list, and there are none among the text files.
+
+**.ASC: cell graphs**, rooms (cells) and the portals between them, for visibility. See the head of `include/at/AtCellGraph.h` for the grammar. A portal is a polygon in a mesh's vertex array, 3 to 31 vertices; it keeps a pointer into the locked array, the centre of its vertices and an unnormalised normal from the first three; a cell is a run of portals. All 9 real files have one graph each, a Mesh, OppositeCell (never OppositeCellDifferentGraph), Vertices, ClosedByViewerDist, Cell, Portals and ExteriorPortals. What a space graph leaf's `Cell` word finds is a cell of one of these: `AtSpaceCellTable` of the .ASG work **is `AtCellGraph`**, now a typedef.
+
+**.ASI and .AST: flat images and text**, things drawn on the screen, each item a block of words with a position, scale, clip rectangle, four corner colours and an image or a font and string. See `include/at/AtDrawItem.h`.
+
+## Flash UI levels (.AFD, .AFP, .AFH, .XFF)
+
+From the code and the 20 real files, one per user interface archive (`DataXbox/UI/Xbox/*.JAM`):
+
+```
+.AFD    Loader { Level "name"  Sprite "name"  Shape "name"  Text "name"  Script "name"  [Sound "name"] }
+        Each word loads at once, in the file's order: Level is name.AFL; Sprite is Sprites\name.AFP and the frames; Shape is Shapes\name.AFH and the .AGD it names; Text and Script are not recovered.
+        Sound is read and dropped. Any other word is reported and the loop goes on.
+.AFP    NameSpace "s"  Sprites[n] { SpriteDef { index FrameRefs[n] { frame,"name" | frame; | from:to | frame*times ... } } ... }
+.AFH    NameSpace "s"  GraphicsDatabaseLoader "agd"  Shape[ n ] { Shape index { Rectangle r r r r  MeshAssignment i "name" } ... }
+.XFF    binary, little-endian. 16 bytes: "HVSIXFF\0", then 8 bytes not read here (01 00 01 00, and the file's size).
+        16 bytes: u16 frames, u16 offset of the data, u32 size of the data, u16 places, u16 actions, u16 removes, u16 sounds.
+        The data, at that offset: per frame, u32 index, u8 places, u8 actions, u8 removes, u8 sounds; then that frame's tags, removes first, then places, actions, sounds.
+        An action, remove or sound is a u32. A place is 0x18 bytes: u8, u8 (not read), u8, u8, u16, u16, u32, then three u32 offsets, counted from the end of the record, of a name, a 6-word transform and an 8-byte color
+        (4 bytes, then 4 scaled by 1/255); 0 means none. Every tag of a kind comes from one run of objects for the whole file, in file order.
+.AFF    the text form of .XFF, "Frames[n] { FrameDef ... }": read when the environment's +0x1F4 is 0. No .AFF is on the disc, and its frame reader is not recovered.
+```
+
+Which of .XFF and .AFF is read is decided by the .AFE environment (+0x1F4): the 20 .AFE files all have the word `PlatformSpecificFiles`, and all 20 archives hold an .XFF and no .AFF. The name of that field is a guess from the word.
+
+## Binary meshes and animations (.XGG, .XKA)
+
+From the readers, and checked on every real file by the oracle. Both start with 0x10 bytes that no reader looks at: on the disc, `HVSI`, the extension and a terminator, then two 16-bit numbers and a word (an `.XKA`: 2, 2; an `.XGG`: 2, 13). Then a table, then blocks, each read whole; the reader aligns to 4 after the table. Every pointer the readers make is a block's address plus a 32-bit offset from the table. Layouts: `AtXkaHeader`, `AtXkaAnimation` and `AtXggHeader` in `include/at/AtGrD3DDatabase.h`.
+
+* `.XKA`: a table of 0x78 bytes; a scratch block (names of eight bytes, records of 0x60, read onto the token file's heap and freed) and a kept block (component lists and keys, owned by the database). Records are copied word for word into `AtAnimation`, their 32-bit runs cut to 16 bits. The keys get counts and pointers into the kept block, and flag 0x400, so that clearing does not free what they did not allocate. On the disc: 565 distinct files, up to 116 animations each, none empty.
+* `.XGG`: a table of 0x58 bytes; a scratch block of records, a kept block on the mesh heap (aligned to 32 bytes at least while it is allocated), and a third block in memory for the graphics processor, absent in 42 of 442 files. Then items, kind by kind: vertex arrays (records of 0x3C), index arrays (8), streams (0x48), meshes (0x18, a name at 0x0C, with triangles, parts and material references beside). Each item reads its own part and moves the cursors on.
