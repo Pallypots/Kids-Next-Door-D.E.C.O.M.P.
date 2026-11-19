@@ -1,6 +1,7 @@
 // GmAppSettings: the reader of App.ini. Original address clusters 0x000981C0-0x000983FE, 0x00098900-0x00098F91, and 0x0006C2D0, 0x0006C2F0, 0x0015DA00.
 // Verification status per function: config/functions.toml, docs/PROGRESS.md.
 #include "gm/GmAppSettings.h"
+#include "gm/GmApp.h"
 #include "at/AtText.h"
 #include "gm/GmLevelManager.h"
 
@@ -10,8 +11,8 @@ char* strncpy(char* to, const char* from, decltype(sizeof(0)) n);
 int toupper(int c);
 }
 
-GmAppAudioOptions* GmAppAudioOptions::s_instance;
 GmHistoryLogs* GmHistoryLogs::s_instance;
+App* App::s_gmApp;  // 0x003B360C defined here, beside the settings that write through it, so a program of the settings alone does not need App
 unsigned int GmAppSettings::s_argc;
 char** GmAppSettings::s_argv;
 unsigned int GmAppSettings::s_levelUppercaseCount;
@@ -270,32 +271,32 @@ void GmAppSettings::Load() {
             m_skipLegal = 1;
             break;
         case kNoMusic:
-            GmAppAudioOptions::s_instance->m_noMusic = 1;
+            App::s_gmApp->m_noMusic = 1;
             break;
         case kNoAmbientAudio:
-            GmAppAudioOptions::s_instance->m_noAmbientAudio = 1;
+            App::s_gmApp->m_noAmbientAudio = 1;
             break;
         case kNoAudio:
-            GmAppAudioOptions::s_instance->m_noAudio = 1;
+            App::s_gmApp->m_noAudio = 1;
             break;
         case kDisplayBanks:
-            GmAppAudioOptions::s_instance->m_displayBanks = 1;
+            App::s_gmApp->m_displayBanks = 1;
             break;
         case kDisplaySounds:
-            GmAppAudioOptions::s_instance->m_displaySounds = 1;
+            App::s_gmApp->m_displaySounds = 1;
             break;
         case kDisplayMusic:
-            GmAppAudioOptions::s_instance->m_displayMusic = 1;
+            App::s_gmApp->m_displayMusic = 1;
             break;
         case kAudioMode: {
             const unsigned int value = (unsigned int)t->ExpectInt();
             if (value < 3) {
-                GmAppAudioOptions::s_instance->m_audioMode = (int)value;
+                App::s_gmApp->m_audioMode = (int)value;
             }
             break;
         }
         case kAudioTest:
-            GmAppAudioOptions::s_instance->m_audioTest = 1;
+            App::s_gmApp->m_audioTest = 1;
             break;
         case kNoDialogs:
             g_noDialogs = 1;
@@ -354,24 +355,24 @@ void GmAppSettings::ReadCommandLine() {
             m_memStats = 0;
             g_consoleMemStats = 0;
         } else if (EqualIgnoringCase(arg, "nomusic")) {
-            GmAppAudioOptions::s_instance->m_noMusic = 1;
+            App::s_gmApp->m_noMusic = 1;
         } else if (EqualIgnoringCase(arg, "noambientaudio")) {
-            GmAppAudioOptions::s_instance->m_noAmbientAudio = 1;
+            App::s_gmApp->m_noAmbientAudio = 1;
         } else if (EqualIgnoringCase(arg, "noaudio")) {
-            GmAppAudioOptions::s_instance->m_noAudio = 1;
+            App::s_gmApp->m_noAudio = 1;
         } else if (EqualIgnoringCase(arg, "displaybanks")) {
-            GmAppAudioOptions::s_instance->m_displayBanks = 1;
+            App::s_gmApp->m_displayBanks = 1;
         } else if (EqualIgnoringCase(arg, "displaysounds")) {
-            GmAppAudioOptions::s_instance->m_displaySounds = 1;
+            App::s_gmApp->m_displaySounds = 1;
         } else if (EqualIgnoringCase(arg, "displaymusic")) {
-            GmAppAudioOptions::s_instance->m_displayMusic = 1;
+            App::s_gmApp->m_displayMusic = 1;
         } else if (EqualIgnoringCase(arg, "audiomode")) {
             const int value = AtNarrowToInt(s_argv[++i]);
             if (value >= 0 && value < 3) {
-                GmAppAudioOptions::s_instance->m_audioMode = value;
+                App::s_gmApp->m_audioMode = value;
             }
         } else if (EqualIgnoringCase(arg, "audiotest")) {
-            GmAppAudioOptions::s_instance->m_audioTest = 1;
+            App::s_gmApp->m_audioTest = 1;
         } else if (EqualIgnoringCase(arg, "skipmainmenu")) {
             m_skipMainMenu = 1;
         }

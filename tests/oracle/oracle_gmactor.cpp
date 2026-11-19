@@ -216,11 +216,9 @@ static int r_vfx_has(GmVfxManager* manager, const char* name) { log_('H', C(mana
 static void __fastcall o_play(void* audio, void*, void* actor, void* note) { log_('L', C(audio)); log_('l', C(actor)); log_('l', U(note)); }
 static void r_play(GmAudioData* audio, GmAcActor* actor, GmSoundNote* note) { log_('L', C(audio)); log_('l', C(actor)); log_('l', U(note)); }
 static void __fastcall o_position(void* cs, void*, AtVector3* out) { log_('W', C(cs)); *out = g_position; }
-static void r_position(AtCoordSys* cs, AtVector3* out) { log_('W', C(cs)); *out = g_position; }
 static uint32_t fbits(float f) { uint32_t u; std::memcpy(&u, &f, 4); return u; }
 static void log_vector(const AtVector3* v) { log_('v', fbits(v->x)); log_('v', fbits(v->y)); log_('v', fbits(v->z)); }
 static void __fastcall o_place(void* cs, void*, const AtVector3* fwd, int b, const AtVector3* pos, int d) { log_('O', C(cs)); log_vector(fwd); log_('o', b); log_vector(pos); log_('o', d); }
-static void r_place(AtCoordSys* cs, const AtVector3* fwd, int b, const AtVector3* pos, int d) { log_('O', C(cs)); log_vector(fwd); log_('o', b); log_vector(pos); log_('o', d); }
 
 template <class M> static void* member_address(M m) { void* p; std::memcpy(&p, &m, sizeof p); return p; }
 __declspec(noinline) static void destroy_slot(GmAcAnimSlot* s) { s->~GmAcAnimSlot(); }
@@ -351,6 +349,14 @@ static void run_lifetimes() {
             } else {
                 both("destroy", [&] { at<Fn0>(k.dtor)(o, nullptr); }, [&] { k.host_dtor(r); });
                 same_words("destroyed", o, r, k.size);
+                if (k.ctor == 0x001598B0) {
+                    // 0x001590D0, the abstract base's deleting destructor. Only vftable 0x0028EF44 names it, and an object holds that table only once a
+                    // destructor has run (0x00159B20 stores it at 0x00159BDE, 0x001590C0 and 0x001590D0 themselves): nothing in the game deletes a controller
+                    // already destroyed, so the game never calls it. Called here through each side's base table, which the destroyed controller now holds.
+                    both("base deleting, flag 0", [&] { ((FnDel)vptr(o)[0])(o, nullptr, 0); }, [&] { ((FnDel)vptr(r)[0])(r, nullptr, 0); });
+                    same_words("base deleted, flag 0", o, r, k.size);
+                    both("base deleting, flag 1", [&] { ((FnDel)vptr(o)[0])(o, nullptr, 1); }, [&] { ((FnDel)vptr(r)[0])(r, nullptr, 1); });
+                }
                 void* o2 = fresh(k.size);
                 void* r2 = fresh(k.size);
                 at<FnP0>(k.ctor)(o2, nullptr);
@@ -1055,8 +1061,8 @@ int main(int argc, char** argv) {
         {0x0014FB40, (void*)&GmDynamicNodeRelease, (const void*)o_release_node, (const void*)r_release_node},
         {0x001616C0, (void*)&GmVfxManagerHas, (const void*)o_vfx_has, (const void*)r_vfx_has},
         {0x001386D0, (void*)&GmAudioDataPlayNote, (const void*)o_play, (const void*)r_play},
-        {0x000332B0, (void*)&AtCoordSysWorldPosition, (const void*)o_position, (const void*)r_position},
-        {0x00032EA0, (void*)&AtCoordSysPlace, (const void*)o_place, (const void*)r_place},
+        {0x000332B0, member_address(&AtCoordSys::WorldPosition), (const void*)o_position, (const void*)o_position},
+        {0x00032EA0, member_address(&AtCoordSys::Place), (const void*)o_place, (const void*)o_place},
         // The node's slots 28 and 29, which the actor's call directly: not recovered.
         {0x0014C040, nullptr, (const void*)d_node_slot28, nullptr},
         {0x0014C080, nullptr, (const void*)d_node_slot29, nullptr},
@@ -1101,6 +1107,8 @@ int main(int argc, char** argv) {
     GmAcActor::s_namedMaps.Insert("Motion", (void*)0x4D4D);
     build_audio();
     g_fill = 0xCD;
+    // Each recorded entry stops once at its first byte; report_entries() names those never reached.
+    if (entries && !arm_entries(entries)) return 2;
 
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.
     if (getenv("GMACTOR_TRACE")) std::printf("phase run_lifetimes\n");

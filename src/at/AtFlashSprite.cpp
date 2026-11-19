@@ -1,7 +1,7 @@
 // See include/at/AtFlashSprite.h.
 #include "at/AtFlashSprite.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 #include "at/AtAudioBank.h"
 #include "at/AtText.h"
 

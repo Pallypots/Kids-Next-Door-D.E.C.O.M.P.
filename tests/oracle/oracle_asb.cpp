@@ -80,7 +80,7 @@ static int g_heap_token;
 
 // ---- matrices: the same arithmetic on both sides, logged --------------------------------------------------------------
 
-struct AtMatrix { float m[16]; };
+#include "at/AtMatrix.h"  // the one definition of AtMatrix (the matrix work's), the same sixteen floats this harness declared for itself
 
 // A NaN is a NaN: see eqf.
 static uint32_t bits_of(float f) { uint32_t b; std::memcpy(&b, &f, 4); return f != f ? 0x7FC00000u : b; }

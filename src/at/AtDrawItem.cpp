@@ -3,7 +3,7 @@
 
 #include "at/AtIoFileSystem.h"
 #include "at/AtScene.h"
-#include "AtSceneArray.h"
+#include "AtArray.h"
 #include "at/AtText.h"
 
 void AtRaise(int code, int a, int b, int c);
@@ -39,28 +39,7 @@ const float kLargestReal = 3.4028234663852886e38f;  // 0x7F7FFFFF
 
 }  // namespace
 
-// ---- colours ----------------------------------------------------------------------------------------------------
-
-AtColorRectangle::AtColorRectangle() {
-    m_colors[0].SetWhite();
-    m_colors[1].SetWhite();
-    m_colors[2].SetWhite();
-    m_colors[3].SetWhite();
-}
-
-void AtColorRectangle::Read(AtIoTokenizer* tokenizer) {
-    m_colors[0].Read(tokenizer);
-    m_colors[1].Read(tokenizer);
-    m_colors[2].Read(tokenizer);
-    m_colors[3].Read(tokenizer);
-}
-
-void AtColorRectangle::SetAll(const AtColor& color) {
-    m_colors[0] = color;
-    m_colors[1] = color;
-    m_colors[2] = color;
-    m_colors[3] = color;
-}
+// The colour rectangle, AtColorRectangle, is in src/at/AtImage.cpp.
 
 // ---- the base ---------------------------------------------------------------------------------------------------
 

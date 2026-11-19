@@ -221,10 +221,7 @@ struct GmDataRoot {
     AtDataRegistryOwner* Owner() { return (AtDataRegistryOwner*)(m_ownerBase + 0x394); }
     static GmDataRoot* s_instance;   // 0x003B357C
 };
-int AtDataRegistryAttachUnder(AtDataRegistry* registry, AtDataRegistry* parent, const char* path);  // 0x00067D40 registry->m_root under the parent's node at path
-void AtDataRegistryPrepare(AtDataRegistry* registry, AtDataRegistryOwner* owner);  // 0x000675B0 with thirteen zero arguments after the owner
-void AtDataRegistrySetFileName(AtDataRegistry* registry, const char* name);  // 0x00066860
-AtDataLink* AtDataRegistryFindPath(AtDataRegistry* registry, AtDataLink* from, const char* path, int deep);  // 0x000679E0
+// AtDataRegistry's AttachUnder, Prepare, SetFileName and FindPath, which start-up calls, are declared with the class (include/at/AtDataRegistry.h); not recovered, they stop in src/gm/GmAppHost.cpp.
 // The object at 0x003B3524 keeps the library's registry and its root node; the name map at 0x002CD138 is told of the registry. Neither is recovered.
 struct GmRegistryUser {
     char m_unknown00[0x40];
@@ -392,7 +389,6 @@ public:
     void CreateFrameworks();                     // 0x0008DC70
     void SetFrameworkTable();                    // 0x0008DDF0
     void LoadRegistries();                       // 0x0008DEA0 Generic.ADR, then Library.ADD
-    GmAppAudioOptions* AudioOptionsView();       // where GmAppAudioOptions's fields fall on this App's; `this` on x86
 
     char m_unknown004[0x314];                    // +0x0004 handed to the atlas layer
     AtIoFileSystemFactory* m_fileSystemFactory;  // +0x0318 App is the mount manager's AtIoMountOwner
@@ -407,7 +403,7 @@ public:
     AppPart<AppAtlasLayer, 4> m_atlas;           // +0x6450
     int m_atlasRunning;                          // +0x6454 a second Init shuts down first
     AppViewport* m_viewport;                     // +0x6458
-    int m_noMusic;                               // +0x645C the eight words of GmAppAudioOptions
+    int m_noMusic;                               // +0x645C the eight audio words the settings write, through s_gmApp
     int m_noAmbientAudio;                        // +0x6460
     int m_noAudio;                               // +0x6464
     int m_displayBanks;                          // +0x6468
@@ -451,6 +447,7 @@ public:
     GmLevelManifest* m_manifest;                 // +0x6D48 PERSIST.MNG
 
     static App* s_instance;                      // 0x00304D58 set by Init
+    static App* s_gmApp;                         // 0x003B360C set by GmApp's start-up (0x00141500), read by 0x001414F0; the settings write its audio words
     static AtHeap* s_heap;                       // 0x00304D6C the first heap, copied by Init
     static unsigned int s_heapMemory;            // 0x00304D68 what the four heaps take: 0x2280000
     static unsigned int s_memoryTotal;           // 0x003B3BE0
@@ -486,7 +483,7 @@ static_assert(offsetof(App, m_materialOwner) == 0x5F98, "App::m_materialOwner");
 static_assert(offsetof(App, m_userInterface) == 0x6358, "App::m_userInterface");
 static_assert(offsetof(App, m_atlas) == 0x6450, "App::m_atlas");
 static_assert(offsetof(App, m_noMusic) == 0x645C, "App::m_noMusic");
-static_assert(offsetof(App, m_audioTest) == offsetof(GmAppAudioOptions, m_audioTest), "App::m_audioTest");
+static_assert(offsetof(App, m_audioTest) == 0x6478, "App::m_audioTest");
 static_assert(offsetof(App, m_initA) == 0x6488, "App::m_initA");
 static_assert(offsetof(App, m_heaps) == 0x6494, "App::m_heaps");
 static_assert(offsetof(App, m_heapConfig) == 0x64A4, "App::m_heapConfig");

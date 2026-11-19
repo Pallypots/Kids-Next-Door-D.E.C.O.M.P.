@@ -321,46 +321,6 @@ subsystem = "at/loader"
 evidence = "slot 11: +0x30, stride 0x24"
 
 [[function]]
-va = 0x000249D0
-size = 123
-symbol = "?Open@AtIoBinaryFile@@QAEHPBDH@Z"
-source = "src/at/AtGrD3DAnimation.cpp"
-subsystem = "at/loader"
-evidence = "context 0x002C6328: Top when flags & 1, else 0x00019300"
-
-[[function]]
-va = 0x00024AA0
-size = 184
-symbol = "?OpenWithExtension@AtIoBinaryFile@@QAEHPBD0H@Z"
-source = "src/at/AtGrD3DAnimation.cpp"
-subsystem = "at/loader"
-evidence = "0x80 bytes; strrchr 0x00125F40 for \\ and .; then 0x000249D0"
-
-[[function]]
-va = 0x00024A50
-size = 74
-symbol = "?ReadAll@AtIoBinaryFile@@QAEHPAXIPAI@Z"
-source = "src/at/AtGrD3DAnimation.cpp"
-subsystem = "at/loader"
-evidence = "file slot 5; on 7, request slot 2 and file slot 9"
-
-[[function]]
-va = 0x00024950
-size = 36
-symbol = "?Read@AtIoBinaryFile@@QAEHPAXIPAIPAPAVAtIoFileRequest@@@Z"
-source = "src/at/AtGrD3DAnimation.cpp"
-subsystem = "at/loader"
-evidence = "file slot 5, ret 0x10"
-
-[[function]]
-va = 0x00024980
-size = 32
-symbol = "?Release@AtIoBinaryFile@@QAEHPAVAtIoFileRequest@@@Z"
-source = "src/at/AtGrD3DAnimation.cpp"
-subsystem = "at/loader"
-evidence = "file slot 9 when there is a file; 1 or 0"
-
-[[function]]
 va = 0x000C8920
 size = 9
 symbol = "??0AtGrD3DAnimationDevice@@QAE@XZ"
@@ -597,8 +557,6 @@ subsystem = "at/loader"
 "?HasBinaryForm@AtGrD3DMeshDatabase@@UAEHXZ" = 0x001A2B40  # returns 1, folded
 "?HasBinaryForm@AtGrD3DAnimationDatabase@@UAEHXZ" = 0x001A2B40  # returns 1, folded
 "?FreeDatabase@AtGrD3DAnimationDevice@@UAEXPAVAtAnimationDatabase@@@Z" = 0x000EB9D0  # delete through slot 0, folded with the mount manager's
-"?Close@AtIoBinaryFile@@QAEXXZ" = 0x000249A0  # the same code as AtAudioBankFile's destructor, folded
-"?s_context@AtIoBinaryFile@@2PAVAtIoContext@@A" = 0x002C6328
 "?s_heap@AtGrD3DMeshDatabase@@2PAXA" = 0x002C637C
 "?s_heap@AtGrD3DAnimationDevice@@2PAXA" = 0x003ADF7C
 "?s_soundHeap@AtXboxFactory@@2PAXA" = 0x003AE370

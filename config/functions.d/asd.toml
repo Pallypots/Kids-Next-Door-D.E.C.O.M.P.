@@ -433,26 +433,10 @@ subsystem = "at/asd"
 evidence = "stores vftable 0x00277108 and jumps to 0x00057C80"
 
 [[function]]
-va = 0x00042140
-size = 46
-symbol = "?Read@AtColorRectangle@@QAEXPAVAtIoTokenizer@@@Z"
-source = "src/at/AtDrawItem.cpp"
-subsystem = "at/asd"
-evidence = "four calls of 0x00041270 on successive words; called by 0x000491D3"
-
-[[function]]
-va = 0x00042170
-size = 36
-symbol = "??0AtColorRectangle@@QAE@XZ"
-source = "src/at/AtDrawItem.cpp"
-subsystem = "at/asd"
-evidence = "four calls of 0x000412B0; called by 0x00057D4C"
-
-[[function]]
 va = 0x000421A0
 size = 98
 symbol = "?SetAll@AtColorRectangle@@QAEXABUAtColor@@@Z"
-source = "src/at/AtDrawItem.cpp"
+source = "src/at/AtImage.cpp"
 subsystem = "at/asd"
 evidence = "one colour to four; called by 0x00057CBB"
 

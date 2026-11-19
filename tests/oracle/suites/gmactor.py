@@ -6,7 +6,7 @@
 #  * The nine-byte copies in OnTrigger (nameText, bankText): never read, as in the original.
 #  * Zeroing the bank before GetNoteBank or before AtCopyName8 of the actor's bank: GetNoteBank's double writes all eight bytes, and AtCopyName8 always writes eight. In the original likewise
 #    the zeroing is dead once the real 0x000A1E10 fills it; kept because the original does it.
-#  * The no-actor branch past FindNote (position, forward, AtCoordSysPlace): FindNote with a null bank name returns null when no bank is in use and crashes when one is, on both sides, so nothing
+#  * The no-actor branch past FindNote (position, forward, AtCoordSys::Place): FindNote with a null bank name returns null when no bank is in use and crashes when one is, on both sides, so nothing
 #    after it can run. Mutants there cannot be detected by any input.
 #  * Clearing m_unknown270 after deleting it in the actor's shutdown: ResetActor clears it before the shutdown returns, and nothing between reads it.
 N = "GmAcNode.cpp"

@@ -32,18 +32,25 @@ void AtColor::SetBlack() {
     a = 255;
 }
 
-AtColorRect::AtColorRect() {
+AtColorRectangle::AtColorRectangle() {
     m_colors[0].SetWhite();
     m_colors[1].SetWhite();
     m_colors[2].SetWhite();
     m_colors[3].SetWhite();
 }
 
-void AtColorRect::Read(AtIoTokenizer* tokenizer) {
+void AtColorRectangle::Read(AtIoTokenizer* tokenizer) {
     m_colors[0].Read(tokenizer);
     m_colors[1].Read(tokenizer);
     m_colors[2].Read(tokenizer);
     m_colors[3].Read(tokenizer);
+}
+
+void AtColorRectangle::SetAll(const AtColor& color) {
+    m_colors[0] = color;
+    m_colors[1] = color;
+    m_colors[2] = color;
+    m_colors[3] = color;
 }
 
 // ---- the seam -----------------------------------------------------------------------------------------------------------

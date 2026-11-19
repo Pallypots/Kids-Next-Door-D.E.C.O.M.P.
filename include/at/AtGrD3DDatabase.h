@@ -38,22 +38,11 @@ void AtGrD3DReadMesh(AtGrD3DMesh* mesh, AtMaterialOwner* owner, AtGrD3DMeshDatab
 
 // ---- The binary file ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-// A file opened for reading in blocks. The same shape as AtIoFileRef, but its methods are a second set, which look for files through a context of their own and do not test m_fs when closing: see AtAudioBankFile, which
-// shares its constructor and destructor and is perhaps the same class.
-class AtIoBinaryFile : public AtAudioBankFile {
-public:
-    int Open(const char* path, int flags);                                   // 0x000249D0 1 when no file system holds the file
-    int OpenWithExtension(const char* path, const char* ext, int flags);     // 0x00024AA0 ext is added if the leaf has no dot
-    int ReadAll(void* out, unsigned int size, unsigned int* done);           // 0x00024A50 waits for a pending read
-    int Read(void* out, unsigned int size, unsigned int* done, AtIoFileRequest** request);  // 0x00024950
-    int Release(AtIoFileRequest* request);                                   // 0x00024980 0 when there is no file
-    void Close();                                                            // 0x000249A0 the same code as AtAudioBankFile's destructor, folded; called by name before it
-
-    static AtIoContext* s_context;  // 0x002C6328
-};
+// The binary file the readers read through is AtAudioBankFile (include/at/AtAudioBank.h): the .AFD sprites' work and this one recovered the same five
+// methods (0x000249D0, 0x00024AA0, 0x00024A50, 0x00024950, 0x00024980) as two classes, folded there. Its Read waits for a pending read; ReadPending may leave it.
 
 // Reads a whole block, waiting for it if it is pending. The original writes this out at each read, the same each time.
-int AtReadBlock(AtIoBinaryFile* file, void* out, unsigned int size);
+int AtReadBlock(AtAudioBankFile* file, void* out, unsigned int size);
 
 // ---- The owner as the graphics layer sees it ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -415,7 +404,7 @@ public:
     void Clear() override;                    // 0x001115D0
     void OnReady(AtMaterialOwner* owner) override;  // 0x00111400
     void MakeFonts2D() override;              // 0x00111420
-    AtFontItem* Font2DAt(unsigned int index) override;  // 0x001113E0
+    AtGrI2DFont* Font2DAt(unsigned int index) override;  // 0x001113E0
 
     char m_unknown28[0x14];
 };
@@ -428,7 +417,7 @@ public:
     void Clear() override;                    // 0x00111BE0
     void MakeItems() override;                // 0x00111A40
     void OnReady(AtMaterialOwner* owner) override;  // 0x00111A20
-    AtImageItem* ImageAt(unsigned int index) override;  // 0x00111A00
+    AtImage* ImageAt(unsigned int index) override;  // 0x00111A00
 
     char m_unknown28[0x0C];
 };

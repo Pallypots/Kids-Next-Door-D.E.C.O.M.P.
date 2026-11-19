@@ -435,10 +435,10 @@ void AppUnknown692C::Update(int time) { d_692c_update(this, nullptr, time); }
 GmDataRoot* GmDataRoot::s_instance;
 GmRegistryUser* GmRegistryUser::s_instance;
 GmRegistryNames* GmRegistryNames::s_instance;
-int AtDataRegistryAttachUnder(AtDataRegistry* r, AtDataRegistry* parent, const char* path) { return d_attach(r, nullptr, parent, path); }
-void AtDataRegistryPrepare(AtDataRegistry* r, AtDataRegistryOwner* owner) { d_prepare(r, nullptr, owner, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
-void AtDataRegistrySetFileName(AtDataRegistry* r, const char* name) { d_set_name(r, nullptr, name); }
-AtDataLink* AtDataRegistryFindPath(AtDataRegistry* r, AtDataLink* from, const char* path, int deep) { return (AtDataLink*)d_find_path(r, nullptr, from, path, deep); }
+int AtDataRegistry::AttachUnder(AtDataRegistry* parent, const char* path) { return d_attach(this, nullptr, parent, path); }
+void AtDataRegistry::Prepare(AtDataRegistryOwner* owner) { d_prepare(this, nullptr, owner, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
+void AtDataRegistry::SetFileName(const char* name) { d_set_name(this, nullptr, name); }
+AtDataLink* AtDataRegistry::FindPath(AtDataLink* from, const char* path, int deep) { return (AtDataLink*)d_find_path(this, nullptr, from, path, deep); }
 void GmRegistryNames::Add(AtDataRegistry* r) { d_names_add(this, nullptr, r); }
 char* g_unknown30567C;
 void AppSaveDataInit(void* part) { d_savedata(part, nullptr); }
@@ -482,7 +482,7 @@ static const std::vector<Global>& globals() {
         {"App::s_memoryTotal", 0x003B3BE0, &App::s_memoryTotal, 4, false},
         {"App::s_memoryOverhead", 0x003B3BDC, &App::s_memoryOverhead, 4, false},
         {"App::s_gameState", 0x003B3530, &App::s_gameState, 4, true},
-        {"GmAppAudioOptions::s_instance", 0x003B360C, &GmAppAudioOptions::s_instance, 4, true},
+        {"App::s_gmApp", 0x003B360C, &App::s_gmApp, 4, true},
         {"GmMoFramework::s_heap", 0x003B3600, &GmMoFramework::s_heap, 4, false},
         {"g_heap00301B70", 0x00301B70, &g_heap00301B70, 4, false},
         {"g_heap003B3614", 0x003B3614, &g_heap003B3614, 4, false},

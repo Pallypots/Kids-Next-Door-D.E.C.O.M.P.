@@ -2,7 +2,7 @@
 #include "at/AtCellGraph.h"
 
 #include "at/AtScene.h"
-#include "AtSceneArray.h"
+#include "AtArray.h"
 #include "at/AtText.h"
 
 void AtRaise(int code, int a, int b, int c);

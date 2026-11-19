@@ -5,6 +5,17 @@ project(knd_recovered LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# No contraction of a multiplication and an addition into a fused one, for the library and every test alike. The recovered arithmetic gives the original's bits
+# only when each product is rounded before it is added (docs/worklog/2026-11-08-matrix.md): GCC contracts by default for GNU C++ and ignores the standard
+# pragma, and Clang's default may contract too. MSVC does not contract by default; src/at/AtMatrix.cpp also turns it off by pragma. Set before any target.
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    if(CMAKE_CXX_COMPILER_FRONTEND_VARIANT STREQUAL "MSVC")
+        add_compile_options(/clang:-ffp-contract=off)  # clang-cl
+    else()
+        add_compile_options(-ffp-contract=off)
+    endif()
+endif()
+
 # KND_GM_SRC exists for tools/oracle_run.py, which builds deliberately broken copies as negative controls.
 set(KND_GM_SRC "${CMAKE_CURRENT_SOURCE_DIR}/src/gm" CACHE PATH "Directory of the gm sources")
 add_library(knd_gm STATIC

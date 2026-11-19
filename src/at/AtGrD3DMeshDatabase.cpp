@@ -157,18 +157,18 @@ int AtGrD3DMeshDatabase::HasBinaryForm() {
 }
 
 void AtGrD3DMeshDatabase::LoadBinaryForm(AtMaterialOwner* owner, const char* name) {
-    AtIoBinaryFile file;
+    AtAudioBankFile file;
     int status = file.OpenWithExtension(name, "XGG", 2);
     if (status != 0) {
         AtReportFileError(status, name, "XGG");
     }
     char unread[0x10];
-    status = file.ReadAll(unread, sizeof unread, 0);
+    status = file.Read(unread, sizeof unread, 0);
     if (status != 0) {
         AtReportFileError(status, name, "XGG");
     }
     AtXggHeader header;
-    status = file.ReadAll(&header, sizeof header, 0);
+    status = file.Read(&header, sizeof header, 0);
     if (status != 0) {
         AtReportFileError(status, name, "XGG");
     }

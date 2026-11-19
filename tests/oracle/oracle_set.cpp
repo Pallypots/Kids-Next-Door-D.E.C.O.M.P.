@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "gm/GmAppSettings.h"
+#include "gm/GmApp.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
 
@@ -61,7 +62,9 @@ public:
 
 static HistoryDouble g_logs[2][2];
 static GmHistoryLogs g_histories[2];
-static GmAppAudioOptions g_audio[2];
+// Room for two Apps, of which the settings write only the audio words (+0x645C to +0x6478): nothing else of App is made or read here.
+alignas(16) static unsigned char g_audioBytes[2][sizeof(App)];
+static App* const g_audio[2] = {(App*)g_audioBytes[0], (App*)g_audioBytes[1]};
 static AtIoMountManager* g_mount[2];
 
 static const uint32_t kChannels = 0x002B93A4, kPlatformBinary = 0x002B9348, kBgMusic = 0x002B9110, kMemStats = 0x002B93A0, kSkipProfile = 0x003ADA5C, kUnlockables = 0x003ADA60, kNoDialogs = 0x003B3908, kFlashHeap = 0x003B3544;
@@ -76,7 +79,7 @@ static void reset_globals() {
     *(int*)(uintptr_t)kUnlockables = g_enableAllUnlockables = 0;
     *(int*)(uintptr_t)kNoDialogs = g_noDialogs = 0;
     *(int*)(uintptr_t)kFlashHeap = g_showFlashHeapInfo = 0;
-    for (GmAppAudioOptions& a : g_audio) std::memset(&a.m_noMusic, 0, sizeof(int) * 8);
+    for (App* a : g_audio) std::memset(&a->m_noMusic, 0, sizeof(int) * 8);
 }
 
 static void same_globals(const char* what) {
@@ -89,7 +92,7 @@ static void same_globals(const char* what) {
     eq(what, *(int*)(uintptr_t)kUnlockables, g_enableAllUnlockables);
     eq(what, *(int*)(uintptr_t)kNoDialogs, g_noDialogs);
     eq(what, *(int*)(uintptr_t)kFlashHeap, g_showFlashHeapInfo);
-    eq(what, std::memcmp(&g_audio[0].m_noMusic, &g_audio[1].m_noMusic, sizeof(int) * 8), 0);
+    eq(what, std::memcmp(&g_audio[0]->m_noMusic, &g_audio[1]->m_noMusic, sizeof(int) * 8), 0);
 }
 
 static void same_settings(const char* what, const GmAppSettings* o, const GmAppSettings* r) {
@@ -505,8 +508,8 @@ int main(int argc, char** argv) {
     }
     *(GmHistoryLogs**)(uintptr_t)0x002CB0A8 = &g_histories[0];
     GmHistoryLogs::s_instance = &g_histories[1];
-    *(GmAppAudioOptions**)(uintptr_t)0x003B360C = &g_audio[0];
-    GmAppAudioOptions::s_instance = &g_audio[1];
+    *(App**)(uintptr_t)0x003B360C = g_audio[0];
+    App::s_gmApp = g_audio[1];
     AtIoMountManager* mount = (AtIoMountManager*)std::calloc(1, sizeof(AtIoMountManager));
     mount->m_device = g_fs;
     *(AtIoMountManager**)(uintptr_t)0x002E26E0 = mount;

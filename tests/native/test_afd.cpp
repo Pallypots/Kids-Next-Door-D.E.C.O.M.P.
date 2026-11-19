@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstring>
 
-#include "../../src/at/AtSceneArray.h"
+#include "../../src/at/AtArray.h"
 #include "at/AtFlashLevel.h"
 
 static int g_fail = 0;

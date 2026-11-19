@@ -18,6 +18,7 @@
 L = "AtSceneDatabaseLoader.cpp"
 C = "AtCellGraph.cpp"
 D = "AtDrawItem.cpp"
+I = "AtImage.cpp"  # the colour rectangle, folded with the image and font work's
 
 M = []
 add = M.append
@@ -235,8 +236,8 @@ add(("keywords: Portal", C, "{0x3C, \"Portal\"}", "{0x3C, \"Portals\"}"))
 add(("keywords: Cell", C, "{0x42, \"Cell\"}", "{0x42, \"Cells\"}"))
 
 # ---- flat images and text ---------------------------------------------------------------------------------------------------------------------
-add(("colours: read", D, "    m_colors[2].Read(tokenizer);\n", ""))
-add(("colours: set", D, "    m_colors[1] = color;\n", ""))
+add(("colours: read", I, "    m_colors[2].Read(tokenizer);\n", ""))
+add(("colours: set", I, "    m_colors[1] = color;\n", ""))
 add(("FindFont: space ignored", D, "        return m_fontSpaces.Find(ns, name);", "        return m_fonts.Find(name);"))
 add(("FindFont: empty space", D, "    if (ns != 0 && ns[0] != 0) {\n        return m_fontSpaces", "    if (ns != 0) {\n        return m_fontSpaces"))
 add(("FindImage: space ignored", D, "        return m_imageSpaces.Find(ns, name);", "        return m_images.Find(name);"))

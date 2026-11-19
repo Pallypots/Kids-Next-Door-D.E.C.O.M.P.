@@ -152,7 +152,7 @@ void GmAcAnimationCallback::OnTrigger(const char* trigger, int, int) {
         }
         AtVector3 position;
         if (m_node->m_coordSys != 0) {
-            AtCoordSysWorldPosition(m_node->m_coordSys, &position);
+            m_node->m_coordSys->WorldPosition(&position);
         } else {
             position.x = 0;
             position.y = 0;
@@ -162,7 +162,7 @@ void GmAcAnimationCallback::OnTrigger(const char* trigger, int, int) {
         forward.x = 0;
         forward.y = 0;
         forward.z = 1.0f;
-        AtCoordSysPlace(m_place, &forward, 0, &position, 0);
+        m_place->Place(&forward, 0, &position, 0);
     }
     if (note != 0 && note->m_gameEvent[0] != 0) {
         GmEventManager::s_instance->Post(note->m_gameEvent, note->m_gameEventArgument, m_actor);

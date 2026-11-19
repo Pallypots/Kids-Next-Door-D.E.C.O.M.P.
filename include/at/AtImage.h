@@ -12,14 +12,6 @@
 class AtImageDatabase;  // include/at/AtImageDatabase.h
 class AtFontDatabase;
 
-// Four colours, read in order: "ColorValueRectangle". 16 bytes.
-struct AtColorRect {
-    AtColorRect();                            // 0x00042170 all white
-    void Read(AtIoTokenizer* tokenizer);      // 0x00042140 four colours of four integers
-
-    AtColor m_colors[4];
-};
-
 // What slot 5 of an image hands a name to. Known only by the one slot called; not recovered. Slots stop with a diagnostic.
 class AtGrNameSink {
 public:
@@ -107,7 +99,7 @@ public:
     AtMatAssignment* m_materials;   // +0x18 the database's list
     unsigned short m_material;      // +0x1C an index into it; 0xFFFF for none. Only one past its end is reported, and it is kept all the same.
     unsigned short m_unknown1E;     // +0x1E
-    AtColorRect m_colorRectangle;   // +0x20
+    AtColorRectangle m_colorRectangle;   // +0x20
     void* m_data;                   // +0x30 pixels, freed on the heap's delete
     AtImageDatabase* m_database;    // +0x34
     AtColor m_transparent;          // +0x38 TransparentColor sets three bytes; alpha is 255 from new
@@ -162,7 +154,7 @@ public:
     float m_leading;                // +0x24
     float m_scaleX;                 // +0x28 1 from new
     float m_scaleY;                 // +0x2C 1 from new
-    AtColorRect m_colorRectangle;   // +0x30
+    AtColorRectangle m_colorRectangle;   // +0x30
 };
 
 // A 2D font. 0x64 bytes. Vftable 0x00289820; slots 4, 9, 11 and 12 are pure there, and filled by the concrete font at 0x0028B970, which also replaces slots 5 and 8.
@@ -206,7 +198,7 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(sizeof(AtColorRect) == 0x10, "AtColorRect");
+static_assert(sizeof(AtColorRectangle) == 0x10, "AtColorRectangle");
 static_assert(offsetof(AtImage, m_name) == 0x04, "AtImage::m_name");
 static_assert(offsetof(AtImage, m_flags) == 0x0C, "AtImage::m_flags");
 static_assert(offsetof(AtImage, m_materials) == 0x18, "AtImage::m_materials");

@@ -223,7 +223,7 @@ static void same_image(const AtImage* x, const AtImage* y, const void* xdb, cons
     eq("image's list set", x->m_materials != nullptr, y->m_materials != nullptr);
     eq("image's material", x->m_material, y->m_material);
     eq("image's +1E", x->m_unknown1E, y->m_unknown1E);
-    eq("image's rectangle", std::memcmp(&x->m_colorRectangle, &y->m_colorRectangle, sizeof(AtColorRect)), 0);
+    eq("image's rectangle", std::memcmp(&x->m_colorRectangle, &y->m_colorRectangle, sizeof(AtColorRectangle)), 0);
     eq("image's data", x->m_data != nullptr, y->m_data != nullptr);
     eq("image's database", x->m_database == xdb, y->m_database == ydb);
     eq("image's database set", x->m_database != nullptr, y->m_database != nullptr);
@@ -245,7 +245,7 @@ static void same_font(const AtGrI2DFont* x, const AtGrI2DFont* y, const void* xd
     same_float("font's leading", x->m_leading, y->m_leading);
     same_float("font's scale x", x->m_scaleX, y->m_scaleX);
     same_float("font's scale y", x->m_scaleY, y->m_scaleY);
-    eq("font's rectangle", std::memcmp(&x->m_colorRectangle, &y->m_colorRectangle, sizeof(AtColorRect)), 0);
+    eq("font's rectangle", std::memcmp(&x->m_colorRectangle, &y->m_colorRectangle, sizeof(AtColorRectangle)), 0);
     eq("font's material", x->m_material, y->m_material);
     eq("font's +44", std::memcmp(x->m_unknown44, y->m_unknown44, sizeof x->m_unknown44), 0);
     eq("font's format", x->m_format, y->m_format);

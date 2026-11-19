@@ -1,7 +1,7 @@
 // See include/at/AtFlashShape.h.
 #include "at/AtFlashShape.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 #include "at/AtDatabaseLoader.h"
 #include "at/AtText.h"
 

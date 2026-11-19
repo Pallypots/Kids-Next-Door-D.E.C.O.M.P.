@@ -101,7 +101,7 @@ DEFAULTS = [
 ]
 
 STARTUP = [
-    ("StartUp: audio view", A, "GmAppAudioOptions::s_instance = AudioOptionsView();", "GmAppAudioOptions::s_instance = 0;"),
+    ("StartUp: audio view", A, "    s_gmApp = this;\n", "    s_gmApp = 0;\n"),
     ("StartUp: total", A, "unsigned int total = status.m_totalPhysical;", "unsigned int total = status.m_availablePhysical;"),
     ("StartUp: available", A, "const unsigned int available = status.m_availablePhysical;", "const unsigned int available = status.m_totalPhysical;"),
     ("StartUp: reduce when", A, "if (available <= 0x4000000) {\n        total -= 0x4000000;", "if (available < 0x4000000) {\n        total -= 0x4000000;"),
@@ -198,16 +198,16 @@ PARTS = [
     ("Registries: directory", A, 'PushPath("Design\\\\Registry\\\\");', 'PushPath("Design\\\\");'),
     ("Registries: Generic found", A, 'FindFile("Generic.ADR", &fs) == 0', 'FindFile("Generic.ADR", &fs) != 0'),
     ("Registries: Generic loaded", A, 'm_genericRegistry.Load(GmDataRoot::s_instance->Owner(), "Generic", 0, 0, 0);', 'm_genericRegistry.Load(GmDataRoot::s_instance->Owner(), "Generic", 1, 0, 0);'),
-    ("Registries: Generic attached", A, "AtDataRegistryAttachUnder(&m_genericRegistry, &GmDataRoot::s_instance->m_registry, 0);", "AtDataRegistryAttachUnder(&m_genericRegistry, &m_genericRegistry, 0);"),
+    ("Registries: Generic attached", A, "m_genericRegistry.AttachUnder(&GmDataRoot::s_instance->m_registry, 0);", "m_genericRegistry.AttachUnder(&m_genericRegistry, 0);"),
     ("Registries: first pop", A, "    AtIoMountManager::s_instance->m_context->PopPath();\n    s_instance->m_gameState", "    s_instance->m_gameState"),
     ("Registries: game state", A, "s_instance->m_gameState->SetRegistry(&m_genericRegistry);", "s_instance->m_gameState->SetRegistry(&m_registry6B54);"),
     ("Registries: second directory", A, 'PushPath("");', 'PushPath("x");'),
     ("Registries: Library found", A, 'FindFile("Library.ADD", &fs) == 0', 'FindFile("Library.ADD", &fs) != 0'),
-    ("Registries: prepare", A, "        AtDataRegistryPrepare(&GmDataRoot::s_instance->m_registry, GmDataRoot::s_instance->Owner());\n", ""),
-    ("Registries: file name", A, '        AtDataRegistrySetFileName(&GmDataRoot::s_instance->m_registry, "Library");\n', ""),
-    ("Registries: library parent", A, 'm_library.Load((AtDataOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, &GmDataRoot::s_instance->m_registry);', 'm_library.Load((AtDataOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, 0);'),
+    ("Registries: prepare", A, "        GmDataRoot::s_instance->m_registry.Prepare(GmDataRoot::s_instance->Owner());\n", ""),
+    ("Registries: file name", A, '        GmDataRoot::s_instance->m_registry.SetFileName("Library");\n', ""),
+    ("Registries: library parent", A, 'm_library.Load((AtDataRegistryOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, &GmDataRoot::s_instance->m_registry);', 'm_library.Load((AtDataRegistryOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, 0);'),
     ("Registries: user's registry", A, "        user->m_registry = root;\n", ""),
-    ("Registries: user's root", A, 'user->m_root = AtDataRegistryFindPath(root, &root->m_root, "", 0);', 'user->m_root = AtDataRegistryFindPath(root, &root->m_root, "", 1);'),
+    ("Registries: user's root", A, 'user->m_root = root->FindPath(&root->m_root, "", 0);', 'user->m_root = root->FindPath(&root->m_root, "", 1);'),
     ("Registries: names", A, "        GmRegistryNames::s_instance->Add(&GmDataRoot::s_instance->m_registry);\n", ""),
     ("Registries: last pop", A, "    }\n    AtIoMountManager::s_instance->m_context->PopPath();\n}", "    }\n}"),
 ]

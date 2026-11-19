@@ -125,10 +125,10 @@ void AppUnknown692C::Update(int) { StopHere("App+0x692C: 0x0006DEA0 is not recov
 GmDataRoot* GmDataRoot::s_instance;
 GmRegistryUser* GmRegistryUser::s_instance;
 GmRegistryNames* GmRegistryNames::s_instance;
-int AtDataRegistryAttachUnder(AtDataRegistry*, AtDataRegistry*, const char*) { StopHere("AtDataRegistry: 0x00067D40 is not recovered"); return 0; }
-void AtDataRegistryPrepare(AtDataRegistry*, AtDataRegistryOwner*) { StopHere("AtDataRegistry: 0x000675B0 is not recovered"); }
-void AtDataRegistrySetFileName(AtDataRegistry*, const char*) { StopHere("AtDataRegistry: 0x00066860 is not recovered"); }
-AtDataLink* AtDataRegistryFindPath(AtDataRegistry*, AtDataLink*, const char*, int) { StopHere("AtDataRegistry: 0x000679E0 is not recovered"); return 0; }
+int AtDataRegistry::AttachUnder(AtDataRegistry*, const char*) { StopHere("AtDataRegistry: 0x00067D40 is not recovered"); return 0; }
+void AtDataRegistry::Prepare(AtDataRegistryOwner*) { StopHere("AtDataRegistry: 0x000675B0 is not recovered"); }
+void AtDataRegistry::SetFileName(const char*) { StopHere("AtDataRegistry: 0x00066860 is not recovered"); }
+AtDataLink* AtDataRegistry::FindPath(AtDataLink*, const char*, int) { StopHere("AtDataRegistry: 0x000679E0 is not recovered"); return 0; }
 void GmRegistryNames::Add(AtDataRegistry*) { StopHere("Registry names: 0x00071F20 is not recovered"); }
 
 // Save data, sound, and the rest.

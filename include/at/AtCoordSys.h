@@ -108,6 +108,9 @@ public:
     void SetRotation(const AtQuaternion* rotation);  // 0x000272E0
     void SetPosition(const AtVector3* position);     // 0x00027310
     void SetLookAt(const AtVector3* direction, const AtVector3* up);  // 0x00049960
+    // Called by the game actor's animation callback (src/gm/GmAcActor.cpp) and not recovered: each stops with a diagnostic, in src/gm/GmAcSeams.cpp. Names inferred.
+    void WorldPosition(AtVector3* out);        // 0x000332B0
+    void Place(const AtVector3* forward, int b, const AtVector3* position, int d);  // 0x00032EA0
     // 0x000324E0 for a file's word that either kind takes: Parent, or LocalDrawingTransform. Anything else is reported. The parent must have come earlier in the file; if it has not, the report is followed by
     // a call through null, as it is not in the game, where a report does not return.
     void ReadWord(AtIoTokenizer* tokenizer, AtCoordSysDatabase* database, int token);

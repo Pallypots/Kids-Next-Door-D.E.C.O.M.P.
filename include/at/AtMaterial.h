@@ -12,6 +12,15 @@ struct AtColor {
     unsigned char r, g, b, a;
 };
 
+// Four colours, one for each corner, read in order ("ColorValueRectangle"). 16 bytes. The bodies are in src/at/AtImage.cpp. The .ASD work (as AtColorRectangle, for the flat
+// lists) and the image and font work (as AtColorRect) recovered it twice; folded.
+struct AtColorRectangle {
+    AtColorRectangle();                                // 0x00042170 all white
+    void Read(AtIoTokenizer* tokenizer);               // 0x00042140 four colours of four integers
+    void SetAll(const AtColor& color);                 // 0x000421A0
+    AtColor m_colors[4];
+};
+
 class AtMaterialDatabase;  // include/at/AtMaterialDatabase.h
 class AtMatrixDevice;      // include/at/AtCoordSys.h
 void AtFatal(const char* message, int file, int line, int unused);

@@ -30,5 +30,5 @@ void GmEventManager::Post(const char*, const char*, GmAcActor*) { AtFatal("Gm ac
 void GmDynamicNodeRelease(GmAcNode*, int) { AtFatal("Gm actor: 0x0014FB40, releasing an attached node, is not recovered", 0, 0, 0); }
 int GmVfxManagerHas(GmVfxManager*, const char*) { AtFatal("Gm actor: 0x001616C0, finding an effect, is not recovered", 0, 0, 0); return 0; }
 void GmAudioDataPlayNote(GmAudioData*, GmAcActor*, GmSoundNote*) { AtFatal("Gm actor: 0x001386D0, playing a sound note, is not recovered", 0, 0, 0); }
-void AtCoordSysWorldPosition(AtCoordSys*, AtVector3*) { AtFatal("Gm actor: 0x000332B0, a coordinate system's position, is not recovered", 0, 0, 0); }
-void AtCoordSysPlace(AtCoordSys*, const AtVector3*, int, const AtVector3*, int) { AtFatal("Gm actor: 0x00032EA0, placing a coordinate system, is not recovered", 0, 0, 0); }
+void AtCoordSys::WorldPosition(AtVector3*) { AtFatal("Gm actor: 0x000332B0, a coordinate system's position, is not recovered", 0, 0, 0); }
+void AtCoordSys::Place(const AtVector3*, int, const AtVector3*, int) { AtFatal("Gm actor: 0x00032EA0, placing a coordinate system, is not recovered", 0, 0, 0); }

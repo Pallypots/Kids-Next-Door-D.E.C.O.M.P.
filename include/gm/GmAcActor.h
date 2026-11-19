@@ -470,8 +470,7 @@ public:
 void GmDynamicNodeRelease(GmAcNode* node, int flag);                       // 0x0014FB40, a method of GmDynamicNodeLoader (0x003B3984)
 int GmVfxManagerHas(GmVfxManager* manager, const char* name);              // 0x001616C0, a method of GmVfxManager (0x003B3C28)
 void GmAudioDataPlayNote(GmAudioData* audio, GmAcActor* actor, GmSoundNote* note);  // 0x001386D0, a method of GmAudioData (0x003B354C)
-void AtCoordSysWorldPosition(AtCoordSys* coordSys, AtVector3* out);        // 0x000332B0, a method of AtCoordSys
-void AtCoordSysPlace(AtCoordSys* coordSys, const AtVector3* forward, int b, const AtVector3* position, int d);  // 0x00032EA0, a method of AtCoordSys
+// AtCoordSys::WorldPosition 0x000332B0 and AtCoordSys::Place 0x00032EA0 are declared with their class; they stop in src/gm/GmAcSeams.cpp.
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
 #pragma push_macro("offsetof")

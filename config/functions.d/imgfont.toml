@@ -67,7 +67,7 @@ evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside th
 [[function]]
 va = 0x00042140
 size = 46
-symbol = "?Read@AtColorRect@@QAEXPAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtColorRectangle@@QAEXPAVAtIoTokenizer@@@Z"
 source = "src/at/AtImage.cpp"
 subsystem = "at/imgfont"
 evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"
@@ -75,7 +75,7 @@ evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside th
 [[function]]
 va = 0x00042170
 size = 36
-symbol = "??0AtColorRect@@QAE@XZ"
+symbol = "??0AtColorRectangle@@QAE@XZ"
 source = "src/at/AtImage.cpp"
 subsystem = "at/imgfont"
 evidence = "tests/oracle/oracle_agn.cpp (suite imgfont); address noted beside the declaration in include/at/AtImage.h"

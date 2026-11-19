@@ -199,8 +199,7 @@ static void test_main(const char* directory) {
     CHECK(stopped == "App start-up: GlobalMemoryStatus (0x00085451, SDK) is not in this build");
     CHECK(App::s_instance == &g_app);
     CHECK(GmAppSettings::s_argc == 1);
-    CHECK(GmAppAudioOptions::s_instance != nullptr && &GmAppAudioOptions::s_instance->m_noMusic == &g_app.m_noMusic);
-    CHECK(&GmAppAudioOptions::s_instance->m_audioTest == &g_app.m_audioTest);
+    CHECK(App::s_gmApp == &g_app);
 }
 
 int main(int argc, char** argv) {

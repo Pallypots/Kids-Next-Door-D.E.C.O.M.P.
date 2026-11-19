@@ -8,77 +8,16 @@ void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);
 void AtPopHeap();
 
-AtIoContext* AtIoBinaryFile::s_context;
 void* AtGrD3DAnimationDevice::s_heap;
 
 // ---- The binary file ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-int AtIoBinaryFile::Open(const char* path, int flags) {
-    AtIoFileSystem* fs;
-    if (flags & 1) {
-        fs = s_context->Top();
-    } else if (s_context->FindFile(path, &fs) != 0) {
-        return 1;
-    }
-    if (m_file != 0) {
-        m_fs->Close(m_file);
-        m_fs = 0;
-        m_file = 0;
-    }
-    m_fs = fs;
-    return fs->Open(path, flags, &m_file);
-}
-
-int AtIoBinaryFile::OpenWithExtension(const char* path, const char* ext, int flags) {
-    char full[0x80];
-    strcpy(full, path);
-    char* leaf = strrchr(full, '\\');
-    if (leaf == 0) {
-        leaf = full;
-    }
-    if (strrchr(leaf, '.') == 0) {
-        strcat(full, ".");
-        strcat(full, ext);
-    }
-    return Open(full, flags);
-}
-
-int AtIoBinaryFile::ReadAll(void* out, unsigned int size, unsigned int* done) {
-    AtIoFileRequest* request;
-    int status = m_file->Read(out, size, done, &request);
-    if (status == AtIoFile::kPending) {
-        status = request->Wait();
-        if (m_file != 0) {
-            m_file->Release(request);
-        }
-    }
-    return status;
-}
-
-int AtIoBinaryFile::Read(void* out, unsigned int size, unsigned int* done, AtIoFileRequest** request) {
-    return m_file->Read(out, size, done, request);
-}
-
-int AtIoBinaryFile::Release(AtIoFileRequest* request) {
-    if (m_file == 0) {
-        return 0;
-    }
-    m_file->Release(request);
-    return 1;
-}
-
-void AtIoBinaryFile::Close() {
-    if (m_file != 0) {
-        m_fs->Close(m_file);
-    }
-    m_fs = 0;
-    m_file = 0;
-}
+// Its methods are AtAudioBankFile's, in src/at/AtFlashSprite.cpp.
 
 // Not a function of the original: each reader writes this out at each block.
-int AtReadBlock(AtIoBinaryFile* file, void* out, unsigned int size) {
+int AtReadBlock(AtAudioBankFile* file, void* out, unsigned int size) {
     AtIoFileRequest* request;
-    int status = file->Read(out, size, 0, &request);
+    int status = file->ReadPending(out, size, 0, &request);
     if (status == AtIoFile::kPending) {
         status = request->Wait();
         file->Release(request);
@@ -188,18 +127,18 @@ int AtGrD3DAnimationDatabase::HasBinaryForm() {
 }
 
 void AtGrD3DAnimationDatabase::LoadBinaryForm(AtAnimationDevice* device, const char* name) {
-    AtIoBinaryFile file;
+    AtAudioBankFile file;
     int status = file.OpenWithExtension(name, "XKA", 2);
     if (status != 0) {
         AtReportFileError(status, name, "XKA");
     }
     char unread[0x10];
-    status = file.ReadAll(unread, sizeof unread, 0);
+    status = file.Read(unread, sizeof unread, 0);
     if (status != 0) {
         AtReportFileError(status, name, "XKA");
     }
     AtXkaHeader header;
-    status = file.ReadAll(&header, sizeof header, 0);
+    status = file.Read(&header, sizeof header, 0);
     if (status != 0) {
         AtReportFileError(status, name, "XKA");
     }

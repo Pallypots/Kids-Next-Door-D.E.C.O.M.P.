@@ -175,10 +175,6 @@ unsigned int App::HeapsUsed() {
     return used;
 }
 
-GmAppAudioOptions* App::AudioOptionsView() {
-    return (GmAppAudioOptions*)((char*)&m_noMusic - __builtin_offsetof(GmAppAudioOptions, m_noMusic));
-}
-
 // ---- construction --------------------------------------------------------------------------------------------------
 
 App::App() {
@@ -230,7 +226,7 @@ void App::SetDefaults() {
 void App::StartUp() {
     char text[0xFC];
     char report[0x1000];
-    GmAppAudioOptions::s_instance = AudioOptionsView();
+    s_gmApp = this;
     AtSdkMemoryStatus status;
     AtSdkGlobalMemoryStatus(&status);
     unsigned int total = status.m_totalPhysical;
@@ -387,19 +383,19 @@ void App::LoadRegistries() {
     AtIoMountManager::s_instance->m_context->PushPath("Design\\Registry\\");
     if (AtIoMountManager::s_instance->m_context->FindFile("Generic.ADR", &fs) == 0) {
         m_genericRegistry.Load(GmDataRoot::s_instance->Owner(), "Generic", 0, 0, 0);
-        AtDataRegistryAttachUnder(&m_genericRegistry, &GmDataRoot::s_instance->m_registry, 0);
+        m_genericRegistry.AttachUnder(&GmDataRoot::s_instance->m_registry, 0);
     }
     AtIoMountManager::s_instance->m_context->PopPath();
     s_instance->m_gameState->SetRegistry(&m_genericRegistry);
     AtIoMountManager::s_instance->m_context->PushPath("");
     if (AtIoMountManager::s_instance->m_context->FindFile("Library.ADD", &fs) == 0) {
-        AtDataRegistryPrepare(&GmDataRoot::s_instance->m_registry, GmDataRoot::s_instance->Owner());
-        AtDataRegistrySetFileName(&GmDataRoot::s_instance->m_registry, "Library");
-        m_library.Load((AtDataOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, &GmDataRoot::s_instance->m_registry);
+        GmDataRoot::s_instance->m_registry.Prepare(GmDataRoot::s_instance->Owner());
+        GmDataRoot::s_instance->m_registry.SetFileName("Library");
+        m_library.Load((AtDataRegistryOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, &GmDataRoot::s_instance->m_registry);
         AtDataRegistry* root = &GmDataRoot::s_instance->m_registry;
         GmRegistryUser* user = GmRegistryUser::s_instance;
         user->m_registry = root;
-        user->m_root = AtDataRegistryFindPath(root, &root->m_root, "", 0);
+        user->m_root = root->FindPath(&root->m_root, "", 0);
         GmRegistryNames::s_instance->Add(&GmDataRoot::s_instance->m_registry);
     }
     AtIoMountManager::s_instance->m_context->PopPath();

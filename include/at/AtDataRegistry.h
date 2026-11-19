@@ -169,6 +169,12 @@ public:
 
     static void SetHeap(void* heap);                   // 0x00066100
 
+    // Called by App's start-up (src/gm/GmApp.cpp) and not recovered: each stops with a diagnostic, in src/gm/GmAppHost.cpp. Names inferred from what start-up does with them.
+    int AttachUnder(AtDataRegistry* parent, const char* path);  // 0x00067D40 m_root under the parent's node at path
+    void Prepare(AtDataRegistryOwner* owner);          // 0x000675B0 the original takes thirteen more arguments; start-up passes zeros
+    void SetFileName(const char* name);                // 0x00066860
+    AtDataLink* FindPath(AtDataLink* from, const char* path, int deep);  // 0x000679E0
+
     int m_unknown04;           // +0x04 never touched
     int m_unknown08;           // +0x08 never touched
     AtDataLinkRoot m_root;     // +0x0C
