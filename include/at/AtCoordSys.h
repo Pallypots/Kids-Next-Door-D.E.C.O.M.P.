@@ -29,6 +29,8 @@ struct AtMatrixTable {
     void (*GetPosition)(const AtMatrix* m, AtVector3* position);                       // 0x002C61F8
     void (*GetAxes)(const AtMatrix* m, AtVector3* x, AtVector3* y, AtVector3* z);      // 0x002C61FC
     void (*TransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);  // 0x002C625C
+    void (*SetAxisAngle)(AtMatrix* m, const AtVector3* axis, float angle);            // 0x002C6104 inferred from its arguments: the sound code passes (1, 0, 0) and 0
+    void (*Unknown168)(AtMatrix* m, const void* with);                                 // 0x002C6168 skipped for null
 };
 extern AtMatrixTable g_atMatrix;
 
@@ -83,6 +85,11 @@ public:
     void SetRotation(const AtQuaternion* rotation);  // 0x000272E0
     void SetPosition(const AtVector3* position);     // 0x00027310
     void SetLookAt(const AtVector3* direction, const AtVector3* up);  // 0x00049960
+    // For the sound code, in src/at/AtAudioVoices.cpp:
+    void SetWorldTransform(const AtVector3* axis, float angle, const AtVector3* position, const void* with);  // 0x00032EA0 sets m_world, then LocalFromWorld
+    void LocalFromWorld();                     // 0x00032DF0 m_local from m_world and the parent's; marks this and its children (not theirs) kAllLocal
+    void MarkChildrenDirty(unsigned int mask); // 0x00032310 only the children, not theirs
+    void GetWorldPosition(AtVector3* out);     // 0x000332B0 m_local's with no parent, otherwise m_world's once brought up to date
     // 0x000324E0 for a file's word that either kind takes: Parent, or LocalDrawingTransform. Anything else is reported. The parent must have come earlier in the file; if it has not, the report is followed by
     // a call through null, as it is not in the game, where a report does not return.
     void ReadWord(AtIoTokenizer* tokenizer, AtCoordSysDatabase* database, int token);

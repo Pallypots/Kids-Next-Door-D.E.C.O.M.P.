@@ -19,6 +19,7 @@ struct GmAppAudioOptions {
     int m_audioMode;           // +0x6474
     int m_audioTest;           // +0x6478
 
+    static GmAppAudioOptions* Get();       // 0x001414F0 s_instance. src/gm/GmSoundPlay.cpp
     static GmAppAudioOptions* s_instance;  // 0x003B360C
 };
 
@@ -37,7 +38,9 @@ struct GmHistoryLogs {
     void SetTraceHistory(int lines);   // 0x0006C2D0
     void SetErrorHistory(int lines);   // 0x0006C2F0
 
-    char m_unknown[0x18];
+    char m_unknown00[0x10];
+    struct GmRandom* m_random; // +0x10 the game's random numbers: include/gm/GmRandom.h
+    char m_unknown14[4];
     GmHistoryLog* m_errors;    // +0x18
     GmHistoryLog* m_traces;    // +0x1C both setters test this one
 

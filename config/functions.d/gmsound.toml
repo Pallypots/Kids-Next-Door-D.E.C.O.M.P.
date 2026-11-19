@@ -1,0 +1,350 @@
+# Playing sound notes, the voice slots, sound nodes (.GOO), collision (.GOC) and instance (.GOI) sounds, and the game's random numbers. Names inferred; see include/gm/GmSoundNodes.h,
+# include/gm/GmAudioData.h, include/gm/GmRandom.h. Two subsystems, so that each suite's mutants reach its own source directory: gm/gmsound (src/gm) and at/gmsound (src/at), one oracle.
+# Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x001386D0
+size = 466
+symbol = "?PlayNote@GmAudioData@@QAEXPAVGmActor@@PAUGmSoundNote@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00137F50
+size = 72
+symbol = "?PlayOnEmitter@GmAudioData@@QAEXPAVAtAudioEmitter@@PAVAtAudioSegment@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00137FA0
+size = 104
+symbol = "?PlayByName@GmAudioData@@QAEXPBD0@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00138010
+size = 204
+symbol = "?PlayAtActor@GmAudioData@@QAEXPAVGmActor@@PAVAtAudioSegment@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x001388B0
+size = 140
+symbol = "?TakeVoiceSlot@GmAudioData@@QAEPAVAtAudioEmitter@@XZ"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x001367A0
+size = 62
+symbol = "?ReleaseVoiceSlot@GmAudioData@@QAEXPAVAtAudioEmitter@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00137660
+size = 287
+symbol = "?FindEmitters@GmAudioData@@QAEXXZ"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00138F00
+size = 103
+symbol = "?TakeDynamicNode@GmAudioData@@QAEPAUGmSoundNode@@PAVGmActor@@M@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00138F70
+size = 285
+symbol = "?PlayNode@GmAudioData@@QAEXPAUGmSoundNode@@PAVAtAudioSegment@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00138290
+size = 101
+symbol = "?StopBankVoices@GmAudioData@@QAEXPAVAtAudioEmitter@@PAVAtAudioBank@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00139F90
+size = 219
+symbol = "?RemoveDatabase@GmAudioData@@QAEXPAVAtAudioDatabase@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136C60
+size = 45
+symbol = "?GetWorldSphere@AtSceneNode@@QAEXPAUAtSceneSphere@@@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtScene.h"
+
+[[function]]
+va = 0x001414F0
+size = 6
+symbol = "?Get@GmAppAudioOptions@@SAPAU1@XZ"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAppSettings.h"
+
+[[function]]
+va = 0x00194BB0
+size = 54
+symbol = "?StopSegment@GmActorSoundNodes@@QAEXPAVAtAudioSegment@@H@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmSoundNodes.h"
+
+[[function]]
+va = 0x00194E40
+size = 142
+symbol = "?Play@GmActorSoundNodes@@QAEXPAVAtAudioSegment@@HPBVAtVector3@@H@Z"
+source = "src/gm/GmSoundPlay.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmSoundNodes.h"
+
+[[function]]
+va = 0x001367E0
+size = 47
+symbol = "?AllocateNodeBank@GmAudioData@@QAEPAUGmSoundNodeBank@@XZ"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136810
+size = 51
+symbol = "?ReleaseNodeBank@GmAudioData@@QAEXPAUGmSoundNodeBank@@@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x0013AA80
+size = 197
+symbol = "?LoadNodes@GmAudioData@@QAEXPAUGmSoundNodeBank@@PBD@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00138A70
+size = 938
+symbol = "?ReadNodes@GmAudioData@@QAEXPAVAtIoTokenizer@@PAUGmSoundNodeBank@@@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00138E50
+size = 162
+symbol = "?FreeNodes@GmAudioData@@QAEXPAUGmSoundNodeBank@@@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00138A10
+size = 83
+symbol = "?RegisterNodes@GmAudioData@@QAEXPAUGmSoundNodeBank@@@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00139C40
+size = 579
+symbol = "?LoadInstanceSounds@GmAudioData@@QAEPAUGmInstanceSoundBank@@PBD@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00139A90
+size = 186
+symbol = "?AllocateInstanceBank@GmAudioData@@QAEPAUGmInstanceSoundBank@@I@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136B30
+size = 130
+symbol = "?FreeInstanceSounds@GmAudioData@@QAEXPAUGmInstanceSoundBank@@@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00136A10
+size = 178
+symbol = "?RegisterInstanceSounds@GmAudioData@@QAEXPAUGmInstanceSoundBank@@@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00139610
+size = 1123
+symbol = "?LoadCollisionSounds@GmAudioData@@QAEPAUGmCollisionSoundBank@@PBD@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00139B50
+size = 237
+symbol = "?FreeCollisionSounds@GmAudioData@@QAEXPAUGmCollisionSoundBank@@@Z"
+source = "src/gm/GmSoundNodes.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
+
+[[function]]
+va = 0x00071BB0
+size = 21
+symbol = "??0GmRandom@@QAE@XZ"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x00071BD0
+size = 193
+symbol = "?Regenerate@GmRandom@@QAEXXZ"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x00071CA0
+size = 81
+symbol = "?Seed@GmRandom@@QAEXI@Z"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x00071D00
+size = 73
+symbol = "?Next@GmRandom@@QAEIXZ"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x00071D50
+size = 30
+symbol = "?NextBelow@GmRandom@@QAEII@Z"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x00071D70
+size = 29
+symbol = "?NextUnit@GmRandom@@QAEMXZ"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x00071D90
+size = 13
+symbol = "?SeedDefault@GmRandom@@QAEHXZ"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x00071DA0
+size = 27
+symbol = "?SeedDefaultReturningSeed@GmRandom@@QAEIXZ"
+source = "src/gm/GmRandom.cpp"
+subsystem = "gm/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
+
+[[function]]
+va = 0x0011F160
+size = 33
+symbol = "?IsPlaying@AtAudioEmitter@@QAEPAUAtAudioVoice@@PBVAtAudioSegment@@@Z"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EBA0
+size = 4
+symbol = "?FirstVoice@AtAudioEmitter@@QAEPAUAtAudioVoice@@XZ"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EBB0
+size = 10
+symbol = "?NextVoice@AtAudioEmitter@@QAEPAUAtAudioVoice@@PAU2@@Z"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x00032310
+size = 29
+symbol = "?MarkChildrenDirty@AtCoordSys@@QAEXI@Z"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00032DF0
+size = 82
+symbol = "?LocalFromWorld@AtCoordSys@@QAEXXZ"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00032EA0
+size = 74
+symbol = "?SetWorldTransform@AtCoordSys@@QAEXPBVAtVector3@@M0PBX@Z"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000332B0
+size = 61
+symbol = "?GetWorldPosition@AtCoordSys@@QAEXPAVAtVector3@@@Z"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00049990
+size = 29
+symbol = "?GetWorldPosition@AtSceneNode@@QAEXPAVAtVector3@@@Z"
+source = "src/at/AtAudioVoices.cpp"
+subsystem = "at/gmsound"
+evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtScene.h"
+
+[symbols]
+"?s_listener@GmAudioData@@2PAVAtCoordSys@@A" = 0x003B3554
