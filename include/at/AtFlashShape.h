@@ -5,7 +5,10 @@
 #include "at/AtFlashTextFormat.h"
 
 class AtDatabaseLoader;
+class AtFlashFontLoader;
+class AtFontDatabase;
 struct AtMaterialOwner;
+void AtFatal(const char* message, int file, int line, int unused);
 
 // What the owner's slot 18 returns. Only the two slots this file calls are known; nothing here says what else it is.
 class AtFlashGraphicsFactory {
@@ -19,8 +22,9 @@ public:
     virtual void Slot6() {}
     virtual void Slot7() {}
     virtual void Slot8() {}
-    virtual void Slot9() {}
-    virtual void Slot10() {}
+    // Slots 9 and 10, 19 and 20: what the text table's fonts make and free (0x000200B0, 0x0001FEA0). Names inferred. They stop with a diagnostic unless a factory overrides them.
+    virtual AtFlashFontLoader* MakeFontLoader() { AtFatal("AtFlashGraphicsFactory: slot 9 is not recovered", 0, 0, 0); return 0; }
+    virtual void FreeFontLoader(AtFlashFontLoader*) { AtFatal("AtFlashGraphicsFactory: slot 10 is not recovered", 0, 0, 0); }
     virtual void Slot11() {}
     virtual void Slot12() {}
     virtual void Slot13() {}
@@ -29,8 +33,8 @@ public:
     virtual void Slot16() {}
     virtual void Slot17() {}
     virtual void Slot18() {}
-    virtual void Slot19() {}
-    virtual void Slot20() {}
+    virtual AtFontDatabase* MakeFontDatabase() { AtFatal("AtFlashGraphicsFactory: slot 19 is not recovered", 0, 0, 0); return 0; }
+    virtual void FreeFontDatabase(AtFontDatabase*) { AtFatal("AtFlashGraphicsFactory: slot 20 is not recovered", 0, 0, 0); }
     virtual void Slot21() {}
     virtual void Slot22() {}
     virtual void Slot23() {}

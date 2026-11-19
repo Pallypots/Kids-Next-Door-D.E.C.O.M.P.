@@ -1,0 +1,413 @@
+# The Flash user interface's texts (.AFT), their fonts and the formats' load, and its scripts (.AFA) with the action script machine's state, values and stack. Names inferred, but for AtFpActionScriptVM, the original's own;
+# see include/at/AtFlashText.h and include/at/AtFlashScript.h. Sizes are the inventory's.
+
+[[function]]
+va = 0x00013870
+size = 117
+symbol = "??0AtFlashTextTable@@QAE@XZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000138F0
+size = 170
+symbol = "?ClearTexts@AtFlashTextTable@@QAEXXZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000139A0
+size = 288
+symbol = "?ReadFile@AtFlashTextTable@@QAEXPBD@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013B00
+size = 49
+symbol = "?Release@AtFlashTextTable@@UAEXI@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013B40
+size = 226
+symbol = "?Allocate@AtFlashTextTable@@UAEXI@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013C30
+size = 121
+symbol = "??1AtFlashTextTable@@UAE@XZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013CB0
+size = 278
+symbol = "?Load@AtFlashTextTable@@QAEXPBDHPAUAtMaterialOwner@@H@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013DD0
+size = 30
+symbol = "??_GAtFlashTextTable@@UAEPAXI@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FBC0
+size = 147
+symbol = "?ReadData@AtFlashText@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FC70
+size = 59
+symbol = "?Release@AtFlashText@@QAEXPAVAtFlashResourceTable@@PAVAtFlashFontTable@@@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FCB0
+size = 124
+symbol = "??0AtFlashText@@QAE@XZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FD30
+size = 24
+symbol = "?Read@AtFlashText@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FD50
+size = 100
+symbol = "?Reset@AtFlashText@@QAEXXZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FE20
+size = 79
+symbol = "??1AtFlashText@@QAE@XZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FE70
+size = 44
+symbol = "??0AtFlashFontTable@@QAE@XZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FEA0
+size = 152
+symbol = "?ClearFonts@AtFlashFontTable@@QAEXXZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001FFE0
+size = 118
+symbol = "?ReleaseFont@AtFlashFontTable@@QAEHPBD@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020060
+size = 79
+symbol = "??1AtFlashFontTable@@UAE@XZ"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000200B0
+size = 419
+symbol = "?Load@AtFlashFontTable@@QAEXPBDHPAUAtMaterialOwner@@@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020260
+size = 30
+symbol = "??_GAtFlashFontTable@@UAEPAXI@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020570
+size = 176
+symbol = "?Load@AtFlashTextFormatTable@@QAEXPBDH@Z"
+source = "src/at/AtFlashText.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000133B0
+size = 102
+symbol = "??0AtFlashScriptTable@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013420
+size = 127
+symbol = "?ClearScripts@AtFlashScriptTable@@QAEXXZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000134A0
+size = 822
+symbol = "?Load@AtFlashScriptTable@@QAEXPBDHPAUAtFlashApplication@@@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000137E0
+size = 105
+symbol = "??1AtFlashScriptTable@@UAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013850
+size = 30
+symbol = "??_GAtFlashScriptTable@@UAEPAXI@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001C900
+size = 32
+symbol = "??0AtFpScript@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001C920
+size = 83
+symbol = "?Free@AtFpScript@@QAEXXZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001C980
+size = 190
+symbol = "?Init@AtFpScript@@QAEXHII@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CA40
+size = 156
+symbol = "?ReadInstructions@AtFpScript@@QAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CAE0
+size = 79
+symbol = "??1AtFpScript@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CC80
+size = 25
+symbol = "??0AtFpActionScriptVM@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CCA0
+size = 23
+symbol = "?Clear@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CCC0
+size = 66
+symbol = "?Init@AtFpActionScriptVM@@QAEXPAUAtFlashApplication@@PAVAtTextTable@@@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001EF00
+size = 100
+symbol = "??1AtFpActionScriptVM@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000209B0
+size = 81
+symbol = "?MoveTo@AtFpActionScriptValue@@UAEXPAV1@@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020A10
+size = 53
+symbol = "?SetString@AtFpActionScriptValue@@UAEXPADI@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020A50
+size = 45
+symbol = "??0AtFpActionScriptValue@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020A80
+size = 75
+symbol = "?Reset@AtFpActionScriptValue@@UAEXXZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020AD0
+size = 142
+symbol = "?Reserve@AtFpActionScriptValue@@UAEXI@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020CC0
+size = 81
+symbol = "??1AtFpActionScriptValue@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D1A0
+size = 10
+symbol = "?SetHeap@AtFpActionScriptStack@@SAXPAX@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D270
+size = 23
+symbol = "??0AtFpActionScriptStack@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D290
+size = 82
+symbol = "?Free@AtFpActionScriptStack@@QAEXXZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D570
+size = 5
+symbol = "??1AtFpActionScriptStack@@QAE@XZ"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D580
+size = 208
+symbol = "?Allocate@AtFpActionScriptStack@@QAEXI@Z"
+source = "src/at/AtFlashScript.cpp"
+subsystem = "at/aft"
+evidence = "tests/oracle/oracle_aft.cpp; address noted beside the declaration in the header"
+
+[[vtable]]
+va = 0x002712D8
+slots = 4
+symbol = "??_7AtFlashTextTable@@6B@"
+source = "src/at/AtFlashText.cpp"
+
+[[vtable]]
+va = 0x00272750
+slots = 1
+symbol = "??_7AtFlashText@@6B@"
+source = "src/at/AtFlashText.cpp"
+
+[[vtable]]
+va = 0x0027275C
+slots = 4
+symbol = "??_7AtFlashFontTable@@6B@"
+source = "src/at/AtFlashText.cpp"
+
+[[vtable]]
+va = 0x0027125C
+slots = 4
+symbol = "??_7AtFlashScriptTable@@6B@"
+source = "src/at/AtFlashScript.cpp"
+
+[[vtable]]
+va = 0x002725B0
+slots = 1
+symbol = "??_7AtFpScript@@6B@"
+source = "src/at/AtFlashScript.cpp"
+
+[[vtable]]
+va = 0x00272964
+slots = 4
+symbol = "??_7AtFpActionScriptValue@@6B@"
+source = "src/at/AtFlashScript.cpp"
+
+[symbols]
+"?s_heap@AtFpActionScriptValue@@2PAXA" = 0x002C6318
+"?s_heap@AtFpActionScriptStack@@2PAXA" = 0x002C6390
+"?s_heap@AtFpActionScriptVM@@2PAXA" = 0x002C62EC
+"?s_heap@AtFpScript@@2PAXA" = 0x002C62E8
+"?s_defaultHeap@AtFlashScriptTable@@2PAXA" = 0x002C60B8

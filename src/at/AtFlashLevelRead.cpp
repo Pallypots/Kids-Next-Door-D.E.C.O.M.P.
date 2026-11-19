@@ -97,13 +97,3 @@ void AtFlashLevel::ReadDefinition(const char* name, int unused) {
     }
     file.Close();
 }
-
-// ---- what is not recovered ------------------------------------------------------------------------------------------
-
-void AtFlashScriptTable::Load(const char*, int, AtFlashApplication*) {
-    AtFatal("AtFlashScriptTable::Load (0x000134A0), the word Script of an .AFD, is not recovered", 0, 0, 0);
-}
-
-void AtFlashTextTable::Load(const char*, int, AtMaterialOwner*, int) {
-    AtFatal("AtFlashTextTable::Load (0x00013CB0), the word Text of an .AFD, is not recovered", 0, 0, 0);
-}
