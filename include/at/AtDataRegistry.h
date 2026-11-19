@@ -2,7 +2,8 @@
 // registry may have a parent, whose tree is searched first and under whose root it hangs. Original address cluster 0x00066110-0x0006C240. The words DataRegistry, DataLink, DataComponent come from the
 // files; every class and member name is inferred.
 //
-// Loading a file reaches the value classes' slots 0 to 4. Slots 5 to 9 are how the game reads and writes values afterwards; they are not recovered, and stop with a diagnostic. See AtDataComponent.
+// Loading a file reaches the value classes' slots 0 to 4. Slots 5 to 9 are how the game reads and writes values afterwards (src/at/AtDataValueAccess.cpp), and the lookups by path and name
+// are in src/at/AtDataLookup.cpp.
 #pragma once
 
 #include "at/AtIoTokenizer.h"
@@ -30,6 +31,7 @@ public:
     // 0x0006BDB0, the .ADB reader of a DataComponentDesc (src/at/AtDatabaseManager.cpp, with that format's words). Skips to the first left curly, whatever comes before it. A file that ends first never
     // returns, as in the original.
     int Read(AtIoTokenizer* tokenizer);
+    int CopyFrom(const AtDataDescriptor* other);       // 0x0006BCE0 clears first if typed; the format allocated one byte short, as SetFormat; typed afterwards; 0
 
     static void SetHeap(void* heap);                   // 0x0006BAC0
 
@@ -57,6 +59,9 @@ public:
     void Clear();                                      // 0x0006C110 detaches it; its children keep each other but lose their parent
     void AttachTo(AtDataLink* parent);                 // 0x0006C000 the last child. Does not leave any parent it had
     void Detach();                                     // 0x0006C030
+    // 0x0006C080 appends "A\B\this\" from the first named link up, stopping at a link with no name: a registry's root. A nameless link here is
+    // passed over to its parent if skipNameless; an empty name adds nothing, and neither does anything above it. No bound on out.
+    void AppendPath(char* out, int skipNameless);
 
     static void SetHeap(void* heap);                   // 0x0006BFC0
 
@@ -88,6 +93,8 @@ public:
     AtDataLink* FindByName(const char* name, int exact);  // 0x00066A70 the whole name, ignoring case unless exact; exact does not carry on to the chain
     AtDataLink* New(int unused);                       // 0x00067430 the first link not in use; a block with no count becomes one of four, and a full chain grows
     void Grow();                                       // 0x000666E0 an empty block of the same count and type
+    void CopyFrom(AtDataComponentPool* other, AtDataRegistry* registry);  // 0x00067200 the first block of other's, every link under registry's root; a chained block is not copied
+    void Relink(AtDataComponentPool* other, AtDataRegistry* registry);    // 0x00068720 each copied link's parent, found by other's parent's whole path; sets m_parent only, not the lists
 
     unsigned int m_count;      // +0x00
     unsigned int m_capacity;   // +0x04 set with the count, and copied to a new block
@@ -167,6 +174,28 @@ public:
     int NameMatches(const char* name, const char* path);  // 0x00066800 equal up to the end or a backslash on each
     void Clamp(unsigned int type, AtDataComponent* value);  // 0x00067A60 into the descriptor's bounds, by the type given, not the value's own
 
+    // Reading it: src/at/AtDataLookup.cpp.
+    // 0x000679E0 the search every game object's record reader calls. Part by part from from's children (the root's if null), each part through FindChild.
+    // With climb, a part not among from's children is looked for among its parent's, and so on up; one found nowhere leaves null, and the next part is
+    // then looked for from the root. A null or empty path answers from.
+    AtDataLink* Find(AtDataLink* from, const char* path, int climb);
+    AtDataLink* FindLink(const char* name, AtDataLink* under, int exact);  // 0x000678A0 the whole name, depth first from under (the root if null) through children and then siblings, so past this registry's tree into those hung beside it
+    AtDataLink* FindInPools(const char* name, int exact);  // 0x00067950 FindByName in each block, by type
+    AtDataComponent* ValueNamed(const char* name);     // 0x00067CB0 FindByName in each block, ignoring case; the value
+    AtDataComponent* ValueAt(AtDataLink* from, const char* path, int climb);  // 0x00067CF0 Find's value
+    AtDataLink* FindPath(const char* path, int climb); // 0x00067D20 Find from the root
+    AtDataComponent* ValueAtPath(const char* path, int climb);  // 0x00068860 Find's value, from the root
+    // 0x000687D0 the other loading form: every block copied from other (CopyFrom), then the parents (Relink), filed with other's owner in the plain group.
+    // No parent registry, file name or count of types is taken. 0
+    int CopyFrom(AtDataRegistry* other);
+    int AttachUnder(AtDataRegistry* parent, const char* path);  // 0x00067D40 this root under parent's link at path, or its root if path is null; 0 and nothing done if not found, else 1
+    // 0x000675B0 empty blocks of the counts given, all allocated, under parent if there is one, and filed in the plain group. Start-up makes the registry every
+    // loaded one hangs under this way, with no values. The block of no type, the thirteenth, is not touched. 0
+    int Create(AtDataRegistryOwner* owner, unsigned int empties, unsigned int booleans, unsigned int ints, unsigned int reals, unsigned int shortNames, unsigned int strings,
+               unsigned int booleanArrays, unsigned int byteArrays, unsigned int intArrays, unsigned int realArrays, unsigned int shortNameArrays, unsigned int stringArrays,
+               AtDataRegistry* parent);
+    void SetFileName(const char* name);                // 0x00066860 into the block there if it is long enough
+
     static void SetHeap(void* heap);                   // 0x00066100
 
     int m_unknown04;           // +0x04 never touched
@@ -195,13 +224,14 @@ public:
     virtual int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer);  // slot 1, 0x00069E20 nothing to read
     virtual int SetDescriptor(AtDataDescriptor* descriptor);  // slot 2, 0x00069E30 0
     virtual void Reset();                              // slot 3, 0x000E7880
-    // Not recovered; nothing in loading reaches them. Each class's differ (0x0006A870 and its like are recovered for slot 4). These stop with a diagnostic.
-    virtual int Resize(unsigned int count);            // slot 4, 0x000B15B0 on this class: 0
-    virtual void* ElementAt(unsigned int index);       // slot 5, 0x000B15B0 on this class, 0x0006A010 0x0006A830 0x0006A9E0 0x0006AE50 0x0006B0F0
-    virtual void SetElement(const void* from, unsigned int index, unsigned int count);  // slot 6, 0x001ACD70 on this class, 0x0006A000 0x0006A020 0x0006A790 0x0006A760 0x0006A7B0 0x0006A7D0; argument names inferred
-    virtual int Equals(const AtDataComponent* other);  // slot 7, 0x000B15B0 on this class, 0x0006A0A0 0x0006A0E0 0x0006A130 0x0006A540
-    virtual void RemoveAt(unsigned int index);         // slot 8, 0x000CBF30 on this class, 0x0006ADE0 0x0006AC00 0x0006B080 0x0006B6A0
-    virtual void Write(AtIoTokenizer* tokenizer);      // slot 9, 0x00069E40 on this class, and each class's own; ends a line if m_flags has kAcceptsParentData
+    // Slots 4 to 9: src/at/AtDataValueAccess.cpp. On this class the original's are stubs shared with other classes of the game: 0x000B15B0 answers 0,
+    // 0x001ACD70 and 0x000CBF30 do nothing.
+    virtual int Resize(unsigned int count);            // slot 4, 0x000B15B0 0
+    virtual void* ElementAt(unsigned int index);       // slot 5, 0x000B15B0 null
+    virtual void SetElement(const void* from, unsigned int index, unsigned int count);  // slot 6, 0x001ACD70 nothing. No bound in any class
+    virtual int Equals(const AtDataComponent* other);  // slot 7, 0x000B15B0 0. Other is taken to be of this one's class
+    virtual void RemoveAt(unsigned int index);         // slot 8, 0x000CBF30 nothing
+    virtual void Write(AtIoTokenizer* tokenizer);      // slot 9, 0x00069E40 the value as text; here only a space and the word WillAcceptParentData, if m_flags has kAcceptsParentData
 
     AtDataDescriptor* m_descriptor;  // +0x04
     AtDataRegistry* m_registry;      // +0x08 set by the registry that read it
@@ -217,7 +247,11 @@ public:
     ~AtDataBoolean() override;                         // slot 0; 0x00069E70 complete, 0x00066200 vector deleting
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006A080
     void Reset() override;                             // slot 3, 0x00069F50
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A010 the value, whatever the index
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A000 the first word, whatever the index and count
     int Equals(const AtDataComponent* other) override; // slot 7, 0x0006A0A0 1 if the two values are the same word; other is taken to be of this class. Reached from AtDataRecordDatabase::FindByValue
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x00069EB0
+    int Set(AtDataDescriptor* descriptor, int value);  // 0x0006A060 0
     int m_value;               // +0x0C
 };
 
@@ -228,7 +262,11 @@ public:
     ~AtDataInt() override;                             // slot 0; 0x00069EA0 complete, 0x00066260 vector deleting
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006A080 folded with AtDataBoolean's
     void Reset() override;                             // slot 3, 0x00069F50 folded
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A010 folded
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A000 folded
     int Equals(const AtDataComponent* other) override; // slot 7, 0x0006A0A0 folded with AtDataBoolean's
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x00069EB0 folded
+    int Set(AtDataDescriptor* descriptor, int value);  // 0x0006A060 folded
     int m_value;               // +0x0C
 };
 
@@ -239,6 +277,11 @@ public:
     ~AtDataReal() override;                            // slot 0; 0x00069EF0 complete, 0x000662C0 vector deleting
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006A0C0
     void Reset() override;                             // slot 3, 0x00069F50 folded
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A010 folded
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A000 folded: the word as it is
+    int Equals(const AtDataComponent* other) override; // slot 7, 0x0006A0E0 equal as reals
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x00069F00
+    int Set(AtDataDescriptor* descriptor, float value);  // 0x0006A060 folded
     float m_value;             // +0x0C
 };
 
@@ -249,6 +292,11 @@ public:
     ~AtDataShortName() override;                       // slot 0; 0x00069F40 complete, 0x00066320 vector deleting
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x00069F60
     void Reset() override;                             // slot 3, 0x00069F50 folded
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A010 folded
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A020 eight bytes
+    int Equals(const AtDataComponent* other) override; // slot 7, 0x0006A130 up to eight characters or a terminator
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x00069FA0
+    int Set(AtDataDescriptor* descriptor, const char* name);  // 0x0006A100 eight bytes
     char m_value[8];           // +0x0C not always terminated
 };
 
@@ -261,7 +309,17 @@ public:
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;
     void Reset() override;                             // slot 3, 0x0006A200
 
+    // Slots 5 and 6 are the base's stubs. Slot 7 compares what slot 5 answers, null: unequal lengths are unequal, two empty texts equal, and two others
+    // of one length crash on null, as in the original.
+    int Equals(const AtDataComponent* other) override; // slot 7, 0x0006A540
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x0006A5C0 narrowed
+
     int Assign(AtDataDescriptor* descriptor, const char* text);  // 0x0006A330 room for the text and a terminator, or the ceiling if larger. Wide text clears only half its block
+    int CopyText(AtDataDescriptor* descriptor, AtText* other);  // 0x0006A250 always wide: room for other's capacity, or the ceiling if larger
+    // The .ADB tables' strings, whose characters are the table's own (src/at/AtDatabaseManager.cpp still reaches these through the seams in AtDataLibrary.h).
+    void Forget();                                     // 0x0006A1D0 lets go of the characters without freeing them; the base's fields stay
+    int BindAndRead(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size);  // 0x0006A4D0 narrow, in characters; m_chars not set
+    int Bind(AtDataDescriptor* descriptor, char* characters, unsigned int size);  // 0x00069FD0 characters as they are; nothing held before is let go
 
     AtTextAscii m_narrow;      // +0x0C
     AtTextUnicode m_wide;      // +0x20
@@ -277,6 +335,12 @@ public:
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006A920
     void Reset() override;                             // slot 3, 0x0006A840
     int Resize(unsigned int count) override;           // slot 4, 0x0006A870 keeps what fits, and sets the descriptor's count; -4 with no memory
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A830 element index, no bound
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A790 count elements from index on, no bound
+    void RemoveAt(unsigned int index) override;        // slot 8, 0x0006ADE0 the rest moved down, then Resize to one fewer whatever the index
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x0006A970 each followed by a space
+    int Copy(AtDataDescriptor* descriptor, const AtDataBooleanArray* other);  // 0x0006AD70 SetData with other's count and elements
+    int SetData(AtDataDescriptor* descriptor, unsigned int count, const int* data);  // 0x0006AC80 what was held goes through Reset; the descriptor's count is not set
     int* m_data;               // +0x0C
 };
 
@@ -288,6 +352,12 @@ public:
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006AB40 keeps the low byte
     void Reset() override;                             // slot 3, 0x0006A840 folded
     int Resize(unsigned int count) override;           // slot 4, 0x0006A9F0
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A9E0 element index, no bound
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A760 count elements from index on, no bound
+    void RemoveAt(unsigned int index) override;        // slot 8, 0x0006AC00 the rest moved down, then Resize to one fewer whatever the index
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x0006ABB0 each followed by a space
+    int Copy(AtDataDescriptor* descriptor, const AtDataByteArray* other);  // 0x0006AB90 SetData with other's count and elements
+    int SetData(AtDataDescriptor* descriptor, unsigned int count, const unsigned char* data);  // 0x0006AAA0 what was held goes through Reset; the descriptor's count is not set
     unsigned char* m_data;     // +0x0C
 };
 
@@ -299,6 +369,12 @@ public:
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006A920 folded
     void Reset() override;                             // slot 3, 0x0006A840 folded
     int Resize(unsigned int count) override;           // slot 4, 0x0006A870 folded
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A830 folded element index, no bound
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A790 folded count elements from index on, no bound
+    void RemoveAt(unsigned int index) override;        // slot 8, 0x0006ADE0 folded the rest moved down, then Resize to one fewer whatever the index
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x0006A970 folded each followed by a space
+    int Copy(AtDataDescriptor* descriptor, const AtDataIntArray* other);  // 0x0006AD70 folded SetData with other's count and elements
+    int SetData(AtDataDescriptor* descriptor, unsigned int count, const int* data);  // 0x0006AC80 folded what was held goes through Reset; the descriptor's count is not set
     int* m_data;               // +0x0C
 };
 
@@ -310,6 +386,12 @@ public:
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006AD20
     void Reset() override;                             // slot 3, 0x0006A840 folded
     int Resize(unsigned int count) override;           // slot 4, 0x0006A870 folded
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006A830 folded element index, no bound
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A790 folded count elements from index on, no bound
+    void RemoveAt(unsigned int index) override;        // slot 8, 0x0006ADE0 folded the rest moved down, then Resize to one fewer whatever the index
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x0006AD90 each followed by a space
+    int Copy(AtDataDescriptor* descriptor, const AtDataRealArray* other);  // 0x0006AD70 folded SetData with other's count and elements
+    int SetData(AtDataDescriptor* descriptor, unsigned int count, const float* data);  // 0x0006AC80 folded what was held goes through Reset; the descriptor's count is not set
     float* m_data;             // +0x0C
 };
 
@@ -321,6 +403,12 @@ public:
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006AFB0
     void Reset() override;                             // slot 3, 0x0006A840 folded
     int Resize(unsigned int count) override;           // slot 4, 0x0006AE60
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006AE50 element index, no bound
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A7B0 count elements from index on, no bound
+    void RemoveAt(unsigned int index) override;        // slot 8, 0x0006B080 the rest moved down, then Resize to one fewer whatever the index
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x0006B030 each followed by a space
+    int Copy(AtDataDescriptor* descriptor, const AtDataShortNameArray* other);  // 0x0006B010 SetData with other's count and elements
+    int SetData(AtDataDescriptor* descriptor, unsigned int count, char (*data)[8]);  // 0x0006AF10 what was held goes through Reset; the descriptor's count is not set
     char (*m_data)[8];         // +0x0C
 };
 
@@ -333,7 +421,14 @@ public:
     void Reset() override;                             // slot 3, 0x0006B100 with nothing held it does not clear the base's fields either
     int Resize(unsigned int count) override;           // slot 4, 0x0006B170 -4 with no memory, having kept what it had
 
+    void* ElementAt(unsigned int index) override;      // slot 5, 0x0006B0F0 element index's characters
+    void SetElement(const void* from, unsigned int index, unsigned int count) override;  // slot 6, 0x0006A7D0 from's characters, unterminated, over the list of pointers from index on; count unused
+    void RemoveAt(unsigned int index) override;        // slot 8, 0x0006B6A0 the rest moved down, then Resize to one fewer; the removed characters are not freed
+    void Write(AtIoTokenizer* tokenizer) override;     // slot 9, 0x0006B5C0 each narrowed, followed by a space
+
     int SetText(unsigned int index, const char* text);  // 0x0006B4F0 does not free what was at index
+    int Copy(AtDataDescriptor* descriptor, const AtDataStringArray* other);  // 0x0006B9E0 through a block on the token file heap as long as other's roomiest text; reads other's first text even when it has none
+    int Make(AtDataDescriptor* descriptor, unsigned int size, unsigned int count);  // 0x0006B330 count empty texts of size characters; SetText later loses these blocks
 
     unsigned short** m_chars;  // +0x0C
     AtTextUnicode* m_texts;    // +0x10

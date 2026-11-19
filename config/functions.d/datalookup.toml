@@ -1,0 +1,595 @@
+# Reading the design data once loaded (subsystem at/datalookup). Names inferred; see include/at/AtDataRegistry.h. Recorded sizes are the inventory's.
+# Folded code is recorded once, by the first class whose vftable holds it: 0x0006A010, 0x0006A000, 0x00069EB0, 0x0006A060 serve Boolean, Int (and Real, ShortName for
+# 0x0006A010; Real for 0x0006A000 and 0x0006A060); 0x0006A830, 0x0006A790, 0x0006ADE0, 0x0006AD70, 0x0006AC80 serve the Boolean, Int and Real arrays; 0x0006A970 the Boolean
+# and Int arrays. 0x000B15B0 is also slots 5 and 7 of the base class and slot 4 of the one-value classes and the string.
+
+[[function]]
+va = 0x000679E0
+size = 118
+symbol = "?Find@AtDataRegistry@@QAEPAVAtDataLink@@PAV2@PBDH@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000678A0
+size = 174
+symbol = "?FindLink@AtDataRegistry@@QAEPAVAtDataLink@@PBDPAV2@H@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067950
+size = 46
+symbol = "?FindInPools@AtDataRegistry@@QAEPAVAtDataLink@@PBDH@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067CB0
+size = 54
+symbol = "?ValueNamed@AtDataRegistry@@QAEPAVAtDataComponent@@PBD@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067CF0
+size = 35
+symbol = "?ValueAt@AtDataRegistry@@QAEPAVAtDataComponent@@PAVAtDataLink@@PBDH@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067D20
+size = 20
+symbol = "?FindPath@AtDataRegistry@@QAEPAVAtDataLink@@PBDH@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00068860
+size = 32
+symbol = "?ValueAtPath@AtDataRegistry@@QAEPAVAtDataComponent@@PBDH@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000687D0
+size = 131
+symbol = "?CopyFrom@AtDataRegistry@@QAEHPAV1@@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067200
+size = 499
+symbol = "?CopyFrom@AtDataComponentPool@@QAEXPAV1@PAVAtDataRegistry@@@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00068720
+size = 141
+symbol = "?Relink@AtDataComponentPool@@QAEXPAV1@PAVAtDataRegistry@@@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006C080
+size = 135
+symbol = "?AppendPath@AtDataLink@@QAEXPADH@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006BCE0
+size = 205
+symbol = "?CopyFrom@AtDataDescriptor@@QAEHPBV1@@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00067D40
+size = 60
+symbol = "?AttachUnder@AtDataRegistry@@QAEHPAV1@PBD@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000675B0
+size = 742
+symbol = "?Create@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@IIIIIIIIIIIIPAV1@@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00066860
+size = 205
+symbol = "?SetFileName@AtDataRegistry@@QAEXPBD@Z"
+source = "src/at/AtDataLookup.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00039910
+size = 85
+symbol = "?CopyFrom@AtText@@QAEXPAV1@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtText.h"
+
+[[function]]
+va = 0x000B15B0
+size = 5
+symbol = "?Resize@AtDataComponent@@UAEHI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x001ACD70
+size = 3
+symbol = "?SetElement@AtDataComponent@@UAEXPBXII@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x000CBF30
+size = 3
+symbol = "?RemoveAt@AtDataComponent@@UAEXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069E40
+size = 37
+symbol = "?Write@AtDataComponent@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A010
+size = 6
+symbol = "?ElementAt@AtDataBoolean@@UAEPAXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A000
+size = 12
+symbol = "?SetElement@AtDataBoolean@@UAEXPBXII@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069EB0
+size = 32
+symbol = "?Write@AtDataBoolean@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A060
+size = 26
+symbol = "?Set@AtDataBoolean@@QAEHPAVAtDataDescriptor@@H@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A0E0
+size = 32
+symbol = "?Equals@AtDataReal@@UAEHPBVAtDataComponent@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069F00
+size = 32
+symbol = "?Write@AtDataReal@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A020
+size = 18
+symbol = "?SetElement@AtDataShortName@@UAEXPBXII@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A130
+size = 63
+symbol = "?Equals@AtDataShortName@@UAEHPBVAtDataComponent@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069FA0
+size = 35
+symbol = "?Write@AtDataShortName@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A100
+size = 34
+symbol = "?Set@AtDataShortName@@QAEHPAVAtDataDescriptor@@PBD@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A540
+size = 116
+symbol = "?Equals@AtDataString@@UAEHPBVAtDataComponent@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A5C0
+size = 154
+symbol = "?Write@AtDataString@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A250
+size = 210
+symbol = "?CopyText@AtDataString@@QAEHPAVAtDataDescriptor@@PAVAtText@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A1D0
+size = 43
+symbol = "?Forget@AtDataString@@QAEXXZ"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A4D0
+size = 98
+symbol = "?BindAndRead@AtDataString@@QAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@PADI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x00069FD0
+size = 44
+symbol = "?Bind@AtDataString@@QAEHPAVAtDataDescriptor@@PADI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A830
+size = 13
+symbol = "?ElementAt@AtDataBooleanArray@@UAEPAXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A790
+size = 29
+symbol = "?SetElement@AtDataBooleanArray@@UAEXPBXII@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006ADE0
+size = 68
+symbol = "?RemoveAt@AtDataBooleanArray@@UAEXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A970
+size = 66
+symbol = "?Write@AtDataBooleanArray@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AD70
+size = 28
+symbol = "?Copy@AtDataBooleanArray@@QAEHPAVAtDataDescriptor@@PBV1@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AC80
+size = 148
+symbol = "?SetData@AtDataBooleanArray@@QAEHPAVAtDataDescriptor@@IPBH@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A9E0
+size = 10
+symbol = "?ElementAt@AtDataByteArray@@UAEPAXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A760
+size = 38
+symbol = "?SetElement@AtDataByteArray@@UAEXPBXII@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AC00
+size = 61
+symbol = "?RemoveAt@AtDataByteArray@@UAEXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006ABB0
+size = 67
+symbol = "?Write@AtDataByteArray@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AB90
+size = 28
+symbol = "?Copy@AtDataByteArray@@QAEHPAVAtDataDescriptor@@PBV1@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AAA0
+size = 145
+symbol = "?SetData@AtDataByteArray@@QAEHPAVAtDataDescriptor@@IPBE@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AD90
+size = 66
+symbol = "?Write@AtDataRealArray@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AE50
+size = 13
+symbol = "?ElementAt@AtDataShortNameArray@@UAEPAXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A7B0
+size = 31
+symbol = "?SetElement@AtDataShortNameArray@@UAEXPBXII@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B080
+size = 68
+symbol = "?RemoveAt@AtDataShortNameArray@@UAEXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B030
+size = 69
+symbol = "?Write@AtDataShortNameArray@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B010
+size = 28
+symbol = "?Copy@AtDataShortNameArray@@QAEHPAVAtDataDescriptor@@PBV1@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006AF10
+size = 148
+symbol = "?SetData@AtDataShortNameArray@@QAEHPAVAtDataDescriptor@@IPAY07D@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B0F0
+size = 13
+symbol = "?ElementAt@AtDataStringArray@@UAEPAXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006A7D0
+size = 56
+symbol = "?SetElement@AtDataStringArray@@UAEXPBXII@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B6A0
+size = 108
+symbol = "?RemoveAt@AtDataStringArray@@UAEXI@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B5C0
+size = 221
+symbol = "?Write@AtDataStringArray@@UAEXPAVAtIoTokenizer@@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B9E0
+size = 222
+symbol = "?Copy@AtDataStringArray@@QAEHPAVAtDataDescriptor@@PBV1@@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+[[function]]
+va = 0x0006B330
+size = 444
+symbol = "?Make@AtDataStringArray@@QAEHPAVAtDataDescriptor@@II@Z"
+source = "src/at/AtDataValueAccess.cpp"
+subsystem = "at/datalookup"
+evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
+
+# The value classes' vftables, now that every slot is recovered. Their addresses are also in at/adr's [symbols].
+[[vtable]]
+va = 0x00277754
+slots = 10
+symbol = "??_7AtDataComponent@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x0027777C
+slots = 10
+symbol = "??_7AtDataBoolean@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x002777A4
+slots = 10
+symbol = "??_7AtDataInt@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x002777CC
+slots = 10
+symbol = "??_7AtDataReal@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x002777F4
+slots = 10
+symbol = "??_7AtDataShortName@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x0027781C
+slots = 10
+symbol = "??_7AtDataString@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x0027784C
+slots = 10
+symbol = "??_7AtDataBooleanArray@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x00277874
+slots = 10
+symbol = "??_7AtDataByteArray@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x0027789C
+slots = 10
+symbol = "??_7AtDataIntArray@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x002778C4
+slots = 10
+symbol = "??_7AtDataRealArray@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x002778EC
+slots = 10
+symbol = "??_7AtDataShortNameArray@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[[vtable]]
+va = 0x00277914
+slots = 10
+symbol = "??_7AtDataStringArray@@6B@"
+source = "src/at/AtDataComponent.cpp"
+
+[symbols]
+"_memmove" = 0x001262C0  # 0x0006B6A0 and the array RemoveAt slots move overlapping blocks through it; the name is a hint
+# Folded slots: each name below is code recorded once under another class's symbol, so the vftables resolve.
+"?ElementAt@AtDataComponent@@UAEPAXI@Z" = 0x000B15B0
+"?Equals@AtDataComponent@@UAEHPBV1@@Z" = 0x000B15B0
+"?Read@AtDataInt@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z" = 0x0006A080
+"?Reset@AtDataInt@@UAEXXZ" = 0x00069F50
+"?ElementAt@AtDataInt@@UAEPAXI@Z" = 0x0006A010
+"?SetElement@AtDataInt@@UAEXPBXII@Z" = 0x0006A000
+"?Write@AtDataInt@@UAEXPAVAtIoTokenizer@@@Z" = 0x00069EB0
+"?Reset@AtDataReal@@UAEXXZ" = 0x00069F50
+"?ElementAt@AtDataReal@@UAEPAXI@Z" = 0x0006A010
+"?SetElement@AtDataReal@@UAEXPBXII@Z" = 0x0006A000
+"?Reset@AtDataShortName@@UAEXXZ" = 0x00069F50
+"?ElementAt@AtDataShortName@@UAEPAXI@Z" = 0x0006A010
+"?Reset@AtDataByteArray@@UAEXXZ" = 0x0006A840
+"?Read@AtDataIntArray@@UAEHPAVAtDataDescriptor@@PAVAtIoTokenizer@@@Z" = 0x0006A920
+"?Reset@AtDataIntArray@@UAEXXZ" = 0x0006A840
+"?Resize@AtDataIntArray@@UAEHI@Z" = 0x0006A870
+"?ElementAt@AtDataIntArray@@UAEPAXI@Z" = 0x0006A830
+"?SetElement@AtDataIntArray@@UAEXPBXII@Z" = 0x0006A790
+"?RemoveAt@AtDataIntArray@@UAEXI@Z" = 0x0006ADE0
+"?Write@AtDataIntArray@@UAEXPAVAtIoTokenizer@@@Z" = 0x0006A970
+"?Reset@AtDataRealArray@@UAEXXZ" = 0x0006A840
+"?Resize@AtDataRealArray@@UAEHI@Z" = 0x0006A870
+"?ElementAt@AtDataRealArray@@UAEPAXI@Z" = 0x0006A830
+"?SetElement@AtDataRealArray@@UAEXPBXII@Z" = 0x0006A790
+"?RemoveAt@AtDataRealArray@@UAEXI@Z" = 0x0006ADE0
+"?Reset@AtDataShortNameArray@@UAEXXZ" = 0x0006A840

@@ -22,6 +22,7 @@ public:
     void ClearFields();                       // 0x00031BA0
     unsigned int ComputeEnd();                // 0x000398B0 the first terminator from m_start, or m_capacity - 1
     void SetNarrow(const char* text);         // 0x00039970 as much as fits, then a terminator at that index even if that is m_capacity; src/at/AtDataComponent.cpp
+    void CopyFrom(AtText* other);             // 0x00039910 other's characters from its index 0, as many as m_end - m_start, as much as fits; terminator as SetNarrow; src/at/AtDataValueAccess.cpp
 
     virtual unsigned int CharAt(unsigned int index) = 0;            // slot 0
     virtual void SetChar(unsigned int index, unsigned int c) = 0;   // slot 1

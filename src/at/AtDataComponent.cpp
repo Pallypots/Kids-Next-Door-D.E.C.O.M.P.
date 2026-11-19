@@ -88,10 +88,6 @@ template <class T> void FreeData(AtDataComponent* self, T*& data) {
     self->AtDataComponent::Reset();
 }
 
-void NotRecovered(const char* what) {
-    AtFatal(what, 0, 0, 0);
-}
-
 }  // namespace
 
 void AtText::SetNarrow(const char* text) {
@@ -139,33 +135,6 @@ int AtDataComponent::SetDescriptor(AtDataDescriptor* descriptor) {
 void AtDataComponent::Reset() {
     m_descriptor = 0;
     m_registry = 0;
-}
-
-int AtDataComponent::Resize(unsigned int) {
-    NotRecovered("AtDataComponent::Resize: slot 4 of this class is not recovered");
-    return 0;
-}
-
-void* AtDataComponent::ElementAt(unsigned int) {
-    NotRecovered("AtDataComponent::ElementAt: slot 5 is not recovered");
-    return 0;
-}
-
-void AtDataComponent::SetElement(const void*, unsigned int, unsigned int) {
-    NotRecovered("AtDataComponent::SetElement: slot 6 is not recovered");
-}
-
-int AtDataComponent::Equals(const AtDataComponent*) {
-    NotRecovered("AtDataComponent::Equals: slot 7 is not recovered");
-    return 0;
-}
-
-void AtDataComponent::RemoveAt(unsigned int) {
-    NotRecovered("AtDataComponent::RemoveAt: slot 8 is not recovered");
-}
-
-void AtDataComponent::Write(AtIoTokenizer*) {
-    NotRecovered("AtDataComponent::Write: slot 9 is not recovered");
 }
 
 // ---- one value ----------------------------------------------------------------------------------------------------------
