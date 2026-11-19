@@ -272,7 +272,7 @@ int main() {
         loader->Load(owner, "MODEL\\THING", 2, 0, 1);
         CHECK(loader->m_textureCount == 1 && loader->m_meshCount == 1 && loader->m_animationCount == 1);
         CHECK(loader->m_textures != nullptr && loader->TextureAt(0) == loader->m_textures);
-        CHECK(g_unrecovered[0x0010FFC0] == 1);
+        CHECK(loader->m_textures[0].m_owner == owner && owner->m_textureDatabases == loader->m_textures);  // the recovered texture database, include/at/AtGrD3DTextures.h
         CHECK(loader->m_meshes != nullptr && loader->MeshAt(0) == loader->m_meshes);
         CHECK(loader->m_meshes[0].m_meshCount == 2 && g_mesh_reads == 2);
         CHECK(loader->m_animations != nullptr && loader->m_animations[0]->m_animationCount == 2);
@@ -280,7 +280,7 @@ int main() {
         CHECK(owner->m_meshDatabases == loader->m_meshes);
         loader->Unload();
         CHECK(loader->m_meshes == nullptr && loader->m_textures == nullptr && owner->m_meshDatabases == nullptr);
-        CHECK(g_unrecovered[0x001101D0] == 1);
+        CHECK(owner->m_textureDatabases == nullptr);
         delete loader;
     }
 

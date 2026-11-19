@@ -32,7 +32,10 @@ public:
     unsigned int m_textureCapacity;  // +0x24 StagedShaderTexture
     unsigned int m_textureUsed;      // +0x28
     void** m_textures;               // +0x2C
-    int m_unknown30;                 // +0x30 only ever cleared here
+    union {
+        int m_unknown30;             // +0x30 cleared here as an integer; on x86 the same as clearing m_more
+        AtMaterialDatabase* m_more;  // +0x30 made by the concrete database's slot 3, which MaterialAt goes on to past m_count
+    };
 
     static void* s_heap;             // 0x002C63F0
 };

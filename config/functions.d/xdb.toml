@@ -1,0 +1,529 @@
+# The Xbox texture and material databases, and the items they hold as far as loading, clearing and destroying need. Names inferred. See include/at/AtGrD3DTextures.h and docs/worklog/2026-11-08-xdb.md.
+
+[[function]]
+va = 0x0010FFC0
+size = 47
+symbol = "??0AtGrD3DTextureDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x0001BFA0, then +0x34 to +0x54 cleared; stores vftable 0x0028A6E0; made by 0x00112170"
+
+[[function]]
+va = 0x001101D0
+size = 79
+symbol = "??1AtGrD3DTextureDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable, 0x0010FFF0, then GmNameMap's 0x00025260"
+
+[[function]]
+va = 0x0010FFF0
+size = 223
+symbol = "?Clear@AtGrD3DTextureDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 1: 0x000EF0C0 if +0x34; arrays +0x40 +0x44 +0x48 +0x38 +0x3C through their slot 0; 0x0001C6B0"
+
+[[function]]
+va = 0x0010F810
+size = 18
+symbol = "?OnReady@AtGrD3DTextureDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 2: owner to +0x34, jumps to 0x000EF0A0"
+
+[[function]]
+va = 0x0010F830
+size = 185
+symbol = "?MakeSurfaces2D@AtGrD3DTextureDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 3: heap 0x002C62E4, count +0x14, 0x50 each, ctor 0x000FCEE0, to +0x38"
+
+[[function]]
+va = 0x0010F950
+size = 185
+symbol = "?MakeSurfaces3D@AtGrD3DTextureDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 4: count +0x18, 0x50 each, ctor 0x000FCD50, to +0x3C"
+
+[[function]]
+va = 0x0010FA70
+size = 184
+symbol = "?MakeTextures2D@AtGrD3DTextureDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 5: count +0x1C, 0x34 each, ctor 0x000FC630, to +0x40"
+
+[[function]]
+va = 0x0010FB90
+size = 185
+symbol = "?MakeTextures3D@AtGrD3DTextureDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 6: count +0x20, 0x30 each, ctor 0x001214A0, to +0x44"
+
+[[function]]
+va = 0x0010FCB0
+size = 185
+symbol = "?MakeCubeMaps@AtGrD3DTextureDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 7: count +0x24, 0x30 each, ctor 0x00121730, to +0x48"
+
+[[function]]
+va = 0x001100D0
+size = 248
+symbol = "?MakeMore@AtGrD3DTextureDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 8: new 0x58 inline to +0x30; 0x00013F70 of the group's name; 0x0001C600 with the five counts"
+
+[[function]]
+va = 0x0010FDD0
+size = 18
+symbol = "?Surface2DAt@AtGrD3DTextureDatabase@@UAEPAXI@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 9: +0x38 + i*0x50"
+
+[[function]]
+va = 0x0010FDF0
+size = 18
+symbol = "?Surface3DAt@AtGrD3DTextureDatabase@@UAEPAXI@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 10: +0x3C + i*0x50"
+
+[[function]]
+va = 0x0010FE10
+size = 15
+symbol = "?Texture2DAt@AtGrD3DTextureDatabase@@UAEPAVAtTextureItem@@I@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 11: +0x40 + i*0x34"
+
+[[function]]
+va = 0x0010FE20
+size = 18
+symbol = "?Texture3DAt@AtGrD3DTextureDatabase@@UAEPAVAtTextureItem@@I@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 12: +0x44 + i*0x30"
+
+[[function]]
+va = 0x0010FE40
+size = 18
+symbol = "?CubeMapAt@AtGrD3DTextureDatabase@@UAEPAVAtTextureItem@@I@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 13: +0x48 + i*0x30"
+
+[[function]]
+va = 0x0010FE60
+size = 100
+symbol = "?TakeSurfaces2D@AtGrD3DTextureDatabase@@QAEPAVAtGrD3DSurface2D@@I@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "message 0x0028A698 copied to the frame for 0x00011070; +0x4C advanced; called by 0x000FC670 and 0x000FC6C0"
+
+[[function]]
+va = 0x000EF0A0
+size = 22
+symbol = "?AddTextureDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DTextureDatabase@@@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "owner +0x3338, link +0x54"
+
+[[function]]
+va = 0x000EF0C0
+size = 44
+symbol = "?RemoveTextureDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DTextureDatabase@@@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "owner +0x3338, link +0x54"
+
+[[function]]
+va = 0x000FC630
+size = 29
+symbol = "??0AtGrD3DTexture2D@@QAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x00031070, +0x28..+0x30 cleared, vftable 0x00289700"
+
+[[function]]
+va = 0x000FCCC0
+size = 95
+symbol = "??1AtGrD3DTexture2D@@UAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x000FC980, 0x000310C0, fields cleared, 0x00031290"
+
+[[function]]
+va = 0x000FCC80
+size = 28
+symbol = "?Reset@AtGrD3DTexture2D@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable 0x00289700 slot 4; not in the inventory: follows 0x000FCAD0"
+
+[[function]]
+va = 0x000FC6C0
+size = 82
+symbol = "?Describe@AtGrD3DTexture2D@@UAEXPAVAtTextureDatabase@@PBDIHIH@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 1: 0x00030FF0, then 0x0010FE60 of 1 or +0x1E"
+
+[[function]]
+va = 0x000FC670
+size = 67
+symbol = "?Read@AtGrD3DTexture2D@@UAEXPAVAtTextureDatabase@@PBDPAVAtIoTokenizer@@@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 2: 0x000312D0, then 0x0010FE60 of 1 or +0x1E"
+
+[[function]]
+va = 0x000FCCA0
+size = 31
+symbol = "?ClearPending@AtGrD3DTexture2D@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 3: if 0x800, 0x000FC980 when +0x30, then 0x00031100"
+
+[[function]]
+va = 0x000FC980
+size = 107
+symbol = "?Release@AtGrD3DTexture2D@@QAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x000FB630 on owner+0x3354 for stages 0-3; 0x000FCFC0 per level; 0x00205E20, 0x00205D10 on +0x2C"
+
+[[function]]
+va = 0x000FC570
+size = 18
+symbol = "?SurfaceAt@AtGrD3DTexture2D@@UAEPAVAtGrD3DSurface2D@@I@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 13: +0x30 + i*0x50"
+
+[[function]]
+va = 0x000FCEE0
+size = 92
+symbol = "??0AtGrD3DSurface2D@@QAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x00060480, 0x000F5A70 at +0x2C, vftable 0x00289768"
+
+[[function]]
+va = 0x000FD8C0
+size = 92
+symbol = "??1AtGrD3DSurface2D@@UAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x000FCF40, 0x000F5CC0 at +0x2C, 0x00060510"
+
+[[function]]
+va = 0x000FCF40
+size = 121
+symbol = "?Reset@AtGrD3DSurface2D@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 1: +0x4C slots 1 and 0, +0x48, +0x44, 0x00205D10 on +0x28, 0x000F5AA0, 0x000604B0"
+
+[[function]]
+va = 0x000FCFC0
+size = 32
+symbol = "?ReleaseChain@AtGrD3DSurface2D@@QAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x00205D10 on +0x28 along +0x4C"
+
+[[function]]
+va = 0x000FD230
+size = 13
+symbol = "?Palette@AtGrD3DSurface2D@@UAEPAVAtGrIPalette@@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 2: +0x2C when format flag 4"
+
+[[function]]
+va = 0x00060480
+size = 48
+symbol = "??0AtGrIPixelSurface@@QAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable 0x00277458, 0x00042C90 at +4"
+
+[[function]]
+va = 0x00060510
+size = 46
+symbol = "??1AtGrIPixelSurface@@UAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable 0x00277458, 0x00042D60 at +4"
+
+[[function]]
+va = 0x000604B0
+size = 40
+symbol = "?Reset@AtGrIPixelSurface@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable 0x00277458 slot 1"
+
+[[function]]
+va = 0x000604E0
+size = 34
+symbol = "?SetColorKey@AtGrIPixelSurface@@UAEXPBE@Z"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 4: four bytes to +0x18, +0x1E |= 2"
+
+[[function]]
+va = 0x00060400
+size = 5
+symbol = "?ClearColorKey@AtGrIPixelSurface@@UAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 5: +0x1E &= ~2"
+
+[[function]]
+va = 0x0011C160
+size = 19
+symbol = "??0AtGrIPalette@@QAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable 0x0028B118"
+
+[[function]]
+va = 0x0011C180
+size = 7
+symbol = "??1AtGrIPalette@@UAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable 0x0028B118"
+
+[[function]]
+va = 0x000F5A70
+size = 34
+symbol = "??0AtGrD3DPalette@@QAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x0011C160, vftable 0x00289274"
+
+[[function]]
+va = 0x000F5CC0
+size = 117
+symbol = "??1AtGrD3DPalette@@UAE@XZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "+0xC freed, 0x00205D10 on +8, 0x0011C180"
+
+[[function]]
+va = 0x000F5AA0
+size = 52
+symbol = "?Free@AtGrD3DPalette@@QAEXXZ"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "+0xC freed, 0x00205D10 on +8; called by 0x000FCF40"
+
+[[function]]
+va = 0x000F7790
+size = 29
+symbol = "??0AtGrD3DMaterialDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x00038F80, +0x34..+0x3C, vftable 0x00289300; made by 0x001122A0"
+
+[[function]]
+va = 0x000F7970
+size = 79
+symbol = "??1AtGrD3DMaterialDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "vftable, 0x000F77B0, 0x00039470"
+
+[[function]]
+va = 0x000F77B0
+size = 132
+symbol = "?Clear@AtGrD3DMaterialDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 1: 0x000EF110, 0x0010A460 per material (0x18C), array through slot 1, jumps to 0x000392F0"
+
+[[function]]
+va = 0x000F79C0
+size = 205
+symbol = "?OnReady@AtGrD3DMaterialDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 2: heap 0x003B1F90, +0x14 materials, ctor 0x0010A3F0, owner to +0x34, 0x000EF0F0"
+
+[[function]]
+va = 0x000F7AF0
+size = 222
+symbol = "?Slot3@AtGrD3DMaterialDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 3: new 0x40 inline to +0x30; 0x00013F70; slot 5 with +0x34 +0x18 +0x24 +0x14"
+
+[[function]]
+va = 0x000F7840
+size = 41
+symbol = "?MaterialAt@AtGrD3DMaterialDatabase@@UAEPAVAtMaterial@@I@Z"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "slot 8: +0x38 + i*0x18C below +0x14, else +0x30's slot 8"
+
+[[function]]
+va = 0x000EF0F0
+size = 22
+symbol = "?AddMaterialDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DMaterialDatabase@@@Z"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "owner +0x333C, link +0x3C"
+
+[[function]]
+va = 0x000EF110
+size = 44
+symbol = "?RemoveMaterialDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DMaterialDatabase@@@Z"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "owner +0x333C, link +0x3C"
+
+[[function]]
+va = 0x000F7780
+size = 10
+symbol = "?SetHeap@AtGrD3DMaterialDatabase@@SAXPAX@Z"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "to 0x003B1F90"
+
+[[function]]
+va = 0x0010A3F0
+size = 107
+symbol = "??0AtGrD3DMaterial@@QAE@XZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x000383E0, vftable 0x0028A200, eight 0x28 at +0x48 by 0x000F6400, +0x188 +0x18A cleared"
+
+[[function]]
+va = 0x000F7870
+size = 86
+symbol = "??1AtGrD3DMaterial@@UAE@XZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "eight 0x28 at +0x48 by 0x000F6450, then 0x00038EB0"
+
+[[function]]
+va = 0x0010A460
+size = 24
+symbol = "?Release@AtGrD3DMaterial@@QAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x0010A330, 0x00038C50"
+
+[[function]]
+va = 0x0010A330
+size = 56
+symbol = "?ReleaseStages@AtGrD3DMaterial@@QAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x000F6250 on each of +0x18A at +0x48; ret 4"
+
+[[function]]
+va = 0x000F6400
+size = 68
+symbol = "??0AtGrD3DMaterialStage@@QAE@XZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "fields, 0x8006 and 1 twice"
+
+[[function]]
+va = 0x000F6250
+size = 162
+symbol = "?Reset@AtGrD3DMaterialStage@@QAEXXZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "+4, +8 freed; +0 array of 0x14 by 0x00105330; flag 1 counts 0x003B1F74 down to 0x000F61D0"
+
+[[function]]
+va = 0x000F6450
+size = 5
+symbol = "??1AtGrD3DMaterialStage@@QAE@XZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "a jump to 0x000F6250; the destructor 0x000F7870 names"
+
+[[function]]
+va = 0x00105330
+size = 31
+symbol = "??1AtGrD3DStageEntry@@QAE@XZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "the destructor 0x000F6250 and 0x000F61D0 give the array of 0x14"
+
+[[function]]
+va = 0x000F61D0
+size = 117
+symbol = "?FreeShared@AtGrD3DMaterialStage@@SAXXZ"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+evidence = "0x003B1F88, 0x003B1F84 freed, 0x003B1F78 array; 0x003B1F78-0x003B1F8C cleared"
+
+[[vtable]]
+va = 0x0028A6E0
+slots = 14
+symbol = "??_7AtGrD3DTextureDatabase@@6B@"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+
+[[vtable]]
+va = 0x00289300
+slots = 9
+symbol = "??_7AtGrD3DMaterialDatabase@@6B@"
+source = "src/at/AtGrD3DMaterialDatabase.cpp"
+subsystem = "at/xdb"
+
+[[vtable]]
+va = 0x00277458
+slots = 7
+symbol = "??_7AtGrIPixelSurface@@6B@"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+
+[[vtable]]
+va = 0x0028B118
+slots = 11
+symbol = "??_7AtGrIPalette@@6B@"
+source = "src/at/AtGrD3DTextureDatabase.cpp"
+subsystem = "at/xdb"
+
+[symbols]
+"??_7AtGrD3DPalette@@6B@" = 0x00289274  # not recorded as a vftable: slots 1 to 10 stop
+"??_7AtGrD3DSurface2D@@6B@" = 0x00289768  # not recorded as a vftable: slots 6 to 13 stop
+"??_7AtGrD3DTexture2D@@6B@" = 0x00289700  # not recorded as a vftable: slots 8, 9, 11 stop and 12 is the seam
+"??_7AtGrD3DMaterial@@6B@" = 0x0028A200  # not recorded as a vftable: slot 0 is the seam
+"??_EAtGrD3DTextureDatabase@@UAEPAXI@Z" = 0x00112240  # vector deleting destructor, compiler-made
+"??_GAtGrD3DTextureDatabase@@UAEPAXI@Z" = 0x00112240  # the scalar form the candidate's table names; the original's slot 0 is the vector form, which does both
+"??_EAtGrD3DMaterialDatabase@@UAEPAXI@Z" = 0x00112370  # vector deleting destructor, compiler-made
+"??_GAtGrD3DMaterialDatabase@@UAEPAXI@Z" = 0x00112370  # as above
+"??_GAtGrIPixelSurface@@UAEPAXI@Z" = 0x00060540  # scalar deleting destructor, compiler-made
+"??_EAtGrIPixelSurface@@UAEPAXI@Z" = 0x00060540  # as above
+"??_EAtGrD3DSurface2D@@UAEPAXI@Z" = 0x0010F8F0  # vector deleting destructor, compiler-made
+"??_EAtGrD3DTexture2D@@UAEPAXI@Z" = 0x0010FB30  # vector deleting destructor, compiler-made
+"??_EAtGrD3DMaterial@@UAEPAXI@Z" = 0x000F7A90  # vector deleting destructor, compiler-made
+"??_GAtGrD3DPalette@@UAEPAXI@Z" = 0x000F5FA0  # scalar deleting destructor, compiler-made
+"??_GAtGrIPalette@@UAEPAXI@Z" = 0x0011C190  # scalar deleting destructor, compiler-made
+"?Palette@AtGrIPixelSurface@@UAEPAVAtGrIPalette@@XZ" = 0x000AB720  # vftable 0x00277458 slot 2: returns 0, folded
+"?Slot3@AtGrD3DSurface2D@@UAEHXZ" = 0x000AB720  # vftable 0x00289768 slot 3: returns 0, folded
+"?Slot6@AtGrIPixelSurface@@UAEXXZ" = 0x001CC9F0  # vftable 0x00277458 slot 6: empty, folded
+"?s_heap@AtGrD3DMaterialDatabase@@2PAXA" = 0x003B1F90
+"?s_sharedUsers@AtGrD3DMaterialStage@@2IA" = 0x003B1F74
+"?s_sharedEntries@AtGrD3DMaterialStage@@2PAUAtGrD3DStageEntry@@A" = 0x003B1F78
+"?s_shared7C@AtGrD3DMaterialStage@@2IA" = 0x003B1F7C
+"?s_shared80@AtGrD3DMaterialStage@@2IA" = 0x003B1F80
+"?s_shared84@AtGrD3DMaterialStage@@2PAXA" = 0x003B1F84
+"?s_shared88@AtGrD3DMaterialStage@@2PAXA" = 0x003B1F88
+"?s_shared8C@AtGrD3DMaterialStage@@2IA" = 0x003B1F8C

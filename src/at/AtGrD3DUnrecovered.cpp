@@ -1,5 +1,5 @@
-// Not recovered code. The bodies of what include/at/AtGrD3DDatabase.h declares and this work does not recover: the eight kinds of database other than meshes and animations, the items a mesh database makes, and the
-// keys' own slots. Each goes to AtGrD3DUnrecovered, or for an item's reader to a function of its own, in src/at/AtGrD3DSeam.cpp, which stops with a diagnostic; a test supplies those instead. Each body names the
+// Not recovered code. The bodies of what include/at/AtGrD3DDatabase.h and include/at/AtGrD3DTextures.h declare and is not recovered: the six kinds of database other than meshes, animations, textures and materials,
+// the items a mesh database makes, what a texture database holds that loading does not need, and the keys' own slots. Each goes to AtGrD3DUnrecovered, or for an item's reader to a function of its own, in src/at/AtGrD3DSeam.cpp, which stops with a diagnostic; a test supplies those instead. Each body names the
 // original's function, or for a slot whose function is not known, the address of its entry in the vftable.
 #include "at/AtGrD3DDatabase.h"
 
@@ -7,32 +7,48 @@
 #define STOP1(va, a) AtGrD3DUnrecovered(va, this, (unsigned int)(a), 0)
 #define POINTER(T, va, a) ((T*)(unsigned long long)AtGrD3DUnrecovered(va, this, (unsigned int)(a), 0))
 
-// ---- Textures ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ---- What the texture database holds and does not recover: include/at/AtGrD3DTextures.h ---------------------------------------------------------------------------------------------------------------------------
 
-AtGrD3DTextureDatabase::AtGrD3DTextureDatabase() { STOP(0x0010FFC0); }
-AtGrD3DTextureDatabase::~AtGrD3DTextureDatabase() { STOP(0x001101D0); }
-void AtGrD3DTextureDatabase::Clear() { STOP(0x0010FFF0); }
-void AtGrD3DTextureDatabase::OnReady(AtMaterialOwner* owner) { STOP1(0x0010F810, owner != 0); }
-void AtGrD3DTextureDatabase::MakeSurfaces2D() { STOP(0x0010F830); }
-void AtGrD3DTextureDatabase::MakeSurfaces3D() { STOP(0x0010F950); }
-void AtGrD3DTextureDatabase::MakeTextures2D() { STOP(0x0010FA70); }
-void AtGrD3DTextureDatabase::MakeTextures3D() { STOP(0x0010FB90); }
-void AtGrD3DTextureDatabase::MakeCubeMaps() { STOP(0x0010FCB0); }
-void AtGrD3DTextureDatabase::MakeMore() { STOP(0x001100D0); }
-void* AtGrD3DTextureDatabase::Surface2DAt(unsigned int index) { return POINTER(void, 0x0010FDD0, index); }
-void* AtGrD3DTextureDatabase::Surface3DAt(unsigned int index) { return POINTER(void, 0x0010FDF0, index); }
-AtTextureItem* AtGrD3DTextureDatabase::Texture2DAt(unsigned int index) { return POINTER(AtTextureItem, 0x0010FE10, index); }
-AtTextureItem* AtGrD3DTextureDatabase::Texture3DAt(unsigned int index) { return POINTER(AtTextureItem, 0x0010FE20, index); }
-AtTextureItem* AtGrD3DTextureDatabase::CubeMapAt(unsigned int index) { return POINTER(AtTextureItem, 0x0010FE40, index); }
+void AtGrD3DPalette::CopyFrom(const AtGrIPalette* from) { STOP1(0x000F5AE0, from != 0); }
+void AtGrD3DPalette::Slot2() { STOP(0x000F58E0); }
+void AtGrD3DPalette::Slot3() { STOP(0x000F5EC0); }
+void AtGrD3DPalette::Slot4() { STOP(0x000F5920); }
+void AtGrD3DPalette::Slot5() { STOP(0x000F5F20); }
+void AtGrD3DPalette::Slot6() { STOP(0x000F5970); }
+void AtGrD3DPalette::Slot7() { STOP(0x000F5B10); }
+void AtGrD3DPalette::Slot8() { STOP(0x000F5B80); }
+void AtGrD3DPalette::Slot9() { STOP(0x000F5BF0); }
+void AtGrD3DPalette::Slot10() { STOP(0x000F5C60); }
 
-// ---- Materials, shaders, lights ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void AtGrD3DSurface2D::Slot6() { STOP(0x000FD240); }
+void AtGrD3DSurface2D::Slot7() { STOP(0x000FD9A0); }
+void AtGrD3DSurface2D::Slot8() { STOP(0x0005F2E0); }
+void AtGrD3DSurface2D::Slot9() { STOP(0x000FE260); }
+void AtGrD3DSurface2D::Slot10() { STOP(0x000FE320); }
+void AtGrD3DSurface2D::Slot11() { STOP(0x001ACD70); }
+void AtGrD3DSurface2D::Slot12() { STOP(0x000FD0C0); }
+void AtGrD3DSurface2D::Slot13() { STOP(0x000FD190); }
 
-AtGrD3DMaterialDatabase::AtGrD3DMaterialDatabase() { STOP(0x000F7790); }
-AtGrD3DMaterialDatabase::~AtGrD3DMaterialDatabase() { STOP(0x000F7970); }
-void AtGrD3DMaterialDatabase::Clear() { STOP(0x000F77B0); }
-void AtGrD3DMaterialDatabase::OnReady(AtMaterialOwner* owner) { STOP1(0x000F79C0, owner != 0); }
-void AtGrD3DMaterialDatabase::Slot3() { STOP(0x000F7AF0); }
-AtMaterial* AtGrD3DMaterialDatabase::MaterialAt(unsigned int index) { return POINTER(AtMaterial, 0x000F7840, index); }
+// Slots 8 and 9 return pointers, which the base's type, an int, cannot hold on a 64-bit host: Texture() and PaletteOf() do what they do.
+int AtGrD3DTexture2D::Unknown8() { return (int)STOP(0x000FC620); }
+int AtGrD3DTexture2D::Unknown9() { return (int)STOP(0x000FC590); }
+void AtGrD3DTexture2D::Slot11() { STOP(0x000FC8A0); }
+
+AtGrD3DTexture3D::AtGrD3DTexture3D() { STOP(0x001214A0); }
+AtGrD3DTexture3D::~AtGrD3DTexture3D() { STOP(0x001214C0); }
+void AtGrD3DTexture3D::Slot11() { STOP(0x0028B8B8); }
+void AtGrD3DTexture3D::OnLoaded(AtMaterialOwner* owner) { STOP1(0x0028B8BC, owner != 0); }
+
+AtGrD3DCubeMap::AtGrD3DCubeMap() { STOP(0x00121730); }
+AtGrD3DCubeMap::~AtGrD3DCubeMap() { STOP(0x001220E0); }
+void AtGrD3DCubeMap::Slot11() { STOP(0x00121920); }
+void AtGrD3DCubeMap::OnLoaded(AtMaterialOwner* owner) { STOP1(0x00121F60, owner != 0); }
+
+AtGrD3DSurface3D::AtGrD3DSurface3D() { STOP(0x000FCD50); }
+AtGrD3DSurface3D::~AtGrD3DSurface3D() { STOP(0x000FCDF0); }
+int AtGrD3DSurface3D::Slot3() { return (int)STOP(0x00289744); }
+
+// ---- Shaders, lights ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 AtGrD3DShaderDatabase::AtGrD3DShaderDatabase() { STOP(0x00110260); }
 AtGrD3DShaderDatabase::~AtGrD3DShaderDatabase() { STOP(0x001103F0); }
