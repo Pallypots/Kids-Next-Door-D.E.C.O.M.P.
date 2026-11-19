@@ -3,6 +3,7 @@
 #pragma once
 
 #include "at/AtFlashTextFormat.h"
+#include "at/AtFpDisplay.h"
 
 class AtDatabaseLoader;
 class AtFlashFontLoader;
@@ -52,9 +53,13 @@ struct AtFlashGraphics {
     char m_unknown00[0x10];
     AtMaterialOwner* m_owner;          // +0x10
 };
+// The display manager at +0x004 and the remote function calls at +0x264 are what the action script machine reaches (include/at/AtFpDisplay.h); neither is recovered.
 struct AtFlashApplication {
-    char m_unknown000[0x260];
+    char m_unknown000[4];
+    AtFpDisplayManager m_display;      // +0x004
+    char m_unknown1D4[0x260 - 0x1D4];  // perhaps more of the display manager: its size is not known
     AtFlashGraphics* m_graphics;       // +0x260
+    AtFpRfcTable m_rfc;                // +0x264
 };
 struct AtFlashEnvironment {            // The class that reads .AFE, by its callers at 0x0002BBC8 to 0x0002CCFE.
     AtFlashApplication* m_application; // +0x000
@@ -104,7 +109,9 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
+static_assert(offsetof(AtFlashApplication, m_display) == 0x4, "AtFlashApplication::m_display");
 static_assert(offsetof(AtFlashApplication, m_graphics) == 0x260, "AtFlashApplication::m_graphics");
+static_assert(offsetof(AtFlashApplication, m_rfc) == 0x264, "AtFlashApplication::m_rfc");
 static_assert(offsetof(AtFlashEnvironment, m_platformSpecificFiles) == 0x1F4, "AtFlashEnvironment::m_platformSpecificFiles");
 static_assert(offsetof(AtFlashShape, m_rectangle) == 0x1C, "AtFlashShape::m_rectangle");
 static_assert(offsetof(AtFlashShape, m_heap) == 0x34, "AtFlashShape::m_heap");

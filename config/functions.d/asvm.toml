@@ -1,0 +1,546 @@
+# The Flash action script machine (at/asvm): its dispatch loop 0x0001F020, every handler from 0x0001CB30 to 0x0001EE80, and the values', the stack's and the handlers' own values' methods only they use.
+# Names inferred but for AtFpActionScriptVM and its LoadMovie and ActionGetURL2 (the original's vLoadMovie, vActionGetURL2). Sizes are the inventory's. See include/at/AtFlashScript.h.
+
+[[function]]
+va = 0x0001F020
+size = 724
+symbol = "?Run@AtFpActionScriptVM@@QAEXPAVAtFpScript@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001EF70
+size = 163
+symbol = "?ActionIf@AtFpActionScriptVM@@QAEXGPAIPAVAtFpScript@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001E520
+size = 205
+symbol = "?ActionCall@AtFpActionScriptVM@@QAEHXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CB30
+size = 112
+symbol = "?LoadMovie@AtFpActionScriptVM@@QAEXPBD0@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CBA0
+size = 106
+symbol = "?ActionGetTime@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CC10
+size = 107
+symbol = "?ActionWaitForFrame2@AtFpActionScriptVM@@QAEXE@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CD10
+size = 219
+symbol = "?ActionGotoLabel@AtFpActionScriptVM@@QAEXPBE@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CDF0
+size = 161
+symbol = "?ActionGotoFrame2@AtFpActionScriptVM@@QAEXE@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CEA0
+size = 264
+symbol = "?ActionSetTarget@AtFpActionScriptVM@@QAEXPBE@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001CFB0
+size = 194
+symbol = "?ActionSetTarget2@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D080
+size = 312
+symbol = "?ActionPush@AtFpActionScriptVM@@QAEXIPBE@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D1C0
+size = 207
+symbol = "?ActionGetVariable@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D290
+size = 207
+symbol = "?ActionSetVariable@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D360
+size = 255
+symbol = "?ActionLess@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D460
+size = 253
+symbol = "?ActionEquals@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D560
+size = 163
+symbol = "?ActionNot@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D610
+size = 266
+symbol = "?ActionAnd@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D720
+size = 266
+symbol = "?ActionOr@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D830
+size = 238
+symbol = "?ActionAdd@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001D920
+size = 242
+symbol = "?ActionSubtract@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001DA20
+size = 242
+symbol = "?ActionDivide@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001DB20
+size = 238
+symbol = "?ActionMultiply@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001DC10
+size = 418
+symbol = "?ActionStringAdd@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001DDC0
+size = 166
+symbol = "?ActionCharToAscii@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001DE70
+size = 155
+symbol = "?ActionAsciiToChar@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001DF10
+size = 137
+symbol = "?ActionToInteger@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001DFA0
+size = 321
+symbol = "?ActionStringEquals@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001E0F0
+size = 321
+symbol = "?ActionStringLess@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001E240
+size = 164
+symbol = "?ActionStringLength@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001E2F0
+size = 558
+symbol = "?ActionStringExtract@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001E5F0
+size = 513
+symbol = "?ActionGetURL2@AtFpActionScriptVM@@QAEXE@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001E8D0
+size = 334
+symbol = "?ActionRandomNumber@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001EA20
+size = 216
+symbol = "?ActionTrace@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001EB00
+size = 298
+symbol = "?ActionGetProperty@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001EC30
+size = 296
+symbol = "?ActionSetProperty@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001ED60
+size = 277
+symbol = "?ActionCloneSprite@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0001EE80
+size = 120
+symbol = "?ActionRemoveSprite@AtFpActionScriptVM@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020740
+size = 37
+symbol = "?Clear@AtFpActionScriptValue@@QAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020770
+size = 30
+symbol = "?SetInt@AtFpActionScriptValue@@QAEXPBH@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020790
+size = 70
+symbol = "?SetReal@AtFpActionScriptValue@@QAEXPBM@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000207E0
+size = 74
+symbol = "?ToReal@AtFpActionScriptValue@@QAEMXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020830
+size = 76
+symbol = "?ToInt@AtFpActionScriptValue@@QAEHXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020880
+size = 127
+symbol = "?ToText@AtFpActionScriptValue@@QAEPADXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020900
+size = 43
+symbol = "?Length@AtFpActionScriptValue@@QAEIXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020930
+size = 122
+symbol = "?IsInteger@AtFpActionScriptValue@@QAEHXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020C00
+size = 83
+symbol = "?SetText@AtFpActionScriptValue@@QAEXPAVAtText@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020C60
+size = 95
+symbol = "?SetText@AtFpActionScriptValue@@QAEXPBD@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D200
+size = 97
+symbol = "?CopyFrom@AtFpActionScriptValue@@QAEPAV1@PBV1@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D1B0
+size = 47
+symbol = "?Pop@AtFpActionScriptStack@@QAEHPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D1E0
+size = 20
+symbol = "?Discard@AtFpActionScriptStack@@QAEHXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D2F0
+size = 76
+symbol = "?PushInt@AtFpActionScriptStack@@QAEHH@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D340
+size = 76
+symbol = "?PushReal@AtFpActionScriptStack@@QAEHM@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D390
+size = 76
+symbol = "?PushText@AtFpActionScriptStack@@QAEHPBD@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D3E0
+size = 76
+symbol = "?PushText@AtFpActionScriptStack@@QAEHPAVAtText@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D430
+size = 66
+symbol = "?PushUndefined@AtFpActionScriptStack@@QAEHXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D480
+size = 80
+symbol = "?PushString@AtFpActionScriptStack@@QAEHPADI@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D4D0
+size = 76
+symbol = "?PushCopy@AtFpActionScriptStack@@QAEHPBVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D520
+size = 74
+symbol = "?PushFrom@AtFpActionScriptStack@@QAEHPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D650
+size = 73
+symbol = "??0AtFpActionScriptLocalValue@@QAE@XZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D6A0
+size = 22
+symbol = "?Reset@AtFpActionScriptLocalValue@@UAEXXZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D6C0
+size = 181
+symbol = "?Reserve@AtFpActionScriptLocalValue@@UAEXI@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D780
+size = 60
+symbol = "?SetString@AtFpActionScriptLocalValue@@UAEXPADI@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D7C0
+size = 92
+symbol = "??1AtFpActionScriptLocalValue@@QAE@XZ"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D820
+size = 28
+symbol = "?MoveTo@AtFpActionScriptLocalValue@@UAEXPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFlashScriptVM.cpp"
+subsystem = "at/asvm"
+evidence = "tests/oracle/oracle_asvm.cpp; address noted beside the declaration in the header"
+
+[[vtable]]
+va = 0x00274878
+slots = 4
+symbol = "??_7AtFpActionScriptLocalValue@@6B@"
+source = "src/at/AtFlashScriptVM.cpp"
+
+[symbols]
+"?GetCurrentFrame@AtFpDisplayManager@@QAEHXZ" = 0x0002BF50  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?GotoFrame@AtFpDisplayManager@@QAEXH@Z" = 0x0002B970  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?SetPlaying@AtFpDisplayManager@@QAEXH@Z" = 0x0002BFC0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?StopSounds@AtFpDisplayManager@@QAEXXZ" = 0x0002BF20  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?GotoFrameByLabel@AtFpDisplayManager@@QAEXPBD@Z" = 0x0002BF80  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?GotoFrameByExpression@AtFpDisplayManager@@QAEXPBD@Z" = 0x0002CB70  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?SetTarget@AtFpDisplayManager@@QAEXPBD@Z" = 0x0002C3B0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?LoadMovie@AtFpDisplayManager@@QAEXPBD0@Z" = 0x0002CFD0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?ResolveTarget@AtFpDisplayManager@@QAEPAVAtFpRfcArgs@@PBD@Z" = 0x0002CC90  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?GetVariable@AtFpDisplayManager@@QAEHPBDPAVAtFpActionScriptValue@@@Z" = 0x0002C9C0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?SetVariable@AtFpDisplayManager@@QAEHPBDPAVAtFpActionScriptValue@@@Z" = 0x0002CAA0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?GetProperty@AtFpDisplayManager@@QAEXPBDHPAVAtFpActionScriptValue@@@Z" = 0x0002C320  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?SetProperty@AtFpDisplayManager@@QAEXPBDHPAVAtFpActionScriptValue@@@Z" = 0x0002C360  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?ExecuteScripts@AtFpDisplayManager@@QAEHH@Z" = 0x0002C150  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?ExecuteScripts@AtFpDisplayManager@@QAEHPBD@Z" = 0x0002C1C0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?SetTarget@AtFpDisplayMgrContextStack@@QAEXPAX@Z" = 0x00016130  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?Call@AtFpRfcTable@@QAEXPBDPAVAtFpRfcArgs@@@Z" = 0x0002D9E0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?Construct@AtFpRfcArgs@@QAEXXZ" = 0x00021620  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?Destruct@AtFpRfcArgs@@QAEXXZ" = 0x00021AD0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?Init@AtFpRfcArgs@@QAEXXZ" = 0x000216E0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?Add@AtFpRfcArgs@@QAEXPBDPAVAtFpActionScriptValue@@@Z" = 0x00021DD0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?Clear@AtFpRfcArgs@@QAEXXZ" = 0x00021680  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?AtPlatformMilliseconds@@YAIXZ" = 0x00020640  # the clock, from the performance counter
+"?AtFormatGeneral@@YAXPADN@Z" = 0x00125559  # stands in for the C library's sprintf with "%g"
