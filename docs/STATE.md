@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-18, dev cycle 25 (fifth batch: scene lists, Flash levels, the concrete database loader, images and fonts, the matrix table, the game actor base, main and App init). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-19, dev cycle 26 (sixth batch: Flash texts and scripts, the layer start-up chain, the matrix device, the character classes). Per-function results live in docs/PROGRESS.md (generated).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-18, dev cycle 25 (fifth batch: scene lists, Flash levels, 
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 1984 functions and 172 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
+All source is in `src/`, types in `include/`. 2167 functions and 182 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -61,6 +61,10 @@ All source is in `src/`, types in `include/`. 1984 functions and 172 vftables ar
 * `at/matrix` (40 functions): the matrix table `g_atMatrix`. On all 544 real `.AKC` files, matrices match the original bit for bit. GCC and Clang builds now use `-ffp-contract=off` (CMakeLists.txt), because contracting multiply and add changes results.
 * `gm/gmactor` (70 functions): the game actor base `GmAcActor` (vftable 0x0028E4C8, 0x2D8 bytes) and its bases, and the animation callback that plays sound notes. Players are `FaAcPlayer`, enemies `FaAcNPC`; see the worklog for the class tree. Nothing in a build creates actors yet.
 * `gm/app` (28 functions): the game's `main`, App init and the main loop (0x0008EBE0; 0x0008ED60 is Shutdown). A real x64 build stops at the first SDK call of start-up; later branches carry it further.
+* `at/aft` (46 functions): Flash UI texts `.AFT`, fonts tables, and scripts `.AFA` (Flash action bytecode, loaded; the interpreter is on a later branch). All 20 real `.AFD` files read to the end in the oracle.
+* `gm/atap` and `at/atap` (72 functions): App's layer start-up chain. **A real x64 start-up now brings up the memory system and App's heaps, the event layer, the network layer and the I/O layer, then stops at the math layer** (later branches carry it further). The host's memory query is answered by port code in `platform/host_sdk.cpp` and `platform/host_io.cpp`, which never counts as recovered.
+* `at/matdev` (29 functions): the matrix device and pool. All 544 real `.AKC` files load completely through recovered code on x64; on x86 every matrix matches the original bit for bit. Its two item classes are the loader's vertex and index arrays, folded.
+* `gm/gmchar` (36 functions): the record reader, GmAcObject and GmAcCharacter. A real record read now reaches the recovered registry search.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
@@ -135,7 +139,7 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. Integrate branches waiting: Flash text and scripts, the layer start-up chain, the matrix device, the character classes; then the work still running (Xbox texture and material databases, registry lookups, graphics device, NPCs, players, manifest base, sound playback, the ActionScript interpreter, further start-up layers).
+1. Integrate branches waiting: graphics device, registry lookups, middle and graphics start-up layers, NPCs, players, Xbox textures and materials, sound playback, the manifest base, the ActionScript interpreter; then the work still running.
 2. Everything a loader reaches through a failed open goes to `AtFatal` 0x00011070, which stops rumble, draws an error screen and launches out. Plan closures with that cut.
 3. Whether `AtSceneDevice`, `AtMaterialOwner` and the class in 0x00027B70-0x0002AC10 are one class, and whether `AtNameTableOwner` is really the class of vftable 0x00274A78. The pool vftables 0x002770D8 and 0x002764D4 have 7 slots, not the 5 recorded.
 

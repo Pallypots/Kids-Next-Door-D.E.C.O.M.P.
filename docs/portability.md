@@ -115,3 +115,9 @@ The hash divides by the table's size, which a cleared map has as zero. The origi
 
 * `AtCellPortal::m_vertices` points into a locked vertex array, a host pointer. `AtVertexLock` keeps 0x48 bytes of room past its two known words, for whatever the graphics layer's lock writes there.
 * Counts ahead of arrays are `size_t`, through `AtSceneArray.h`.
+
+## Matrix device
+
+* `src/at/AtMatrixAxis.cpp` turns off contraction as `src/at/AtMatrix.cpp` does; the same GCC note applies (`-ffp-contract=off`).
+* The pool's block is `count << 6` in 32-bit unsigned on any host, as the original's: on x64 the wrap is kept, not widened.
+* A matrix is 64 bytes on every host; nothing here holds a pointer in the game's layout. The objects themselves (`AtMatrixPoolXbox` 0xC bytes on x86) grow with pointers on x64, which nothing in the data depends on.

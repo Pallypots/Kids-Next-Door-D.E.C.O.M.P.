@@ -579,3 +579,18 @@ From the readers, and checked on every real file by the oracle. Both start with 
 
 * `.XKA`: a table of 0x78 bytes; a scratch block (names of eight bytes, records of 0x60, read onto the token file's heap and freed) and a kept block (component lists and keys, owned by the database). Records are copied word for word into `AtAnimation`, their 32-bit runs cut to 16 bits. The keys get counts and pointers into the kept block, and flag 0x400, so that clearing does not free what they did not allocate. On the disc: 565 distinct files, up to 116 animations each, none empty.
 * `.XGG`: a table of 0x58 bytes; a scratch block of records, a kept block on the mesh heap (aligned to 32 bytes at least while it is allocated), and a third block in memory for the graphics processor, absent in 42 of 442 files. Then items, kind by kind: vertex arrays (records of 0x3C), index arrays (8), streams (0x48), meshes (0x18, a name at 0x0C, with triangles, parts and material references beside). Each item reads its own part and moves the cursors on.
+
+## Flash texts and scripts (.AFT, .AFA)
+
+From the code and the 20 real files, one of each per user interface archive (`DataXbox/UI/Xbox/*.JAM`):
+
+```
+.AFT    Text\name.AFT: NameSpace "s"  Text[ n ] { Text i { String "8 bytes"  Font2D "8 bytes"  TextFormat i  Variable "string" } ... }
+        The words inside a Text in any order, each optional; any other word is reported (code 0x27) and reading goes on.
+        Loaded with, in this order: Text\name.AFX (the formats, already recovered), Text\Font.AGF when the file system has it (2 of the 20 archives), Text\name.AFT, then Text\name.AIS (the strings).
+.AFA    AScript\name.AFA: NameSpace "s"  [ActionScriptFileVersion r]  ScriptBlocks [ n ] { Script { ScriptID i  ScriptBlockSize i  Instructions[ k ] { len b1 .. blen  ... } } ... }
+        Only NameSpace is checked. After it, the reader takes tokens by position: one more if the first is ActionScriptFileVersion, then the count is the third token's number, and so on.
+        Each instruction is a length and that many bytes (each token's low byte), packed one after another into a block of ScriptBlockSize. The bytes are Flash action codes as 16-bit fields (150 = Push, 29 =
+        SetVariable, 154 = GetURL2, 157 = If, 153 = Jump, 140 = GotoLabel, 0 = End, by the SWF numbering).
+        The strings are AScript\name.AIS, loaded first, through AtIoContext::s_instance (0x002C62F0), not the file context.
+```
