@@ -298,8 +298,8 @@ void App::StartUpAtlas() {
 
 void App::LoadDirtyDiskScreen() {
     AtHeapManager::s_instance->m_override = s_instance->GetHeap(0);
-    m_dirtyDiskLoader = s_instance->m_graphics->DatabaseLoader();
-    m_dirtyDiskLoader->Load(s_instance->m_materialOwner, "DataXbox\\UI\\DirtyDsk\\loader", 0, 0, 1);
+    m_dirtyDiskLoader = s_instance->m_device->m_factory->DatabaseLoader();
+    m_dirtyDiskLoader->Load(s_instance->m_device->m_materialOwner, "DataXbox\\UI\\DirtyDsk\\loader", 0, 0, 1);
     AtHeapManager::s_instance->m_override = 0;
 }
 

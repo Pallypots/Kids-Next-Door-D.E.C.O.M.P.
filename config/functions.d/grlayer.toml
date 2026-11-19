@@ -1,0 +1,567 @@
+# The graphics layer's object short of the hardware, its saved globals and function tables, and the heap setters only it calls (at/grlayer).
+# Names inferred; see include/at/AtGraphicsLayer.h. Sizes run to the padding after each function's last instruction.
+
+[[function]]
+va = 0x000140A0
+size = 21
+symbol = "?AtMatrixTableSet@@YAXPBUAtMatrixTable@@@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "copies 0x68 words from its argument to 0x002C60C8, the matrix table (include/at/AtCoordSys.h); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000140C0
+size = 6
+symbol = "?AtMatrixTableGet@@YAPAUAtMatrixTable@@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "returns 0x002C60C8; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000283E0
+size = 10
+symbol = "?AtSetHeap2C6358@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C6358; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00028CD0
+size = 10
+symbol = "?AtSetHeap2C635C@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C635C; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x0002AAF0
+size = 10
+symbol = "?AtSetHeap2C6378@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C6378; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x0002AD50
+size = 10
+symbol = "?AtSetHeap2C637C@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C637C; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x0002B420
+size = 10
+symbol = "?AtSetHeap2C6384@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C6384; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x0002B680
+size = 10
+symbol = "?AtSetHeap2C6388@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C6388; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00036AB0
+size = 10
+symbol = "?AtSetHeap2C63E8@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C63E8; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00043480
+size = 28
+symbol = "??0AtDisplayMode@@QAE@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x00042C90 on +8, clears +0, +4, +0x1C, +0x20; from 0x000B2F80 on +0x54; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00043760
+size = 10
+symbol = "?AtSetHeap2C7C38@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C7C38; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000455B0
+size = 30
+symbol = "?AtRenderTableSet@@YAXPBUAtRenderTable@@@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x000140A0 with its argument, then 0x6F words to 0x002C7C48; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000455D0
+size = 6
+symbol = "?AtRenderTableGet@@YAPAUAtRenderTable@@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "returns 0x002C7C48; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00057DB0
+size = 10
+symbol = "?AtSetHeap2C7FF0@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C7FF0; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00059580
+size = 10
+symbol = "?AtSetHeap2C9C08@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002C9C08; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00060590
+size = 10
+symbol = "?AtSetHeap2CB08C@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002CB08C; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00065B00
+size = 10
+symbol = "?AtSetHeap2CB090@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x002CB090; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000B2F50
+size = 11
+symbol = "?Slot7@AtGraphicsSystem@@UAEHXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "vftable 0x0028478C slot 7: +0x38, or +0x3C if it is 0; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000B2F60
+size = 24
+symbol = "?SetHeaps@AtGraphicsSystem@@UAEXPBUAtGraphicsConfig@@@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "vftable 0x0028478C slot 3: 0x000C8240 then 0x000C7CA0; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000B2F80
+size = 124
+symbol = "??0AtGraphicsSystem@@QAE@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x000C81B0, vftable 0x0028478C, 0x00043480 on +0x54, 0x00042C90 on +0x78, clears eleven words; App's constructor chain; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000B3000
+size = 170
+symbol = "?Init@AtGraphicsSystem@@UAEXPAUAtGraphicsConfig@@PAX1@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "vftable 0x0028478C slot 1, from 0x0009CAB0: globals on the stack, kind 1 to 2, 0x000C81E0, slot 3, 0x000C7C60, the factory's slots 0 and 3; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000B30B0
+size = 104
+symbol = "?Shutdown@AtGraphicsSystem@@UAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "vftable 0x0028478C slot 2: the device's slot 1, the factory's slot 4, 0x000C7C90 for a non-zero kind, 0x000C8210, 0x00042D60 on +0x78; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C7CA0
+size = 1187
+symbol = "?AtGraphicsSetHeaps@@YAXPBUAtGraphicsConfig@@@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "cdecl, from 0x000B2F60: 52 heap setters, ending in a jump to 0x000EC6D0; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C81B0
+size = 44
+symbol = "??0AtGraphicsSystemBase@@QAE@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores vftable 0x00286608, clears +4 to +0x2C; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C81E0
+size = 40
+symbol = "?Init@AtGraphicsSystemBase@@UAEXPAUAtGraphicsConfig@@PAX1@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "vftable 0x00286608 slot 1: slot 2 if bit 0 of +0xC; +0x10 below, +0x28 config +4, +8 config +0; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C8210
+size = 36
+symbol = "?Shutdown@AtGraphicsSystemBase@@UAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "vftable 0x00286608 slot 2: clears +4 to +0x2C; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C8240
+size = 818
+symbol = "?SetHeaps@AtGraphicsSystemBase@@UAEXPBUAtGraphicsConfig@@@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "vftable 0x00286608 slot 3: 34 heap setters, each config word or +8; the name map's and namespace database's only if unset; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C8600
+size = 19
+symbol = "??0AtGraphicsGlobals@@QAE@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x00100F80, clears +0x18; constructed on the stack by 0x000B3000; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C8620
+size = 18
+symbol = "?Save@AtGraphicsGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x00100F90, then +0x18 = 0x000455D0(); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000C8640
+size = 22
+symbol = "?Restore@AtGraphicsGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x00100FA0, then 0x000455B0(+0x18); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000EB510
+size = 10
+symbol = "?AtSetHeap3B13CC@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B13CC; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000EC6D0
+size = 10
+symbol = "?AtSetHeap3B13D0@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B13D0; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000ED2B0
+size = 10
+symbol = "?AtSetHeap3B13D4@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B13D4; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000ED5E0
+size = 10
+symbol = "?AtSetHeap3B13D8@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B13D8; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000EE550
+size = 10
+symbol = "?AtSetHeap3B13DC@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B13DC; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000EEF90
+size = 10
+symbol = "?AtSetHeap3B13E0@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B13E0; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F5610
+size = 10
+symbol = "?AtSetHeap3B1F50@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1F50; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F58D0
+size = 10
+symbol = "?AtSetHeap3B1F54@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1F54; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F61C0
+size = 10
+symbol = "?AtSetHeap3B1F70@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1F70; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F7780
+size = 10
+symbol = "?AtSetHeap3B1F90@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1F90; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F7ED0
+size = 10
+symbol = "?AtSetHeap3B1F98@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1F98; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F8500
+size = 10
+symbol = "?AtSetHeap3B1F9C@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1F9C; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F93C0
+size = 10
+symbol = "?AtSetHeap3B1FA0@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FA0; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000F98E0
+size = 10
+symbol = "?AtSetHeap3B1FA4@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FA4; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FA4F0
+size = 10
+symbol = "?AtSetHeap3B1FA8@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FA8; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FA930
+size = 10
+symbol = "?AtSetHeap3B1FAC@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FAC; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FAD30
+size = 10
+symbol = "?AtSetHeap3B1FB0@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FB0; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FBA60
+size = 10
+symbol = "?AtSetHeap3B1FB4@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FB4; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FC550
+size = 10
+symbol = "?AtSetHeap3B1FB8@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FB8; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FCD20
+size = 10
+symbol = "?AtSetHeap3B1FBC@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FBC; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FCE60
+size = 10
+symbol = "?AtSetHeap3B1FC0@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FC0; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x000FE500
+size = 10
+symbol = "?AtSetHeap3B1FC4@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B1FC4; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00100340
+size = 10
+symbol = "?AtSetHeap3B23D0@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B23D0; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00100350
+size = 10
+symbol = "?AtSetHeap3B23D4@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B23D4; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00100CF0
+size = 10
+symbol = "?AtSetHeap3B23D8@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B23D8; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00100DB0
+size = 10
+symbol = "?AtSetHeap3B23DC@@YAXPAX@Z"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "stores its argument at 0x003B23DC; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00100F80
+size = 12
+symbol = "??0AtKinematicsGlobals@@QAE@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x0011E370 only; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00100F90
+size = 5
+symbol = "?Save@AtKinematicsGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "jumps to 0x0011E380; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00100FA0
+size = 5
+symbol = "?Restore@AtKinematicsGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "jumps to 0x0011E390; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x0011E370
+size = 12
+symbol = "??0AtDataGlobals@@QAE@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x00125000 only; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x0011E380
+size = 5
+symbol = "?Save@AtDataGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "jumps to 0x00125020; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x0011E390
+size = 5
+symbol = "?Restore@AtDataGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "jumps to 0x00125040; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00125000
+size = 19
+symbol = "??0AtMathGlobals@@QAE@XZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x000C9200 (AtIoGlobals), clears +0x14; tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00125020
+size = 18
+symbol = "?Save@AtMathGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x000C9220, then +0x14 = 0x000140C0(); tests/oracle/oracle_grlayer.cpp"
+
+[[function]]
+va = 0x00125040
+size = 22
+symbol = "?Restore@AtMathGlobals@@QAEXXZ"
+source = "src/at/AtGraphicsLayer.cpp"
+subsystem = "at/grlayer"
+evidence = "0x000C9230, then 0x000140A0(+0x14); tests/oracle/oracle_grlayer.cpp"
+
+[symbols]
+"??_7AtGraphicsSystemBase@@6B@" = 0x00286608
+"??_7AtGraphicsSystem@@6B@" = 0x0028478C
+"??_7AtGraphicsFactory@@6B@" = 0x00288BE0
+"?g_atRender@@3UAtRenderTable@@A" = 0x002C7C48  # 0x1BC bytes in the original
+"?g_atMatrix@@3UAtMatrixTable@@A" = 0x002C60C8  # at/asn's, 0x1A0 bytes in the original; only fifteen members known
+"?g_heap3B23DC@@3PAXA" = 0x003B23DC
+"?g_heap2C7C38@@3PAXA" = 0x002C7C38
+"?g_heap3B23D8@@3PAXA" = 0x003B23D8
+"?g_heap2C7FF0@@3PAXA" = 0x002C7FF0
+"?g_heap2C635C@@3PAXA" = 0x002C635C
+"?g_heap2C63E8@@3PAXA" = 0x002C63E8
+"?g_heap3B23D4@@3PAXA" = 0x003B23D4
+"?g_heap3B1FC4@@3PAXA" = 0x003B1FC4
+"?g_heap2C6358@@3PAXA" = 0x002C6358
+"?g_heap2CB08C@@3PAXA" = 0x002CB08C
+"?g_heap2CB090@@3PAXA" = 0x002CB090
+"?g_heap2C9C08@@3PAXA" = 0x002C9C08
+"?g_heap3B13D4@@3PAXA" = 0x003B13D4
+"?g_heap2C6378@@3PAXA" = 0x002C6378
+"?g_heap2C637C@@3PAXA" = 0x002C637C
+"?g_heap3B1F50@@3PAXA" = 0x003B1F50
+"?g_heap3B23D0@@3PAXA" = 0x003B23D0
+"?g_heap3B1FA0@@3PAXA" = 0x003B1FA0
+"?g_heap3B1F9C@@3PAXA" = 0x003B1F9C
+"?g_heap2C6384@@3PAXA" = 0x002C6384
+"?g_heap2C6388@@3PAXA" = 0x002C6388
+"?g_heap3B1FC0@@3PAXA" = 0x003B1FC0
+"?g_heap3B1FBC@@3PAXA" = 0x003B1FBC
+"?g_heap3B1FB8@@3PAXA" = 0x003B1FB8
+"?g_heap3B1FB4@@3PAXA" = 0x003B1FB4
+"?g_heap3B1FB0@@3PAXA" = 0x003B1FB0
+"?g_heap3B1FAC@@3PAXA" = 0x003B1FAC
+"?g_heap3B1FA8@@3PAXA" = 0x003B1FA8
+"?g_heap3B1FA4@@3PAXA" = 0x003B1FA4
+"?g_heap3B13CC@@3PAXA" = 0x003B13CC
+"?g_heap3B1F98@@3PAXA" = 0x003B1F98
+"?g_heap3B1F90@@3PAXA" = 0x003B1F90
+"?g_heap3B1F70@@3PAXA" = 0x003B1F70
+"?g_heap3B1F54@@3PAXA" = 0x003B1F54
+"?g_heap3B13E0@@3PAXA" = 0x003B13E0
+"?g_heap3B13DC@@3PAXA" = 0x003B13DC
+"?g_heap3B13D8@@3PAXA" = 0x003B13D8
+"?g_heap3B13D0@@3PAXA" = 0x003B13D0

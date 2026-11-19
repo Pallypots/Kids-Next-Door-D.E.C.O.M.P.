@@ -77,7 +77,7 @@ static void test_configs() {
     AppGraphicsConfig graphics;
     std::memset(&graphics, 0x5A, sizeof graphics);
     app->GetGraphicsConfig(&graphics);
-    CHECK(graphics.m_unknown00 == 1 && graphics.m_unknown04 == 0 && graphics.m_heap == heaps[0] && graphics.m_unknown0C[56] == 0);
+    CHECK(graphics.m_unknown00 == 1 && graphics.m_unknown04 == 0 && graphics.m_heap == heaps[0] && graphics.m_unknownEC == 0);
     AppControllerConfig controller;
     std::memset(&controller, 0x5A, sizeof controller);
     app->GetControllerConfig(&controller);
@@ -217,7 +217,7 @@ LAYER3(Scene, AppSceneLayer);
 LAYER2(Ui, AppUserInterfaceLayer);
 class Graphics : public AppDevice {
 public:
-    void Init(const void*, void* below, void*) override { g_order.push_back("AppDevice"); g_below.push_back(below); }
+    void Init(AtGraphicsConfig*, void* below, void*) override { g_order.push_back("AppDevice"); g_below.push_back(below); }
 };
 
 static void test_chain() {
@@ -230,7 +230,7 @@ static void test_chain() {
     // The real chain stops at the first layer that is not recovered.
     std::string stopped = stop_of([&] { app->StartUpUserInterface(); });
     std::printf("chain stopped: %s\n", stopped.c_str());
-    CHECK(stopped == "App start-up: the graphics layer's Init (0x000B3000) is not recovered");
+    CHECK(stopped == "Graphics layer: the graphics factory's start (0x000C7C60: the render function tables and the factory at 0x003ADF64) is not recovered");
     CHECK(app->m_memory.m_started == 1 && AtHeapManager::s_instance == &app->m_memory.m_manager && app->m_memory.m_region != nullptr);
     for (int i = 0; i < 4; i++) CHECK(app->m_heaps[i] != nullptr && app->m_heaps[i]->m_size == app->m_heapConfig[i].m_size);
     CHECK(app->m_events.m_below == &app->m_memory && AtEventSystem::s_heap3ADF8C == app->m_heaps[0]);
