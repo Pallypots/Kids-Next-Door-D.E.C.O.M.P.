@@ -1,0 +1,271 @@
+# GmAcNPC and FaAcNPC, the enemies and the game's other AI characters, and the helpers they alone need. Names other than RTTI names are inferred; see include/gm/GmAcNPC.h.
+# Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x0014CB00
+size = 67
+symbol = "?FindValueObject@GmAcNode@@QAEPAVAtDataComponent@@PBDH@Z"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001524C0
+size = 85
+symbol = "?GmStatInRange@@YAHPAUGmAcStat@@PAVAtDataComponent@@@Z"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014EA60
+size = 38
+symbol = "??0GmAcNPC@@QAE@XZ"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014EAE0
+size = 136
+symbol = "??1GmAcNPC@@UAE@XZ"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014ECD0
+size = 87
+symbol = "??_EGmAcNPC@@UAEPAXI@Z"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E960
+size = 5
+symbol = "?Slot2@GmAcNPC@@UAEHXZ"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014EA90
+size = 66
+symbol = "?Shutdown@GmAcNPC@@UAEXXZ"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E950
+size = 5
+symbol = "?Slot10@GmAcNPC@@UAEXXZ"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E970
+size = 207
+symbol = "?Slot15@GmAcNPC@@UAEXXZ"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014EA40
+size = 5
+symbol = "?Slot20@GmAcNPC@@UAEXH@Z"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014EA50
+size = 5
+symbol = "?Slot49@GmAcNPC@@UAEXPBDHH@Z"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014EB70
+size = 344
+symbol = "?Create@GmAcNPC@@SAPAV1@H@Z"
+source = "src/gm/GmAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00013E00
+size = 71
+symbol = "?AtCompareN@@YAHPBD0I@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000920D0
+size = 57
+symbol = "?GmAcTargetOf@@YAPAVGmAcActor@@PAV1@@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092C20
+size = 30
+symbol = "?GmAcFloat154NotZero@@YAHPAVGmAcActor@@@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092110
+size = 69
+symbol = "?GmNthControlledCharacter@@YAPAVGmAcCharacter@@PAUGmControlledCharacters@@I@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000928F0
+size = 76
+symbol = "??0FaAcNPC@@QAE@XZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000929C0
+size = 142
+symbol = "??1FaAcNPC@@UAE@XZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092B90
+size = 87
+symbol = "??_EFaAcNPC@@UAEPAXI@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091F70
+size = 108
+symbol = "?Slot2@FaAcNPC@@UAEHXZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092940
+size = 68
+symbol = "?Shutdown@FaAcNPC@@UAEXXZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091F50
+size = 15
+symbol = "?Slot4@FaAcNPC@@UAEXXZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091F60
+size = 5
+symbol = "?Slot10@FaAcNPC@@UAEXXZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091FE0
+size = 221
+symbol = "?Slot15@FaAcNPC@@UAEXXZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092990
+size = 35
+symbol = "?Slot20@FaAcNPC@@UAEXH@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000920C0
+size = 5
+symbol = "?Slot49@FaAcNPC@@UAEXPBDHH@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092160
+size = 1256
+symbol = "?TestCondition@FaAcNPC@@UAEHPBD@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092650
+size = 664
+symbol = "?UpdateHealthLevels@FaAcNPC@@QAEXXZ"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00092A50
+size = 307
+symbol = "?Create@FaAcNPC@@SAPAV1@H@Z"
+source = "src/gm/FaAcNPC.cpp"
+subsystem = "gm/gmnpc"
+evidence = "tests/oracle/oracle_gmnpc.cpp; address noted beside the declaration in include/gm/GmAcNPC.h or include/gm/GmAcActor.h"
+
+[[vtable]]
+va = 0x0028E9A8
+slots = 61
+symbol = "??_7GmAcNPC@@6B@"
+source = "src/gm/GmAcNPC.cpp"
+
+[[vtable]]
+va = 0x0027B41C
+slots = 61
+symbol = "??_7FaAcNPC@@6B@"
+source = "src/gm/FaAcNPC.cpp"
+
+[symbols]
+"?Slot4@GmAcNPC@@UAEXXZ" = 0x001318F0  # folded: one body with GmAcPlayer's slot 4, in GmAcPlayer's range; a jump to GmAcCharacter's
+"?TestCondition@GmAcNPC@@UAEHPBD@Z" = 0x000B15B0  # folded: returns 0
+"?Start@FaCmCombat@@UAEXXZ" = 0x001CC9F0  # folded: empty
+"??_C@_0P@NCMOCBJG@LowHealthRange@" = 0x0027B2E8  # "LowHealthRange"
+"??_C@_0P@LAMPOKPB@MedHealthRange@" = 0x0027B2D8  # "MedHealthRange"
+"??_C@_0BA@KPKHONFN@HighHealthRange@" = 0x0027B2C8  # "HighHealthRange"
+"??_C@_0BC@EACCEBJK@NumAIHealthLevels@" = 0x0027B2B4  # "NumAIHealthLevels"
+"?AtFormatTemp@@YAPAUAtTempText@@PAU1@PBDZZ" = 0x00072330  # seams
+"??0GmGameEvent@@QAE@XZ" = 0x00152590
+"?Set@GmGameEvent@@QAEXPAVGmAcActor@@HHH@Z" = 0x00152780
+"?GmEventManagerSend@@YAXPAVGmEventManager@@PBD1PAUGmGameEvent@@H@Z" = 0x001512B0  # a method of GmEventManager
+"?GmAcCharacterCanSee@@YAHPAVGmAcCharacter@@PAVGmAcActor@@HHHHHHHHH@Z" = 0x00130E50  # a method of GmAcCharacter
+"??0GmAiActionManager@@QAE@XZ" = 0x0017D420
+"??1GmAiActionManager@@QAE@XZ" = 0x0017D6C0  # a jump to 0x0017D450
+"?Setup@GmAiActionManager@@QAEXPAVGmAcNPC@@@Z" = 0x0017D4E0
+"??0FaCmCombat@@QAE@XZ" = 0x000A3360
+"??_GFaCmCombat@@UAEPAXI@Z" = 0x000A46D0  # the deleting destructor; the seam is the complete destructor it calls
+"?Attach@FaCmCombat@@UAEXPAVGmAcActor@@@Z" = 0x000A33B0
+"?Slot2@FaCmCombat@@UAEXXZ" = 0x000A1F10
+"?Stop@FaCmCombat@@UAEXXZ" = 0x000A3430
+"?Slot5@FaCmCombat@@UAEXXZ" = 0x000A2310
+"?Update@FaCmCombat@@UAEXH@Z" = 0x000A4BB0
+"?Slot7@FaCmCombat@@UAEHXZ" = 0x000A3380

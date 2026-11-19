@@ -18,6 +18,7 @@
 #include "gm/GmNameMap.h"
 
 class AtCoordSys;
+class AtDataComponent;
 class AtVector3;
 class GmAcActor;
 class GmAcNode;
@@ -202,6 +203,9 @@ public:
     int SetupAndConfigure(void* a, Descriptor* descriptor);   // 0x0014BB00 keeps both, then slot 2, whose answer it returns
     // 0x0014CAA0. FindValue, then the same name under the game's default record (0x003B3524), searched without parents. An empty name finds nothing. The second argument is not read.
     void* FindValueOrDefault(const char* name, int unused);
+    // 0x0014CB00. The value object named `name` under this object's record, searched with parents, not its first element; null for an empty name or none found. Neither the registry nor the record
+    // is tested. The second argument is not read. src/gm/GmAcNPC.cpp
+    AtDataComponent* FindValueObject(const char* name, int unused);
     void ApplyMatAssignment(int which);  // 0x0014D590 the scene: not recovered, stops with a diagnostic. 1, 2, 3 pick +0x12C, +0x130, +0x134
     int IsVisible();                    // 0x0014C1B0 the scene and the camera: not recovered, stops with a diagnostic
 
