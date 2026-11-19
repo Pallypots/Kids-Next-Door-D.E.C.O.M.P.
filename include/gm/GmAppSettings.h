@@ -3,6 +3,8 @@
 #pragma once
 #include "at/AtIoMountManager.h"
 
+class AtRandomGenerator;
+
 // Supplied by the platform layer. On Xbox: 0x001B7B84, reading the console's language, and 0x001B7B12, its game region.
 int AtPlatformLanguage();
 int AtPlatformGameRegion();
@@ -37,7 +39,9 @@ struct GmHistoryLogs {
     void SetTraceHistory(int lines);   // 0x0006C2D0
     void SetErrorHistory(int lines);   // 0x0006C2F0
 
-    char m_unknown[0x18];
+    char m_unknown[0x10];
+    AtRandomGenerator* m_random;  // +0x10 the game's random numbers: made, seeded and destroyed by this object (0x0006C3E0, 0x0006C310); include/at/AtRandomGenerator.h
+    char m_unknown14[4];
     GmHistoryLog* m_errors;    // +0x18
     GmHistoryLog* m_traces;    // +0x1C both setters test this one
 
@@ -100,6 +104,7 @@ public:
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
 static_assert(offsetof(GmAppAudioOptions, m_audioTest) == 0x6478, "GmAppAudioOptions::m_audioTest");
+static_assert(offsetof(GmHistoryLogs, m_random) == 0x10, "GmHistoryLogs::m_random");
 static_assert(offsetof(GmHistoryLogs, m_traces) == 0x1C, "GmHistoryLogs::m_traces");
 static_assert(offsetof(GmAppSettings, m_controllerDeadZone) == 0x30, "GmAppSettings::m_controllerDeadZone");
 static_assert(offsetof(GmAppSettings, m_character) == 0x44, "GmAppSettings::m_character");

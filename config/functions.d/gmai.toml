@@ -1,0 +1,231 @@
+# The AI action manager that enemies use, the behaviour chart's commands that drive it, the game's random numbers, and the small readers they alone need. Names are inferred; see
+# include/gm/GmAiActionManager.h and include/at/AtRandomGenerator.h. Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x00014030
+size = 106
+symbol = "?AtNameLength8@@YAHPBD@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; an engine text routine, recovered here for its callers"
+
+[[function]]
+va = 0x00067CF0
+size = 35
+symbol = "?AtDataRegistryFindValue@@YAPAVAtDataComponent@@PAVAtDataRegistry@@PAVAtDataLink@@PBDH@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; a method of AtDataRegistry, free here"
+
+[[function]]
+va = 0x0014BAC0
+size = 52
+symbol = "?GmAcNodeFindLink@@YAPAVAtDataLink@@PAVGmAcNode@@PBDH@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; a method of GmAcNode, free here"
+
+[[function]]
+va = 0x0017CDD0
+size = 10
+symbol = "?SetHeap@GmAiActionManager@@SAXPAX@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017CDE0
+size = 78
+symbol = "?Find@GmAiActionManager@@QAEPAUGmAiAction@@PBDH@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017CE30
+size = 36
+symbol = "?IsEnabled@GmAiActionManager@@QAEHPBD@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017CE60
+size = 26
+symbol = "?Enable@GmAiActionManager@@QAEXPBD@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017CE80
+size = 26
+symbol = "?Disable@GmAiActionManager@@QAEXPBD@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017CEA0
+size = 995
+symbol = "?ReadActions@GmAiActionManager@@QAEXXZ"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017D290
+size = 164
+symbol = "?Weight@GmAiActionManager@@QAEMIH@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; the inventory's 0x0017D310 (17 bytes) is inside this function, not a function"
+
+[[function]]
+va = 0x0017D340
+size = 118
+symbol = "?Store@GmAiActionManager@@QAEXPBD@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017D3C0
+size = 89
+symbol = "?SetPattern@GmAiActionManager@@QAEXPBD@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017D420
+size = 37
+symbol = "??0GmAiActionManager@@QAE@XZ"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017D450
+size = 133
+symbol = "?Clear@GmAiActionManager@@QAEXXZ"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017D4E0
+size = 68
+symbol = "?Setup@GmAiActionManager@@QAEXPAVGmAcNPC@@@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017D530
+size = 400
+symbol = "?Choose@GmAiActionManager@@QAEXPAD@Z"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x0017D6C0
+size = 5
+symbol = "??1GmAiActionManager@@QAE@XZ"
+source = "src/gm/GmAiActionManager.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; a jump to Clear"
+
+[[function]]
+va = 0x0016C0C0
+size = 178
+symbol = "?GmChartChooseAIAction@@YAHPAUGmChartContext@@PAXPAPAX@Z"
+source = "src/gm/GmAiChart.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; bNPCChooseAIAction"
+
+[[function]]
+va = 0x0016C180
+size = 112
+symbol = "?GmChartStoreAIAction@@YAHPAUGmChartContext@@PAXPAPAX@Z"
+source = "src/gm/GmAiChart.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; vNPCStoreAIAction"
+
+[[function]]
+va = 0x0016C1F0
+size = 116
+symbol = "?GmChartHasAIAction@@YAHPAUGmChartContext@@PAXPAPAX@Z"
+source = "src/gm/GmAiChart.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; bNPCHasAIAction"
+
+[[function]]
+va = 0x00071BB0
+size = 21
+symbol = "??0AtRandomGenerator@@QAE@XZ"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h; one body with the destructor"
+
+[[function]]
+va = 0x00071BD0
+size = 193
+symbol = "?Reload@AtRandomGenerator@@QAEXXZ"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x00071CA0
+size = 81
+symbol = "?Seed@AtRandomGenerator@@QAEXI@Z"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x00071D00
+size = 73
+symbol = "?Next@AtRandomGenerator@@QAEIXZ"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x00071D50
+size = 30
+symbol = "?Below@AtRandomGenerator@@QAEII@Z"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x00071D70
+size = 29
+symbol = "?Unit@AtRandomGenerator@@QAENXZ"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x00071D90
+size = 13
+symbol = "?SeedDefault@AtRandomGenerator@@QAEHXZ"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[[function]]
+va = 0x00071DA0
+size = 27
+symbol = "?ResetSeed@AtRandomGenerator@@QAEIXZ"
+source = "src/gm/AtRandomGenerator.cpp"
+subsystem = "gm/gmai"
+evidence = "tests/oracle/oracle_gmai.cpp; address noted beside the declaration in include/gm/GmAiActionManager.h or include/at/AtRandomGenerator.h"
+
+[symbols]
+"??1AtRandomGenerator@@QAE@XZ" = 0x00071BB0  # folded: one body with the constructor
+"?s_heap@GmAiActionManager@@2PAXA" = 0x003B3C88
+"?GmChartTextArgument@@YAXPADIPAUGmChartContext@@PAXPAPAXHH@Z" = 0x001659F0  # seams: the behaviour chart's text argument

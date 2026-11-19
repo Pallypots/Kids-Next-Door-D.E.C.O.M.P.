@@ -19,10 +19,6 @@ int GmAcCharacterCanSee(GmAcCharacter*, GmAcActor*, int, int, int, int, int, int
     return 0;
 }
 
-GmAiActionManager::GmAiActionManager() { AtFatal("Gm NPC: 0x0017D420, the AI action manager, is not recovered", 0, 0, 0); }
-GmAiActionManager::~GmAiActionManager() { AtFatal("Gm NPC: 0x0017D6C0, destroying the AI action manager, is not recovered", 0, 0, 0); }
-void GmAiActionManager::Setup(GmAcNPC*) { AtFatal("Gm NPC: 0x0017D4E0, setting up the AI action manager, is not recovered", 0, 0, 0); }
-
 FaCmCombat::FaCmCombat() { AtFatal("Gm NPC: 0x000A3360, an NPC's combat object, is not recovered", 0, 0, 0); }
 FaCmCombat::~FaCmCombat() { AtFatal("Gm NPC: 0x000A46D0, deleting an NPC's combat object, is not recovered", 0, 0, 0); }
 void FaCmCombat::Attach(GmAcActor*) { AtFatal("Gm NPC: 0x000A33B0, attaching an NPC's combat object, is not recovered", 0, 0, 0); }
