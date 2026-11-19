@@ -108,7 +108,7 @@ class TestArray : public AtVertexArray {
 public:
     TestArray() { m_unknown04 = 0; m_flags = kPositionsInMemory; }
     float* PositionOf(float* index) override { slot('p', (uint32_t)(uintptr_t)index); return g_positions[g_side][(uintptr_t)index % 64]; }
-    void Slot1() override {} void Slot2() override {} void Slot3() override {} void Slot4() override {} void Slot5() override {} void Slot6() override {} void Slot7() override {} void Slot8() override {}
+    void Slot1() override {} void Destroy(unsigned int) override {} void Slot3() override {} void Slot4() override {} void Slot5() override {} void Slot6() override {} void Slot7() override {} void Slot8() override {}
     void Slot9() override {} void Slot10() override {} void Slot11() override {} void Slot12() override {} void Slot13() override {} void Slot14() override {} void Slot15() override {}
     void Finish() override { slot('v'); }
     void Slot17() override {} void Slot18() override {} void Slot19() override {} void Slot20() override {}
@@ -121,7 +121,7 @@ class TestIndices : public AtIndexArray {
 public:
     TestIndices() { m_count = 0; m_flags = 0; m_loadFlags = 0; std::memset(m_name, 0, sizeof m_name); m_index = 0; }
     void Allocate(unsigned int count, unsigned int flags) override { slot('a', count); slot('a', flags); }
-    void Slot1() override {} void Slot2() override {}
+    void Destroy(unsigned int) override {} void Slot2() override {}
     void Lock(void** out, int mode) override { slot('k', (uint32_t)mode); *out = g_indices[g_side]; }
     void Unlock() override { slot('u'); }
     void Finish() override { slot('i'); }

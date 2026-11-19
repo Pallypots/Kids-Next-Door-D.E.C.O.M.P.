@@ -33,7 +33,7 @@ public:
 
     virtual float* PositionOf(float* index) = 0;   // slot 0: an index as read, to the vertex's position
     virtual void Slot1() = 0;
-    virtual void Slot2() = 0;
+    virtual void Destroy(unsigned int flags) = 0;  // slot 2: the deleting destructor (the graphics layer's, 0x001105C0, is what AtMatrixDeviceXbox's FreeVertexArray calls with 1)
     virtual void Slot3() = 0;
     virtual void Slot4() = 0;
     virtual void Slot5() = 0;
@@ -67,7 +67,7 @@ public:
     enum LoadFlags { kDemandLoad = 0x20 };
 
     virtual void Allocate(unsigned int count, unsigned int flags) = 0;  // slot 0
-    virtual void Slot1() = 0;
+    virtual void Destroy(unsigned int flags) = 0;  // slot 1: the deleting destructor (the graphics layer's, 0x00110620, is what AtMatrixDeviceXbox's FreeIndexArray calls with 1)
     virtual void Slot2() = 0;
     virtual void Lock(void** out, int mode) = 0;   // slot 3 the one caller here passes 8
     virtual void Unlock() = 0;                     // slot 4

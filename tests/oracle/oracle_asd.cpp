@@ -179,7 +179,7 @@ class TestArray : public AtVertexArray {
 public:
     unsigned which = 0;
     float* PositionOf(float*) override { return nullptr; }
-    void Slot1() override {} void Slot2() override {} void Slot3() override {} void Slot4() override {} void Slot5() override {}
+    void Slot1() override {} void Destroy(unsigned int) override {} void Slot3() override {} void Slot4() override {} void Slot5() override {}
     void Slot6() override { g_log[g_side].add('U', which); }
     void Slot7() override {} void Slot8() override {} void Slot9() override {} void Slot10() override {} void Slot11() override {} void Slot12() override {} void Slot13() override {} void Slot14() override {}
     void Slot15() override {} void Finish() override {} void Slot17() override {} void Slot18() override {} void Slot19() override {} void Slot20() override {}

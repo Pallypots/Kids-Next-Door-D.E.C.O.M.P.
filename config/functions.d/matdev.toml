@@ -147,18 +147,18 @@ evidence = "tests/oracle/oracle_matdev.cpp; device slot 4, and slot 12 (ReleaseM
 [[function]]
 va = 0x000EBB30
 size = 24
-symbol = "?FreeItemA@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemA@@@Z"
+symbol = "?FreeVertexArray@AtMatrixDeviceXbox@@UAEXPAVAtVertexArray@@@Z"
 source = "src/at/AtMatrixDevice.cpp"
 subsystem = "at/matdev"
-evidence = "tests/oracle/oracle_matdev.cpp; device slot 6, and slot 14 (ReleaseItemA), folded; a harness item stands for the 0x64-byte object"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 6, and slot 14 (ReleaseVertexArray), folded; a harness vertex array stands for the graphics layer's (AtGrD3DVertexArray, 0x64 bytes)"
 
 [[function]]
 va = 0x000F7D20
 size = 24
-symbol = "?FreeItemB@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemB@@@Z"
+symbol = "?FreeIndexArray@AtMatrixDeviceXbox@@UAEXPAVAtIndexArray@@@Z"
 source = "src/at/AtMatrixDevice.cpp"
 subsystem = "at/matdev"
-evidence = "tests/oracle/oracle_matdev.cpp; device slot 7, and slot 15 (ReleaseItemB), folded; a harness item stands for the 0x24-byte object"
+evidence = "tests/oracle/oracle_matdev.cpp; device slot 7, and slot 15 (ReleaseIndexArray), folded; a harness index array stands for the graphics layer's (AtGrD3DIndexArray, 0x24 bytes)"
 
 [[function]]
 va = 0x000F7BE0
@@ -253,7 +253,7 @@ source = "src/at/AtMatrixDevice.cpp"
 "?FreePool@AtMatrixDeviceXbox@@UAEXPAVAtMatrixPool@@@Z" = 0x000EB9D0  # device slot 5; folded, recorded as AtIoDeleteObject (at/mount)
 "?ReleaseMatrix@AtMatrixDeviceXbox@@UAEXPAUAtMatrix@@@Z" = 0x000F7D80  # device slot 12, folded with FreeMatrix
 "?ReleasePool@AtMatrixDeviceXbox@@UAEXPAVAtMatrixPool@@@Z" = 0x000EB9D0  # device slot 13, folded
-"?ReleaseItemA@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemA@@@Z" = 0x000EBB30  # device slot 14, folded with FreeItemA
-"?ReleaseItemB@AtMatrixDeviceXbox@@UAEXPAVAtMatrixDeviceItemB@@@Z" = 0x000F7D20  # device slot 15, folded with FreeItemB
-"?NewItemA@AtMatrixDeviceXbox@@UAEPAVAtMatrixDeviceItemA@@XZ" = 0x000F7D90  # device slot 10: NOT recovered, stops with a diagnostic
-"?NewItemB@AtMatrixDeviceXbox@@UAEPAVAtMatrixDeviceItemB@@XZ" = 0x000F7E30  # device slot 11: NOT recovered, stops with a diagnostic
+"?ReleaseVertexArray@AtMatrixDeviceXbox@@UAEXPAVAtVertexArray@@@Z" = 0x000EBB30  # device slot 14, folded with FreeVertexArray
+"?ReleaseIndexArray@AtMatrixDeviceXbox@@UAEXPAVAtIndexArray@@@Z" = 0x000F7D20  # device slot 15, folded with FreeIndexArray
+"?NewVertexArray@AtMatrixDeviceXbox@@UAEPAVAtVertexArray@@XZ" = 0x000F7D90  # device slot 10: NOT recovered, stops with a diagnostic
+"?NewIndexArray@AtMatrixDeviceXbox@@UAEPAVAtIndexArray@@XZ" = 0x000F7E30  # device slot 11: NOT recovered, stops with a diagnostic

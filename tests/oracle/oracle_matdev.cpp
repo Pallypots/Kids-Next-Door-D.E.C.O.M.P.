@@ -178,17 +178,22 @@ static AtMatrixDeviceXbox* original_device() {
     return (AtMatrixDeviceXbox*)p;
 }
 
-// What slots 6 and 7 free; each logs the flag its destructor slot is given.
-class ItemA : public AtMatrixDeviceItemA {
+// What slots 6 and 7 free, a vertex array and an index array; each logs the flag its destructor slot is given.
+class ItemA : public AtVertexArray {
 public:
-    void Slot0() override {}
+    float* PositionOf(float*) override { return nullptr; }
     void Slot1() override {}
     void Destroy(unsigned int flags) override { if (g_recording) g_log[g_side].add('A', flags); }
+    void Slot3() override {} void Slot4() override {} void Slot5() override {} void Slot6() override {} void Slot7() override {} void Slot8() override {} void Slot9() override {}
+    void Slot10() override {} void Slot11() override {} void Slot12() override {} void Slot13() override {} void Slot14() override {} void Slot15() override {}
+    void Finish() override {} void Slot17() override {} void Slot18() override {} void Slot19() override {} void Slot20() override {}
+    void Read(AtMaterialOwner*, AtIoTokenizer*, unsigned int) override {}
 };
-class ItemB : public AtMatrixDeviceItemB {
+class ItemB : public AtIndexArray {
 public:
-    void Slot0() override {}
+    void Allocate(unsigned int, unsigned int) override {}
     void Destroy(unsigned int flags) override { if (g_recording) g_log[g_side].add('B', flags); }
+    void Slot2() override {} void Lock(void**, int) override {} void Unlock() override {} void Finish() override {}
 };
 
 // Words of a pool, the vftable aside, with the block given as an offset from nothing, or as present.
@@ -306,10 +311,10 @@ static void test_device() {
             g_device[side]->FreePool(nullptr);
             g_device[side]->ReleasePool(nullptr);
             g_device[side]->FreeMatrix(nullptr);
-            g_device[side]->FreeItemA(nullptr);
-            g_device[side]->FreeItemB(nullptr);
-            g_device[side]->ReleaseItemA(nullptr);
-            g_device[side]->ReleaseItemB(nullptr);
+            g_device[side]->FreeVertexArray(nullptr);
+            g_device[side]->FreeIndexArray(nullptr);
+            g_device[side]->ReleaseVertexArray(nullptr);
+            g_device[side]->ReleaseIndexArray(nullptr);
         }
         compare_logs("log");
         g_op = "free items";
@@ -317,10 +322,10 @@ static void test_device() {
             ItemA a;
             ItemB b;
             On on(side);
-            g_device[side]->FreeItemA(&a);
-            g_device[side]->FreeItemB(&b);
-            g_device[side]->ReleaseItemA(&a);
-            g_device[side]->ReleaseItemB(&b);
+            g_device[side]->FreeVertexArray(&a);
+            g_device[side]->FreeIndexArray(&b);
+            g_device[side]->ReleaseVertexArray(&a);
+            g_device[side]->ReleaseIndexArray(&b);
         }
         compare_logs("log");
     }

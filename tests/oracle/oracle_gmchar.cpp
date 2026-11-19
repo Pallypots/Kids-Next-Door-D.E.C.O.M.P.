@@ -257,7 +257,6 @@ static AtDataLink* find_impl(void* registry, void* under, const char* path, int 
     return nullptr;
 }
 static AtDataLink* __fastcall o_find(void* registry, void*, void* under, const char* path, int parents) { return find_impl(registry, under, path, parents); }
-static AtDataLink* r_find(AtDataRegistry* registry, AtDataLink* under, const char* path, int parents) { return find_impl(registry, under, path, parents); }
 
 static const char* const kMats[] = {"matA", "matB", "matC", "nomat"};
 static const char* const kSpaces[] = {"nsX", "", "nsY"};
@@ -976,7 +975,7 @@ int main(int argc, char** argv) {
     void* inter_ctor = call_target((const void*)&construct_interaction);
     if (!inter_ctor) { std::printf("cannot find the interaction's constructor\n"); return 2; }
     const Seam seams[] = {
-        {0x000679E0, (void*)&AtDataRegistryFind, (const void*)o_find, (const void*)r_find},
+        {0x000679E0, member_address(&AtDataRegistry::FindPath), (const void*)o_find, (const void*)o_find},
         {0x0014D590, member_address(&GmAcNode::ApplyMatAssignment), (const void*)d_apply, (const void*)d_apply},
         {0x0014C1B0, member_address(&GmAcNode::IsVisible), (const void*)d_visible, (const void*)d_visible},
         {0x001553C0, inter_ctor, (const void*)d_inter_ctor, (const void*)d_inter_ctor},

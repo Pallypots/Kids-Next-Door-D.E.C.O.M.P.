@@ -612,8 +612,6 @@ source = "src/at/AtFlashSprite.cpp"
 
 [symbols]
 "?SetHeap@AtFlashResourceTable@@QAEXPAX@Z" = 0x00058AF0  # one store; called at 0x000116B2 and 0x000116C4
-"?Load@AtFlashScriptTable@@QAEXPBDHPAUAtFlashApplication@@@Z" = 0x000134A0  # not recovered; stops with a diagnostic
-"?Load@AtFlashTextTable@@QAEXPBDHPAUAtMaterialOwner@@H@Z" = 0x00013CB0  # not recovered; stops with a diagnostic
 "?Release@AtFlashSpriteTable@@UAEXI@Z" = 0x00012540  # not recovered; stops with a diagnostic
 "?Release@AtFlashShapeTable@@UAEXI@Z" = 0x00012F70  # not recovered; stops with a diagnostic
 "?Read@AtFlashFrame@@UAEXPAVAtIoTokenizer@@@Z" = 0x00023A50  # not recovered; stops with a diagnostic
@@ -639,4 +637,5 @@ source = "src/at/AtFlashSprite.cpp"
 "?s_context@AtAudioBankFile@@2PAVAtIoContext@@A" = 0x002C6328  # stored at 0x0001951A
 "?Close@AtAudioBankFile@@QAEXXZ" = 0x000249A0  # same code as the destructor: folded
 "__ehhandler$??0AtFlashShape@@QAE@XZ" = 0x001F62D8  # pushed by 0x00019600
+"__ehhandler$?ReadDefinition@AtFlashLevel@@QAEXPBDH@Z" = 0x001F5E58  # pushed at 0x00011778 by 0x00011770; the host compile frames it since the .AFT/.AFA diagnostics left
 "??_GAtFlashTag@@UAEPAXI@Z" = 0x000318B0  # the base's deleting destructor, made by the compiler; nothing here calls it, so it is mapped and not counted

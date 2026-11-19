@@ -4,11 +4,6 @@
 
 void AtFatal(const char* message, int file, int line, int unused);
 
-AtDataLink* AtDataRegistryFind(AtDataRegistry*, AtDataLink*, const char*, int) {
-    AtFatal("Gm character: 0x000679E0, the design registry's search by path, is not recovered", 0, 0, 0);
-    return 0;
-}
-
 void GmAcNode::ApplyMatAssignment(int) { AtFatal("Gm character: 0x0014D590, applying a node's material assignment to its scene node, is not recovered", 0, 0, 0); }
 int GmAcNode::IsVisible() { AtFatal("Gm character: 0x0014C1B0, whether a node is in view, is not recovered", 0, 0, 0); return 0; }
 

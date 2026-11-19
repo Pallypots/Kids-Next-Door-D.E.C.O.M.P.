@@ -81,7 +81,7 @@ AtGrD3DVertexArray::~AtGrD3DVertexArray() { STOP(0x000ED260); }
 void AtGrD3DVertexArray::ReadBinary(char** records, char** kept, char** contiguous) { AtGrD3DReadVertexArray(this, records, kept, contiguous); }
 float* AtGrD3DVertexArray::PositionOf(float* index) { return POINTER(float, 0x00288CF8, index != 0); }
 void AtGrD3DVertexArray::Slot1() { STOP(0x00288CFC); }
-void AtGrD3DVertexArray::Slot2() { STOP(0x00288D00); }
+void AtGrD3DVertexArray::Destroy(unsigned int) { STOP(0x00288D00); }
 void AtGrD3DVertexArray::Slot3() { STOP(0x00288D04); }
 void AtGrD3DVertexArray::Slot4() { STOP(0x00288D08); }
 void AtGrD3DVertexArray::Slot5() { STOP(0x00288D0C); }
@@ -106,7 +106,7 @@ AtGrD3DIndexArray::AtGrD3DIndexArray() { STOP(0x000F8010); }
 AtGrD3DIndexArray::~AtGrD3DIndexArray() { STOP(0x000F84B0); }
 void AtGrD3DIndexArray::ReadBinary(char** records, char** kept) { AtGrD3DReadIndexArray(this, records, kept); }
 void AtGrD3DIndexArray::Allocate(unsigned int count, unsigned int) { STOP1(0x00289358, count); }
-void AtGrD3DIndexArray::Slot1() { STOP(0x0028935C); }
+void AtGrD3DIndexArray::Destroy(unsigned int) { STOP(0x0028935C); }
 void AtGrD3DIndexArray::Slot2() { STOP(0x00289360); }
 void AtGrD3DIndexArray::Lock(void** out, int mode) { *out = POINTER(void, 0x00289364, mode); }
 void AtGrD3DIndexArray::Unlock() { STOP(0x00289368); }

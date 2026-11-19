@@ -19,8 +19,8 @@ MUTANTS = [
     ("OrDefault: empty name searched", R, "    if (name[0] == 0) {\n        return 0;\n    }\n", ""),
     ("OrDefault: own value ignored", R, "    if (value != 0) {\n        return value;\n    }\n", ""),
     ("OrDefault: defaults with parents", R, "defaults->m_link, name, 0);", "defaults->m_link, name, 1);"),
-    ("OrDefault: defaults under the record", R, "AtDataRegistryFind(defaults->m_registry, defaults->m_link,", "AtDataRegistryFind(defaults->m_registry, (AtDataLink*)m_descriptor,"),
-    ("OrDefault: defaults' own registry", R, "AtDataRegistryFind(defaults->m_registry, defaults->m_link,", "AtDataRegistryFind((AtDataRegistry*)m_unknown10, defaults->m_link,"),
+    ("OrDefault: defaults under the record", R, "defaults->m_registry->FindPath(defaults->m_link,", "defaults->m_registry->FindPath((AtDataLink*)m_descriptor,"),
+    ("OrDefault: defaults' own registry", R, "defaults->m_registry->FindPath(defaults->m_link,", "((AtDataRegistry*)m_unknown10)->FindPath(defaults->m_link,"),
     ("OrDefault: not found", R, "    if (link == 0) {\n        return 0;\n    }\n", ""),
     ("OrDefault: element 1", R, "    return link->m_value->ElementAt(0);\n}", "    return link->m_value->ElementAt(1);\n}"),
     # the node's record

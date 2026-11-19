@@ -13,7 +13,7 @@ _POST_Z_TAIL = "    r[0] = (float)c;\n    r[1] = (float)-s;\n    r[4] = (float)s
 
 
 def _item(name, kind):
-    return "void AtMatrixDeviceXbox::%s(AtMatrixDeviceItem%s* item) {\n    if (item != 0) {\n        item->Destroy(1);\n" % (name, kind)
+    return "void AtMatrixDeviceXbox::%s(%s* array) {\n    if (array != 0) {\n        array->Destroy(1);\n" % (name, kind)
 
 
 MUTANTS = [
@@ -53,16 +53,16 @@ MUTANTS = [
     # The device.
     ("base: member not cleared", D, "    m_unknown04 = 0;\n", "    m_unknown04 = 1;\n"),
     ("device heap: not stored", D, "void AtMatrixDeviceXbox::SetHeap(void* heap) {\n    s_heap = heap;\n", "void AtMatrixDeviceXbox::SetHeap(void* heap) {\n"),
-    ("slot 2: to slot 11", D, "void AtMatrixDeviceXbox::Slot2() {\n    NewItemA();", "void AtMatrixDeviceXbox::Slot2() {\n    NewItemB();"),
-    ("slot 3: to slot 10", D, "void AtMatrixDeviceXbox::Slot3() {\n    NewItemB();", "void AtMatrixDeviceXbox::Slot3() {\n    NewItemA();"),
+    ("slot 2: to slot 11", D, "void AtMatrixDeviceXbox::Slot2() {\n    NewVertexArray();", "void AtMatrixDeviceXbox::Slot2() {\n    NewIndexArray();"),
+    ("slot 3: to slot 10", D, "void AtMatrixDeviceXbox::Slot3() {\n    NewIndexArray();", "void AtMatrixDeviceXbox::Slot3() {\n    NewVertexArray();"),
     ("free matrix: not freed", D, "void AtMatrixDeviceXbox::FreeMatrix(AtMatrix* matrix) {\n    operator delete(matrix);\n", "void AtMatrixDeviceXbox::FreeMatrix(AtMatrix* matrix) {\n"),
     ("release matrix: not freed", D, "void AtMatrixDeviceXbox::ReleaseMatrix(AtMatrix* matrix) {\n    operator delete(matrix);\n", "void AtMatrixDeviceXbox::ReleaseMatrix(AtMatrix* matrix) {\n"),
     ("free pool: cleared, not deleted", D, "void AtMatrixDeviceXbox::FreePool(AtMatrixPool* pool) {\n    if (pool != 0) {\n        pool->Slot0();", "void AtMatrixDeviceXbox::FreePool(AtMatrixPool* pool) {\n    if (pool != 0) {\n        pool->Clear();"),
     ("release pool: cleared, not deleted", D, "void AtMatrixDeviceXbox::ReleasePool(AtMatrixPool* pool) {\n    if (pool != 0) {\n        pool->Slot0();", "void AtMatrixDeviceXbox::ReleasePool(AtMatrixPool* pool) {\n    if (pool != 0) {\n        pool->Clear();"),
-    ("free item A: flag 0", D, _item("FreeItemA", "A"), _item("FreeItemA", "A").replace("Destroy(1)", "Destroy(0)")),
-    ("free item B: flag 0", D, _item("FreeItemB", "B"), _item("FreeItemB", "B").replace("Destroy(1)", "Destroy(0)")),
-    ("release item A: flag 0", D, _item("ReleaseItemA", "A"), _item("ReleaseItemA", "A").replace("Destroy(1)", "Destroy(0)")),
-    ("release item B: flag 0", D, _item("ReleaseItemB", "B"), _item("ReleaseItemB", "B").replace("Destroy(1)", "Destroy(0)")),
+    ("free item A: flag 0", D, _item("FreeVertexArray", "AtVertexArray"), _item("FreeVertexArray", "AtVertexArray").replace("Destroy(1)", "Destroy(0)")),
+    ("free item B: flag 0", D, _item("FreeIndexArray", "AtIndexArray"), _item("FreeIndexArray", "AtIndexArray").replace("Destroy(1)", "Destroy(0)")),
+    ("release item A: flag 0", D, _item("ReleaseVertexArray", "AtVertexArray"), _item("ReleaseVertexArray", "AtVertexArray").replace("Destroy(1)", "Destroy(0)")),
+    ("release item B: flag 0", D, _item("ReleaseIndexArray", "AtIndexArray"), _item("ReleaseIndexArray", "AtIndexArray").replace("Destroy(1)", "Destroy(0)")),
     ("new matrix: null heap not reported", D, _NEW_MATRIX, "AtMatrix* AtMatrixDeviceXbox::DoNewMatrix() {\n"),
     ("new matrix: not constructed", D, "AtMatrixObject* matrix = block != 0 ? new (block, Placement()) AtMatrixObject : 0;", "AtMatrixObject* matrix = (AtMatrixObject*)block;"),
     ("new matrix: failure not reported", D, "    if (matrix == 0) {\n        AtRaise(-4, 0, 0, 0);\n    }\n", ""),

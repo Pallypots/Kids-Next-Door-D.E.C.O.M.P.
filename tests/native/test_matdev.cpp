@@ -75,8 +75,8 @@ void TestDevice() {
     pool->Reserve(1);
     base->FreePool(pool);
     base->FreePool(nullptr);
-    device.FreeItemA(nullptr);
-    device.FreeItemB(nullptr);
+    device.FreeVertexArray(nullptr);
+    device.FreeIndexArray(nullptr);
 }
 
 // The arithmetic, against the original's hash: the two products and the matrix to quaternion. The rotations take the host's sine and cosine, which on x64 are the C library's and not the x87's, so they

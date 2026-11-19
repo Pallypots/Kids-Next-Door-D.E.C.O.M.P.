@@ -306,7 +306,6 @@ source = "src/gm/GmAcCharacter.cpp"
 "?Update@GmAcInteraction@@UAEXH@Z" = 0x000CBF30  # folded: empty
 "?s_instance@GmDesignDefaults@@2PAU1@A" = 0x003B3524
 "?AtFormat@@YAHPADPBDZZ" = 0x00125559  # the C library's sprintf
-"?AtDataRegistryFind@@YAPAVAtDataLink@@PAVAtDataRegistry@@PAV1@PBDH@Z" = 0x000679E0  # seams: a method of AtDataRegistry
 "?ApplyMatAssignment@GmAcNode@@QAEXH@Z" = 0x0014D590
 "?IsVisible@GmAcNode@@QAEHXZ" = 0x0014C1B0
 "??0GmAcInteraction@@QAE@XZ" = 0x001553C0

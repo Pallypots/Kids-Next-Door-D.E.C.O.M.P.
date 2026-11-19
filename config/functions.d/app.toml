@@ -188,7 +188,7 @@ evidence = "App vftable 0x0027AE44 slot 2; tests/oracle/oracle_app.cpp"
 [[function]]
 va = 0x0008C680
 size = 33
-symbol = "?GetConfig07@App@@UAEXPAUAppLayerConfig07@@@Z"
+symbol = "?GetConfig07@App@@UAEXPAUAtEventConfig@@@Z"
 source = "src/gm/GmApp.cpp"
 subsystem = "gm/app"
 evidence = "App vftable 0x0027AE44 slot 7; tests/oracle/oracle_app.cpp"
@@ -266,7 +266,6 @@ evidence = "App vftable 0x0027AE44 slot 68; tests/oracle/oracle_app.cpp"
 "?s_instance@GmRegistryNames@@2PAU1@A" = 0x002CD138
 # NOT recovered: src/gm/GmAppHost.cpp
 "?AtSdkGlobalMemoryStatus@@YAXPAUAtSdkMemoryStatus@@@Z" = 0x00085451
-"?StartUpUserInterface@App@@QAEXXZ" = 0x0009C3C0
 "?SetDisplayMode@App@@QAEXXZ" = 0x0008DBA0
 "?ReadMatrixDevice@App@@QAEXXZ" = 0x001416A0
 "?CreateSubsystems@App@@QAEXXZ" = 0x0008CFB0

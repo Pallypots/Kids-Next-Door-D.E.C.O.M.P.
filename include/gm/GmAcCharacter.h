@@ -17,9 +17,9 @@ class GmAcCharacter;
 class GmAcObject;
 
 // ---- seams in classes declared elsewhere -----------------------------------------------------------------------------------
-// 0x000679E0, AtDataRegistry's search by path from a link: each backslash part among the children, and, when `parents` is not 0, again from each parent of `under` in turn while nothing is found. Not
-// recovered (the .ADR work recovered loading, not the lookups): stops with a diagnostic. A method of AtDataRegistry; a free function here so as not to change that header.
-AtDataLink* AtDataRegistryFind(AtDataRegistry* registry, AtDataLink* under, const char* path, int parents);
+// The record reader searches with AtDataRegistry::FindPath (0x000679E0, include/at/AtDataRegistry.h): each backslash part among the children, and, when
+// its last argument is not 0, again from each parent of the link in turn while nothing is found. Not recovered (the .ADR work recovered loading, not the
+// lookups): it stops with a diagnostic (src/gm/GmAppHost.cpp).
 
 // 0x003B3524: what the reader falls back on. Only the default record is known: its registry and link.
 struct GmDesignDefaults {

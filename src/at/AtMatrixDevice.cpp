@@ -144,11 +144,11 @@ AtMatrixPool* AtMatrixDeviceXbox::NewPool() {
 }
 
 void AtMatrixDeviceXbox::Slot2() {
-    NewItemA();
+    NewVertexArray();
 }
 
 void AtMatrixDeviceXbox::Slot3() {
-    NewItemB();
+    NewIndexArray();
 }
 
 void AtMatrixDeviceXbox::FreeMatrix(AtMatrix* matrix) {
@@ -161,15 +161,15 @@ void AtMatrixDeviceXbox::FreePool(AtMatrixPool* pool) {
     }
 }
 
-void AtMatrixDeviceXbox::FreeItemA(AtMatrixDeviceItemA* item) {
-    if (item != 0) {
-        item->Destroy(1);
+void AtMatrixDeviceXbox::FreeVertexArray(AtVertexArray* array) {
+    if (array != 0) {
+        array->Destroy(1);
     }
 }
 
-void AtMatrixDeviceXbox::FreeItemB(AtMatrixDeviceItemB* item) {
-    if (item != 0) {
-        item->Destroy(1);
+void AtMatrixDeviceXbox::FreeIndexArray(AtIndexArray* array) {
+    if (array != 0) {
+        array->Destroy(1);
     }
 }
 
@@ -201,13 +201,13 @@ AtMatrixPool* AtMatrixDeviceXbox::DoNewPool() {
     return pool;
 }
 
-AtMatrixDeviceItemA* AtMatrixDeviceXbox::NewItemA() {
-    AtFatal("AtMatrixDeviceXbox: slot 10, the 0x64-byte graphics item (vftable 0x00288CF8), is not recovered", 0, 0, 0);
+AtVertexArray* AtMatrixDeviceXbox::NewVertexArray() {
+    AtFatal("AtMatrixDeviceXbox: slot 10, the graphics layer's vertex array (vftable 0x00288CF8), is not recovered", 0, 0, 0);
     return 0;
 }
 
-AtMatrixDeviceItemB* AtMatrixDeviceXbox::NewItemB() {
-    AtFatal("AtMatrixDeviceXbox: slot 11, the 0x24-byte graphics item (vftable 0x00289358), is not recovered", 0, 0, 0);
+AtIndexArray* AtMatrixDeviceXbox::NewIndexArray() {
+    AtFatal("AtMatrixDeviceXbox: slot 11, the graphics layer's index array (vftable 0x00289358), is not recovered", 0, 0, 0);
     return 0;
 }
 
@@ -221,14 +221,14 @@ void AtMatrixDeviceXbox::ReleasePool(AtMatrixPool* pool) {
     }
 }
 
-void AtMatrixDeviceXbox::ReleaseItemA(AtMatrixDeviceItemA* item) {
-    if (item != 0) {
-        item->Destroy(1);
+void AtMatrixDeviceXbox::ReleaseVertexArray(AtVertexArray* array) {
+    if (array != 0) {
+        array->Destroy(1);
     }
 }
 
-void AtMatrixDeviceXbox::ReleaseItemB(AtMatrixDeviceItemB* item) {
-    if (item != 0) {
-        item->Destroy(1);
+void AtMatrixDeviceXbox::ReleaseIndexArray(AtIndexArray* array) {
+    if (array != 0) {
+        array->Destroy(1);
     }
 }

@@ -5,8 +5,9 @@
 // owner's slot 0x44, hands to AtCoordSysDatabase::Load. A second, free-standing one is made by 0x000EBDF0, slot 23 of vftable 0x00288B88, not recovered. No other class derives from the base: its
 // constructor 0x0010F800 has those two callers only.
 //
-// Only the matrix part is recovered. Slots 2 and 3 make two other kinds of graphics object, of 0x64 bytes (vftable 0x00288CF8) and 0x24 bytes (vftable 0x00289358); they and the objects stay behind
-// NewItemA and NewItemB, which stop with a diagnostic.
+// Only the matrix part is recovered. Slots 2 and 3 make the graphics layer's vertex array (AtGrD3DVertexArray: vftable 0x00288CF8, 0x64 bytes, constructor 0x000EC890) and index array
+// (AtGrD3DIndexArray: vftable 0x00289358, 0x24 bytes, constructor 0x000F8010), giving each the device's m_unknown04 as its m_owner (+0x44, +0x18); they stay behind NewVertexArray and
+// NewIndexArray, which stop with a diagnostic. Slots 6 and 7 free them through their deleting destructors, the bases' Destroy (include/at/AtMeshDatabase.h).
 //
 // Memory: every matrix is 64 bytes, made the identity by AtMatrixObject's constructor. The pool asks its heap for 64-byte alignment while it allocates (AtHeap::m_allocShift 6), which the game's heap
 // honours, and the original's SSE matrix functions need 16 (movaps). A host build's operator new does not see that field, so there the alignment is the host allocator's: enough for the recovered matrix
@@ -15,26 +16,13 @@
 
 #include "at/AtCoordSys.h"
 #include "at/AtMatrix.h"
+#include "at/AtMeshDatabase.h"
 
 class AtHeap;
 
 // The original's matrix class: AtMatrix's sixteen floats with a constructor. AtMatrix itself stays a plain layout for the code that only reads and writes it.
 struct AtMatrixObject : AtMatrix {
     AtMatrixObject();  // 0x000EC270 the identity, word by word
-};
-
-// What slots 2 and 3 make; not recovered. Each is known here only by the slot of its deleting destructor that the device's FreeItemA and FreeItemB call.
-class AtMatrixDeviceItemA {  // vftable 0x00288CF8, 0x64 bytes, constructor 0x000EC890
-public:
-    virtual void Slot0() = 0;
-    virtual void Slot1() = 0;
-    virtual void Destroy(unsigned int flags) = 0;  // slot 2, 0x001105C0 deleting destructor
-};
-
-class AtMatrixDeviceItemB {  // vftable 0x00289358, 0x24 bytes, constructor 0x000F8010
-public:
-    virtual void Slot0() = 0;
-    virtual void Destroy(unsigned int flags) = 0;  // slot 1, 0x00110620 deleting destructor
 };
 
 // Vftable 0x002892E4, seven slots. 0xC bytes. One block of count matrices from the class's heap.
@@ -69,22 +57,22 @@ public:
     AtMatrixDeviceXbox();                            // inlined in the original, at 0x000F2131 and 0x000EBE47; out of line here, so that the vftable has a home
     AtMatrix* NewMatrix() override;                 // slot 0, 0x000F7D40 DoNewMatrix, through the vftable
     AtMatrixPool* NewPool() override;                // slot 1, 0x000F7D50 DoNewPool, through the vftable
-    void Slot2() override;                           // slot 2, 0x000F7D60 NewItemA, through the vftable; the original passes on what it returns
-    void Slot3() override;                           // slot 3, 0x000F7D70 NewItemB, likewise
+    void Slot2() override;                           // slot 2, 0x000F7D60 NewVertexArray, through the vftable; the original passes on what it returns
+    void Slot3() override;                           // slot 3, 0x000F7D70 NewIndexArray, likewise
     void FreeMatrix(AtMatrix* matrix) override;      // slot 4, 0x000F7D80 operator delete
     void FreePool(AtMatrixPool* pool) override;      // slot 5, 0x000EB9D0 folded: its slot 0 with 1, if not null
-    virtual void FreeItemA(AtMatrixDeviceItemA* item);  // slot 6, 0x000EBB30 folded: its slot 2 with 1, if not null
-    virtual void FreeItemB(AtMatrixDeviceItemB* item);  // slot 7, 0x000F7D20 its slot 1 with 1, if not null
+    virtual void FreeVertexArray(AtVertexArray* array);  // slot 6, 0x000EBB30 folded: its slot 2, Destroy, with 1, if not null
+    virtual void FreeIndexArray(AtIndexArray* array);   // slot 7, 0x000F7D20 its slot 1, Destroy, with 1, if not null
     // Slot 8, 0x000F7BE0. One identity matrix from s_heap. A null heap is reported (AtRaise -2) and pushed all the same; no memory is reported (-4) and null returned.
     virtual AtMatrix* DoNewMatrix();
     virtual AtMatrixPool* DoNewPool();               // slot 9, 0x000F7C80 an empty pool from s_heap, reported as DoNewMatrix's
-    virtual AtMatrixDeviceItemA* NewItemA();         // slot 10, 0x000F7D90 not recovered: stops with a diagnostic. The original gives the item m_unknown04 at +0x44
-    virtual AtMatrixDeviceItemB* NewItemB();         // slot 11, 0x000F7E30 not recovered: stops with a diagnostic. The original gives the item m_unknown04 at +0x18
+    virtual AtVertexArray* NewVertexArray();         // slot 10, 0x000F7D90 not recovered: stops with a diagnostic. The original gives the array m_unknown04 at +0x44
+    virtual AtIndexArray* NewIndexArray();           // slot 11, 0x000F7E30 not recovered: stops with a diagnostic. The original gives the array m_unknown04 at +0x18
     // Slots 12-15 hold the same functions as 4-7: the compiler folded identical bodies, so these are separate members with the same code. Which callers use which is not known.
     virtual void ReleaseMatrix(AtMatrix* matrix);    // slot 12, 0x000F7D80
     virtual void ReleasePool(AtMatrixPool* pool);    // slot 13, 0x000EB9D0
-    virtual void ReleaseItemA(AtMatrixDeviceItemA* item);  // slot 14, 0x000EBB30
-    virtual void ReleaseItemB(AtMatrixDeviceItemB* item);  // slot 15, 0x000F7D20
+    virtual void ReleaseVertexArray(AtVertexArray* array);  // slot 14, 0x000EBB30
+    virtual void ReleaseIndexArray(AtIndexArray* array);   // slot 15, 0x000F7D20
 
     static void SetHeap(void* heap);                 // 0x000F7BD0
 

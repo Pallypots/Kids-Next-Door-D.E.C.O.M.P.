@@ -29,7 +29,7 @@ AtSceneDevice* SceneDevice() {
 // ---- the readers -------------------------------------------------------------------------------------------------------------
 void* GmBaObject::FindValue(const char* name, int) {
     if (m_unknown10 != 0 && m_descriptor != 0) {
-        AtDataLink* link = AtDataRegistryFind((AtDataRegistry*)m_unknown10, (AtDataLink*)m_descriptor, name, 1);
+        AtDataLink* link = ((AtDataRegistry*)m_unknown10)->FindPath((AtDataLink*)m_descriptor, name, 1);
         if (link != 0) {
             return link->m_value->ElementAt(0);
         }
@@ -47,7 +47,7 @@ void* GmAcNode::FindValueOrDefault(const char* name, int) {
         return value;
     }
     GmDesignDefaults* defaults = GmDesignDefaults::s_instance;
-    AtDataLink* link = AtDataRegistryFind(defaults->m_registry, defaults->m_link, name, 0);
+    AtDataLink* link = defaults->m_registry->FindPath(defaults->m_link, name, 0);
     if (link == 0) {
         return 0;
     }

@@ -221,7 +221,7 @@ public:
 
     float* PositionOf(float* index) override;
     void Slot1() override;
-    void Slot2() override;
+    void Destroy(unsigned int flags) override;  // slot 2, 0x001105C0
     void Slot3() override;
     void Slot4() override;
     void Slot5() override;
@@ -255,7 +255,7 @@ public:
     void ReadBinary(char** records, char** kept);  // 0x000F7EE0
 
     void Allocate(unsigned int count, unsigned int flags) override;
-    void Slot1() override;
+    void Destroy(unsigned int flags) override;  // slot 1, 0x00110620
     void Slot2() override;
     void Lock(void** out, int mode) override;
     void Unlock() override;

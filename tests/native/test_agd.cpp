@@ -75,7 +75,7 @@ public:
     unsigned int m_given = 0;
     Indices() { m_count = 0; m_flags = 0; m_loadFlags = 0; m_index = 0; }
     void Allocate(unsigned int, unsigned int flags) override { m_given = flags; }
-    void Slot1() override {} void Slot2() override {}
+    void Destroy(unsigned int) override {} void Slot2() override {}
     void Lock(void** out, int) override { *out = m_memory.data(); }
     void Unlock() override {}
     void Finish() override {}
