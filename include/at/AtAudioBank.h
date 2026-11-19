@@ -17,6 +17,10 @@ public:
     virtual void Unknown1() = 0;
     virtual void Add(AtAudioBank* bank) = 0;     // slot 2
     virtual void Remove(AtAudioBank* bank) = 0;  // slot 3
+    virtual void Unknown4();                     // slots 4 to 7 are not recovered, and stop with a diagnostic: src/at/AtAudioVoices.cpp
+    virtual void Unknown5();
+    virtual void Unknown6();
+    virtual void Wait(float seconds);            // slot 7: the sound manager calls it with a tenth, to let stopped voices finish
 };
 
 // A file held by a bank. The same shape as AtIoFileRef, and the constructor is the same code, but this destructor does not check m_fs.

@@ -196,6 +196,8 @@ public:
     void AddChild(AtSceneNode* child);             // 0x00049900 nothing if it is already this one's. It stays in any other's list
     void AttachBase(AtSceneNode* parent);          // 0x0004A210
     void AttachToJoint(AtSceneNode* parent, const char* joint);  // 0x0004A310 parent is a jointed actor; nothing happens unless it has that joint
+    void GetWorldPosition(AtVector3* out);         // 0x00049990 the coordinate system's; zero with none. src/at/AtAudioVoices.cpp
+    void GetWorldSphere(AtSceneSphere* out);       // 0x00136C60, a copy the sound code has: m_worldSphere, after FinishBody if kMoved. src/gm/GmSoundPlay.cpp
 
     static AtSceneNode* AsJointed(AtSceneNode* node);  // 0x000559B0 reports null, or another class, and hands it back regardless
     static void SetHeap(void* heap);               // 0x000497F0

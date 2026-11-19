@@ -24,7 +24,18 @@ struct AtAudioEmitterDesc {
     AtQuaternion m_rotation;             // +0x28
 };
 
-// One emitter. Vftable 0x0028B460. Slots 8 and 12 to 23 keep the voices now playing here (0x00040 is the list) and are not recovered: no list file reaches them. They stop with a diagnostic.
+// One voice playing on an emitter: what the emitter's list at +0x40 holds. Made and run by the bank, through slots of the emitter that are not recovered; only these fields are read here.
+struct AtAudioVoice {
+    int m_unknown00;                           // +0x00
+    AtAudioSegment* m_segment;                 // +0x04
+    int m_unknown08;                           // +0x08
+    unsigned int m_flags;                      // +0x0C
+    int m_state;                               // +0x10
+    AtAudioVoice* m_next;                      // +0x14
+};
+
+// One emitter. Vftable 0x0028B460, 26 slots. Slots 8 and 12 to 25 keep the voices now playing here (0x00040 is the list) and are not recovered: what they reach is the bank's, and so XACT. They stop
+// with a diagnostic. The names of 15 and 22 to 25 are inferred from what their code does with the list; the sound manager calls them.
 class AtAudioEmitter : public AtCoordSys {
 public:
     AtAudioEmitter();                          // 0x0011F1B0
@@ -38,15 +49,21 @@ public:
     virtual void Unknown12();                  // slots 12 to 23 not recovered, and neither are their arguments
     virtual void Unknown13();
     virtual void Unknown14();
-    virtual void Unknown15();
+    virtual void Play(AtAudioSegment* segment, AtAudioVoice** voice);  // slot 15, 0x0011F010 makes a voice (slot 14) and starts it (slot 16); the voice is handed back if asked for
     virtual void Unknown16();
     virtual void Unknown17();
     virtual void Unknown18();
     virtual void Unknown19();
     virtual void Unknown20();
     virtual void Unknown21();
-    virtual void Unknown22();
-    virtual void Unknown23();
+    virtual void StopSegment(AtAudioSegment* segment);  // slot 22, 0x0011F130 slot 23 on each voice of that segment
+    virtual void StopVoice(AtAudioVoice* voice);  // slot 23, 0x0011F100 through the voice's segment's bank, slot 8
+    virtual void StopAll();                    // slot 24, 0x0011EC20 slot 23 on each voice; the Xbox one, 0x0010F140, stops its stream as well
+    virtual void SetVelocity(const AtVector3* velocity);  // slot 25, 0x0011F190 into +0x34
+
+    AtAudioVoice* IsPlaying(const AtAudioSegment* segment);  // 0x0011F160 the first voice of that segment, or null. src/at/AtAudioVoices.cpp
+    AtAudioVoice* FirstVoice();                // 0x0011EBA0
+    AtAudioVoice* NextVoice(AtAudioVoice* voice);  // 0x0011EBB0 does not read this
 
     AtNameTableOwner* m_owner;                 // +0x28
     int m_kind;                                // +0x2C

@@ -36,7 +36,7 @@ struct AtNameTableOwner {
     AtMatrixDevice* m_unknown08;       // +0x08 where emitters take their matrices from. 0x0011ED90, 0x0011EE30.
     AtAudioBankLoader* m_loader;       // +0x0C
     int m_unknown10;                   // +0x10
-    int m_unknown14;                   // +0x14
+    float m_unknown14;                 // +0x14 on the sound owner a scale: GmAudioData::PlayNode multiplies a node's range by it
     GmNameMapGroup m_first;            // +0x18
     GmNameSpaceDb m_firstSpaces;       // +0x30
     GmNameMapGroup m_second;           // +0x54

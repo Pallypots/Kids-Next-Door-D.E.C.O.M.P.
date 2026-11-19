@@ -1,6 +1,7 @@
 // What the level manifest reaches outside itself and is not recovered: the base's word parser and its Finished, its own items, and what each item loads into. Each stops with a diagnostic.
 // In a file of its own, so that a test can supply them instead. Not recovered code. Recovered code is in src/gm/GmLevelManifest.cpp and src/gm/GmLevelManifestItems.cpp.
 #include "gm/GmLevelManifest.h"
+#include "gm/GmAudioData.h"
 
 void AtFatal(const char* message, int a, int b, int c);
 
@@ -13,7 +14,8 @@ void StopHere(const char* what) {
 void GmDatabaseManifest::OnToken(int, AtIoTokenizer*) { StopHere("Level manifest: the database words (0x0015D000) are not recovered"); }
 void GmDatabaseManifest::Finished() { StopHere("Level manifest: the databases' Finished (0x0015D920) is not recovered"); }
 void GmDatabaseItemsDelete(int, GmManifestItem*) { StopHere("Level manifest: the database items are not recovered"); }
-void GmAudioFreeDatabase(void*) { StopHere("Level manifest: 0x00139F90 is not recovered"); }
+// Recovered in src/gm/GmSoundPlay.cpp: these forward to the sound manager, as the original calls its members.
+void GmAudioFreeDatabase(void* database) { GmAudioData::s_instance->RemoveDatabase((AtAudioDatabase*)database); }
 void GmSceneItemLeave(void*, AtSpaceGraph*) { StopHere("Level manifest: 0x0002EDD0 is not recovered"); }
 void GmRegistryRelease(void*) { StopHere("Level manifest: 0x00071DC0 is not recovered"); }
 
@@ -43,16 +45,17 @@ void GmDynamicNodeLoader::Unload(AtScene*, int) { StopHere("Dynamic nodes (0x001
 void AtScene::InsertInto(AtSpaceGraph*) { StopHere("Atlas Scene: 0x0003E860 is not recovered"); }
 void AtScene::RemoveFrom(AtSpaceGraph*) { StopHere("Atlas Scene: 0x0003E890 is not recovered"); }
 
-void* GmAudioAllocateNodeBank() { StopHere("Sound nodes (0x001367E0) are not recovered"); return 0; }
-void GmAudioLoadNodes(void*, const char*) { StopHere("Sound nodes (0x0013AA80) are not recovered"); }
-void GmAudioFreeNodes(void*) { StopHere("Sound nodes (0x00138E50) are not recovered"); }
-void GmAudioReleaseNodeBank(void*) { StopHere("Sound nodes (0x00136810) are not recovered"); }
-void GmAudioRegisterNodes(void*) { StopHere("Sound nodes (0x00138A10) are not recovered"); }
-void* GmAudioLoadInstanceSounds(const char*) { StopHere("Instance sounds (0x00139C40) are not recovered"); return 0; }
-void GmAudioFreeInstanceSounds(void*) { StopHere("Instance sounds (0x00136B30) are not recovered"); }
-void GmAudioRegisterInstanceSounds(void*) { StopHere("Instance sounds (0x00136A10) are not recovered"); }
-void* GmAudioLoadCollisionSounds(const char*) { StopHere("Collision sounds (0x00139610) are not recovered"); return 0; }
-void GmAudioFreeCollisionSounds(void*) { StopHere("Collision sounds (0x00139B50) are not recovered"); }
+// Recovered in src/gm/GmSoundNodes.cpp: these forward to the sound manager, as the original calls its members.
+void* GmAudioAllocateNodeBank() { return GmAudioData::s_instance->AllocateNodeBank(); }
+void GmAudioLoadNodes(void* bank, const char* path) { GmAudioData::s_instance->LoadNodes((GmSoundNodeBank*)bank, path); }
+void GmAudioFreeNodes(void* bank) { GmAudioData::s_instance->FreeNodes((GmSoundNodeBank*)bank); }
+void GmAudioReleaseNodeBank(void* bank) { GmAudioData::s_instance->ReleaseNodeBank((GmSoundNodeBank*)bank); }
+void GmAudioRegisterNodes(void* bank) { GmAudioData::s_instance->RegisterNodes((GmSoundNodeBank*)bank); }
+void* GmAudioLoadInstanceSounds(const char* path) { return GmAudioData::s_instance->LoadInstanceSounds(path); }
+void GmAudioFreeInstanceSounds(void* data) { GmAudioData::s_instance->FreeInstanceSounds((GmInstanceSoundBank*)data); }
+void GmAudioRegisterInstanceSounds(void* data) { GmAudioData::s_instance->RegisterInstanceSounds((GmInstanceSoundBank*)data); }
+void* GmAudioLoadCollisionSounds(const char* path) { return GmAudioData::s_instance->LoadCollisionSounds(path); }
+void GmAudioFreeCollisionSounds(void* data) { GmAudioData::s_instance->FreeCollisionSounds((GmCollisionSoundBank*)data); }
 
 void GmMusicChain::Load(const char*, int) { StopHere("Music chains (0x0013D2A0) are not recovered"); }
 void GmMusicChain::Clear() { StopHere("Music chains (0x0013CFF0) are not recovered"); }
