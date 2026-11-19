@@ -4,7 +4,7 @@
 //
 // The binary files are in <cases>\..\scratch\loader\bin, written by tests/oracle/loader_cases.py.
 //
-// What it does not show, first. Beneath both sides are doubles for what is not recovered, the same doubles on each: the eight kinds of database other than meshes and animations are the seam classes of
+// What it does not show, first. Beneath both sides are doubles for what is not recovered, the same doubles on each: the six kinds of database other than meshes, animations, textures and materials (include/at/AtGrD3DTextures.h, real on both sides) are the seam classes of
 // src/at/AtGrD3DUnrecovered.cpp on both sides (the original's constructors are sent to them), so they only log; the items a mesh database makes are those classes too, and their binary readers are this harness's,
 // which log the words at each cursor and step the first cursor by the record sizes the original's step it; memory for the graphics processor is the harness's. Text files an .AGD names open as empty text. So real
 // files show that the loader, the mesh database and the animation database do the same, in the same order, with the same blocks, pointers and names, as far as those doubles; they show nothing of how an item reads
@@ -237,7 +237,7 @@ static uint32_t object_index(void* object) {
 }
 
 static bool is_constructor(unsigned int va) {
-    for (unsigned int c : {0x0010FFC0u, 0x000F7790u, 0x00110260u, 0x001111B0u, 0x001115A0u, 0x00111BC0u, 0x00111E50u, 0x001120B0u, 0x000EC890u, 0x000F8010u, 0x000EECA0u, 0x00122460u}) if (c == va) return true;
+    for (unsigned int c : {0x00110260u, 0x001111B0u, 0x001115A0u, 0x00111BC0u, 0x00111E50u, 0x001120B0u, 0x000EC890u, 0x000F8010u, 0x000EECA0u, 0x00122460u}) if (c == va) return true;
     return false;
 }
 
@@ -322,6 +322,18 @@ static void __fastcall o_read_mesh(AtGrD3DMesh* self, void*, AtMaterialOwner* o,
 }
 static void* __stdcall o_contiguous(unsigned size, unsigned alignment) { return AtGrD3DAllocateContiguous(size, alignment); }
 static void __stdcall o_free_contiguous(void* p) { AtGrD3DFreeContiguous(p); }
+
+// What a texture or a material does with the device, and the device's calls: they log, the same on both sides. tests/oracle/oracle_xdb.cpp tests them.
+void AtGrD3DLoadTexture2D(AtGrD3DTexture2D* t, AtMaterialOwner* owner) { slot('L', *(const uint32_t*)t->m_name); slot('l', owner == g_own_any[g_side]); }
+void AtGrD3DLoadMaterial(AtGrD3DMaterial* m, AtMaterialOwner* owner) { slot('M', m->m_flags); slot('m', owner == g_own_any[g_side]); }
+void AtGrD3DReleaseStage(void*, unsigned int stage) { slot('G', stage); }
+void AtGrD3DBeforeRelease(void*) { slot('B'); }
+void AtGrD3DRelease(void*) { slot('X'); }
+static void __fastcall o_load_texture(AtGrD3DTexture2D* t, void*, AtMaterialOwner* owner) { AtGrD3DLoadTexture2D(t, owner); }
+static void __fastcall o_load_material(AtGrD3DMaterial* m, void*, AtMaterialOwner* owner) { AtGrD3DLoadMaterial(m, owner); }
+static void __fastcall o_release_stage(void* stages, void*, unsigned stage) { AtGrD3DReleaseStage(stages, stage); }
+static void __stdcall o_before_release(void* r) { AtGrD3DBeforeRelease(r); }
+static void __stdcall o_release(void* r) { AtGrD3DRelease(r); }
 
 // ---- owners -----------------------------------------------------------------------------------------------------------
 
@@ -806,6 +818,9 @@ static void run_written() {
     // Material and image lists that reach their database's own slots, so that a log says which element was loaded.
     for (const char* n : {"MODEL\\A.AGM", "MODEL\\B.AGM"}) g_files[n] = "Material[0]\n{\n}\n";
     for (const char* n : {"MODEL\\A.AGI", "MODEL\\B.AGI"}) g_files[n] = "Image[0]\n{\n}\n";
+    // Texture lists with a texture each, named for their file: the recovered texture database loads them, and the double for a texture's slot 12 logs which.
+    g_files["MODEL\\A.AGT"] = "Surface2D[1]\nTexture[1]\nTexture2D[1]\n{\n Texture2D \"TA\"\n {\n }\n}\n";
+    g_files["MODEL\\B.AGT"] = "Surface2D[1]\nTexture[1]\nTexture2D[1]\n{\n Texture2D \"TB\"\n {\n }\n}\n";
     g_files["MODEL\\SUB2.AGD"] = "AnimationDatabase[1]\n{\n \"RUN\"\n}\nTextureDatabase[2]\n{\n \"A\"\n \"B\"\n}\n";
     struct { const char* word; const char* names; } kinds[] = {
         {"TextureDatabase", "\"A\" \"B\""}, {"ShaderDatabase", "\"A\" \"B\""}, {"MaterialDatabase", "\"A\" \"B\""}, {"MeshDatabase", "\"BOX\" \"BOX2\""},
@@ -872,6 +887,7 @@ static void set_heaps(void* h) {
     GmNameSpaceDb::s_heap = h;
     AtMaterialDatabase::s_heap = h;
     AtTextureDatabase::s_heap = h;
+    *(void**)(uintptr_t)0x003B1F90 = AtGrD3DMaterialDatabase::s_heap = h;  // the concrete material database's own
     AtGrD3DMeshDatabase::s_heap = &g_mesh_heap;
     // This work's own heaps, each its own token on both sides.
     *(void**)(uintptr_t)0x002C60B0 = AtIoTokenFile::s_heap = &g_heap_own[0];
@@ -1320,8 +1336,12 @@ int main(int argc, char** argv) {
     redirect(0x00011070, (const void*)o_fatal);
     redirect(0x00011170, (const void*)o_raise);
     // The seam classes on the original's side.
-    redirect(0x0010FFC0, (const void*)&Thin<AtGrD3DTextureDatabase, 0x0001BFA0, 0x0001BFD0, 0x0010FFC0, 0x001101D0, 0x0028A6E0, 16>::Construct);
-    redirect(0x000F7790, (const void*)&Thin<AtGrD3DMaterialDatabase, 0x00038F80, 0x00039470, 0x000F7790, 0x000F7970, 0x00289300, 9>::Construct);
+    // The texture and material databases are recovered (include/at/AtGrD3DTextures.h): the original's run on its side. What their items do with the device is the doubles above.
+    redirect(0x000FCAD0, (const void*)o_load_texture);
+    redirect(0x0010B7F0, (const void*)o_load_material);
+    redirect(0x000FB630, (const void*)o_release_stage);
+    redirect(0x00205E20, (const void*)o_before_release);
+    redirect(0x00205D10, (const void*)o_release);
     redirect(0x00110260, (const void*)&Thin<AtGrD3DShaderDatabase, 0x0002B1C0, 0x0002B3A0, 0x00110260, 0x001103F0, 0x0028A720, 4>::Construct);
     redirect(0x001111B0, (const void*)&Thin<AtGrD3DLightDatabase, 0x0002AB00, 0x0002ACD0, 0x001111B0, 0x00111350, 0x0028A764, 4>::Construct);
     redirect(0x001115A0, (const void*)&Thin<AtGrD3DFontDatabase, 0x0002A020, 0x0002A470, 0x001115A0, 0x001119B0, 0x0028A774, 8>::Construct);

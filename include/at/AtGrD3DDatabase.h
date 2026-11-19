@@ -7,7 +7,7 @@
 //
 // The seams. What is not recovered is behind src/at/AtGrD3DUnrecovered.cpp, whose bodies all go to a handful of functions in src/at/AtGrD3DSeam.cpp. Those stop with a diagnostic; a test supplies them instead:
 //   * The items a mesh database makes (meshes, vertex arrays, index arrays, vertex streams): constructors, destructors, and their binary readers. They hold Direct3D resources.
-//   * The eight other kinds of database the loader makes (textures, materials, shaders, lights, fonts, images, vertex and pixel processes): the classes exist, with their sizes and the slots their bases require, and every
+//   * The six other kinds of database the loader makes (shaders, lights, fonts, images, vertex and pixel processes; textures and materials are in include/at/AtGrD3DTextures.h): the classes exist, with their sizes and the slots their bases require, and every
 //     body stops, the constructor first. Their items are textures, surfaces and the like.
 //   * Memory for the graphics processor (0x00205EA0, 0x00205EE0), which a mesh's third block lives in.
 //   * The keys' own slots other than 1, 3, 6 and 14 to 18: allocating, interpolating, and reading text keys. So animations load and cannot yet be sampled.
@@ -15,6 +15,7 @@
 
 #include "at/AtAudioBank.h"
 #include "at/AtDatabaseLoader.h"
+#include "at/AtGrD3DTextures.h"
 
 class AtSoXboxDatabase;
 class AtGrD3DMeshDatabase;
@@ -63,9 +64,16 @@ struct AtGrD3DOwner : public AtMaterialOwner {
     void RemoveMeshDatabase(AtGrD3DMeshDatabase* database);  // 0x000EF160 if it is there
 
     char m_unknown[0x3338 - sizeof(AtMaterialOwner)];
-    AtGrD3DTextureDatabase* m_textureDatabases;  // +0x3338 linked through +0x54 of each, by 0x000EF0A0; not recovered here
-    void* m_unknown333C;                         // +0x333C
+    void AddTextureDatabase(AtGrD3DTextureDatabase* database);      // 0x000EF0A0 at the head; src/at/AtGrD3DTextureDatabase.cpp
+    void RemoveTextureDatabase(AtGrD3DTextureDatabase* database);   // 0x000EF0C0 if it is there
+    void AddMaterialDatabase(AtGrD3DMaterialDatabase* database);    // 0x000EF0F0 at the head; src/at/AtGrD3DMaterialDatabase.cpp
+    void RemoveMaterialDatabase(AtGrD3DMaterialDatabase* database); // 0x000EF110 if it is there
+
+    AtGrD3DTextureDatabase* m_textureDatabases;  // +0x3338 linked through m_next
+    AtGrD3DMaterialDatabase* m_materialDatabases;  // +0x333C linked through m_next
     AtGrD3DMeshDatabase* m_meshDatabases;        // +0x3340 linked through m_next
+    char m_unknown3344[0x10];
+    char m_stageCache[4];                        // +0x3354 the device's texture stages, as a 2D texture's Release sees them; how far it goes is not known
 };
 
 // ---- Animations: .XKA -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -347,40 +355,7 @@ public:
 
 // ---- The other kinds: classes with no bodies (src/at/AtGrD3DUnrecovered.cpp) ------------------------------------------------------------------------------------------------------------------------------------
 
-// Vftable 0x0028A6E0, 0x58 bytes.
-class AtGrD3DTextureDatabase : public AtTextureDatabase {
-public:
-    AtGrD3DTextureDatabase();                 // 0x0010FFC0
-    ~AtGrD3DTextureDatabase() override;       // 0x001101D0
-    void Clear() override;                    // 0x0010FFF0
-    void OnReady(AtMaterialOwner* owner) override;  // 0x0010F810
-    void MakeSurfaces2D() override;           // 0x0010F830
-    void MakeSurfaces3D() override;           // 0x0010F950
-    void MakeTextures2D() override;           // 0x0010FA70
-    void MakeTextures3D() override;           // 0x0010FB90
-    void MakeCubeMaps() override;             // 0x0010FCB0
-    void MakeMore() override;                 // 0x001100D0
-    void* Surface2DAt(unsigned int index) override;   // 0x0010FDD0
-    void* Surface3DAt(unsigned int index) override;   // 0x0010FDF0
-    AtTextureItem* Texture2DAt(unsigned int index) override;  // 0x0010FE10
-    AtTextureItem* Texture3DAt(unsigned int index) override;  // 0x0010FE20
-    AtTextureItem* CubeMapAt(unsigned int index) override;    // 0x0010FE40
-
-    char m_unknown34[0x24];
-};
-
-// Vftable 0x00289300, 0x40 bytes.
-class AtGrD3DMaterialDatabase : public AtMaterialDatabase {
-public:
-    AtGrD3DMaterialDatabase();                // 0x000F7790
-    ~AtGrD3DMaterialDatabase() override;      // 0x000F7970
-    void Clear() override;                    // 0x000F77B0
-    void OnReady(AtMaterialOwner* owner) override;  // 0x000F79C0
-    void Slot3() override;                    // 0x000F7AF0
-    AtMaterial* MaterialAt(unsigned int index) override;  // 0x000F7840
-
-    char m_unknown34[0x0C];
-};
+// The texture and material databases: include/at/AtGrD3DTextures.h.
 
 // Vftable 0x0028A720, 0x1C bytes.
 class AtGrD3DShaderDatabase : public AtShaderDatabase {
@@ -520,6 +495,7 @@ public:
 static_assert(sizeof(AtMaterialOwner) == 0x39C, "AtMaterialOwner");
 static_assert(offsetof(AtGrD3DOwner, m_textureDatabases) == 0x3338, "AtGrD3DOwner::m_textureDatabases");
 static_assert(offsetof(AtGrD3DOwner, m_meshDatabases) == 0x3340, "AtGrD3DOwner::m_meshDatabases");
+static_assert(offsetof(AtGrD3DOwner, m_stageCache) == 0x3354, "AtGrD3DOwner::m_stageCache");
 static_assert(sizeof(AtXkaHeader) == 0x78, "AtXkaHeader");
 static_assert(sizeof(AtXkaAnimation) == 0x60, "AtXkaAnimation");
 static_assert(sizeof(AtXggHeader) == 0x58, "AtXggHeader");
@@ -535,8 +511,6 @@ static_assert(sizeof(AtGrD3DMesh) == 0x50, "AtGrD3DMesh");
 static_assert(offsetof(AtGrD3DMeshDatabase, m_owner) == 0x24, "AtGrD3DMeshDatabase::m_owner");
 static_assert(offsetof(AtGrD3DMeshDatabase, m_next) == 0x4C, "AtGrD3DMeshDatabase::m_next");
 static_assert(sizeof(AtGrD3DMeshDatabase) == 0x50, "AtGrD3DMeshDatabase");
-static_assert(sizeof(AtGrD3DTextureDatabase) == 0x58, "AtGrD3DTextureDatabase");
-static_assert(sizeof(AtGrD3DMaterialDatabase) == 0x40, "AtGrD3DMaterialDatabase");
 static_assert(sizeof(AtGrD3DShaderDatabase) == 0x1C, "AtGrD3DShaderDatabase");
 static_assert(sizeof(AtGrD3DLightDatabase) == 0x20, "AtGrD3DLightDatabase");
 static_assert(sizeof(AtGrD3DFontDatabase) == 0x3C, "AtGrD3DFontDatabase");
