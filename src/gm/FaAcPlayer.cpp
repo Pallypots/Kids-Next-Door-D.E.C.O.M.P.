@@ -129,11 +129,11 @@ void FaAcPlayer::Reset() {
     m_unknown3A4 = 0;
     m_unknown3B8[0] = 0;
     m_unknown3B8[1] = 0;
-    m_unknown3D8 = 0;
+    m_head = 0;
     m_unknown334 = 0;
     m_unknown364[0] = 0;
     m_unknown364[1] = 0;
-    m_sightCone = 0;
+    m_combat = 0;
     m_unknown3A8 = 1;
     m_unknown3AC = 0;
     m_unknown3B0 = 1;
@@ -194,8 +194,8 @@ int FaAcPlayer::Slot2() {
 
 // Quirk kept: the combat object is deleted and left in place for Reset to clear.
 void FaAcPlayer::Shutdown() {
-    if (m_sightCone != 0) {
-        delete m_sightCone;
+    if (m_combat != 0) {
+        delete m_combat;
     }
     m_target.Clear();
     Reset();
@@ -210,7 +210,6 @@ void FaAcPlayer::Slot10() {
     GmAcPlayer::Slot10();
 }
 
-void FaAcPlayer::Slot15() { AtFatal("Gm player: FaAcPlayer slot 15, 0x000940A0, is not recovered", 0, 0, 0); }
 void FaAcPlayer::Slot20(int) { AtFatal("Gm player: FaAcPlayer slot 20, 0x00094A80, is not recovered", 0, 0, 0); }
 void FaAcPlayer::Slot21(int) { AtFatal("Gm player: FaAcPlayer slot 21, 0x00093450, is not recovered", 0, 0, 0); }
 

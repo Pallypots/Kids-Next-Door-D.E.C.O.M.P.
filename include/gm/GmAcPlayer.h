@@ -16,6 +16,9 @@
 #include "at/AtSegmentQuery.h"
 #include "at/AtBoundingGeometry.h"
 #include "at/AtVector3.h"
+#include "at/AtCoordSys.h"
+#include "at/AtDataRegistry.h"
+#include "at/AtMaterial.h"
 #include "gm/GmAcCharacter.h"
 #include "gm/GmSocket.h"
 
@@ -35,9 +38,33 @@ public:
     float AxisValue(int controller, int axis);
 };
 
-// App (0x00304D58, App::s_instance on integrate-batch5): only its +0x692C. Nothing on this branch sets it.
+// 0x000678A0, AtDataRegistry's search by a whole name: `under` (the root when null), then everything beneath it, then its later siblings and everything beneath them, depth first. `exact`
+// compares case and all; otherwise case is ignored. A method of AtDataRegistry; a free function here so as not to change that header. src/gm/FaAcPlayerSetup.cpp.
+AtDataLink* AtDataRegistryFindNamed(AtDataRegistry* registry, const char* name, AtDataLink* under, int exact);
+
+// What App+0x65B8 is: the saved game's values, in a registry at +0x04, by a section's name and a value's. Only the lookups FaAcPlayer's slot 15 reaches are recovered, in
+// src/gm/FaAcPlayerSetup.cpp; 0x00144B00 (booleans) and 0x00144AE0 (integers) are the same as FindReal with types 1 and 2. Names inferred.
+struct GmSaveData {
+    // 0x00144A50. The value named `name` in the section named `section`, if its type is `type`; null otherwise. The section is a node found anywhere in the registry by its name, exactly; within it
+    // the value is searched with parents. An empty or missing section looks for `name` as a node itself, and failing that searches from the root.
+    void* Find(const char* section, const char* name, unsigned int type);
+    float* FindReal(const char* section, const char* name);  // 0x00144B20 type 3
+
+    int m_unknown00;                    // +0x00
+    AtDataRegistry m_registry;          // +0x04
+};
+
+// The object at 0x00305A48: game-wide state reached by the game's own classes. Only this reader is recovered; it does not read its own words. Names inferred.
+struct GmSavedGame {
+    float GetReal(const char* section, const char* name);  // 0x0009D980 App's saved value, or 0. 0x0009D920 and 0x0009D950 are its boolean reader and real writer
+    static GmSavedGame* s_instance;     // 0x00305A48
+};
+
+// App (0x00304D58, App::s_instance on integrate-batch5): only its +0x65B8 and +0x692C. Nothing on this branch sets it.
 struct GmPlayerApp {
-    char m_unknown0000[0x692C];
+    char m_unknown0000[0x65B8];
+    GmSaveData m_saveData;              // +0x65B8
+    char m_unknown67AC[0x180];
     GmPlayerInput* m_input;             // +0x692C
 
     static GmPlayerApp* s_instance;     // 0x00304D58
@@ -117,38 +144,50 @@ public:
 };
 
 // ---- what FaAcPlayer holds -----------------------------------------------------------------------------------------------------
-// +0x338, 0x2C bytes, no vftable. What GmAcCharacter's 0x00130BF0 (not recovered) is handed with the sight cone's words, as FaAcPlayer's slot 15 does; also made at 0x00130D3F and 0x00154F78. Its
+// +0x338, 0x2C bytes, no vftable. What GmAcCharacter's 0x00130BF0 is handed with the sight cone's words, as FaAcPlayer's slot 15 does; also made at 0x00130D3F and 0x00154F78. Its
 // constructor and destructor count the living ones and keep one segment query for them all, of three, while any live.
 struct GmAcSightQuery {
     GmAcSightQuery();                   // 0x00152A80
     ~GmAcSightQuery();                  // 0x00152AC0 also sets the three words again
 
-    int m_unknown00[6];                 // +0x00
-    int m_unknown18;                    // +0x18 0 when made
-    float m_unknown1C;                  // +0x1C -1
-    int m_unknown20;                    // +0x20
-    float m_unknown24;                  // +0x24 1
-    float m_unknown28;                  // +0x28 1
+    // 0x00152B00. Where from and which way, how far, and the half-angles in degrees, kept as cosines; the lengths also squared. src/gm/FaAcPlayerSetup.cpp.
+    void Set(const AtVector3* position, const AtVector3* direction, float length, float yaw, float pitch, float minDistance);
+
+    AtVector3 m_position;               // +0x00
+    AtVector3 m_direction;              // +0x0C
+    float m_unknown18;                  // +0x18 0 when made; the least distance, squared
+    float m_unknown1C;                  // +0x1C -1; the length
+    float m_unknown20;                  // +0x20 the length, squared
+    float m_unknown24;                  // +0x24 1; the cosine of the yaw
+    float m_unknown28;                  // +0x28 1; the cosine of the pitch
 
     static unsigned int s_count;        // 0x003B3998 how many live
     static AtSegmentQuery s_query;      // 0x003B39A0 allocated for three when the first is made with none, cleared when the last goes
 };
 
+// What a sprite is set up from: an object whose +0x10 holds the materials. FaAcPlayer's slot 15 hands its target the word at +0x08 of the object at +0x08 of 0x002CB0A8 (GmSystemScenes,
+// include/gm/GmAppSettings.h). What class it is, is not known.
+struct GmSpriteScene {
+    char m_unknown00[0x10];
+    AtMaterialOwner* m_materials;       // +0x10 its slot 21, and its materials
+};
+
 // +0x410: vftable 0x00277A3C (3 slots), 0xA4 bytes. A quad drawn with a material named in a scene's tables ("Target"): its vertex format is set to 0xA080, one texture coordinate. Also held by
-// classes at 0x001A17D3, 0x001A61C7 and others. Its two set-up slots are not recovered.
+// classes at 0x001A17D3, 0x001A61C7 and others. Its two set-up slots are in src/gm/FaAcPlayerSetup.cpp.
 class GmAcSprite {
 public:
     GmAcSprite();                       // 0x0006E1F0
     ~GmAcSprite();                      // 0x0006E230 not virtual: the vftable has no destructor. The same words as Clear
-    virtual void Setup(void* scene);    // slot 0, 0x0006E2E0 not recovered: stops with a diagnostic
-    virtual void SetupNamed(void* scene, const char* name, const char* ns);  // slot 1, 0x0006E260 not recovered: stops with a diagnostic. Not an overload of Setup: MSVC orders overloads in reverse
+    virtual void Setup(GmSpriteScene* scene);  // slot 0, 0x0006E2E0 the scene, the materials' slot 21, the vertex format; no material
+    // slot 1, 0x0006E260 the same, and the material by name, in the name space if one is given. Not an overload of Setup: MSVC orders overloads in reverse
+    virtual void SetupNamed(GmSpriteScene* scene, const char* name, const char* ns);
     virtual void Slot2(int a);          // slot 2, 0x000CBF30 empty, folded
     void Clear();                       // 0x0006E1D0
 
     AtVertexFormat m_format;            // +0x04
     int m_unknown20;                    // +0x20 the scene device's slot 21, when set up
     char m_unknown24[0x70];             // +0x24
-    void* m_scene;                      // +0x94
+    GmSpriteScene* m_scene;             // +0x94
     int m_unknown98;                    // +0x98
     void* m_material;                   // +0x9C
     int m_unknownA0;                    // +0xA0
@@ -165,7 +204,9 @@ public:
     void Shutdown() override;           // slot 3, 0x00094070 the combat object, the sprite, Reset, then GmAcPlayer's
     void Slot4() override;              // slot 4, 0x00092BF0 GmAcPlayer's
     void Slot10() override;             // slot 10, 0x00092C00 GmAcPlayer's
-    void Slot15() override;             // slot 15, 0x000940A0 LevelContinuation, Combat, Target: stops with a diagnostic
+    // slot 15, 0x000940A0 the character's; the level's saved time when LevelContinuation; the head joint; the sight query; the combat module when Combat; the target sprite with "Target".
+    // src/gm/FaAcPlayerSetup.cpp
+    void Slot15() override;
     void Slot20(int a) override;        // slot 20, 0x00094A80 691 bytes: stops with a diagnostic
     void Slot21(int a) override;        // slot 21, 0x00093450 ShotType, Speed, ShotPitch, ShotBone: stops with a diagnostic
     int MoveFrame(AtVector3* forward, AtVector3* up, AtVector3* right) override;  // slot 60, 0x00093B50 from the two game axes, turned by m_unknown4C0 degrees
@@ -204,7 +245,7 @@ public:
     float* m_cosOfAngleToSwitchMouthSides;  // +0x3B4 CosOfAngleToSwitchMouthSides
     int m_unknown3B8[2];                // +0x3B8
     int m_unknown3C0[6];                // +0x3C0 not reset
-    int m_unknown3D8;                   // +0x3D8 slot 15's joint
+    AtRotTransCoordSys* m_head;         // +0x3D8 the scene actor's joint HEADR, by slot 15 (m_unknown3D8 before)
     int m_unknown3DC[2];                // +0x3DC
     int m_unknown3E4[6];                // +0x3E4
     int m_unknown3FC;                   // +0x3FC -1 when reset
@@ -233,6 +274,10 @@ static_assert(offsetof(GmAcPlayer, m_look) == 0x310, "GmAcPlayer::m_look");
 static_assert(offsetof(GmAcPlayer, m_partner) == 0x328, "GmAcPlayer::m_partner");
 static_assert(sizeof(GmAcPlayer) == 0x32C, "GmAcPlayer");
 static_assert(sizeof(GmAcSightQuery) == 0x2C, "GmAcSightQuery");
+static_assert(offsetof(GmAcSightQuery, m_unknown18) == 0x18, "GmAcSightQuery::m_unknown18");
+static_assert(offsetof(GmPlayerApp, m_saveData) == 0x65B8, "GmPlayerApp::m_saveData");
+static_assert(sizeof(GmSaveData) == 0x1F4, "GmSaveData");
+static_assert(offsetof(GmSpriteScene, m_materials) == 0x10, "GmSpriteScene::m_materials");
 static_assert(offsetof(GmAcSprite, m_unknown20) == 0x20, "GmAcSprite::m_unknown20");
 static_assert(offsetof(GmAcSprite, m_scene) == 0x94, "GmAcSprite::m_scene");
 static_assert(sizeof(GmAcSprite) == 0xA4, "GmAcSprite");
@@ -241,7 +286,7 @@ static_assert(offsetof(FaAcPlayer, m_sightQuery) == 0x338, "FaAcPlayer::m_sightQ
 static_assert(offsetof(FaAcPlayer, m_followMaxHorizontalLook) == 0x36C, "FaAcPlayer::m_followMaxHorizontalLook");
 static_assert(offsetof(FaAcPlayer, m_powuhUpRecord) == 0x398, "FaAcPlayer::m_powuhUpRecord");
 static_assert(offsetof(FaAcPlayer, m_cosOfAngleToSwitchMouthSides) == 0x3B4, "FaAcPlayer::m_cosOfAngleToSwitchMouthSides");
-static_assert(offsetof(FaAcPlayer, m_unknown3D8) == 0x3D8, "FaAcPlayer::m_unknown3D8");
+static_assert(offsetof(FaAcPlayer, m_head) == 0x3D8, "FaAcPlayer::m_head");
 static_assert(offsetof(FaAcPlayer, m_unknown3FC) == 0x3FC, "FaAcPlayer::m_unknown3FC");
 static_assert(offsetof(FaAcPlayer, m_unknown40C) == 0x40C, "FaAcPlayer::m_unknown40C");
 static_assert(offsetof(FaAcPlayer, m_target) == 0x410, "FaAcPlayer::m_target");

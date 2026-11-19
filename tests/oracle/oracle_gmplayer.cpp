@@ -59,6 +59,9 @@ template <class F> static F at(uint32_t va) { return (F)(uintptr_t)va; }
 
 // The manifest loader is linked in for statics this code reads; its clock is not used here.
 unsigned int AtPlatformMilliseconds() { return 0; }
+// FaAcPlayer's slot 15 (src/gm/FaAcPlayerSetup.cpp) reads GmHistoryLogs::s_instance, defined beside the settings reader, which asks the platform for these; not called here.
+int AtPlatformLanguage() { return 0; }
+int AtPlatformGameRegion() { return 0; }
 
 static uint32_t U(const void* p) { return (uint32_t)(uintptr_t)p; }
 static void** vptr(void* obj) { return *(void***)obj; }

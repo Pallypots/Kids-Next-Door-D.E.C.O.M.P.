@@ -138,6 +138,7 @@ public:
     // 0x00026C10. Errors go to the tokenizer, and reading goes on. An entry past the count given is reported, and then read over what lies after the array.
     void Read(AtMatrixDevice* device, AtIoTokenizer* tokenizer);
     AtMatrix* NextMatrix();                    // 0x000268C0 the next of the pool's, or null when there are no more
+    AtRotTransCoordSys* FindRotTrans(const char* name);  // 0x00026860 by name, and only if it is one of m_rotTrans; otherwise null. src/gm/FaAcPlayerSetup.cpp, by its first user
 
     void CopyFrom(AtMatrixDevice* device, AtCoordSysDatabase* from);  // 0x00026E50 the same shape and names, with matrices of its own. src/at/AtSceneAnimation.cpp
 

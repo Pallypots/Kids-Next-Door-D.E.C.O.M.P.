@@ -16,6 +16,7 @@
 class AtCoordSys;
 class GmAcCharacter;
 class GmAcObject;
+struct GmAcSightQuery;  // include/gm/GmAcPlayer.h
 
 // ---- seams in classes declared elsewhere -----------------------------------------------------------------------------------
 // 0x000679E0, AtDataRegistry's search by path from a link: each backslash part among the children, and, when `parents` is not 0, again from each parent of `under` in turn while nothing is found. Not
@@ -53,11 +54,17 @@ public:
 };
 
 // An actor's +0x270 (GmAcActor::m_unknown270) is an object whose +0x04 is a set of named stats. Only the search is known.
+// The words from +0x0C on are named by FaCmCombat's Attach (0x000A33B0), which sets the value from the base, clamps it to the bounds and copies it back: an inlined setter of this class.
 struct GmAcStat {
     void* m_unknown00;
     char m_name[8];                     // +0x04
-    char m_unknown0C[0x10];
+    float m_min;                        // +0x0C
+    float m_max;                        // +0x10
+    int m_unknown14;                    // +0x14
+    float m_base;                       // +0x18
     float m_value;                      // +0x1C
+    int m_unknown20[3];                 // +0x20
+    int m_changed;                      // +0x2C set by that setter, which then copies the value to the base
 };
 
 struct GmAcStatSet {
@@ -125,22 +132,28 @@ public:
     Registration* m_registration;       // +0x04
 };
 
-// +0x2E4: nothing here makes it. Slot names say who calls them.
-class GmAcSightCone {
+// +0x2E4: the character's combat module, vftable 0x0028F5C4, 8 slots, 0x0C bytes. GmCmCombat is an RTTI name: FaCmPlayerCombat's hierarchy descriptor (0x0029E0FC) gives FaCmPlayerCombat,
+// FaCmCombat, GmCmCombat; this is matched by depth, since FaCmCombat's constructor 0x000A3360 calls 0x001645F0, which stores 0x0028F5C4. FaAcPlayer's slot 15 makes a FaCmPlayerCombat here when
+// its record says Combat (include/gm/FaCmCombat.h). The gmchar work named this member the sight cone, after the record words beside it; those words are the sight query's (0x00130BF0), not this.
+// Its methods are in src/gm/GmCmCombat.cpp. Slot names other than the RTTI names are inferred.
+class GmCmCombat {
 public:
-    virtual ~GmAcSightCone() = 0;       // slot 0, through which the character deletes it
-    virtual void Slot1() = 0;
-    virtual void Slot2() = 0;
-    virtual void Slot3() = 0;
-    virtual void Stop() = 0;            // slot 4, before it is deleted
-    virtual void Slot5() = 0;           // from the character's slot 4
-    virtual void Update(int a) = 0;     // slot 6, from the character's slot 20 when slot 27 says so
-    virtual int Slot7() = 0;            // slot 7, answers the character's slot 55
+    GmCmCombat();                       // 0x001645F0
+    virtual ~GmCmCombat();              // slot 0; 0x00164640 deleting, not for arrays; 0x00164620 complete
+    virtual void Attach(GmAcActor* owner);  // slot 1, 0x001645D0 the owner, then ReadRecord
+    virtual int ReadRecord();           // slot 2, 0x000AB720 returns 0, folded
+    virtual void Slot3();               // slot 3, 0x001CC9F0 empty, folded. FaAcPlayer's slot 15 calls it after Attach
+    virtual void Stop();                // slot 4, 0x00164610 no owner, and m_unknown08 1. The character's shutdown calls it before deleting
+    virtual void Slot5();               // slot 5, 0x001645E0 m_unknown08 1. From the character's slot 4
+    virtual void Update(int a);         // slot 6, 0x000CBF30 empty, folded. From the character's slot 20 when slot 27 says so
+    virtual int Slot7();                // slot 7, 0x001A2B40 returns 1, folded. Answers the character's slot 55: FaCmCombat's says whether its health is above zero
+
+    GmAcActor* m_owner;                 // +0x04
+    int m_unknown08;                    // +0x08 1 when made or stopped
 };
 
-// What the two above are is not known, so neither is what their destructors do: these bodies are only for host test classes built on them.
+// What this is is not known, so neither is what its destructor does: this body is only for host test classes built on it.
 inline GmAcShadow::~GmAcShadow() {}
-inline GmAcSightCone::~GmAcSightCone() {}
 
 // +0x2DC: given by the player and NPC classes (0x00131F43, 0x00131F67) and a caller at 0x0009A545. Its +0x08 is told whose it is; its +0x04 is what the character's slot 59 answers. 0x0007DF00 and
 // 0x00154530, the original's two calls, are one-store and one-load bodies folded with other classes' (AtInputAxisHandler, AtAbstractController); they are written in place here.
@@ -180,8 +193,8 @@ public:
     GmAcCharacter();                    // 0x00130F80
     ~GmAcCharacter() override;          // slot 0; 0x00131260 deleting; 0x00131210 complete
     int Slot2() override;               // slot 2, 0x00131020 the sight cone's words and the shadow, then GmAcObject's, whose answer it returns
-    void Shutdown() override;           // slot 3, 0x00131150 GmAcObject's first, then the sight cone and the shadow
-    void Slot4() override;              // slot 4, 0x00130930 the sight cone's slot 5, then the actor's slot 4
+    void Shutdown() override;           // slot 3, 0x00131150 GmAcObject's first, then the combat module and the shadow
+    void Slot4() override;              // slot 4, 0x00130930 the combat module's slot 5, then the actor's slot 4
     void Slot10() override;             // slot 10, 0x00130920 GmAcObject's
     void Slot15() override;             // slot 15, 0x00130950 the shadow's slot 8, then the actor's slot 15
     void Slot20(int a) override;        // slot 20, 0x00130970
@@ -189,16 +202,19 @@ public:
     void Slot32() override;             // slot 32, 0x00130A10 the shadow's slot 11, then the node's
     void Slot33() override;             // slot 33, 0x00130A30 the shadow's slot 10, then the node's
     void Slot49(const char* event, int b, int c) override;  // slot 49, 0x00130A00 the actor's
-    int Slot55() override;              // slot 55, 0x00130A50 the sight cone's slot 7, or GmAcObject's without one
+    int Slot55() override;              // slot 55, 0x00130A50 the combat module's slot 7, or GmAcObject's without one
     int Slot59() override;              // slot 59, 0x00130A90 the controller's +0x04, or 0
 
     void Reset();                       // inlined in the constructor and the shutdown: m_flags98 gains kCharacterReset; every own word 0
     void SetController(GmAcCharController* controller, GmAcActor* owner);  // 0x00130F50 a null owner is this character when m_flags98 has 0x100
     void PostEvent();                   // 0x00130A70 slot 49 with m_event, 0, 1
+    // 0x00130BF0. Sets a sight query up: from `position`, or the scene node's world centre (brought up to date first if it has moved); along `direction`, or the node's +0x18; and each of the
+    // four measures given, or the record's, or 1000, 25, 20 and 0. src/gm/FaAcPlayerSetup.cpp.
+    void SetupSightQuery(GmAcSightQuery* query, const AtVector3* position, const AtVector3* direction, const float* length, const float* yaw, const float* pitch, const float* minDistance);
 
     GmAcCharController* m_controller;   // +0x2DC
     GmAcShadow* m_shadow;               // +0x2E0
-    GmAcSightCone* m_sightCone;         // +0x2E4
+    GmCmCombat* m_combat;               // +0x2E4 (m_sightCone before)
     float* m_sightConeLength;           // +0x2E8 the record's values, where they are: SightConeLength
     float* m_sightConeYaw;              // +0x2EC SightConeYaw
     float* m_sightConePitch;            // +0x2F0 SightConePitch
@@ -228,6 +244,8 @@ static_assert(offsetof(GmAcStat, m_value) == 0x1C, "GmAcStat::m_value");
 static_assert(offsetof(GmAcStatSet, m_stats) == 0x08, "GmAcStatSet::m_stats");
 static_assert(offsetof(GmAcObject, m_interaction) == 0x2D8, "GmAcObject::m_interaction");
 static_assert(sizeof(GmAcObject) == 0x2DC, "GmAcObject");
+static_assert(offsetof(GmAcStat, m_changed) == 0x2C, "GmAcStat::m_changed");
+static_assert(sizeof(GmCmCombat) == 0x0C, "GmCmCombat");
 static_assert(offsetof(GmAcShadow, m_registration) == 0x04, "GmAcShadow::m_registration");
 static_assert(offsetof(GmAcCharController, m_owner) == 0x08, "GmAcCharController::m_owner");
 static_assert(offsetof(GmAcCharController, m_pending) == 0x30, "GmAcCharController::m_pending");

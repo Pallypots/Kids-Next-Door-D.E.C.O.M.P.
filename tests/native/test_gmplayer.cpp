@@ -42,12 +42,9 @@ public:
     int FindAxis(const char* name) override { return std::strcmp(name, "GameAxisForward") == 0 ? 7 : 9; }
 };
 
-class TestCombat : public GmAcSightCone {
+class TestCombat : public GmCmCombat {
 public:
     ~TestCombat() override { g_log += "combat-deleted;"; }
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
     void Stop() override {}
     void Slot5() override {}
     void Update(int) override {}
@@ -180,10 +177,10 @@ void test_fa() {
         GmPlayerApp::s_instance = app;
         CHECK(input.FindAxis("GameAxisForward") == 7);
         p.m_gameAxisForward = 7;
-        p.m_sightCone = new TestCombat;
+        p.m_combat = new TestCombat;
         g_log.clear();
         p.FaAcPlayer::Shutdown();
-        CHECK(g_log == "combat-deleted;" && p.m_sightCone == nullptr && p.m_gameAxisForward == -1);
+        CHECK(g_log == "combat-deleted;" && p.m_combat == nullptr && p.m_gameAxisForward == -1);
         FaAcPlayer q;
         CHECK(GmAcSightQuery::s_count == 2);
         GmPlayerApp::s_instance = nullptr;

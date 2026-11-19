@@ -37,6 +37,11 @@ struct AtMaterialOwner {
     virtual void Slot15() {}
     virtual void Slot16() {}
     virtual AtMatrixDevice* MatrixDevice() { AtFatal("AtMaterialOwner: slot 17, the matrix device, is not recovered", 0, 0, 0); return 0; }  // slot 17
+    virtual void Slot18() {}
+    virtual void Slot19() {}
+    virtual void Slot20() {}
+    // slot 21: what a sprite keeps at its +0x20 when set up (0x0006E2F2, 0x0006E272). What it is, is not known. It stops if nothing has overridden it.
+    virtual int Slot21() { AtFatal("AtMaterialOwner: slot 21 is not recovered", 0, 0, 0); return 0; }
 
     // src/at/AtDatabaseLoader.cpp.
     void AddMeshes(GmNameMap* map, const char* ns);          // 0x00025F30 ns may be empty or null

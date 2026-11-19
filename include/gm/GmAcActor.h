@@ -24,6 +24,7 @@ class GmAcNode;
 class GmAudioData;
 class GmVfxManager;
 class AtDataLink;
+class AtDataComponent;
 struct AtMatAssignment;
 struct GmAcQuery;
 struct GmSoundNote;
@@ -70,6 +71,9 @@ public:
     // 0x0014E590. The first element of the value named `name` under this object's record, in this object's own registry only; null without either. The second argument is not read. The registry's
     // search is told to look in the record's parents too. See include/gm/GmAcCharacter.h: m_unknown10 is the registry and m_descriptor the record, an AtDataLink.
     void* FindValue(const char* name, int unused);
+    // 0x0014CB00. The value itself (not its first element) named `name` under this object's record, searched with parents; null for an empty name, whose whole length is measured only to test
+    // it. Neither the registry nor the record is tested. The second argument is not read. src/gm/FaAcPlayerSetup.cpp, by its first user.
+    AtDataComponent* FindComponent(const char* name, int unused);
 
     int m_unknown04;                    // +0x04
     int m_unknown08;                    // +0x08

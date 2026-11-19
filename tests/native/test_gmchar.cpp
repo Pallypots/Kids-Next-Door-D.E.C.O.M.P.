@@ -41,12 +41,9 @@ public:
     GmAcCharacter* m_owner = nullptr;
 };
 
-class TestSightCone : public GmAcSightCone {
+class TestSightCone : public GmCmCombat {
 public:
     ~TestSightCone() override { g_log += "cone-deleted;"; }
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
     void Stop() override { g_log += "cone-stop;"; }
     void Slot5() override { g_log += "cone-5;"; }
     void Update(int a) override { g_log += "cone-update" + std::to_string(a) + ";"; }
@@ -102,7 +99,7 @@ void test_factory() {
 void test_character() {
     TestCharacter c;
     CHECK((c.m_flags98 & (GmAcCharacter::kCharacterReset | GmAcObject::kObjectReset)) == (GmAcCharacter::kCharacterReset | GmAcObject::kObjectReset));
-    CHECK(c.m_controller == nullptr && c.m_shadow == nullptr && c.m_sightCone == nullptr && c.m_sightConeBone == nullptr && c.m_event[0] == 0);
+    CHECK(c.m_controller == nullptr && c.m_shadow == nullptr && c.m_combat == nullptr && c.m_sightConeBone == nullptr && c.m_event[0] == 0);
     CHECK(c.Slot2() == 0);
     CHECK(c.Slot59() == 0);
     GmAcCharController controller;
@@ -124,7 +121,7 @@ void test_character() {
     // The sight cone answers slot 55; without it the object's answer.
     CHECK(c.Slot55() == 1);
     TestSightCone* cone = new TestSightCone;
-    c.m_sightCone = cone;
+    c.m_combat = cone;
     CHECK(c.Slot55() == 0x77);
     // Shutdown: the cone stopped and deleted, the shadow taken off the list, stopped and deleted, every word reset.
     static int maps_heap;
@@ -140,7 +137,7 @@ void test_character() {
     g_log.clear();
     c.GmAcCharacter::Shutdown();
     CHECK(g_log == "cone-stop;cone-deleted;stop;shadow-deleted;");
-    CHECK(c.m_shadow == nullptr && c.m_sightCone == nullptr && c.m_sightConeLength == nullptr);
+    CHECK(c.m_shadow == nullptr && c.m_combat == nullptr && c.m_sightConeLength == nullptr);
     CHECK(g_casters.m_casters[0] == &d && g_casters.m_casters[1] == nullptr);
 }
 
