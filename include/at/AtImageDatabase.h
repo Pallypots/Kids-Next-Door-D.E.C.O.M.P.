@@ -8,6 +8,7 @@
 
 class AtImageDatabase;
 class AtFontDatabase;
+void AtFatal(const char* message, int file, int line, int unused);
 
 // One image, as this file's reader sees it. Base class at vftable 0x0027711C, concrete at 0x0028B9B8.
 class AtImageItem {
@@ -47,6 +48,8 @@ public:
     virtual void Read(AtMaterialOwner* owner, AtFontDatabase* database, const char* name, AtIoTokenizer* tokenizer) = 0;
     virtual void Slot8() = 0;
     virtual void OnLoaded(AtMaterialOwner* owner) = 0;  // slot 9
+    // Slot 10, called when the last text using a demand-loaded font lets it go (0x0001FFE0). Name inferred; stops with a diagnostic unless overridden.
+    virtual void Unload() { AtFatal("AtFontItem: slot 10 is not recovered", 0, 0, 0); }
 
     char m_unknown04[8];
     unsigned int m_flags;   // +0x0C

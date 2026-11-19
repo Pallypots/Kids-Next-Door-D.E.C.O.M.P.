@@ -3,25 +3,10 @@
 // The readers are what is recovered. The class starts at 0x00011440, and its constructor and destructor need the player at +0x0C, which is not; see docs/worklog/2026-11-07-afd.md.
 #pragma once
 
+#include "at/AtFlashScript.h"
 #include "at/AtFlashShape.h"
 #include "at/AtFlashSprite.h"
-
-// Vftable 0x0027125C. AScript\name.AFA and .AIS. Not recovered: its Load stops with a diagnostic, and only the heap is known.
-class AtFlashScriptTable {
-public:
-    void Load(const char* name, int mode, AtFlashApplication* application);  // 0x000134A0 not recovered
-
-    char m_unknown00[0x8C];
-    void* m_heap;                      // +0x8C
-};
-
-// Vftable 0x002712D8. Text\name.AFT, .AFX, .AIS and its font's .AGF. Not recovered: its Load stops with a diagnostic.
-class AtFlashTextTable : public AtFlashResourceTable {
-public:
-    void Load(const char* name, int mode, AtMaterialOwner* owner, int ownFonts);  // 0x00013CB0 not recovered
-
-    char m_unknown28[0xD4 - 0x28];
-};
+#include "at/AtFlashText.h"
 
 class AtFlashLevel {
 public:

@@ -96,8 +96,9 @@ public:
 
     void ReleaseFormats();             // 0x000202A0 nothing unless m_loaded
     void Read(const char* name);       // 0x00020310 name + ".AFX"; a count of 0 makes no list
+    void Load(const char* name, int unused);  // 0x00020570 Read inside a directory "Text"; in src/at/AtFlashText.cpp
 
-    int m_loaded;                      // +0x28 set by 0x00020570, which is not recovered: it pushes a directory of "Text" round Read
+    int m_loaded;                      // +0x28 set by Load
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
