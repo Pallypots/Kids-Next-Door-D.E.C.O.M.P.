@@ -1083,7 +1083,7 @@ static void run_direct() {
     for (int flags : {0, 1, 2, 3}) {
         for (int has : {1, 0}) {
             g_fs->has = has != 0;
-            AtIoBinaryFile a, b;
+            AtAudioBankFile a, b;
             int oa, ra;
             { On on(0); oa = at<FnOpen>(0x000249D0)(&a, nullptr, "DIR\\F.XGG", flags); }
             { On on(1); ra = b.Open("DIR\\F.XGG", flags); }
@@ -1107,7 +1107,7 @@ static void run_direct() {
                 AtIoFileRequest* qa = nullptr;
                 AtIoFileRequest* qb = nullptr;
                 { On on(0); oa = at<FnRead>(0x00024950)(&a, nullptr, ba, 4, &da, &qa); }
-                { On on(1); ra = b.Read(bb, 4, &db, &qb); }
+                { On on(1); ra = b.ReadPending(bb, 4, &db, &qb); }
                 eq("read", oa, ra);
                 eq("read's count", da, db);
             }
@@ -1371,7 +1371,7 @@ int main(int argc, char** argv) {
     *(AtIoContext**)(uintptr_t)0x002C6278 = &g_ctx;
     *(AtIoContext**)(uintptr_t)0x002C6328 = &g_ctx;
     AtIoFileRef::s_context = &g_ctx;
-    AtIoBinaryFile::s_context = &g_ctx;
+    AtAudioBankFile::s_context = &g_ctx;
     set_heaps(&g_heap_token);
     g_heap_pad = 0x1000;
     g_fs->m_path.m_top = -1;

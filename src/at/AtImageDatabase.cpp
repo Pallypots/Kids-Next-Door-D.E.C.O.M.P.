@@ -139,7 +139,7 @@ void AtImageDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {
                 tokenizer->ExpectToken(kImage);
                 char name[8];
                 tokenizer->ExpectName(name);
-                AtImageItem* item = ImageAt(i);
+                AtImage* item = ImageAt(i);
                 Insert(name, item);
                 item->Read(owner, this, name, tokenizer);
             }
@@ -152,8 +152,8 @@ void AtImageDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {
         token = tokenizer->Next();
     } while (token != AtIoTokenizer::kEnd);
     for (unsigned int i = 0; i < m_count; i++) {
-        AtImageItem* item = ImageAt(i);
-        if ((item->m_flags & AtImageItem::kDemandLoad) != 0) {
+        AtImage* item = ImageAt(i);
+        if ((item->m_flags & AtImage::kDemandLoad) != 0) {
             s_demandLoadCount++;
         } else {
             item->OnLoaded(owner);
@@ -276,7 +276,7 @@ void AtFontDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {
                 tokenizer->ExpectToken(kFont2D);
                 char name[8];
                 tokenizer->ExpectName(name);
-                AtFontItem* item = Font2DAt(i);
+                AtGrI2DFont* item = Font2DAt(i);
                 Insert(name, item);
                 item->Read(owner, this, name, tokenizer);
             }
@@ -288,8 +288,8 @@ void AtFontDatabase::Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer) {
         }
     }
     for (unsigned int i = 0; i < m_count; i++) {
-        AtFontItem* item = Font2DAt(i);
-        if ((item->m_flags & AtFontItem::kDemandLoad) != 0) {
+        AtGrI2DFont* item = Font2DAt(i);
+        if ((item->m_flags & AtFont::kDemandLoad) != 0) {
             s_demandLoadCount++;
         } else {
             item->OnLoaded(owner);

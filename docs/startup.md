@@ -45,3 +45,24 @@ At 0x0008EB33 start-up configures a loader held at App+0x6D48, then calls its `U
 ## The memory system
 
 `AtMemorySystem` (vftable 0x00286694) and its derived class (vftable 0x00284840) are recovered. Startup, slot 2, calls Initialize, which allocates the region, starts the manager, creates the default heap, default size 0x10000, and calls what is probably `XInitDevices`; then sets the instance and the default heap, and pushes it. The object is a member, at +4, of the class whose constructor is at 0x00141840: not recovered, and neither is what passes the sizes. The application's own four heaps come later, from 0x0008C860, which reports `***Mem For Heaps` and reads each heap's size and partner from +0x64A4: -2 joins the default heap's group, -1 none, otherwise another of the four.
+
+## Corrections from recovering App (2026-11-18)
+
+* `App` RTTI: App : GmApp : AtApAtlasApplication, AtApUserInterfaceApplication, AtApCinemaApplication, AtApSceneApplication, AtApVideoPlayerApplication,
+  AtApSoundApplication, AtApControllerApplication, AtApGraphicsApplication, AtApKinematicsApplication, AtApScriptApplication, AtApDataManagementApplication,
+  AtApMathApplication, AtApInputOutputApplication, AtApNetworkApplication, AtApEventApplication, AtApBaseApplication. Constructor 0x0008E5B0, destructor 0x0008F130.
+* Step 1: 0x00141500 is GmApp's start-up: the memory report, the audio options' defaults, then the AtAp layers' start-ups in a chain (0x0009C280 atlas, then 0x0009C3C0,
+  each checking its own running flag, calling the next, asking App for its config by a slot, and initialising its layer object). 0x000703B0 makes the small-C scripts'
+  name map; 0x00083490 and 0x00143DD0 store the first heap.
+* Step 3: 0x0008CE00 makes the derived mount manager at App+0x6914 (0x00140350, vftable 0x0028DBA0), with App as its owner and App+0x31C as its context, and the history
+  logs at App+0x68F0, and sets the stream heap. 0x0008DBA0 sets 640 by 480. 0x0008E240 loads `DataXbox\UI\DirtyDsk\loader` through App+0x5F90's slot 29, with the heap
+  manager's override set to App's first heap. Init then gives the mount manager the App.ini data folder (slot 4) before reading the command line.
+* Step 5: 0x001416A0 reads two things from the matrix device; 0x0008CFB0 is unrecovered and large; App+0x65B8 is FaAcPlayerGameStateData (slots 1, 3; slot 5 gets the
+  Generic registry); 0x0008DC70 makes the three frameworks; 0x0008DDF0 the table of moves between them; 0x0008DEA0 loads `Design\Registry\Generic.ADR` into App+0x6950 and
+  `Library.ADD` into App+0x6B40, each if present; 0x00139F10 reads the saved sound volumes; 0x00097EB0 is not identified.
+* Step 7: 0x0008E420 is `GmLevelManager::FindLevel`, comparing eight characters.
+* Step 8: the "SName" and "Title" strings go to 0x003050E8 and 0x003050F0; the script system (0x003B3418) is initialised and its callbacks registered (13, 5 for
+  "Control", 31 for "SaveData"); both modules are enabled; a "Game" save type of 0xF8 bytes is registered with the space manager; the first framework is entered.
+* Step 9: the loader is the level manifest on `PERSIST.MNG` (from the manifest work).
+* **The main loop is 0x0008EBE0**, Init's second step, not 0x0008ED60. Each frame: the device's slot 6, the clock, App+0x692C's update, the scripts until done, a move
+  between frameworks by the table, the framework's slots 3 and 2, then App's slot 39. 0x0008ED60 is App's slot 6, Shutdown, ending in a tail jump to SetDefaults.

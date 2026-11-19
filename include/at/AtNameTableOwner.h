@@ -22,6 +22,8 @@ struct AtNameTableOwner {
     void AddGeometry(GmNameMap* map, const char* ns);    // 0x000400B0 the same, into the bounding geometry's table. src/at/AtBoundingGeometry.cpp
     // The original has this inline in 0x00031C50. Here an empty ns does mean the plain group, unlike the add methods.
     void* FindInFirst(const char* name, const char* ns) { return ns != 0 && ns[0] != 0 ? m_firstSpaces.Find(ns, name) : m_first.Find(name); }
+    void AddCellGraphs(GmNameMap* map, const char* ns);  // 0x000400F0 the same, by test of null only. src/at/AtCellGraph.cpp
+    void AddSpaceGraphs(GmNameMap* map);                 // 0x00040130 src/at/AtCellGraph.cpp
     AtSceneNode* FindNode(const char* name, const char* ns);       // 0x00045680 ns may be empty or null
     void* FindBoundingGeometry(const char* name, const char* ns);  // 0x000499B0 ns may be empty or null
     AtSceneNode* FindActor(const char* name, const char* ns);      // 0x000456C0 reports a node not of an actor's class, and hands it back. In src/at/AtSpace.cpp
@@ -51,7 +53,7 @@ struct AtNameTableOwner {
     GmNameSpaceDb m_geometrySpaces;    // +0x198
     GmNameMapGroup m_cellTables;       // +0x1BC what a leaf's Cell word finds, a table of cells at its +0x30
     GmNameSpaceDb m_cellTableSpaces;   // +0x1D4
-    char m_unknown1F8[0x18];
+    GmNameMapGroup m_spaceGraphs;      // +0x1F8 where a .ASD's map of its space graphs goes. Nothing here looks in it.
     AtModifierStack m_modifierStack;   // +0x210
     char m_unknown21C[0x48];
     unsigned int m_stackDepth;         // +0x264 how deep a space graph's modifiers may nest

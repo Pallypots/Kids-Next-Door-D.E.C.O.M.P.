@@ -7,20 +7,9 @@
 int AtPlatformLanguage();
 int AtPlatformGameRegion();
 
-// What the settings write into the App object, not otherwise recovered. Reached through 0x001414F0, which reads a pointer at 0x003B360C.
-struct GmAppAudioOptions {
-    char m_unknown[0x645C];
-    int m_noMusic;             // +0x645C
-    int m_noAmbientAudio;      // +0x6460
-    int m_noAudio;             // +0x6464
-    int m_displayBanks;        // +0x6468
-    int m_displaySounds;       // +0x646C
-    int m_displayMusic;        // +0x6470
-    int m_audioMode;           // +0x6474
-    int m_audioTest;           // +0x6478
-
-    static GmAppAudioOptions* s_instance;  // 0x003B360C
-};
+// The audio words the settings write are App's, +0x645C to +0x6478, reached through App::s_gmApp (0x003B360C, read by 0x001414F0): include/gm/GmApp.h. The settings work
+// called that object GmAppAudioOptions before App was recovered; folded.
+class App;
 
 // A small object with a virtual setter at slot 5. Two of them, for how many trace and error lines to keep. Reached through 0x002CB0A8.
 class GmHistoryLog {
@@ -99,7 +88,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(GmAppAudioOptions, m_audioTest) == 0x6478, "GmAppAudioOptions::m_audioTest");
 static_assert(offsetof(GmHistoryLogs, m_traces) == 0x1C, "GmHistoryLogs::m_traces");
 static_assert(offsetof(GmAppSettings, m_controllerDeadZone) == 0x30, "GmAppSettings::m_controllerDeadZone");
 static_assert(offsetof(GmAppSettings, m_character) == 0x44, "GmAppSettings::m_character");

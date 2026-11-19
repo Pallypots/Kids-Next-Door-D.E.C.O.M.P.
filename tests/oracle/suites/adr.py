@@ -51,7 +51,7 @@ def fields(where, prefix, lines, suffix=""):
     return out
 
 
-D_FIELDS = ["    m_unknown04 = 0;", "    m_unknown08 = 0;", "    m_type = AtDataRegistry::kTypeCount;", "    m_flags = 0;", "    m_count = 1;", "    m_intFloor = (int)0x80000000;", "    m_intCeiling = 0x7FFFFFFF;",
+D_FIELDS = ["    *(int*)&m_name[0] = 0;", "    *(int*)&m_name[4] = 0;", "    m_type = AtDataRegistry::kTypeCount;", "    m_flags = 0;", "    m_count = 1;", "    m_intFloor = (int)0x80000000;", "    m_intCeiling = 0x7FFFFFFF;",
             "    *(unsigned int*)&m_realFloor = 0xFF7FFFFF;", "    *(unsigned int*)&m_realCeiling = 0x7F7FFFFF;", "    m_format = 0;"]
 M += fields("descriptor ctor", "AtDataDescriptor::AtDataDescriptor() {\n", D_FIELDS)
 M += fields("descriptor clear", "void AtDataDescriptor::Clear() {\n    if (m_format != 0) {\n        operator delete(m_format);\n    }\n", D_FIELDS)

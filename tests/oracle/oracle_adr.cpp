@@ -212,8 +212,8 @@ static void same_value(int type, const char* v0, const char* v1) {
 }
 
 static void same_descriptor(const AtDataDescriptor* o, const AtDataDescriptor* r) {
-    eq("descriptor +04", o->m_unknown04, r->m_unknown04);
-    eq("descriptor +08", o->m_unknown08, r->m_unknown08);
+    eq("descriptor's name, first word", *(const int*)&o->m_name[0], *(const int*)&r->m_name[0]);
+    eq("descriptor's name, second word", *(const int*)&o->m_name[4], *(const int*)&r->m_name[4]);
     eq("descriptor's type", o->m_type, r->m_type);
     eq("descriptor's flags", o->m_flags, r->m_flags);
     eq("descriptor's count", o->m_count, r->m_count);
@@ -745,8 +745,8 @@ static void run_descriptor() {
     same_descriptor(o, r);
     { On on(0); at<FnP>(0x0006BB70)(o, nullptr, "gone"); }
     { On on(1); r->SetFormat("gone"); }
-    o->m_unknown04 = r->m_unknown04 = 5;
-    o->m_unknown08 = r->m_unknown08 = 6;
+    *(int*)&o->m_name[0] = *(int*)&r->m_name[0] = 5;
+    *(int*)&o->m_name[4] = *(int*)&r->m_name[4] = 6;
     { On on(0); at<Fn0>(0x0006BC60)(o, nullptr); }
     { On on(1); r->Clear(); }
     same_descriptor(o, r);

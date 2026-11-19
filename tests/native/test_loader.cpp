@@ -172,7 +172,7 @@ int main() {
     context.m_stackSize = 4;
     context.m_stack = stack;
     AtIoFileRef::s_context = &context;
-    AtIoBinaryFile::s_context = &context;
+    AtAudioBankFile::s_context = &context;
 
     static int token;
     static AtHeap meshHeap;

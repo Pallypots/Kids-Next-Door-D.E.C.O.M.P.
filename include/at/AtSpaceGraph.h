@@ -18,6 +18,7 @@
 // Original address clusters 0x00039AF0-0x0003AEFF, 0x00045710-0x00045E0F, 0x00046410-0x00046CBF, 0x00046F70-0x00047E00. Slots 6, 7, 10 and 11 of a space, and the drawing and moving functions of the graph, are not recovered. See docs/worklog/2026-11-07-asm.md.
 #pragma once
 
+#include "at/AtCellGraph.h"
 #include "at/AtIoTokenizer.h"
 #include "at/AtModifier.h"
 #include "at/AtModifierState.h"
@@ -193,11 +194,8 @@ struct AtSpaceGraphHook {
     AtSpaceGraphHook* m_next;  // +0x0C
 };
 
-// What a leaf's Cell word finds cells in. Only this member is seen here.
-struct AtSpaceCellTable {
-    char m_unknown00[0x30];    // +0x00
-    GmNameMap m_cells;         // +0x30
-};
+// What a leaf's Cell word finds cells in is a cell graph: include/at/AtCellGraph.h.
+typedef AtCellGraph AtSpaceCellTable;
 
 class AtSpaceGraph {
 public:

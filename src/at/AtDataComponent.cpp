@@ -1,7 +1,7 @@
 // The values of a data registry, as far as loading reaches. See include/at/AtDataRegistry.h.
 #include "at/AtDataRegistry.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtFatal(const char* message, int file, int line, int unused);
@@ -187,6 +187,10 @@ void AtDataBoolean::Reset() {
     AtDataComponent::Reset();
 }
 
+int AtDataBoolean::Equals(const AtDataComponent* other) {
+    return m_value == static_cast<const AtDataBoolean*>(other)->m_value ? 1 : 0;
+}
+
 AtDataInt::AtDataInt() {
 }
 
@@ -201,6 +205,10 @@ int AtDataInt::Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) {
 
 void AtDataInt::Reset() {
     AtDataComponent::Reset();
+}
+
+int AtDataInt::Equals(const AtDataComponent* other) {
+    return m_value == static_cast<const AtDataInt*>(other)->m_value ? 1 : 0;
 }
 
 AtDataReal::AtDataReal() {

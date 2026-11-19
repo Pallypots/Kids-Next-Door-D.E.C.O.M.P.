@@ -2,11 +2,12 @@
 //
 //   oracle_add <default.xbe> <tokenizer cases dir> [--entries FILE] [--mutate]
 //
-// Cases: the one .ADD on the disc, and text written here. No .ADB exists on the disc, so the manager rests on written text alone.
+// Cases: the one .ADD on the disc, with the eleven real .ADR registries it names under the real GENERIC.ADR as their parent, as start-up loads them; and text written here. No .ADB exists on the disc, so the
+// manager rests on written text alone.
 //
-// What stands in for what. The .ADR registry is a logging double on both sides, so a registry file is never read here: 0x000674E0, 0x00068880 and 0x00067540 are redirected. The descriptor's constructor, destructor
-// and Clear, the eleven value classes and the three string members are not recovered in this branch: on both sides they are the ORIGINAL's code, reached on the recovered side through the seams, with the original's
-// helpers logging to whichever side is running. So a field's value is read by the same code on both sides, through each side's own tokenizer, and a difference can only come from what is recovered here.
+// Both sides are whole, but for three members of AtDataString that no branch has recovered (0x0006A1D0, 0x0006A4D0, 0x00069FD0): the recovered side reaches the ORIGINAL's code for them through the seams, on the
+// recovered side's own objects, with the original's helpers logging to whichever side is running. The registries (.ADR), field descriptors and value classes are each side's own: the original's here, the
+// recovered ones of include/at/AtDataRegistry.h there. Every .ADR a written library names is the same short written registry; the parent is a written one, or the real GENERIC.ADR for the disc's library.
 #define NOMINMAX
 #include <windows.h>
 
@@ -16,6 +17,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <map>
 #include <new>
 #include <string>
 #include <vector>
@@ -65,7 +67,17 @@ void AtPushHeap(void* h) { count_push(); AtPushHeapInDoubles(h); }
 
 // The original's helpers log to the side that is running, since the recovered side reaches the original's value classes too.
 static void* __cdecl s_new(unsigned n) { if (g_recording) g_log[g_side].add('N', n); return filled(n); }
-static void __cdecl s_delete(void* p) { if (g_recording && p) g_log[g_side].add('D'); std::free(p); }
+// While a library runs, nothing freed is given back to the heap on either side. A registry the library deletes stays listed by the owner, as in the original, and the next registry filed points at it;
+// whether that stale pointer then names a new block depends on the host's heap, which differs by side. Kept, it names nothing on both.
+static bool g_keep_freed;
+static void give_back(void* p) { if (!g_keep_freed) std::free(p); }
+static void __cdecl s_delete(void* p) { if (g_recording && p) g_log[g_side].add('D'); give_back(p); }
+static void host_delete(void* p) { if (g_recording && g_side == 1 && p) g_log[1].add('D'); give_back(p); }
+static void host_delete_sized(void* p, std::size_t) { if (g_recording && g_side == 1 && p) g_log[1].add('D'); give_back(p); }
+struct KeepFreed {
+    KeepFreed() { g_keep_freed = true; }
+    ~KeepFreed() { g_keep_freed = false; }
+};
 static void __cdecl s_push(void* h) { count_push(); if (g_recording) g_log[g_side].add('P', (uint32_t)(uintptr_t)h); }
 static void __cdecl s_pop() { if (g_recording) g_log[g_side].add('p'); }
 static void __cdecl s_fatal(const char* m, int a, int, int) { if (g_recording) { g_log[g_side].add('F', a); record_message(m, g_side); } count_report(); }
@@ -74,13 +86,47 @@ static void __cdecl s_raise(int code, int, int, int) { if (g_recording) g_log[g_
 static std::vector<unsigned char> bytes(const std::string& s) { return std::vector<unsigned char>(s.begin(), s.end()); }
 
 // ---- files ------------------------------------------------------------------------------------------------------------
+// An .ADR by its name, upper case and without the extension; any other name is kSmallAdr.
+static std::map<std::string, std::vector<unsigned char>> g_adr;
+static const char kSmallAdr[] =
+    "DataComponentTypes[ 3 ]\n{\n DataComponent { Type Int NumComponents 2 }\n DataComponent { Type Real NumComponents 1 }\n DataComponent { Type ShortName NumComponents 1 }\n}\n"
+    "DataRegistry[ 3 ]\n{\n DataLink { Name \"Speed\" Type Int Data 7 }\n DataLink { Name \"Mass\" Type Real Floor 0.5 Ceiling 4.0 Data 9.5 }\n"
+    " DataLink { Name \"Tag\" Type ShortName Parent \"Top\\\" Data \"tag\" }\n}\n";
+static const char kParentAdr[] =
+    "NameSpace \"Gen\"\nDataComponentTypes[ 2 ]\n{\n DataComponent { Type Empty NumComponents 1 }\n DataComponent { Type Int NumComponents 1 }\n}\n"
+    "DataRegistry[ 2 ]\n{\n DataLink { Name \"Top\" Type Empty Data }\n DataLink { Name \"Gravity\" Type Int Parent \"Top\\\" Data 3 }\n}\n";
+static std::vector<unsigned char> g_small_adr(kSmallAdr, kSmallAdr + sizeof kSmallAdr - 1);
+static unsigned g_adr_opened, g_adr_real_opened;
+
+static std::string adr_key(const char* path) {
+    std::string k;
+    for (const char* p = path; *p; p++) k += (char)((*p >= 'a' && *p <= 'z') ? *p - 32 : *p);
+    const size_t dot = k.rfind(".ADR");
+    return dot == std::string::npos ? k : k.substr(0, dot);
+}
+
 class Fs : public MemFs {
 public:
     std::vector<unsigned char> add, adb;
+    char base[MAX_PATH] = "DATA\\LIBRARY.ADD";
     int Open(const char* path, int flags, AtIoFile** out) override {
+        if (std::strstr(path, ".ADR") || std::strstr(path, ".adr")) {
+            // The key's string would log as the recovered side's allocation: made with the log off.
+            const bool was = g_recording;
+            g_recording = false;
+            const auto i = g_adr.find(adr_key(path));
+            g_recording = was;
+            const std::vector<unsigned char>& d = i != g_adr.end() ? i->second : g_small_adr;
+            if (g_side == 1) { g_adr_opened++; if (i != g_adr.end()) g_adr_real_opened++; }
+            files[g_side].data = d.data();
+            files[g_side].size = d.size();
+            strncpy_s(files[g_side].m_path, path, _TRUNCATE);
+            return MemFs::Open(path, flags, out);
+        }
         const std::vector<unsigned char>& d = std::strstr(path, ".ADB") ? adb : add;
         files[g_side].data = d.data();
         files[g_side].size = d.size();
+        strcpy_s(files[g_side].m_path, base);
         return MemFs::Open(path, flags, out);
     }
 };
@@ -90,7 +136,10 @@ static AtIoFileSystem* g_ctx_stack[4];
 static int g_heap_token;
 
 static void reset_path() { g_fs->m_path.m_top = -1; }
-static void set_path(const char* path) { for (int side = 0; side < 2; side++) strcpy_s(g_fs->files[side].m_path, path); }
+static void set_path(const char* path) {
+    strcpy_s(g_fs->base, path);
+    for (int side = 0; side < 2; side++) strcpy_s(g_fs->files[side].m_path, path);
+}
 
 typedef void(__fastcall* Fn0)(void*, void*);
 typedef void*(__fastcall* FnDel)(void*, void*, unsigned);
@@ -115,86 +164,42 @@ typedef int(__fastcall* FnDescRead)(void*, void*, void*);
 
 static uint32_t& orig_u32(uint32_t va) { return *(uint32_t*)(uintptr_t)va; }
 
-// ---- the registry: a logging double on both sides ----------------------------------------------------------------------
-static int g_registry_loaded_after = 1;
-static int g_registry_loaded_at_birth = 0;
-static AtDataOwner* g_owner[2];
-static unsigned char g_parent_token[2];
+// ---- the registries: real on both sides -------------------------------------------------------------------------------
+static AtDataRegistryOwner* g_owner[2];
+static AtDataRegistry* g_parent[2];
 
-static void* __fastcall r_del(void* self, void*, unsigned flags) {
-    g_log[g_side].add('X', flags);
-    if (flags & 1) s_delete(self);
-    return self;
-}
-static const void* g_registry_table[1] = {(const void*)r_del};
-static void* __fastcall r_ctor(void* self, void*) {
-    g_log[g_side].add('K');
-    *(const void***)self = g_registry_table;
-    *(int*)((char*)self + 0x1EC) = g_registry_loaded_at_birth;
-    return self;
-}
-static void __fastcall r_clear(void*, void*) { g_log[g_side].add('C'); }
-static int __fastcall r_load(void* self, void*, void* owner, const char* name, int unused, char* space, void* parent) {
-    g_log[g_side].add('L', owner == g_owner[g_side]);
-    g_log[g_side].add('l', (uint32_t)unused);
-    g_log[g_side].add('s', (unsigned char)space[0]);
-    g_log[g_side].add('t', parent == nullptr ? 0 : parent == &g_parent_token[g_side] ? 1 : 2);
-    record_message(name, g_side);
-    space[0] = 'Z';
-    *(int*)((char*)self + 0x1EC) = g_registry_loaded_after;
-    return 0;
-}
-
-AtDataRegistry* AtDataRegistryNew() {
-    void* p = s_new(0x1F0);
-    return p ? (AtDataRegistry*)r_ctor(p, nullptr) : nullptr;
-}
-int AtDataRegistryIsLoaded(AtDataRegistry* registry) { return *(int*)((char*)registry + 0x1EC); }
-void AtDataRegistryClear(AtDataRegistry* registry) { r_clear(registry, nullptr); }
-void AtDataRegistryDelete(AtDataRegistry* registry) { r_del(registry, nullptr, 1); }
-void AtDataRegistryLoad(AtDataRegistry* registry, AtDataOwner* owner, const char* name, int unused, char* space, AtDataRegistry* parent) { r_load(registry, nullptr, owner, name, unused, space, parent); }
-
-// ---- the original's descriptor and value classes, for the recovered side ---------------------------------------------
-AtDataDescriptorFields* AtDataDescriptorArrayNew(unsigned int count) {
-    uint32_t* p = (uint32_t*)s_new(count * 0x2C + 4);
-    if (!p) return nullptr;
-    *p = count;
-    char* first = (char*)(p + 1);
-    for (unsigned i = 0; i < count; i++) at<Fn0>(0x0006BC10)(first + i * 0x2C, nullptr);
-    return (AtDataDescriptorFields*)first;
-}
-void AtDataDescriptorArrayDelete(AtDataDescriptorFields* descriptors) {
-    uint32_t* cookie = (uint32_t*)descriptors - 1;
-    if (*cookie == 0) { s_delete(cookie); return; }
-    at<FnDel>((*(uint32_t**)descriptors)[0])(descriptors, nullptr, 3);
-}
-void AtDataDescriptorClear(AtDataDescriptorFields* descriptor) { at<Fn0>(0x0006BC60)(descriptor, nullptr); }
-
-static const struct { unsigned size; uint32_t ctor; } g_value_classes[12] = {
-    {0, 0},           {0x10, 0x0006A040}, {0x10, 0x00069E80}, {0x10, 0x00069ED0}, {0x14, 0x00069F20}, {0x3C, 0x0006A170},
-    {0x10, 0x0006A810}, {0x10, 0x0006A9C0}, {0x10, 0x0006AC40}, {0x10, 0x0006AC60}, {0x10, 0x0006AE30}, {0x14, 0x0006B0D0},
-};
-AtDataValue* AtDataValueArrayNew(unsigned int type, unsigned int count) {
-    const unsigned size = g_value_classes[type].size;
-    uint32_t* p = (uint32_t*)s_new(count * size + 4);
-    if (!p) return nullptr;
-    *p = count;
-    char* first = (char*)(p + 1);
-    for (unsigned i = 0; i < count; i++) at<Fn0>(g_value_classes[type].ctor)(first + i * size, nullptr);
-    return (AtDataValue*)first;
-}
-void AtDataValueArrayDelete(AtDataValue* values) {
-    uint32_t* cookie = (uint32_t*)values - 1;
-    if (*cookie == 0) { s_delete(cookie); return; }
-    at<FnDel>((*(uint32_t**)values)[0])(values, nullptr, 3);
-}
-unsigned int AtDataValueSize(unsigned int type) { return g_value_classes[type].size; }
-void AtDataStringReset(AtDataValue* value) { at<Fn0>(0x0006A1D0)(value, nullptr); }
-void AtDataStringBindAndRead(AtDataValue* value, AtDataDescriptorFields* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size) {
+// The three members of AtDataString no branch has recovered: the original's, on the recovered side's objects.
+void AtDataStringReset(AtDataString* value) { at<Fn0>(0x0006A1D0)(value, nullptr); }
+void AtDataStringBindAndRead(AtDataString* value, AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size) {
     at<int(__fastcall*)(void*, void*, void*, void*, char*, unsigned)>(0x0006A4D0)(value, nullptr, descriptor, tokenizer, characters, size);
 }
-void AtDataStringBind(AtDataValue* value, AtDataDescriptorFields* descriptor, char* characters, unsigned int size) {
+void AtDataStringBind(AtDataString* value, AtDataDescriptor* descriptor, char* characters, unsigned int size) {
     at<int(__fastcall*)(void*, void*, void*, char*, unsigned)>(0x00069FD0)(value, nullptr, descriptor, characters, size);
+}
+
+// Each value class, by type: the original's vftable and size, and the recovered class's vftable, read from one made here.
+static const uint32_t kOrigVft[12] = {0x00277754, 0x0027777C, 0x002777A4, 0x002777CC, 0x002777F4, 0x0027781C, 0x0027784C, 0x00277874, 0x0027789C, 0x002778C4, 0x002778EC, 0x00277914};
+static const unsigned kSize[12] = {0x0C, 0x10, 0x10, 0x10, 0x14, 0x3C, 0x10, 0x10, 0x10, 0x10, 0x10, 0x14};
+static const unsigned kHostSize[12] = {sizeof(AtDataComponent), sizeof(AtDataBoolean), sizeof(AtDataInt), sizeof(AtDataReal), sizeof(AtDataShortName), sizeof(AtDataString),
+                                       sizeof(AtDataBooleanArray), sizeof(AtDataByteArray), sizeof(AtDataIntArray), sizeof(AtDataRealArray), sizeof(AtDataShortNameArray), sizeof(AtDataStringArray)};
+static const void* g_vft[12];
+static const void* g_descriptor_vft;
+template <class T> static const void* vft_of() {
+    alignas(8) static unsigned char space[sizeof(T)];
+    T* t = new (space) T;
+    return *(const void* const*)t;
+}
+static void read_vfts() {
+    g_vft[0] = vft_of<AtDataComponent>(); g_vft[1] = vft_of<AtDataBoolean>(); g_vft[2] = vft_of<AtDataInt>(); g_vft[3] = vft_of<AtDataReal>();
+    g_vft[4] = vft_of<AtDataShortName>(); g_vft[5] = vft_of<AtDataString>(); g_vft[6] = vft_of<AtDataBooleanArray>(); g_vft[7] = vft_of<AtDataByteArray>();
+    g_vft[8] = vft_of<AtDataIntArray>(); g_vft[9] = vft_of<AtDataRealArray>(); g_vft[10] = vft_of<AtDataShortNameArray>(); g_vft[11] = vft_of<AtDataStringArray>();
+    g_descriptor_vft = vft_of<AtDataDescriptor>();
+}
+// A value's class by its vftable, on its own side; -1 for anything else.
+static int class_of(int side, const void* value) {
+    const void* v = *(const void* const*)value;
+    for (int i = 0; i < 12; i++) if (side == 0 ? v == (const void*)(uintptr_t)kOrigVft[i] : v == g_vft[i]) return i;
+    return -1;
 }
 
 // ---- comparing ---------------------------------------------------------------------------------------------------------
@@ -220,9 +225,9 @@ static void same_map(const char* what, const GmNameMap* o, Rel ob, const GmNameM
     }
 }
 
-static void same_descriptor(const AtDataDescriptorFields& a, const AtDataDescriptorFields& b) {
+static void same_descriptor(const AtDataDescriptor& a, const AtDataDescriptor& b) {
     eqs("descriptor's name", nm(a.m_name).c_str(), nm(b.m_name).c_str());
-    eq("descriptor's vftable", (uintptr_t)a.m_vftable, (uintptr_t)b.m_vftable);
+    eq("descriptor's vftable", *(const uint32_t*)&a == 0x0027793C, *(const void* const*)&b == g_descriptor_vft);
     eq("descriptor's type", a.m_type, b.m_type);
     eq("descriptor's flags", a.m_flags, b.m_flags);
     eq("descriptor's count", a.m_count, b.m_count);
@@ -247,9 +252,9 @@ static void same_array(unsigned type, const char* a, const char* b, unsigned cou
 }
 
 static void same_value(unsigned type, const AtDatabaseManager* om, const AtDatabaseManager* rm, const AtDataRecordDatabase* ot, const AtDataRecordDatabase* rt, const char* a, const char* b, unsigned count) {
-    const AtDataDescriptorFields* ad = ((const AtDataValue*)a)->m_descriptor;
-    const AtDataDescriptorFields* bd = ((const AtDataValue*)b)->m_descriptor;
-    eq("value's vftable", *(const uint32_t*)a, *(const uint32_t*)b);
+    const AtDataDescriptor* ad = ((const AtDataComponent*)a)->m_descriptor;
+    const AtDataDescriptor* bd = ((const AtDataComponent*)b)->m_descriptor;
+    eq("value's class", class_of(0, a), class_of(1, b));
     eq("value's descriptor", index_of(om->m_descriptors, ad, 0x2C), index_of(rm->m_descriptors, bd, 0x2C));
     switch (type) {
         case 1: case 2: case 3:
@@ -319,14 +324,14 @@ static void same_table(const AtDatabaseManager* om, const AtDatabaseManager* rm,
         eq("record in use", a.m_inUse, b.m_inUse);
     }
     for (unsigned c = 0; c < o->m_layout->m_count; c++) {
-        const AtDataDescriptorFields* field = o->m_layout->m_fields[c];
-        const AtDataDescriptorFields* rf = r->m_layout->m_fields[c];
+        const AtDataDescriptor* field = o->m_layout->m_fields[c];
+        const AtDataDescriptor* rf = r->m_layout->m_fields[c];
         if (!field || !rf) continue;
         const unsigned type = field->m_type;
         if (type < 1 || type > 11 || rf->m_type != type) continue;
         const char* a = (const char*)o->m_columns[c];
         const char* b = (const char*)r->m_columns[c];
-        for (unsigned i = 0; i < o->m_count; i++) same_value(type, om, rm, o, r, a + i * g_value_classes[type].size, b + i * g_value_classes[type].size, field->m_count);
+        for (unsigned i = 0; i < o->m_count; i++) same_value(type, om, rm, o, r, a + i * kSize[type], b + i * kHostSize[type], field->m_count);
     }
 }
 
@@ -398,12 +403,203 @@ static void make_owners() {
     g_log[0].n = g_log[1].n = 0;
     g_message[0][0] = g_message[1][0] = 0;
     for (int side = 0; side < 2; side++) {
-        g_owner[side] = (AtDataOwner*)std::calloc(1, sizeof(AtDataOwner));
+        g_owner[side] = (AtDataRegistryOwner*)std::calloc(1, sizeof(AtDataRegistryOwner));
         new (&g_owner[side]->m_databases) GmNameMapGroup;
         new (&g_owner[side]->m_databaseSpaces) GmNameSpaceDb;
         g_owner[side]->m_databaseSpaces.Init(8);
+        // The registries' groups, each by its own side's constructors.
+        if (side == 0) {
+            at<Fn0>(0x000603A0)(&g_owner[0]->m_plain, nullptr);
+            at<Fn0>(0x0005FFF0)(&g_owner[0]->m_spaces, nullptr);
+            at<FnFlags>(0x00060010)(&g_owner[0]->m_spaces, nullptr, 8);
+        } else {
+            new (&g_owner[1]->m_plain) AtDataRegistryGroup;
+            new (&g_owner[1]->m_spaces) AtDataRegistryNameSpaces;
+            g_owner[1]->m_spaces.Init(8);
+        }
     }
+    g_parent[0] = g_parent[1] = nullptr;
     g_recording = was;
+}
+
+// ---- registries ----------------------------------------------------------------------------------------------------------
+// What each side's objects are called: their place in a walk of the parent and the library's registries. Anything else is "elsewhere", -1.
+struct Ids {
+    std::map<const void*, long long> m;
+    long long next = 1;
+    void add(const void* p) { if (p && !m.count(p)) m[p] = next++; }
+    long long of(const void* p) const {
+        if (!p) return 0;
+        const auto i = m.find(p);
+        return i == m.end() ? -1 : i->second;
+    }
+};
+static void walk(Ids& ids, int side, const AtDataRegistry* r) {
+    if (!r) return;
+    ids.add(r);
+    ids.add(&r->m_root);
+    for (int p = 0; p < AtDataRegistry::kTypeCount; p++) {
+        for (const AtDataComponentPool* pool = &r->m_pools[p]; pool; pool = pool->m_next) {
+            ids.add(pool);
+            for (unsigned i = 0; i < pool->m_count && i < 4096; i++) {
+                if (pool->m_links) ids.add(&pool->m_links[i]);
+                if (pool->m_descriptors) ids.add(&pool->m_descriptors[i]);
+                if (pool->m_values && pool->m_type < 12) ids.add((const char*)pool->m_values + i * (side == 0 ? kSize[pool->m_type] : kHostSize[pool->m_type]));
+            }
+        }
+    }
+}
+static std::string text_of(const char* p) { return p ? std::string(p) : std::string("(null)"); }
+static unsigned g_links_compared;
+
+static void same_value_of_link(int type, const char* a, const char* b, unsigned count) {
+    switch (type) {
+        case 1: case 2: case 3:
+            eq("registry value", *(const uint32_t*)(a + 0xC), *(const uint32_t*)(b + 0xC));
+            break;
+        case 4:
+            eq("registry short name", std::strncmp(a + 0xC, b + 0xC, 8), 0);
+            break;
+        case 5:
+            eq("registry string's kind", *(const uint32_t*)(a + 0x34), *(const uint32_t*)(b + 0x34));
+            break;
+        case 6: case 8: case 9: case 7: {
+            const unsigned width = type == 7 ? 1 : 4;
+            const unsigned char* x = *(const unsigned char* const*)(a + 0xC);
+            const unsigned char* y = *(const unsigned char* const*)(b + 0xC);
+            eq("registry array", x != nullptr, y != nullptr);
+            if (x && y && count < 4096) eq("registry array's bytes", std::memcmp(x, y, count * width), 0);
+            break;
+        }
+        case 10: {
+            const char* x = *(const char* const*)(a + 0xC);
+            const char* y = *(const char* const*)(b + 0xC);
+            eq("registry names", x != nullptr, y != nullptr);
+            // Up to a terminator only: past it, stack garbage on both sides (see oracle_adr.cpp).
+            if (x && y && count < 4096) for (unsigned i = 0; i < count; i++) eq("registry name in an array", std::strncmp(x + i * 8, y + i * 8, 8), 0);
+            break;
+        }
+        case 11: {
+            const unsigned short* const* x = *(const unsigned short* const* const*)(a + 0xC);
+            const unsigned short* const* y = *(const unsigned short* const* const*)(b + 0xC);
+            eq("registry texts", x != nullptr, y != nullptr);
+            if (x && y && count < 4096) {
+                for (unsigned i = 0; i < count; i++) {
+                    eq("registry text", x[i] != nullptr, y[i] != nullptr);
+                    if (x[i] && y[i]) eq("registry text's characters", wcscmp((const wchar_t*)x[i], (const wchar_t*)y[i]), 0);
+                }
+            }
+            break;
+        }
+    }
+}
+
+static void same_registry(const Ids* ids, const AtDataRegistry* o, const AtDataRegistry* r) {
+    eq("registry's loaded", o->m_loaded, r->m_loaded);
+    eq("registry's owner", o->m_owner == g_owner[0], r->m_owner == g_owner[1]);
+    eq("registry's owner is null", o->m_owner == nullptr, r->m_owner == nullptr);
+    eq("registry's parent", ids[0].of(o->m_parent), ids[1].of(r->m_parent));
+    eq("registry's types", o->m_componentTypes, r->m_componentTypes);
+    eq("registry's next", ids[0].of(o->m_next), ids[1].of(r->m_next));
+    eq("registry's group", o->m_group != nullptr, r->m_group != nullptr);
+    if (o->m_group && r->m_group) {
+        eq("registry's group is the plain one", o->m_group == &g_owner[0]->m_plain, r->m_group == &g_owner[1]->m_plain);
+        eq("registry's group's name", std::strncmp(o->m_group->m_name, r->m_group->m_name, 8), 0);
+    }
+    eqs("registry's file name", text_of(o->m_fileName).c_str(), text_of(r->m_fileName).c_str());
+    eq("root's parent", ids[0].of(o->m_root.m_parent), ids[1].of(r->m_root.m_parent));
+    eq("root's first child", ids[0].of(o->m_root.m_firstChild), ids[1].of(r->m_root.m_firstChild));
+    eq("root's sibling", ids[0].of(o->m_root.m_sibling), ids[1].of(r->m_root.m_sibling));
+    for (int p = 0; p < AtDataRegistry::kTypeCount; p++) {
+        const AtDataComponentPool* a = &o->m_pools[p];
+        const AtDataComponentPool* b = &r->m_pools[p];
+        for (; a && b; a = a->m_next, b = b->m_next) {
+            eq("pool's count", a->m_count, b->m_count);
+            eq("pool's capacity", a->m_capacity, b->m_capacity);
+            eq("pool's type", a->m_type, b->m_type);
+            eq("pool's used", a->m_used, b->m_used);
+            eq("pool's values", a->m_values != nullptr, b->m_values != nullptr);
+            eq("pool's links", a->m_links != nullptr, b->m_links != nullptr);
+            if (a->m_count != b->m_count || !a->m_links || !b->m_links || !a->m_descriptors || !b->m_descriptors || a->m_count > 4096) continue;
+            for (unsigned i = 0; i < a->m_count; i++) {
+                const AtDataLink& x = a->m_links[i];
+                const AtDataLink& y = b->m_links[i];
+                eq("link in use", x.m_inUse, y.m_inUse);
+                if (!x.m_inUse || !y.m_inUse) continue;
+                g_links_compared++;
+                eqs("link's name", text_of(x.m_name).c_str(), text_of(y.m_name).c_str());
+                eq("link's value", ids[0].of(x.m_value), ids[1].of(y.m_value));
+                eq("link's parent", ids[0].of(x.m_parent), ids[1].of(y.m_parent));
+                eq("link's sibling", ids[0].of(x.m_sibling), ids[1].of(y.m_sibling));
+                eq("link's first child", ids[0].of(x.m_firstChild), ids[1].of(y.m_firstChild));
+                same_descriptor(a->m_descriptors[i], b->m_descriptors[i]);
+                if (x.m_value && y.m_value) {
+                    const int type = class_of(0, x.m_value);
+                    eq("link value's class", type, class_of(1, y.m_value));
+                    eq("link value's descriptor", ids[0].of(x.m_value->m_descriptor), ids[1].of(y.m_value->m_descriptor));
+                    eq("link value's registry", ids[0].of(x.m_value->m_registry), ids[1].of(y.m_value->m_registry));
+                    if (type >= 0 && type == class_of(1, y.m_value)) same_value_of_link(type, (const char*)x.m_value, (const char*)y.m_value, a->m_descriptors[i].m_count);
+                }
+            }
+        }
+        eq("pool's chain", a != nullptr, b != nullptr);
+    }
+}
+
+// The parent and the library's registries, and the owner's two registry groups.
+static void same_registries(const AtDataLibrary* o, const AtDataLibrary* r) {
+    Ids ids[2];
+    walk(ids[0], 0, g_parent[0]);
+    walk(ids[1], 1, g_parent[1]);
+    const bool both = o->m_registries && r->m_registries && o->m_registryCount == r->m_registryCount;
+    if (both) {
+        for (unsigned i = 0; i < o->m_registryCount; i++) {
+            walk(ids[0], 0, o->m_registries[i]);
+            walk(ids[1], 1, r->m_registries[i]);
+        }
+    }
+    if (g_parent[0] && g_parent[1]) same_registry(ids, g_parent[0], g_parent[1]);
+    if (both) {
+        for (unsigned i = 0; i < o->m_registryCount; i++) {
+            eq("registry", o->m_registries[i] != nullptr, r->m_registries[i] != nullptr);
+            if (o->m_registries[i] && r->m_registries[i]) same_registry(ids, o->m_registries[i], r->m_registries[i]);
+        }
+    }
+    eq("plain group's first", ids[0].of(g_owner[0]->m_plain.m_first), ids[1].of(g_owner[1]->m_plain.m_first));
+    const AtDataRegistryNameSpaces& a = g_owner[0]->m_spaces;
+    const AtDataRegistryNameSpaces& b = g_owner[1]->m_spaces;
+    eq("spaces' size", a.m_size, b.m_size);
+    if (a.m_pool && b.m_pool && a.m_poolSize == b.m_poolSize) {
+        for (unsigned i = 0; i < a.m_poolSize; i++) {
+            eq("space's first", ids[0].of(a.m_pool[i].m_first), ids[1].of(b.m_pool[i].m_first));
+            eq("space's name", std::strncmp(a.m_pool[i].m_name, b.m_pool[i].m_name, 8), 0);
+        }
+    }
+}
+
+// A parent registry on each side, from kParentAdr or the real GENERIC.ADR, as start-up's App+0x6950. Loaded and compared before the case, with its logs dropped.
+static void make_parents() {
+    const int fail = g_fail_at_push, status = g_fs->open_status;
+    g_fail_at_push = -1;
+    g_fs->open_status = 0;
+    char space[2][8] = {{0}, {0}};
+    for (int side = 0; side < 2; side++) {
+        char* p = (char*)std::malloc(sizeof(AtDataRegistry));
+        std::memset(p, g_fill, sizeof(AtDataRegistry));
+        g_parent[side] = (AtDataRegistry*)p;
+    }
+    const std::string base = g_fs->base;
+    { On on(0); at<Fn0>(0x000674E0)(g_parent[0], nullptr); at<int(__fastcall*)(void*, void*, void*, const char*, int, char*, void*)>(0x00068880)(g_parent[0], nullptr, g_owner[0], "Design\\Registry\\Generic", 0, space[0], nullptr); }
+    { On on(1); new (g_parent[1]) AtDataRegistry; g_parent[1]->Load(g_owner[1], "Design\\Registry\\Generic", 0, space[1], nullptr); }
+    set_path(base.c_str());
+    reset_path();
+    eq("parent's space", std::strncmp(space[0], space[1], 8), 0);
+    compare_logs("parent");
+    g_log[0].n = g_log[1].n = 0;
+    g_message[0][0] = g_message[1][0] = 0;
+    g_pushes = 0;
+    g_fail_at_push = fail;
+    g_fs->open_status = status;
 }
 
 static void same_owner(const AtDatabaseManager* o, const AtDatabaseManager* r) {
@@ -425,6 +621,7 @@ struct LibRun {
     bool with_parent = true;
     int again = 0;
     bool destroy_only = false;
+    bool unload_after = false;  // after each load, every registry's loaded flag cleared by hand, as a registry a Clear has emptied
 };
 
 static AtDataLibrary* new_o_library(unsigned char fill) {
@@ -450,6 +647,7 @@ static void same_library(const AtDataLibrary* o, const AtDataLibrary* r, bool de
     eq("database count", o->m_databaseCount, r->m_databaseCount);
     eq("registry names", orig_u32(0x00305938) != 0, AtDataLibrary::s_registryNames != nullptr);
     eq("database names", orig_u32(0x00305934) != 0, AtDataLibrary::s_databaseNames != nullptr);
+    if (deep) same_registries(o, r);
     if (deep && o->m_databases && r->m_databases && o->m_databaseCount == r->m_databaseCount) {
         for (unsigned i = 0; i < o->m_databaseCount; i++) {
             eq("database", o->m_databases[i] != nullptr, r->m_databases[i] != nullptr);
@@ -461,13 +659,13 @@ static void same_library(const AtDataLibrary* o, const AtDataLibrary* r, bool de
 static void lib_load(AtDataLibrary* o, AtDataLibrary* r, const LibRun& run, bool& crashed) {
     g_reports = 0;
     g_pushes = 0;
-    const bool oc = guarded([&] { On on(0); at<FnLibLoad>(0x0009BD50)(o, nullptr, g_owner[0], "LIBRARY", run.unused, run.with_parent ? &g_parent_token[0] : nullptr); });
+    const bool oc = guarded([&] { On on(0); at<FnLibLoad>(0x0009BD50)(o, nullptr, g_owner[0], "LIBRARY", run.unused, run.with_parent ? g_parent[0] : nullptr); });
     g_recording = false; g_side = 0; g_fail_alloc = false;
     const int otop = g_fs->m_path.m_top;
     reset_path();
     g_reports = 0;
     g_pushes = 0;
-    const bool rc = guarded([&] { On on(1); r->Load(g_owner[1], "LIBRARY", run.unused, run.with_parent ? (AtDataRegistry*)&g_parent_token[1] : nullptr); });
+    const bool rc = guarded([&] { On on(1); r->Load(g_owner[1], "LIBRARY", run.unused, run.with_parent ? g_parent[1] : nullptr); });
     g_recording = false; g_side = 0; g_fail_alloc = false;
     const int rtop = g_fs->m_path.m_top;
     reset_path();
@@ -477,11 +675,13 @@ static void lib_load(AtDataLibrary* o, AtDataLibrary* r, const LibRun& run, bool
 }
 
 static void run_library_text(const std::string& add, const std::string& adb, unsigned char fill, const LibRun& run = LibRun()) {
+    KeepFreed keep;
     g_fs->add = bytes(add);
     g_fs->adb = bytes(adb);
     set_path("DATA\\LIBRARY.ADD");
     g_fill = fill;
     make_owners();
+    make_parents();
     AtDataLibrary* o = new_o_library(fill);
     AtDataLibrary* r = new_r_library(fill);
     bool crashed = false;
@@ -490,6 +690,10 @@ static void run_library_text(const std::string& add, const std::string& adb, uns
     compare_logs("load");
     if (crashed) return;  // What it held is left behind.
     for (int i = 0; i < run.again && !crashed; i++) {
+        if (run.unload_after && o->m_registries && r->m_registries) {
+            for (unsigned k = 0; k < o->m_registryCount; k++) if (o->m_registries[k]) o->m_registries[k]->m_loaded = 0;
+            for (unsigned k = 0; k < r->m_registryCount; k++) if (r->m_registries[k]) r->m_registries[k]->m_loaded = 0;
+        }
         lib_load(o, r, run, crashed);
         if (!crashed) same_library(o, r, true);
         compare_logs("load again");
@@ -689,8 +893,9 @@ static void run_descriptor(const std::string& text, unsigned char fill = 0xCD) {
     Tok t(text + " { { { { { { { {");
     void* a = alloc_filled(4 + 0x2C, 0);
     void* b = alloc_filled(4 + 0x2C, 0);
-    AtDataDescriptorFields* d[2] = {(AtDataDescriptorFields*)((char*)a + 4), (AtDataDescriptorFields*)((char*)b + 4)};
-    for (int side = 0; side < 2; side++) at<Fn0>(0x0006BC10)(d[side], nullptr);
+    AtDataDescriptor* d[2] = {(AtDataDescriptor*)((char*)a + 4), (AtDataDescriptor*)((char*)b + 4)};
+    at<Fn0>(0x0006BC10)(d[0], nullptr);
+    new (d[1]) AtDataDescriptor;
     for (int round = 0; round < 2; round++) {
         g_reports = 0;
         int ret[2] = {-99, -99};
@@ -730,30 +935,29 @@ static void run_table_methods() {
             for (unsigned c = 0; c < a->m_layout->m_count; c++) {
                 { On on(0); eq("layout's field at", (uintptr_t)at<FnAt>(0x000B9AB0)(a->m_layout, nullptr, c) - (uintptr_t)m.o->m_descriptors, (uintptr_t)b->m_layout->FieldAt(c) - (uintptr_t)m.r->m_descriptors); }
                 void* av = at<FnAt>(0x000BAAC0)(ar, nullptr, c);
-                AtDataValue* bv = br->FieldAt(c);
+                AtDataComponent* bv = br->FieldAt(c);
                 const unsigned type = a->m_layout->m_fields[c]->m_type;
                 eq("field at: row and column", (char*)av - (char*)a->m_columns[c], (char*)bv - (char*)b->m_columns[c]);
-                eq("field's size", g_value_classes[type].size, AtDataValueSize(type));
+                eq("field's size", kSize[type], kHostSize[type]);
                 eq("descriptor at", index_of(m.o->m_descriptors, at<FnAt>(0x000BABB0)(ar, nullptr, c), 0x2C), index_of(m.r->m_descriptors, br->DescriptorAt(c), 0x2C));
                 char name[8];
                 std::memcpy(name, a->m_layout->m_fields[c]->m_name, 8);
                 void* an = at<FnFind>(0x000BAC60)(ar, nullptr, name);
-                AtDataValue* bn = br->FieldNamed(name);
+                AtDataComponent* bn = br->FieldNamed(name);
                 eq("field named", (char*)an - (char*)a->m_columns[c], (char*)bn - (char*)b->m_columns[c]);
             }
         }
-        // By value: in the first column of a table that has integers.
-        if (t == 1) {
+        // By value: in every column of booleans or integers (slot 7 of those two classes is recovered; of the others it is not, and stops).
+        for (unsigned c = 0; c < a->m_layout->m_count; c++) {
+            const unsigned type = a->m_layout->m_fields[c]->m_type;
+            if (type != 1 && type != 2) continue;
             for (unsigned i = 0; i < a->m_count; i++) {
-                void* av = at<FnAt>(0x000BAAC0)(&a->m_records[i], nullptr, 0);
-                AtDataValue* bv = b->m_records[i].FieldAt(0);
-                void* af; { On on(0); af = at<FnFindValue>(0x000BA9A0)(a, nullptr, 0, av); }
-                AtDataRecord* bf; { On on(1); bf = b->FindByValue(0, bv); }
-                eq("found by value", index_of(a->m_records, af, sizeof(AtDataRecord)), index_of(b->m_records, bf, sizeof(AtDataRecord)));
+                void* av = at<FnAt>(0x000BAAC0)(&a->m_records[i], nullptr, c);
+                AtDataComponent* bv = b->m_records[i].FieldAt(c);
+                void* af; { On on(0); af = at<FnFindValue>(0x000BA9A0)(a, nullptr, c, av); }
+                AtDataRecord* bf; { On on(1); bf = b->FindByValue(c, bv); }
+                eq(type == 1 ? "found by a boolean" : "found by an integer", index_of(a->m_records, af, sizeof(AtDataRecord)), index_of(b->m_records, bf, sizeof(AtDataRecord)));
             }
-            int nothing = 0;
-            AtDataValue* bv = (AtDataValue*)b->m_columns[0];
-            (void)nothing; (void)bv;
         }
         eq("slot 7", at<FnSlot7>(0x000B15B0)(a, nullptr, 3), b->Unknown7(3));
         { On on(0); at<Fn0>(0x001CC9F0)(a, nullptr); }
@@ -775,7 +979,7 @@ static void run_table_methods() {
         int layout, columns;
         for (int in_use : {1, 0}) {
             a->m_inUse = b->m_inUse = in_use;
-            eq("set returns", at<FnRecordSet>(0x000BAA90)(a, nullptr, 5, &layout, &columns), b->Set(5, (AtRecordLayout*)&layout, (AtDataValue**)&columns));
+            eq("set returns", at<FnRecordSet>(0x000BAA90)(a, nullptr, 5, &layout, &columns), b->Set(5, (AtRecordLayout*)&layout, (AtDataComponent**)&columns));
             eq("set: index", a->m_index, b->m_index);
             eq("set: layout", (uintptr_t)a->m_layout, (uintptr_t)b->m_layout);
             eq("set: columns", (uintptr_t)a->m_columns, (uintptr_t)b->m_columns);
@@ -806,7 +1010,7 @@ static void run_table_methods() {
         AtDataRecord* a = &m.o->m_tables[1]->m_records[0];
         AtDataRecord* b = &m.r->m_tables[1]->m_records[0];
         char nope[8] = {'n', 'o', 'p', 'e'};
-        void* an = nullptr; AtDataValue* bn = nullptr;
+        void* an = nullptr; AtDataComponent* bn = nullptr;
         const bool oc = guarded([&] { an = at<FnFind>(0x000BAC60)(a, nullptr, nope); });
         const bool rc = guarded([&] { bn = b->FieldNamed(nope); });
         eq("no match crashed", oc, rc);
@@ -1021,7 +1225,7 @@ static void run_table_alone() {
     compare_logs("no rows from the file");
     eq("what is next in the text", t.o->Next(), t.r->Next());
     // The reset slot alone, keeping what it would free out of its reach.
-    struct Kept { unsigned count; AtDataValue** columns; char* characters; unsigned size, used; };
+    struct Kept { unsigned count; AtDataComponent** columns; char* characters; unsigned size, used; };
     const Kept so = {o->m_count, o->m_columns, o->m_characters, o->m_characterSize, o->m_characterUsed};
     const Kept sr = {r->m_count, r->m_columns, r->m_characters, r->m_characterSize, r->m_characterUsed};
     { On on(0); at<Fn0>(0x000B9DA0)(o, nullptr); }
@@ -1077,6 +1281,10 @@ static void run_no_type() {
         eq("the original crashes", oc, 1);
         eq("the recovered source reports", rc, 0);
         eq("the report", std::strstr(g_message[1], "a field of no type") != nullptr, 1);
+        // Up to the original's crash, the two did the same: the recovered side's calls begin with the original's, and the next is its report. The original makes no call between its
+        // last (the column list, at 0x000BA23E) and its crash in the rows, so neither may the recovered side: a column made for the field of no type would show here.
+        eq("the calls up to the original's crash", g_log[0].n <= g_log[1].n && std::memcmp(g_log[0].v, g_log[1].v, g_log[0].n * sizeof(uint32_t)) == 0, 1);
+        eq("the report comes next", g_log[0].n < g_log[1].n ? (long long)g_log[1].v[g_log[0].n] : -1, 'F');
         g_log[0].n = g_log[1].n = 0;
         g_message[0][0] = g_message[1][0] = 0;
     }
@@ -1191,19 +1399,17 @@ static void run_library_written() {
     g_context = "library: longest name";
     run_library_text("DataRegistry[ 1 ] { \"" + longest + "\" }\n", full_adb(), 0xCD);
     g_heap_pad = 0;
-    // Loaded twice over, with registries that stay loaded and that do not; none, and one on the second list.
+    // Loaded twice over, with registries that stay loaded and that do not (their flag cleared by hand before each reload).
     for (int after : {1, 0}) {
-        g_registry_loaded_after = after;
         g_context = "library: loaded twice, registries loaded " + std::to_string(after);
         LibRun run;
         run.again = 2;
+        run.unload_after = after == 0;
         run_library_text("DataRegistry[ 2 ] { \"a\" \"b\" }\nDatabaseManager[ 2 ] { \"THING\" \"OTHER\" }\n", full_adb(), 0xCD, run);
     }
-    g_registry_loaded_after = 1;
-    g_registry_loaded_at_birth = 1;
-    g_context = "library: registries loaded from birth, a second list dropped";
+    // The double this replaced could make a registry loaded from birth; a real one never is. Its case stays, on registries as they are.
+    g_context = "library: one registry";
     run_library_text("DataRegistry[ 1 ] { \"a\" }\n", full_adb(), 0xCD);
-    g_registry_loaded_at_birth = 0;
     // Destroying one never loaded; a Clear with entries already gone or not loaded.
     {
         g_context = "library: never loaded";
@@ -1221,6 +1427,7 @@ static void run_library_written() {
         g_fs->adb = bytes(full_adb());
         set_path("DATA\\LIBRARY.ADD");
         make_owners();
+        make_parents();
         o = new_o_library(0xCD);
         r = new_r_library(0xCD);
         bool crashed = false;
@@ -1235,12 +1442,15 @@ static void run_library_written() {
             r->m_databases[0] = nullptr;
             o->m_databases[1]->m_loaded = 0;
             r->m_databases[1]->m_loaded = 0;
-            r_del(o->m_registries[0], nullptr, 1);
-            r_del(r->m_registries[0], nullptr, 1);
+            { On on(0); at<FnDel>(0x000687B0)(o->m_registries[0], nullptr, 1); }
+            { On on(1); delete r->m_registries[0]; }
             o->m_registries[0] = nullptr;
             r->m_registries[0] = nullptr;
-            *(int*)((char*)o->m_registries[1] + 0x1EC) = 0;
-            *(int*)((char*)r->m_registries[1] + 0x1EC) = 0;
+            o->m_registries[1]->m_loaded = 0;
+            r->m_registries[1]->m_loaded = 0;
+            // What a registry's Clear frees when it is not loaded, its block at +0x38 (set by code not recovered): Clear of the library must not ask it, and its destructor leaves it.
+            o->m_registries[1]->m_unknown38 = std::calloc(1, 16);
+            r->m_registries[1]->m_unknown38 = std::calloc(1, 16);
             g_log[0].n = g_log[1].n = 0;
             // Names are not freed by Clear: left in their places, then forgotten.
             orig_u32(0x00305938) = 0x1000;
@@ -1295,9 +1505,23 @@ static void run_library_written() {
 }
 
 // ---- the disc ----------------------------------------------------------------------------------------------------------
-static unsigned g_files, g_names;
+static unsigned g_files, g_names, g_real_loaded, g_real_links;
+static std::map<std::string, std::vector<unsigned char>> g_adr_written, g_adr_real;
+
+// How far the real registries got: how many are loaded, and their links in use, on the recovered side; the two sides are compared besides.
+static void count_real(const AtDataLibrary* r) {
+    for (unsigned i = 0; r->m_registries && i < r->m_registryCount; i++) {
+        const AtDataRegistry* g = r->m_registries[i];
+        if (!g || !g->m_loaded) continue;
+        g_real_loaded++;
+        for (int p = 0; p < AtDataRegistry::kTypeCount; p++)
+            for (const AtDataComponentPool* pool = &g->m_pools[p]; pool; pool = pool->m_next)
+                for (unsigned k = 0; pool->m_links && k < pool->m_count; k++) g_real_links += pool->m_links[k].m_inUse != 0;
+    }
+}
 
 static void run_real(const std::vector<unsigned char>& data, const char* leaf) {
+    g_adr = g_adr_real;  // The eleven registries it names, and GENERIC.ADR as their parent, from the disc.
     for (unsigned char fill : {(unsigned char)0xCD, (unsigned char)0}) {
         g_context = std::string("real ") + leaf;
         LibRun run;
@@ -1310,17 +1534,23 @@ static void run_real(const std::vector<unsigned char>& data, const char* leaf) {
     set_path("DataXbox\\LIBRARY.ADD");
     g_fill = 0xCD;
     make_owners();
+    make_parents();
     AtDataLibrary* o = new_o_library(0xCD);
     AtDataLibrary* r = new_r_library(0xCD);
     LibRun run;
     run.unused = 0;
     bool crashed = false;
+    const unsigned opened = g_adr_real_opened;
     lib_load(o, r, run, crashed);
-    same_library(o, r, false);
+    eq("crashed loading the real registries", crashed, 0);
+    same_library(o, r, true);
     eq("the registries on the disc", o->m_registryCount, r->m_registryCount);
     g_names += r->m_registryCount;
     eq("no database on the disc", r->m_databaseCount, 0);
+    eq("every registry named is a real file", g_adr_real_opened - opened, r->m_registryCount);
     compare_logs("real load");
+    if (!crashed) count_real(r);
+    g_adr = g_adr_written;
 }
 
 static LONG CALLBACK on_crash(EXCEPTION_POINTERS* e) {
@@ -1354,9 +1584,11 @@ int main(int argc, char** argv) {
     redirect(0x00011260, (const void*)s_pop);
     redirect(0x00011070, (const void*)s_fatal);
     redirect(0x00011170, (const void*)s_raise);
-    redirect(0x000674E0, (const void*)r_ctor);
-    redirect(0x00068880, (const void*)r_load);
-    redirect(0x00067540, (const void*)r_clear);
+    // The host's own deletes, so that KeepFreed holds on this side too. /SECTION:.text,ERW and no incremental link make each address the function itself.
+    redirect((uint32_t)(uintptr_t)static_cast<void (*)(void*)>(::operator delete), (const void*)host_delete);
+    redirect((uint32_t)(uintptr_t)static_cast<void (*)(void*)>(::operator delete[]), (const void*)host_delete);
+    redirect((uint32_t)(uintptr_t)static_cast<void (*)(void*, std::size_t)>(::operator delete), (const void*)host_delete_sized);
+    redirect((uint32_t)(uintptr_t)static_cast<void (*)(void*, std::size_t)>(::operator delete[]), (const void*)host_delete_sized);
     at<void(__cdecl*)()>(0x00125BC7)();
     if (entries && !arm_entries(entries)) return 2;
 
@@ -1372,6 +1604,41 @@ int main(int argc, char** argv) {
     AtIoStream::s_heap = &g_heap_token;
     GmNameMap::s_heap = &g_heap_token;
     GmNameSpaceDb::s_heap = &g_heap_token;
+    AtDataRegistry::SetHeap(&g_heap_token);
+    AtDataRegistry::s_poolHeap = &g_heap_token;
+    AtDataComponent::SetHeap(&g_heap_token);
+    AtDataDescriptor::SetHeap(&g_heap_token);
+    AtDataLink::SetHeap(&g_heap_token);
+    AtDataRegistryNameSpaces::SetHeap(&g_heap_token);
+    read_vfts();
+
+    // The .ADR files: written ones for written libraries, every real one by its path for the disc's.
+    g_adr_written["DESIGN\\REGISTRY\\GENERIC"] = std::vector<unsigned char>(kParentAdr, kParentAdr + sizeof kParentAdr - 1);
+    {
+        FILE* index = nullptr;
+        if (fopen_s(&index, (std::string(pos[1]) + "\\index.txt").c_str(), "r") || !index) { std::printf("cannot read index.txt\n"); return 2; }
+        char line[1024];
+        while (std::fgets(line, sizeof line, index)) {
+            if (!std::strstr(line, ".ADR\t")) continue;
+            char* tab1 = std::strchr(line, '\t');
+            char* tab2 = tab1 ? std::strchr(tab1 + 1, '\t') : nullptr;
+            char* tab3 = tab2 ? std::strchr(tab2 + 1, '\t') : nullptr;
+            if (!tab3) continue;
+            *tab1 = *tab2 = *tab3 = 0;
+            const std::string key = adr_key(tab2 + 1);
+            if (g_adr_real.count(key) && !std::strstr(tab1 + 1, "AppInit")) continue;  // AppInit.JAM's, where LIBRARY.ADD is, first
+            FILE* f = nullptr;
+            if (fopen_s(&f, (std::string(pos[1]) + "\\" + line).c_str(), "rb") || !f) { std::printf("cannot read %s\n", line); return 2; }
+            std::fseek(f, 0, SEEK_END);
+            std::vector<unsigned char> data((size_t)std::ftell(f));
+            std::fseek(f, 0, SEEK_SET);
+            if (!data.empty()) std::fread(data.data(), 1, data.size(), f);
+            std::fclose(f);
+            g_adr_real[key] = data;
+        }
+        std::fclose(index);
+    }
+    g_adr = g_adr_written;
 
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.
     run_tables_words();
@@ -1448,6 +1715,7 @@ int main(int argc, char** argv) {
     std::fclose(index);
     if (g_files == 0) eq("no real file", 0, 1);
     report_entries();
-    std::printf("%s: %u real files, %u registries named; %llu comparisons, %d differences\n", g_failures ? "DIFFERENT" : "NO DIFFERENCE OBSERVED", g_files, g_names, g_checks, g_failures);
+    std::printf("%s: %u real files, %u registries named, %u real .ADR registries loaded under the real GENERIC.ADR with %u links in use; %u .ADR files opened, %u links compared; %llu comparisons, %d differences\n",
+                g_failures ? "DIFFERENT" : "NO DIFFERENCE OBSERVED", g_files, g_names, g_real_loaded, g_real_links, g_adr_opened, g_links_compared, g_checks, g_failures);
     return g_failures ? 1 : 0;
 }

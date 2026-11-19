@@ -1,7 +1,7 @@
 // What actors animate with: the channels, the set of them and room to blend, and the copy of a database of coordinate systems. See include/at/AtSceneActor.h.
 #include "at/AtSceneActor.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);

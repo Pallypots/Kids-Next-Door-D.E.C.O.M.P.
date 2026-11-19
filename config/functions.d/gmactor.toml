@@ -1,0 +1,709 @@
+# The game layer's actor base: GmAcActor, GmAcNode, GmBaObject, AtEvSubscriber's destructor, the animation callback and the members' classes. Names other than RTTI names are inferred; see
+# include/gm/GmAcActor.h. Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x000DF5B0
+size = 7
+symbol = "??1AtEvSubscriber@@UAE@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E550
+size = 26
+symbol = "??0GmBaObject@@QAE@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E5D0
+size = 35
+symbol = "??1GmBaObject@@UAE@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E730
+size = 84
+symbol = "??_EGmBaObject@@UAEPAXI@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E530
+size = 30
+symbol = "?Initialize@GmBaObject@@UAEHXZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E570
+size = 18
+symbol = "?Shutdown@GmBaObject@@UAEXXZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000955F0
+size = 14
+symbol = "?Name@GmBaObject@@UAEPBDXZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001598B0
+size = 90
+symbol = "??0GmAcAnimController@@QAE@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00159B20
+size = 207
+symbol = "??1GmAcAnimController@@UAE@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00159CC0
+size = 30
+symbol = "??_GGmAcAnimController@@UAEPAXI@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00159910
+size = 53
+symbol = "?Clear@GmAcAnimController@@QAEXXZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001590A0
+size = 11
+symbol = "?Slot1@GmAcAnimController@@UAEXH@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001590B0
+size = 11
+symbol = "?Slot2@GmAcAnimController@@UAEXH@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001590D0
+size = 31
+symbol = "??_GGmAcAnimControllerBase@@UAEPAXI@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014CE40
+size = 102
+symbol = "??0GmAcNode@@QAE@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E250
+size = 108
+symbol = "??1GmAcNode@@UAE@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014E4B0
+size = 30
+symbol = "??_GGmAcNode@@UAEPAXI@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014BC60
+size = 296
+symbol = "?Reset@GmAcNode@@QAEXXZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014DC60
+size = 162
+symbol = "?Shutdown@GmAcNode@@UAEXXZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014BAA0
+size = 8
+symbol = "?Slot7@GmAcNode@@UAEHH@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014BC20
+size = 61
+symbol = "?Setup@GmAcNode@@UAEXPAXHHPAUDescriptor@GmBaObject@@@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091820
+size = 13
+symbol = "?Slot13@GmAcNode@@UAEHXZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00147FB0
+size = 38
+symbol = "?SetFlag10@GmAcNode@@UAEXH@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014BA90
+size = 13
+symbol = "?SetUnknown140@GmAcNode@@QAEXH@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014BAB0
+size = 7
+symbol = "?Animation@GmAcNode@@QAEPAVGmAcAnimController@@XZ"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014BB00
+size = 22
+symbol = "?SetupAndConfigure@GmAcNode@@QAEHPAXPAUDescriptor@GmBaObject@@@Z"
+source = "src/gm/GmAcNode.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B550
+size = 48
+symbol = "??1GmAcVectorSet@@UAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B580
+size = 72
+symbol = "??_GGmAcVectorSet@@UAEPAXI@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00147EE0
+size = 84
+symbol = "??0?$GmLinkedListOf@PAVGmAcLinkedItem@@@@QAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00148110
+size = 88
+symbol = "??1?$GmLinkedListOf@PAVGmAcLinkedItem@@@@UAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00148170
+size = 30
+symbol = "??_G?$GmLinkedListOf@PAVGmAcLinkedItem@@@@UAEPAXI@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00148190
+size = 8
+symbol = "??_E?$GmLinkedListOf@PAVGmAcLinkedItem@@@@WBA@AEPAXI@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000B1590
+size = 16
+symbol = "??0AtKiAnimationCallBack@@QAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000B15A0
+size = 7
+symbol = "??1AtKiAnimationCallBack@@UAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000B15C0
+size = 31
+symbol = "??_GAtKiAnimationCallBack@@UAEPAXI@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000994B0
+size = 30
+symbol = "??_GGmAcAnimationCallback@@UAEPAXI@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000994D0
+size = 79
+symbol = "??1GmAcAnimationCallback@@UAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00160000
+size = 12
+symbol = "?Reset@GmAcAnimationCallback@@QAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00160010
+size = 29
+symbol = "?OnLoop@GmAcAnimationCallback@@UAEXH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00160030
+size = 685
+symbol = "?OnTrigger@GmAcAnimationCallback@@UAEXPBDHH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B5D0
+size = 165
+symbol = "??0GmAcActor@@QAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B680
+size = 285
+symbol = "??1GmAcActor@@UAE@XZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B8E0
+size = 87
+symbol = "??_EGmAcActor@@UAEPAXI@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0009DA40
+size = 5
+symbol = "?Slot16@GmAcActor@@UAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x001481A0
+size = 389
+symbol = "?ResetActor@GmAcActor@@QAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B150
+size = 482
+symbol = "?Shutdown@GmAcActor@@UAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014A630
+size = 192
+symbol = "?ReleaseItems@GmAcActor@@QAEXH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00148EF0
+size = 112
+symbol = "?ClearRecords@GmAcActor@@QAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091960
+size = 32
+symbol = "?Name@GmAcActor@@UAEPBDXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B510
+size = 50
+symbol = "?SetFlag10@GmAcActor@@UAEXH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000918C0
+size = 44
+symbol = "?HasUnknown254@GmAcActor@@QAEHXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000918A0
+size = 25
+symbol = "?Slot27@GmAcActor@@UAEHXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00148570
+size = 25
+symbol = "?Slot28@GmAcActor@@UAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00148590
+size = 25
+symbol = "?Slot29@GmAcActor@@UAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00148CA0
+size = 27
+symbol = "?Slot38@GmAcActor@@UAEXH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00147CF0
+size = 8
+symbol = "?Slot41@GmAcActor@@UAEXH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00147D00
+size = 62
+symbol = "?StartCollision@GmAcActor@@UAEXHH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00147D40
+size = 62
+symbol = "?EndCollision@GmAcActor@@UAEXH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00147CE0
+size = 11
+symbol = "?ForgetComponent@GmAcActor@@UAEXXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091830
+size = 16
+symbol = "?Unknown278@GmAcActor@@UAEHXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091840
+size = 16
+symbol = "?Unknown274@GmAcActor@@UAEHXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091850
+size = 39
+symbol = "?Unknown27C@GmAcActor@@UAEMXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091880
+size = 7
+symbol = "?Unknown17C@GmAcActor@@UAEIXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091890
+size = 14
+symbol = "?Slot54@GmAcActor@@UAEXPAH@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x000918F0
+size = 43
+symbol = "?Slot56@GmAcActor@@UAEHXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091920
+size = 29
+symbol = "?Slot57@GmAcActor@@UAEHXZ"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x00091940
+size = 23
+symbol = "?SetUnknown284@GmAcActor@@UAEXPAV1@@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B940
+size = 10
+symbol = "?SetHeap@GmAcActor@@SAXPAX@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B7A0
+size = 307
+symbol = "?CreateRotator@GmAcActor@@SAPAV1@H@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[function]]
+va = 0x0014B950
+size = 307
+symbol = "?CreateNode@GmAcActor@@SAPAV1@H@Z"
+source = "src/gm/GmAcActor.cpp"
+subsystem = "gm/gmactor"
+evidence = "tests/oracle/oracle_gmactor.cpp; address noted beside the declaration in include/gm/GmAcActor.h"
+
+[[vtable]]
+va = 0x0028E850
+slots = 7
+symbol = "??_7GmBaObject@@6B@"
+source = "src/gm/GmAcNode.cpp"
+
+[[vtable]]
+va = 0x0028E638
+slots = 45
+symbol = "??_7GmAcNode@@6B@"
+source = "src/gm/GmAcNode.cpp"
+
+[[vtable]]
+va = 0x0028EF44
+slots = 3
+symbol = "??_7GmAcAnimControllerBase@@6B@"
+source = "src/gm/GmAcNode.cpp"
+
+[[vtable]]
+va = 0x0028EF50
+slots = 3
+symbol = "??_7GmAcAnimController@@6B@"
+source = "src/gm/GmAcNode.cpp"
+
+[[vtable]]
+va = 0x0028E4C8
+slots = 60
+symbol = "??_7GmAcActor@@6B@"
+source = "src/gm/GmAcActor.cpp"
+
+[[vtable]]
+va = 0x0028E30C
+slots = 1
+symbol = "??_7GmAcVectorSet@@6B@"
+source = "src/gm/GmAcActor.cpp"
+
+[[vtable]]
+va = 0x0028E2F4
+slots = 5
+symbol = "??_7?$GmLinkedListOf@PAVGmAcLinkedItem@@@@6BGmLinkedList@@@"
+source = "src/gm/GmAcActor.cpp"
+
+[[vtable]]
+va = 0x0028E308
+slots = 1
+symbol = "??_7?$GmLinkedListOf@PAVGmAcLinkedItem@@@@6BGmPlug@@@"
+source = "src/gm/GmAcActor.cpp"
+
+[[vtable]]
+va = 0x0028E33C
+slots = 10
+symbol = "??_7?$GmLinkedListIteratorOf@PAVGmAcLinkedItem@@@@6B@"
+source = "src/gm/GmAcActor.cpp"
+
+[[vtable]]
+va = 0x002845C0
+slots = 7
+symbol = "??_7AtKiAnimationCallBack@@6B@"
+source = "src/gm/GmAcActor.cpp"
+
+[[vtable]]
+va = 0x0027C1D8
+slots = 7
+symbol = "??_7GmAcAnimationCallback@@6B@"
+source = "src/gm/GmAcActor.cpp"
+
+[symbols]
+"??_7AtEvSubscriber@@6B@" = 0x00285828  # AtEvSubscriber's vftable, stored by its destructor; its slots are not recorded
+"?Slot2@GmBaObject@@UAEHXZ" = 0x000AB720  # folded: returns 0
+"?Slot4@GmBaObject@@UAEXXZ" = 0x001CC9F0  # folded: empty
+"?IsInitialized@GmBaObject@@UAEHXZ" = 0x00079DA0  # folded: returns the word at +0x0C
+"?Slot14@GmAcNode@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot16@GmAcNode@@UAEXXZ" = 0x001CC9F0  # folded: empty
+"?Slot18@GmAcNode@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot21@GmAcNode@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot36@GmAcNode@@UAEXHH@Z" = 0x000447F0  # folded: empty
+"?Slot37@GmAcNode@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot38@GmAcNode@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot40@GmAcNode@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot41@GmAcNode@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot42@GmAcNode@@UAEHXZ" = 0x000AB720  # folded: returns 0
+"?Slot44@GmAcActor@@UAEHH@Z" = 0x000FBA70  # folded: returns 1
+"?Slot55@GmAcActor@@UAEHXZ" = 0x000AB720  # folded: returns 0
+"?Slot59@GmAcActor@@UAEHXZ" = 0x000AB720  # folded: returns 0
+"?Slot1@AtKiAnimationCallBack@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot2@AtKiAnimationCallBack@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?OnLoop@AtKiAnimationCallBack@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?OnTrigger@AtKiAnimationCallBack@@UAEXPBDHH@Z" = 0x001ACD70  # folded: ret 0xC
+"?Slot5@AtKiAnimationCallBack@@UAEHH@Z" = 0x000B15B0  # folded: returns 0
+"?Slot6@AtKiAnimationCallBack@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"??_G?$GmLinkedListIteratorOf@PAVGmAcLinkedItem@@@@UAEPAXI@Z" = 0x00097A20  # folded with the FaUiBase iterator's deleting destructor
+"?s_heap@GmAcActor@@2PAXA" = 0x003B3930
+"?s_namedMaps@GmAcActor@@2VGmNameMap@@A" = 0x002CD124
+"?s_instance@GmEventManager@@2PAV1@A" = 0x003B3990
+"?Slot2@GmAcNode@@UAEHXZ" = 0x0014D900  # not recovered from here on
+"?Slot4@GmAcNode@@UAEXXZ" = 0x0014D2E0
+"?Slot8@GmAcNode@@UAEXHPBD@Z" = 0x0014CEB0
+"?Slot10@GmAcNode@@UAEXXZ" = 0x0014BBC0
+"?Slot11@GmAcNode@@UAEXXZ" = 0x0014E2C0
+"?Slot12@GmAcNode@@UAEXXZ" = 0x0014D0F0
+"?Slot15@GmAcNode@@UAEXXZ" = 0x0014DB70
+"?Slot17@GmAcNode@@UAEXH@Z" = 0x0014D070
+"?Slot19@GmAcNode@@UAEXXZ" = 0x0014D120
+"?Slot20@GmAcNode@@UAEXH@Z" = 0x0014E4D0
+"?Slot22@GmAcNode@@UAEXHHHHH@Z" = 0x0014BD90
+"?Slot23@GmAcNode@@UAEXHHHHH@Z" = 0x0014BE10
+"?Slot24@GmAcNode@@UAEXHHHHH@Z" = 0x0014BF20
+"?Slot25@GmAcNode@@UAEXHHHHH@Z" = 0x0014BFB0
+"?Slot27@GmAcNode@@UAEHXZ" = 0x0014C170
+"?Slot28@GmAcNode@@UAEXXZ" = 0x0014C040
+"?Slot29@GmAcNode@@UAEXXZ" = 0x0014C080
+"?Slot30@GmAcNode@@UAEXXZ" = 0x0014C6B0
+"?Slot31@GmAcNode@@UAEXXZ" = 0x0014C6F0
+"?Slot32@GmAcNode@@UAEXXZ" = 0x0014C0C0
+"?Slot33@GmAcNode@@UAEXXZ" = 0x0014C120
+"?Slot34@GmAcNode@@UAEXXZ" = 0x0014C730
+"?Slot35@GmAcNode@@UAEXXZ" = 0x0014C7B0
+"?Slot39@GmAcNode@@UAEXXZ" = 0x0014C8A0
+"?Slot43@GmAcNode@@UAEXHHH@Z" = 0x0014D600
+"?Slot44@GmAcNode@@UAEHH@Z" = 0x0014D800
+"?Slot2@GmAcActor@@UAEHXZ" = 0x0014ACF0
+"?Slot4@GmAcActor@@UAEXXZ" = 0x0014AC20
+"?Slot10@GmAcActor@@UAEXXZ" = 0x001494C0
+"?Slot15@GmAcActor@@UAEXXZ" = 0x0014AE90
+"?Slot17@GmAcActor@@UAEXH@Z" = 0x00149080
+"?Slot20@GmAcActor@@UAEXH@Z" = 0x0014B340
+"?Slot40@GmAcActor@@UAEXH@Z" = 0x001484B0
+"?Slot47@GmAcActor@@UAEXHHH@Z" = 0x001494D0
+"?Slot49@GmAcActor@@UAEXPBDHH@Z" = 0x00148A00
+"?Detach@GmAcAnimController@@QAEXXZ" = 0x00159300  # seams
+"?Resize@GmAcAnimSlots@@QAEXI@Z" = 0x00159760
+"??1GmAcAnimSlot@@QAE@XZ" = 0x001B3B80
+"?Release@GmAcLinkedItem@@QAEXPBUReleaseArgs@1@@Z" = 0x001B1420
+"?SpawnEffect@GmAcActor@@QAEXPBDH0HHH@Z" = 0x0014A260
+"?GetNoteBank@GmAcActor@@QAEXPAD@Z" = 0x000A1E10
+"?SceneSetFlag10@GmAcActor@@QAEXH@Z" = 0x0014A8D0
+"?Slot38@GmAcAudio@@QAEXH@Z" = 0x00194BF0
+"?SendEvent@GmAcComponent@@QAEXHPBD@Z" = 0x0015EC10
+"?FindTrigger@GmAcTriggerTable@@QAEXPBDPAD1@Z" = 0x0017E7C0
+"?FindNote@GmAcTriggerTable@@QAEPAUGmSoundNote@@PBD@Z" = 0x0017E1A0
+"?Post@GmEventManager@@QAEXPBD0PAVGmAcActor@@@Z" = 0x001511E0
+"?GmDynamicNodeRelease@@YAXPAVGmAcNode@@H@Z" = 0x0014FB40
+"?GmVfxManagerHas@@YAHPAVGmVfxManager@@PBD@Z" = 0x001616C0
+"?GmAudioDataPlayNote@@YAXPAVGmAudioData@@PAVGmAcActor@@PAUGmSoundNote@@@Z" = 0x001386D0
+"?WorldPosition@AtCoordSys@@QAEXPAVAtVector3@@@Z" = 0x000332B0
+"?Place@AtCoordSys@@QAEXPBVAtVector3@@H0H@Z" = 0x00032EA0

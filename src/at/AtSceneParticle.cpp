@@ -2,7 +2,7 @@
 #include "at/AtSceneParticle.h"
 
 #include "at/AtRandom.h"
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);

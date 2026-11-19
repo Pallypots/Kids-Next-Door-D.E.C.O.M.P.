@@ -179,11 +179,11 @@ Every loader that opens a text file, from the callers of `AtIoTokenFile::Open`, 
 | AGS | 786 | 0x0002B2E0 | Shaders: below. Recovered |
 | ASE | 737 | 0x0003F760 | Emitters: below. Recovered |
 | ASB | 632 | 0x00040F90 | Collision shapes: below. Recovered |
-| ADR | 311 | 0x00068880 | |
+| ADR | 311 | 0x00068880 | Design data registries: below. Recovered up to reading values |
 | AOB, AOS | 271 each | 0x00025A90, 0x00025640 | Sound banks and segments: below. The lists are recovered; the concrete banks are not |
 | AOD | 261 | 0x00018AC0 | Sound databases: below. Recovered up to the concrete banks |
 | AGN | 229 | 0x00027D50 | AGN family: below. Recovered |
-| GON | 171 | 0x00139090 | |
+| GON | 171 | 0x00139090 | Sound notes: below. Recovered |
 | AIS | 106 | 0x0001FA70 | Game text: recovered |
 | MNG | 104 | 0x00141EA0 | Load lists: base recovered |
 
@@ -446,3 +446,136 @@ AbstractController[n]
 }
 Each word optional, any order; a saturation of 100 and everything else 0 by default. Keyword table 0x002B2828. Inputs get ids 0x30000000, 0x40000000, 0x50000000 up.
 ```
+
+## Design data registries (.ADR)
+
+Text, through the ordinary tokenizer. 103 distinct files in the jams, under `DESIGN\REGISTRY\` and `DESIGN\LOCATION\...`. The words come from the table at 0x002B2690.
+
+```
+[NameSpace "Name"]
+DataComponentTypes[n] { DataComponent { Type T NumComponents c } ... }
+DataRegistry[n] { DataLink { Name "N" Type T Parent "A\B\" NumElements e Floor f Ceiling c FormatString "F" Data ... WillAcceptParentData } ... }
+```
+
+Twelve types: Empty, Boolean, Int, Real, ShortName, String, and arrays of Boolean, Byte, Int, Real, ShortName, String. The real files use all but ByteArray; none uses FormatString or a Unicode string. The first list sizes a pool per type; the second fills a tree of named values, which can hang in a parent registry's tree. It is the game's tunable design data: `Gravity`, `DamageParticles`, actor prototypes inheriting by path.
+
+## Library and record databases (.ADD, .ADB)
+
+* `.ADD` is text through the shared tokenizer, keyword table 0x002B47F0 with two words: `DataRegistry` (0x39) and `DatabaseManager` (0x3A). Each is followed by `[ n ] { "name" ... }`. Anything else is reported (code 0x1E) and reading goes on. A second list of the same kind is reported (code 0x27) and replaces the first, leaking it.
+* Each `DataRegistry` name is loaded as an `.ADR` through the registry at 0x000674E0 / 0x00068880; each `DatabaseManager` name as an `.ADB` through 0x000B2330. All names are read first, the file is closed, and the entries are loaded with the `.ADD`'s directory pushed on the path.
+* Start-up, 0x0008DEA0, loads `Design\Registry\Generic.ADR` into App+0x6950, then `Library.ADD` into the library at App+0x6B40, as `Load(owner, "Library", 0, parent)` where owner is offset 0x394 of the object at 0x003B357C and parent is offset 0x2C of that object. 0x0008ED60 calls the library's Clear.
+* **The disc has exactly one `.ADD`, `AppInit.JAM`'s `LIBRARY.ADD`, holding only a `DataRegistry` list of 11 names (`Design\Registry\Actor` ... `Weapon`), and no `.ADB` in any archive** (a scan of every archive's directory: 1 ADD, 0 ADB, 311 ADR). So on this disc the whole `.ADB` half is never reached; it is recovered because it is what the reader alone needs, and it is tested on written text only.
+* `.ADB`, keyword table 0x002B5310 (34 words, names in the binary): an optional `NameSpace "x"`, then `DataComponentDescs[n] { DataComponentDesc { Name Type NumElements Floor Ceiling FormatString } ... }`, `RecordLayoutDatabases[n] { RecordLayoutDatabase { Name "x" Desc "..." DataComponents[n] { "field" ... } } ... }`, `DataRecordDatabases[n] { DataRecordDatabase { Name Desc RecordLayout "layout" DataRecords[n] { values ... } } ... }`. Values are read by the value classes of the `.ADR` work, by type: Boolean 1, Int 2, Real 3, ShortName 4, String 5, BooleanArray 6, ByteArray 7, IntArray 8, RealArray 9, ShortNameArray 10, StringArray 11; `Relational` gives 12, which no table holds. `Byte`, `Flags`, `Database`, `RelatedField`, `ReferencedField` are in the table but rejected where they could appear.
+
+## Sound notes (.GON)
+
+Not a game object file. A `.GON` file is the table that says which sound an animation's trigger plays: "sound notes". Established from the reader 0x00139090, its keyword table at 0x002B9090 (12 words), and the 49 distinct real files, all under `AUDIO\` (`AUDIO\CAST\ENEMIES\*`, `AUDIO\CAST\PCS\*`, `AUDIO\LOCATION\*`, `AUDIO\SFX\*`, `AUDIO\OBJECTS\*`), one to a character, location or family of effects.
+
+```
+NameSpace "x"                optional; the bank's name, which a search can filter on
+SoundNotes[n]
+{
+    Note "name"
+    {
+        AnimationTrigger "t"     the name an animation fires; the note is found by it
+        VFXTrigger "v"           entered in a third map, which nothing recovered reads
+        GameEvent "e" "arg"      the second string optional; used by 0x00160030 through 0x001511E0
+        ActorEmitter             the default: does nothing
+        GlobalEmitter "sfx"      an emitter by name, from the sound owner's table (EMITTERS.AOE)
+        Conditional "voice"      an emitter: 0x001386D0 plays nothing while it has a voice playing
+        Stop "other"             0x001386D0 first stops the first segment of that note
+        Singleton                0x001386D0 skips the play if the segment already plays on the emitter
+        Segments[n] { "seg" 0.25 "seg2" ... }   names in the .AOS lists, each with an optional real weight, default 1; the load scales them to sum to 1
+    }
+}
+```
+
+Real files: 517 notes, 517 AnimationTrigger, 513 Segments blocks, 510 ActorEmitter, 7 GlobalEmitter, 4 Conditional, 4 Stop, 14 Singleton; no NameSpace, VFXTrigger or GameEvent, and no weights. Words are case-insensitive. Anything else inside a note, word or token, goes by without a report.
+
+What the notes are for, from their callers (not recovered): `GmAcAnimationCallback` (RTTI name, vftable 0x0027C1D8) slot 4, 0x00160030, takes an animation trigger, finds the note by `FindNoteByTrigger` (first in the actor's own bank name, then any) and plays it with 0x001386D0; 0x00166FC0 does the same from a table of event handlers; 0x0017E760 finds notes by name for another class.
+
+## Level manifests (.MNG)
+
+A `.MNG` file is a level's load list. 51 distinct real files: `LOADER.MNG` under each `DESIGN\LOCATION\<level>\` (31), one to a playable character and look under `ART\CAST\PCS\...` (18), `PERSIST.MNG` in `Persist.JAM` and `UI\UI.MNG` in `MainMenu.JAM`. Each word names a kind of database and is followed by a counted list of paths:
+
+```
+// Level:    Lbkyrd1
+SoundDatabaseLoaders[ 16 ]
+{
+   "Audio\Objects\bzappr\bzappr"
+   ...
+}
+SceneDatabasesLoaders[ 60 ]
+{
+   "Art\Location\Lbkyrd\vistest" InSpaceGraph InsertInSnoopie
+   "Art\Objects\Region\BoxReg" NotInSpaceGraph
+   ...
+}
+VFXDatabases[ 22 ] { "Art\VFX\ItmspF\ItmspF.VFX" ... }
+```
+
+Two keyword tables, the original's words: the base's ten at 0x002B9350 and the level's sixteen at 0x002B9200 (ids 0x39 to 0x52). The level's Parse makes a tokenizer of its own, has the base install its words on it, and then installs its sixteen inheriting them.
+
+| Word | Id | Who | Item, extension, size | Real files: paths |
+| --- | --- | --- | --- | --- |
+| EventDatabases | 0x39 | base | (0x1B4880), 0xB8 | 59 |
+| InstanceRegistries | 0x3A | base | (0x1B4A10), 0x288 | 233 |
+| SoundDatabaseLoaders | 0x3B | base | AOD (0x1B3FF0), 0x9C; each runs as soon as it is configured | 285 |
+| GraphicsDatabasesLoaders | 0x3C | base | (0x1B4220), 0x98 | 1158 |
+| BoundingGeometryDatabase | 0x3D | base | (0x1B46F0), 0xBC | 0 |
+| SceneDatabasesLoaders | 0x3E | base | (0x1B43A0), 0x10C; reads InSpaceGraph, NotInSpaceGraph, InsertInSnoopie after each path | 1332 |
+| CinemaDatabaseLoaders | 0x3F | base | (0x1B4560), 0xB8 | 0 |
+| BehaviorAnimationLists | 0x43 | level | ANL, 0x94 | 0 |
+| BehaviorSoundLists | 0x44 | level | SDL, 0x94 | 0 |
+| SmallCScripts | 0x45 | level | ASL, 0x94 | 0 |
+| TriggerDatabases | 0x46 | level | AET, 0xB0 | 42 |
+| SubscriberDatabases | 0x47 | level | AES, 0xB0 | 72 |
+| VFXDatabases | 0x48 | level | VFX, 0x94; the path carries its own `.VFX` | 551 |
+| DynamicNodes | 0x49 | level | DAC, 0x198, an AtScene in place | 0 |
+| Videos, Streaming, Texture, Node | 0x4A-0x4D | level's table | none: they go to the base, which lets them by | 0 |
+| SoundNodeDatabases | 0x4E | level | GOO, 0x94 | 19 |
+| SoundNoteDatabases | 0x4F | level | GON, 0x90 (other branch) | 171 |
+| MusicChainDatabases | 0x50 | level | GOM, 0x90 | 32 |
+| CollisionSoundNodeDatabases | 0x51 | level | GOC, 0x94 | 0 |
+| InstanceSoundNodeDatabases | 0x52 | level | GOI, 0x94 | 0 |
+
+Every word reads `[ n ] {`, allocates n items with new[] from the heap at 0x003B3610 (pushed around the allocation; null is reported with -2, no memory with -4), configures each from a request on the stack (`m_path` at +4, a context at +0x84 and +0x88), then reads `}`. After the parse, AfterParse queues the base's arrays and then the level's, in a fixed order, and the time-sliced loader runs them one at a time; Finished registers the sound nodes', the sound notes' and the instance sounds' data once all have run.
+
+## Scene lists and cell graphs (.ASD, .ASC)
+
+Established from the keyword tables at 0x002B13A0 (11 words), 0x002B2120 (12), 0x002B18A8 (11) and 0x002B1910 (14), from what the readers do with them, and from the real files; not from the extensions.
+
+**.ASD: a scene's list of files.** It is to a scene what .AGD is to graphics, and its own word for its kind is the same, `DatabaseLoader`. It holds no data of its own: every word is a list of leaf names, `NodeDatabase[n] { "name" ... }`, and the loader opens each in the directory of the .ASD. So yes, it ties the other scene formats together: for one object or location it names the .ASN nodes, .ASM modifiers, .ASG space graph, .ASB bounding geometry, .ASE emitters, .ASL lens flares, .ASC cell graphs, .AIS strings, .ASI flat images, .AST flat text, and further .ASD lists. Whatever order the file gives, they load in a fixed one: strings, text, images, geometry, modifiers, emitters, lens flares, nodes, cell graphs, space graphs, then nested lists. That order matters: a space graph names modifiers and nodes, which are by then loaded. The owner is the scene owner (`AtNameTableOwner`); the game makes the list at 0x000A1608 and loads "UI\Trans\wipe" with it, and 0x001B4384 loads others.
+
+The 409 real files use six words: NodeDatabase 409, BoundingGeometryDatabase 211, EmitterDatabase 130, SpaceGraph 13, ModifierDatabase 13, CellGraphDatabase 9. Never DatabaseLoader, LensFlareDatabase, StringDatabase, ImageDrawDatabase or TextDrawDatabase. So .ASI and .AST are reached on the disc by no list, and there are none among the text files.
+
+**.ASC: cell graphs**, rooms (cells) and the portals between them, for visibility. See the head of `include/at/AtCellGraph.h` for the grammar. A portal is a polygon in a mesh's vertex array, 3 to 31 vertices; it keeps a pointer into the locked array, the centre of its vertices and an unnormalised normal from the first three; a cell is a run of portals. All 9 real files have one graph each, a Mesh, OppositeCell (never OppositeCellDifferentGraph), Vertices, ClosedByViewerDist, Cell, Portals and ExteriorPortals. What a space graph leaf's `Cell` word finds is a cell of one of these: `AtSpaceCellTable` of the .ASG work **is `AtCellGraph`**, now a typedef.
+
+**.ASI and .AST: flat images and text**, things drawn on the screen, each item a block of words with a position, scale, clip rectangle, four corner colours and an image or a font and string. See `include/at/AtDrawItem.h`.
+
+## Flash UI levels (.AFD, .AFP, .AFH, .XFF)
+
+From the code and the 20 real files, one per user interface archive (`DataXbox/UI/Xbox/*.JAM`):
+
+```
+.AFD    Loader { Level "name"  Sprite "name"  Shape "name"  Text "name"  Script "name"  [Sound "name"] }
+        Each word loads at once, in the file's order: Level is name.AFL; Sprite is Sprites\name.AFP and the frames; Shape is Shapes\name.AFH and the .AGD it names; Text and Script are not recovered.
+        Sound is read and dropped. Any other word is reported and the loop goes on.
+.AFP    NameSpace "s"  Sprites[n] { SpriteDef { index FrameRefs[n] { frame,"name" | frame; | from:to | frame*times ... } } ... }
+.AFH    NameSpace "s"  GraphicsDatabaseLoader "agd"  Shape[ n ] { Shape index { Rectangle r r r r  MeshAssignment i "name" } ... }
+.XFF    binary, little-endian. 16 bytes: "HVSIXFF\0", then 8 bytes not read here (01 00 01 00, and the file's size).
+        16 bytes: u16 frames, u16 offset of the data, u32 size of the data, u16 places, u16 actions, u16 removes, u16 sounds.
+        The data, at that offset: per frame, u32 index, u8 places, u8 actions, u8 removes, u8 sounds; then that frame's tags, removes first, then places, actions, sounds.
+        An action, remove or sound is a u32. A place is 0x18 bytes: u8, u8 (not read), u8, u8, u16, u16, u32, then three u32 offsets, counted from the end of the record, of a name, a 6-word transform and an 8-byte color
+        (4 bytes, then 4 scaled by 1/255); 0 means none. Every tag of a kind comes from one run of objects for the whole file, in file order.
+.AFF    the text form of .XFF, "Frames[n] { FrameDef ... }": read when the environment's +0x1F4 is 0. No .AFF is on the disc, and its frame reader is not recovered.
+```
+
+Which of .XFF and .AFF is read is decided by the .AFE environment (+0x1F4): the 20 .AFE files all have the word `PlatformSpecificFiles`, and all 20 archives hold an .XFF and no .AFF. The name of that field is a guess from the word.
+
+## Binary meshes and animations (.XGG, .XKA)
+
+From the readers, and checked on every real file by the oracle. Both start with 0x10 bytes that no reader looks at: on the disc, `HVSI`, the extension and a terminator, then two 16-bit numbers and a word (an `.XKA`: 2, 2; an `.XGG`: 2, 13). Then a table, then blocks, each read whole; the reader aligns to 4 after the table. Every pointer the readers make is a block's address plus a 32-bit offset from the table. Layouts: `AtXkaHeader`, `AtXkaAnimation` and `AtXggHeader` in `include/at/AtGrD3DDatabase.h`.
+
+* `.XKA`: a table of 0x78 bytes; a scratch block (names of eight bytes, records of 0x60, read onto the token file's heap and freed) and a kept block (component lists and keys, owned by the database). Records are copied word for word into `AtAnimation`, their 32-bit runs cut to 16 bits. The keys get counts and pointers into the kept block, and flag 0x400, so that clearing does not free what they did not allocate. On the disc: 565 distinct files, up to 116 animations each, none empty.
+* `.XGG`: a table of 0x58 bytes; a scratch block of records, a kept block on the mesh heap (aligned to 32 bytes at least while it is allocated), and a third block in memory for the graphics processor, absent in 42 of 442 files. Then items, kind by kind: vertex arrays (records of 0x3C), index arrays (8), streams (0x48), meshes (0x18, a name at 0x0C, with triangles, parts and material references beside). Each item reads its own part and moves the cursors on.

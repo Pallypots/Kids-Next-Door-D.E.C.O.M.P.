@@ -69,14 +69,14 @@ AtGrD3DFontDatabase::~AtGrD3DFontDatabase() { STOP(0x001119B0); }
 void AtGrD3DFontDatabase::Clear() { STOP(0x001115D0); }
 void AtGrD3DFontDatabase::OnReady(AtMaterialOwner* owner) { STOP1(0x00111400, owner != 0); }
 void AtGrD3DFontDatabase::MakeFonts2D() { STOP(0x00111420); }
-AtFontItem* AtGrD3DFontDatabase::Font2DAt(unsigned int index) { return POINTER(AtFontItem, 0x001113E0, index); }
+AtGrI2DFont* AtGrD3DFontDatabase::Font2DAt(unsigned int index) { return POINTER(AtGrI2DFont, 0x001113E0, index); }
 
 AtGrD3DImageDatabase::AtGrD3DImageDatabase() { STOP(0x00111BC0); }
 AtGrD3DImageDatabase::~AtGrD3DImageDatabase() { STOP(0x00111C60); }
 void AtGrD3DImageDatabase::Clear() { STOP(0x00111BE0); }
 void AtGrD3DImageDatabase::MakeItems() { STOP(0x00111A40); }
 void AtGrD3DImageDatabase::OnReady(AtMaterialOwner* owner) { STOP1(0x00111A20, owner != 0); }
-AtImageItem* AtGrD3DImageDatabase::ImageAt(unsigned int index) { return POINTER(AtImageItem, 0x00111A00, index); }
+AtImage* AtGrD3DImageDatabase::ImageAt(unsigned int index) { return POINTER(AtImage, 0x00111A00, index); }
 
 AtGrD3DVertexProcessDatabase::AtGrD3DVertexProcessDatabase() { STOP(0x00111E50); }
 AtGrD3DVertexProcessDatabase::~AtGrD3DVertexProcessDatabase() { STOP(0x00111EC0); }

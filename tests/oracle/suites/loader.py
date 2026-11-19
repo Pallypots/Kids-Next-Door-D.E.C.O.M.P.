@@ -14,6 +14,8 @@ L = "AtGrD3DDatabaseLoader.cpp"
 M = "AtGrD3DMeshDatabase.cpp"
 A = "AtGrD3DAnimation.cpp"
 K = "AtAnimationKeys.cpp"
+# The binary file is AtAudioBankFile, folded with the .AFD work's; its bodies are there.
+F = "AtFlashSprite.cpp"
 
 MUTANTS = []
 
@@ -95,8 +97,8 @@ MUTANTS += [
     ("xgg: the wrong extension", M, "file.OpenWithExtension(name, \"XGG\", 2);", "file.OpenWithExtension(name, \"XGA\", 2);"),
     ("xgg: the wrong flags", M, "file.OpenWithExtension(name, \"XGG\", 2);", "file.OpenWithExtension(name, \"XGG\", 0);"),
     ("xgg: no report on open", M, "    int status = file.OpenWithExtension(name, \"XGG\", 2);\n    if (status != 0) {\n        AtReportFileError(status, name, \"XGG\");\n    }\n", "    int status = file.OpenWithExtension(name, \"XGG\", 2);\n"),
-    ("xgg: the head not read", M, "    status = file.ReadAll(unread, sizeof unread, 0);\n", ""),
-    ("xgg: the table read short", M, "    status = file.ReadAll(&header, sizeof header, 0);", "    status = file.ReadAll(&header, sizeof header - 4, 0);"),
+    ("xgg: the head not read", M, "    status = file.Read(unread, sizeof unread, 0);\n", ""),
+    ("xgg: the table read short", M, "    status = file.Read(&header, sizeof header, 0);", "    status = file.Read(&header, sizeof header - 4, 0);"),
     ("xgg: not aligned", M, "    file.m_file->Seek((file.m_file->m_position + 3) & ~3u);\n\n    // The first block", "    // The first block"),
     ("xgg: the first block on the mesh heap", M, "    AtPushHeap(AtIoTokenFile::s_heap);\n    char* scratch", "    AtPushHeap(s_heap);\n    char* scratch"),
     ("xgg: the first block, no raise with no heap", M, "    if (AtIoTokenFile::s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n", ""),
@@ -151,19 +153,19 @@ MUTANTS += [
 
 # ---- the binary file, the keys and the animation database ---------------------------------------------------------------------------------------------------------------------------------------------------
 MUTANTS += [
-    ("file: the top whatever the flags", A, "    if (flags & 1) {\n        fs = s_context->Top();", "    if (flags & 2) {\n        fs = s_context->Top();"),
-    ("file: no file found goes on", A, "    } else if (s_context->FindFile(path, &fs) != 0) {\n        return 1;\n    }", "    } else if (s_context->FindFile(path, &fs) != 0) {\n        return 2;\n    }"),
-    ("file: an open file not closed", A, "        m_fs->Close(m_file);\n        m_fs = 0;\n        m_file = 0;\n    }\n    m_fs = fs;", "        m_fs = 0;\n        m_file = 0;\n    }\n    m_fs = fs;"),
-    ("file: the flags not passed", A, "    return fs->Open(path, flags, &m_file);", "    return fs->Open(path, 0, &m_file);"),
-    ("file: the leaf from the start always", A, "    if (leaf == 0) {\n        leaf = full;\n    }\n", "    leaf = full;\n"),
-    ("file: extension added always", A, "    if (strrchr(leaf, '.') == 0) {", "    if (strrchr(leaf, '.') == 0 || 1) {"),
-    ("file: no dot", A, "        strcat(full, \".\");\n", ""),
-    ("file: no wait", A, "        status = request->Wait();\n        if (m_file != 0) {", "        if (m_file != 0) {"),
-    ("file: no release", A, "        if (m_file != 0) {\n            m_file->Release(request);\n        }\n", ""),
-    ("file: read without the count", A, "    return m_file->Read(out, size, done, request);", "    return m_file->Read(out, size, 0, request);"),
-    ("file: release says 1 with no file", A, "    if (m_file == 0) {\n        return 0;\n    }\n    m_file->Release(request);", "    if (m_file == 0) {\n        return 1;\n    }\n    m_file->Release(request);"),
-    ("file: release does not release", A, "    m_file->Release(request);\n    return 1;", "    return 1;"),
-    ("file: close does not close", A, "    if (m_file != 0) {\n        m_fs->Close(m_file);\n    }\n    m_fs = 0;", "    m_fs = 0;"),
+    ("file: the top whatever the flags", F, "    if (flags & 1) {\n        fs = s_context->Top();", "    if (flags & 2) {\n        fs = s_context->Top();"),
+    ("file: no file found goes on", F, "    } else if (s_context->FindFile(path, &fs) != 0) {\n        return 1;\n    }", "    } else if (s_context->FindFile(path, &fs) != 0) {\n        return 2;\n    }"),
+    ("file: an open file not closed", F, "        m_fs->Close(m_file);\n        m_fs = 0;\n        m_file = 0;\n    }\n    m_fs = fs;", "        m_fs = 0;\n        m_file = 0;\n    }\n    m_fs = fs;"),
+    ("file: the flags not passed", F, "    return fs->Open(path, flags, &m_file);", "    return fs->Open(path, 0, &m_file);"),
+    ("file: the leaf from the start always", F, "    if (leaf == 0) {\n        leaf = full;\n    }\n", "    leaf = full;\n"),
+    ("file: extension added always", F, "    if (strrchr(leaf, '.') == 0) {", "    if (strrchr(leaf, '.') == 0 || 1) {"),
+    ("file: no dot", F, "        strcat(full, \".\");\n", ""),
+    ("file: no wait", F, "        status = request->Wait();\n        if (m_file != 0) {", "        if (m_file != 0) {"),
+    ("file: no release", F, "        if (m_file != 0) {\n            m_file->Release(request);\n        }\n", ""),
+    ("file: read without the count", F, "    return m_file->Read(out, size, done, request);", "    return m_file->Read(out, size, 0, request);"),
+    ("file: release says 1 with no file", F, "    if (m_file == 0) {\n        return 0;\n    }\n    m_file->Release(request);", "    if (m_file == 0) {\n        return 1;\n    }\n    m_file->Release(request);"),
+    ("file: release does not release", F, "    m_file->Release(request);\n    return 1;", "    return 1;"),
+    ("file: close does not close", F, "    if (m_file != 0) {\n        m_fs->Close(m_file);\n    }\n    m_fs = 0;", "    m_fs = 0;"),
     ("block: no wait", A, "        status = request->Wait();\n        file->Release(request);", "        file->Release(request);"),
     ("block: no release", A, "        status = request->Wait();\n        file->Release(request);", "        status = request->Wait();"),
     ("keys: clear forgets nothing", A, "    if (m_flags & 0x400) {", "    if (m_flags & 0x800) {"),
@@ -199,8 +201,8 @@ MUTANTS += [
     ("anim: clear leaves the block's pointer", A, "    AtAnimationDatabase::Clear();\n    m_data = 0;", "    AtAnimationDatabase::Clear();"),
     ("anim: no binary form", A, "int AtGrD3DAnimationDatabase::HasBinaryForm() {\n    return 1;", "int AtGrD3DAnimationDatabase::HasBinaryForm() {\n    return 0;"),
     ("xka: the wrong extension", A, "file.OpenWithExtension(name, \"XKA\", 2);", "file.OpenWithExtension(name, \"XKB\", 2);"),
-    ("xka: no report on the table", A, "    status = file.ReadAll(&header, sizeof header, 0);\n    if (status != 0) {\n        AtReportFileError(status, name, \"XKA\");\n    }\n", "    status = file.ReadAll(&header, sizeof header, 0);\n"),
-    ("xka: the table read short", A, "    status = file.ReadAll(&header, sizeof header, 0);", "    status = file.ReadAll(&header, sizeof header - 8, 0);"),
+    ("xka: no report on the table", A, "    status = file.Read(&header, sizeof header, 0);\n    if (status != 0) {\n        AtReportFileError(status, name, \"XKA\");\n    }\n", "    status = file.Read(&header, sizeof header, 0);\n"),
+    ("xka: the table read short", A, "    status = file.Read(&header, sizeof header, 0);", "    status = file.Read(&header, sizeof header - 8, 0);"),
     ("xka: the first block on the database's heap", A, "    AtPushHeap(AtIoTokenFile::s_heap);", "    AtPushHeap(s_heap);"),
     ("xka: the first block's size", A, "    char* scratch = (char*)operator new(header.m_scratchSize);", "    char* scratch = (char*)operator new(header.m_keptSize);"),
     ("xka: the second block, no raise with no heap", A, "    if (s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n    AtPushHeap(s_heap);\n    m_data", "    AtPushHeap(s_heap);\n    m_data"),

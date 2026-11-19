@@ -19,6 +19,13 @@ struct AtMathTriangle {
 void AtMathTriangleNormal(const AtMathTriangle* triangle, float* out);  // 0x00043B70 (v0 - v1) x (v2 - v1)
 void AtMathTriangleSetAxis(AtMathTriangle* triangle);                   // 0x00043BE0
 
+// What a vertex array's lock hands back. The graphics layer's lock may write more of it; only these two are read.
+struct AtVertexLock {
+    void* m_data;             // +0x00
+    unsigned int m_stride;    // +0x04
+    char m_unknown08[0x48];   // +0x08 the room up to the next thing known at this address
+};
+
 // A vertex array, as the mesh's file sees it. Concrete in the graphics layer.
 class AtVertexArray {
 public:
@@ -46,6 +53,8 @@ public:
     virtual void Slot19() = 0;
     virtual void Slot20() = 0;
     virtual void Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer, unsigned int index) = 0;  // slot 21
+    // Slot 22. Concrete in the graphics layer, which is not recovered; slot 6 is what undoes it: see AtCellGraph::LockedVertex. In src/at/AtCellGraph.cpp.
+    virtual void Lock(struct AtVertexLock* out, int unknown);
 
     int m_unknown04;          // +0x04
     unsigned char m_flags;    // +0x08
@@ -96,6 +105,8 @@ public:
 
     // 0x00037220. Its own arrays finish, then each triangle whose vertex array keeps its positions in memory gets them and its axis. Reports an index past its own arrays, and goes on.
     void Finish();
+    // 0x00036AD0. By index: its own if it has any, stopping if out of range; otherwise the database's. In src/at/AtCellGraph.cpp.
+    AtVertexArray* VertexArray(unsigned int index);
 
     unsigned int m_ownVertexArrays;    // +0x04
     unsigned int m_ownIndexArrays;     // +0x08

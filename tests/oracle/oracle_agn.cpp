@@ -5,9 +5,9 @@
 // Cases: every file of the six extensions in index.txt, loaded through the file code on both sides; and text written here. What each side's material search finds is a real map, one owner to a
 // side, filled with every string of the text except names beginning with X.
 //
-// What stands in for the original first: images, fonts and lights are made by the graphics layer, which is not recovered, so both sides are given the same harness items. An image's and a font's
-// body are read by the harness item, which only walks the tokens and logs them; a light's body is the recovered AtLight::Read against the original's 0x000368C0. So on .AGI and .AGF this compares the
-// databases, their material lists and the order of calls, not what an image or a font makes of its words.
+// What stands in for the original first: the concrete databases and items of images, fonts and lights are made by the graphics layer, which is not recovered, so both sides are given harness
+// databases, and harness doubles for the concrete items' slots. The bodies are real: an image's and a 2D font's are the recovered AtImage and AtGrI2DFont against the original's base slots
+// (0x000586A0, 0x000415A0 and what they reach), and a light's is AtLight::Read against 0x000368C0. OnLoaded, the concrete item's work, is a harness double on both sides.
 #define NOMINMAX
 #include <windows.h>
 
@@ -67,78 +67,37 @@ typedef void*(__fastcall* FnFind)(void*, void*, const char*, const char*);
 typedef void(__fastcall* FnAdd)(void*, void*, void*, const char*);
 
 // ---- the items ----------------------------------------------------------------------------------------------------------
+//
+// An image's and a font's body are the real ones: the recovered AtImage and AtGrI2DFont on one side, the original's base and 2D font slots on the other (0x000586A0, 0x000415A0 and what they call).
+// The concrete item of the graphics layer is not recovered on either side: its slots are harness doubles here, and the original's, at vftables 0x0028B9B8 and 0x0028B970, are never called. The read
+// slot is wrapped on both sides, to log what the database hands it, and then runs the real body.
 
-enum { kPool = 512, kWordImageDemand = 0x41, kWordFontDemand = 0x48 };
+enum { kPool = 512 };
 
-// Walks a body's tokens. Text that ends in a body stops here, unlike the items in the game.
+// Set when an item's read begins: what is asked for from then on fails.
 static bool g_fail_in_item;
-
-template <class Item> static void walk_body(Item* item, int side, int demand_word, const char* name, AtIoTokenizer* tokenizer, bool database_right, bool found_by_name) {
-    Log& log = g_log[side];
-    log.add('f', found_by_name);
-    if (g_fail_in_item) g_fail_alloc = true;
-    log.add('I', item->index);
-    log.add('i', database_right);
-    // Past its terminator a short name is whatever was on the stack.
-    for (int i = 0; i < 8 && name[i] != 0; i++) log.add('n', (unsigned char)name[i]);
-    log.add('t', g_fs->m_path.m_top);
-    if (const char* current = g_fs->m_path.Current()) record_message(current, side);
-    item->m_flags = 0;
-    int token = tokenizer->Next();
-    log.add('b', token);
-    if (token != AtIoTokenizer::kLeftCurly) return;
-    for (int depth = 1; depth > 0;) {
-        token = tokenizer->Next();
-        log.add('b', token);
-        if (token == AtIoTokenizer::kEnd) return;
-        if (token == AtIoTokenizer::kLeftCurly) depth++;
-        if (token == AtIoTokenizer::kRightCurly) depth--;
-        if (token == demand_word) item->m_flags |= 8;
-    }
-}
 
 static void* g_db_of[2];
 
-class TestImage : public AtImageItem {
+class TestImage : public AtImage {
 public:
-    int side, index;
-    void Slot0() override {}
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
-    void Slot4() override {}
-    void Slot5() override {}
-    void Slot6() override {}
-    void Slot7() override {}
-    void Slot9() override {}
-    void Read(AtMaterialOwner* owner, AtImageDatabase* database, const char* name, AtIoTokenizer* tokenizer) override {
-        g_log[side].add('w', owner == g_own[side]);
-        walk_body(this, side, kWordImageDemand, name, tokenizer, database == g_db_of[side], database->Find(name) == this);
-    }
-    void OnLoaded(AtMaterialOwner* owner) override {
-        g_log[side].add('L', index);
-        g_log[side].add('l', owner == g_own[side]);
-    }
+    void Slot0() override { never(0); }
+    void Slot1() override { never(1); }
+    void Slot2() override { never(2); }
+    void Slot3() override { never(3); }
+    void Read(AtMaterialOwner* owner, AtImageDatabase* database, const char* name, AtIoTokenizer* tokenizer) override;
+    void OnLoaded(AtMaterialOwner* owner) override;
+    void Slot14() override { never(14); }
+    static void never(int slot) { eq("concrete image slot called", slot, -1); }
 };
-class TestFont : public AtFontItem {
+class TestFont : public AtGrI2DFont {
 public:
-    int side, index;
-    void Slot0() override {}
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
-    void Slot4() override {}
-    void Slot5() override {}
-    void Slot6() override {}
-    void Slot8() override {}
-    void Read(AtMaterialOwner* owner, AtFontDatabase* database, const char* name, AtIoTokenizer* tokenizer) override {
-        g_log[side].add('w', owner == g_own[side]);
-        walk_body(this, side, kWordFontDemand, name, tokenizer, database == g_db_of[side], database->Find(name) == this);
-    }
-    void OnLoaded(AtMaterialOwner* owner) override {
-        g_log[side].add('L', index);
-        g_log[side].add('l', owner == g_own[side]);
-    }
+    void Slot4() override { never(4); }
+    void Read(AtMaterialOwner* owner, AtFontDatabase* database, const char* name, AtIoTokenizer* tokenizer) override;
+    void OnLoaded(AtMaterialOwner* owner) override;
+    void Slot11() override { never(11); }
+    void Slot12() override { never(12); }
+    static void never(int slot) { eq("concrete font slot called", slot, -1); }
 };
 class TestLight : public AtLight {
 public:
@@ -152,12 +111,95 @@ static unsigned char g_fonts[2][kPool][sizeof(TestFont)];
 static unsigned char g_lights[2][kPool][sizeof(TestLight)];
 static bool g_keep_lights;
 
-template <class Item, size_t N> static void make_items(unsigned char (&pool)[kPool][N], int side, unsigned count) {
+template <size_t N> static int index_in(unsigned char (&pool)[kPool][N], const void* p) { return (int)(((const unsigned char*)p - pool[0]) / N); }
+
+// What the database hands a read, the same on both sides.
+static void log_read(int side, int index, AtMaterialOwner* owner, void* database, const char* name, bool found_by_name) {
+    Log& log = g_log[side];
+    log.add('w', owner == g_own[side]);
+    log.add('f', found_by_name);
+    if (g_fail_in_item) g_fail_alloc = true;
+    log.add('I', index);
+    log.add('i', database == g_db_of[side]);
+    // Past its terminator a short name is whatever was on the stack.
+    for (int i = 0; i < 8 && name[i] != 0; i++) log.add('n', (unsigned char)name[i]);
+    log.add('t', g_fs->m_path.m_top);
+    if (const char* current = g_fs->m_path.Current()) record_message(current, side);
+}
+static void log_loaded(int side, int index, AtMaterialOwner* owner) {
+    g_log[side].add('L', index);
+    g_log[side].add('l', owner == g_own[side]);
+}
+
+void TestImage::Read(AtMaterialOwner* owner, AtImageDatabase* database, const char* name, AtIoTokenizer* tokenizer) {
+    log_read(1, index_in(g_images[1], this), owner, database, name, database->Find(name) == this);
+    AtImage::Read(owner, database, name, tokenizer);
+}
+void TestImage::OnLoaded(AtMaterialOwner* owner) { log_loaded(1, index_in(g_images[1], this), owner); }
+void TestFont::Read(AtMaterialOwner* owner, AtFontDatabase* database, const char* name, AtIoTokenizer* tokenizer) {
+    log_read(1, index_in(g_fonts[1], this), owner, database, name, database->Find(name) == this);
+    AtFont::Read(owner, database, name, tokenizer);
+}
+void TestFont::OnLoaded(AtMaterialOwner* owner) { log_loaded(1, index_in(g_fonts[1], this), owner); }
+
+// The original's side: its constructor, then a table of its base slots with doubles where the concrete item's would be.
+typedef void(__fastcall* FnItemRead)(void*, void*, void*, void*, const char*, void*);
+static void __fastcall oi_never(void*, void*) { eq("concrete image slot called", 0, -1); }
+static void __fastcall oi_read(void* self, void*, AtMaterialOwner* owner, AtImageDatabase* database, const char* name, AtIoTokenizer* tokenizer) {
+    log_read(0, index_in(g_images[0], self), owner, database, name, database->Find(name) == self);
+    at<FnItemRead>(0x000586A0)(self, nullptr, owner, database, name, tokenizer);
+}
+static void __fastcall oi_loaded(void* self, void*, AtMaterialOwner* owner) { log_loaded(0, index_in(g_images[0], self), owner); }
+static const void* g_oimage_vft[15] = {
+    (const void*)oi_never, (const void*)oi_never, (const void*)oi_never, (const void*)oi_never, (const void*)(uintptr_t)0x00057DC0, (const void*)(uintptr_t)0x00057FB0,
+    (const void*)(uintptr_t)0x00058A30, (const void*)(uintptr_t)0x00057E80, (const void*)oi_read, (const void*)(uintptr_t)0x00057F00, (const void*)oi_loaded,
+    (const void*)(uintptr_t)0x00057ED0, (const void*)(uintptr_t)0x00058620, (const void*)(uintptr_t)0x00057E10, (const void*)oi_never,
+};
+static void __fastcall of_never(void*, void*) { eq("concrete font slot called", 0, -1); }
+static void __fastcall of_read(void* self, void*, AtMaterialOwner* owner, AtFontDatabase* database, const char* name, AtIoTokenizer* tokenizer) {
+    log_read(0, index_in(g_fonts[0], self), owner, database, name, database->Find(name) == self);
+    at<FnItemRead>(0x000415A0)(self, nullptr, owner, database, name, tokenizer);
+}
+static void __fastcall of_loaded(void* self, void*, AtMaterialOwner* owner) { log_loaded(0, index_in(g_fonts[0], self), owner); }
+static const void* g_ofont_vft[16] = {
+    (const void*)(uintptr_t)0x000FEA90, (const void*)(uintptr_t)0x000FE880, (const void*)(uintptr_t)0x000FE950, (const void*)of_never, (const void*)of_never, (const void*)(uintptr_t)0x00100140,
+    (const void*)(uintptr_t)0x00041610, (const void*)of_read, (const void*)(uintptr_t)0x000FEA50, (const void*)of_loaded, (const void*)(uintptr_t)0x000FEA30, (const void*)of_never,
+    (const void*)of_never, (const void*)(uintptr_t)0x00057FB0, (const void*)(uintptr_t)0x000FFF30, (const void*)(uintptr_t)0x000FE9F0,
+};
+
+// One item, made as each side's database would: the original's constructor (0x00057E30, 0x000FEA00) with the table above, or the recovered class.
+static void make_image(int side, void* p) {
+    if (side == 0) {
+        at<Fn0>(0x00057E30)(p, nullptr);
+        *(const void***)p = g_oimage_vft;
+    } else {
+        new (p) TestImage;
+    }
+}
+static void make_font(int side, void* p) {
+    if (side == 0) {
+        at<Fn0>(0x000FEA00)(p, nullptr);
+        *(const void***)p = g_ofont_vft;
+    } else {
+        new (p) TestFont;
+    }
+}
+
+template <size_t N> static void make_items(unsigned char (&pool)[kPool][N], int side, unsigned count, void (*make)(int, void*)) {
     const bool was = g_recording;
     g_recording = false;
     for (unsigned i = 0; i < std::min(count, (unsigned)kPool); i++) {
         std::memset(pool[i], 0x5A, N);
-        Item* item = new (pool[i]) Item;
+        make(side, pool[i]);
+    }
+    g_recording = was;
+}
+static void make_lights_in(int side, unsigned count) {
+    const bool was = g_recording;
+    g_recording = false;
+    for (unsigned i = 0; i < std::min(count, (unsigned)kPool); i++) {
+        std::memset(g_lights[side][i], 0x5A, sizeof(TestLight));
+        TestLight* item = new (g_lights[side][i]) TestLight;
         item->side = side;
         item->index = (int)i;
     }
@@ -168,28 +210,72 @@ template <size_t N> static void* item_at(unsigned char (&pool)[kPool][N], int si
     return pool[std::min(i, (unsigned)kPool - 1)];
 }
 
+// An item's fields on each side. A short name is compared to its terminator: the database's buffer is copied whole, and past the terminator it is stack.
+static std::string name8(const char* n) { return std::string(n, strnlen(n, 8)); }
+
+static void same_image(const AtImage* x, const AtImage* y, const void* xdb, const void* ydb) {
+    eqs("image's name", name8(x->m_name).c_str(), name8(y->m_name).c_str());
+    eq("image's flags", x->m_flags, y->m_flags);
+    eq("image's format", x->m_format, y->m_format);
+    eq("image's +14", x->m_unknown14, y->m_unknown14);
+    eq("image's +16", x->m_unknown16, y->m_unknown16);
+    eq("image's list", x->m_materials == (const void*)((const char*)xdb + 0x14), y->m_materials == (const void*)((const char*)ydb + 0x14));
+    eq("image's list set", x->m_materials != nullptr, y->m_materials != nullptr);
+    eq("image's material", x->m_material, y->m_material);
+    eq("image's +1E", x->m_unknown1E, y->m_unknown1E);
+    eq("image's rectangle", std::memcmp(&x->m_colorRectangle, &y->m_colorRectangle, sizeof(AtColorRectangle)), 0);
+    eq("image's data", x->m_data != nullptr, y->m_data != nullptr);
+    eq("image's database", x->m_database == xdb, y->m_database == ydb);
+    eq("image's database set", x->m_database != nullptr, y->m_database != nullptr);
+    eq("image's transparent", std::memcmp(&x->m_transparent, &y->m_transparent, 4), 0);
+}
+
+static void same_float(const char* what, float o, float r);
+
+static void same_font(const AtGrI2DFont* x, const AtGrI2DFont* y, const void* xdb, const void* ydb) {
+    eqs("font's name", name8(x->m_name).c_str(), name8(y->m_name).c_str());
+    eq("font's flags", x->m_flags, y->m_flags);
+    eq("font's count", x->m_count, y->m_count);
+    eq("font's +14", x->m_unknown14, y->m_unknown14);
+    eq("font's database", x->m_database == xdb, y->m_database == ydb);
+    eq("font's database set", x->m_database != nullptr, y->m_database != nullptr);
+    eq("font's list", x->m_materials == (const void*)((const char*)xdb + 0x14), y->m_materials == (const void*)((const char*)ydb + 0x14));
+    eq("font's list set", x->m_materials != nullptr, y->m_materials != nullptr);
+    same_float("font's kerning", x->m_kerning, y->m_kerning);
+    same_float("font's leading", x->m_leading, y->m_leading);
+    same_float("font's scale x", x->m_scaleX, y->m_scaleX);
+    same_float("font's scale y", x->m_scaleY, y->m_scaleY);
+    eq("font's rectangle", std::memcmp(&x->m_colorRectangle, &y->m_colorRectangle, sizeof(AtColorRectangle)), 0);
+    eq("font's material", x->m_material, y->m_material);
+    eq("font's +44", std::memcmp(x->m_unknown44, y->m_unknown44, sizeof x->m_unknown44), 0);
+    eq("font's format", x->m_format, y->m_format);
+    eq("font's characters", x->m_chars != nullptr, y->m_chars != nullptr);
+    if (x->m_chars && y->m_chars && x->m_count == y->m_count && x->m_count < 0x10000) eq("font's characters", std::memcmp(x->m_chars, y->m_chars, x->m_count * sizeof(AtGrI2DFontChar)), 0);
+    eq("font's transparent", std::memcmp(&x->m_transparent, &y->m_transparent, 4), 0);
+}
+
 // ---- the abstract databases on each side ------------------------------------------------------------------------------
 
 class TestImageDb : public AtImageDatabase {
 public:
-    void MakeItems() override { g_log[1].add('M', m_count); make_items<TestImage>(g_images[1], 1, m_count); }
+    void MakeItems() override { g_log[1].add('M', m_count); make_items(g_images[1], 1, m_count, make_image); }
     void OnReady(AtMaterialOwner* owner) override { g_log[1].add('Y', owner == g_own[1]); g_log[1].add('y', m_group != nullptr); }
-    AtImageItem* ImageAt(unsigned i) override { return (AtImageItem*)(TestImage*)item_at(g_images[1], 1, i); }
+    AtImage* ImageAt(unsigned i) override { return (AtImage*)(TestImage*)item_at(g_images[1], 1, i); }
 };
-static void __fastcall oi_make(AtImageDatabase* s, void*) { g_log[0].add('M', s->m_count); make_items<TestImage>(g_images[0], 0, s->m_count); }
+static void __fastcall oi_make(AtImageDatabase* s, void*) { g_log[0].add('M', s->m_count); make_items(g_images[0], 0, s->m_count, make_image); }
 static void __fastcall oi_ready(AtImageDatabase* s, void*, AtMaterialOwner* owner) { g_log[0].add('Y', owner == g_own[0]); g_log[0].add('y', s->m_group != nullptr); }
-static void* __fastcall oi_at(void*, void*, unsigned i) { return (AtImageItem*)(TestImage*)item_at(g_images[0], 0, i); }
+static void* __fastcall oi_at(void*, void*, unsigned i) { return item_at(g_images[0], 0, i); }
 static const void* g_image_table[6] = {(const void*)(uintptr_t)0x00029FF0, (const void*)(uintptr_t)0x00029F00, (const void*)oi_make, (const void*)oi_ready, (const void*)oi_at, (const void*)(uintptr_t)0x000AB720};
 
 class TestFontDb : public AtFontDatabase {
 public:
     void OnReady(AtMaterialOwner* owner) override { g_log[1].add('Y', owner == g_own[1]); g_log[1].add('y', m_group != nullptr); }
-    void MakeFonts2D() override { g_log[1].add('M', m_count); g_log[1].add('y', m_group != nullptr); make_items<TestFont>(g_fonts[1], 1, m_count); }
-    AtFontItem* Font2DAt(unsigned i) override { return (AtFontItem*)(TestFont*)item_at(g_fonts[1], 1, i); }
+    void MakeFonts2D() override { g_log[1].add('M', m_count); g_log[1].add('y', m_group != nullptr); make_items(g_fonts[1], 1, m_count, make_font); }
+    AtGrI2DFont* Font2DAt(unsigned i) override { return (AtGrI2DFont*)(TestFont*)item_at(g_fonts[1], 1, i); }
 };
 static void __fastcall of_ready(AtFontDatabase* s, void*, AtMaterialOwner* owner) { g_log[0].add('Y', owner == g_own[0]); g_log[0].add('y', s->m_group != nullptr); }
-static void __fastcall of_make(AtFontDatabase* s, void*) { g_log[0].add('M', s->m_count); g_log[0].add('y', s->m_group != nullptr); make_items<TestFont>(g_fonts[0], 0, s->m_count); }
-static void* __fastcall of_at(void*, void*, unsigned i) { return (AtFontItem*)(TestFont*)item_at(g_fonts[0], 0, i); }
+static void __fastcall of_make(AtFontDatabase* s, void*) { g_log[0].add('M', s->m_count); g_log[0].add('y', s->m_group != nullptr); make_items(g_fonts[0], 0, s->m_count, make_font); }
+static void* __fastcall of_at(void*, void*, unsigned i) { return item_at(g_fonts[0], 0, i); }
 static const void* g_font_table[8] = {(const void*)(uintptr_t)0x0002A500, (const void*)(uintptr_t)0x0002A410, (const void*)of_ready, (const void*)of_make, (const void*)(uintptr_t)0x000AB720, (const void*)(uintptr_t)0x000447F0, (const void*)of_at, (const void*)(uintptr_t)0x000AB720};
 
 class TestLightDb : public AtLightDatabase {
@@ -202,7 +288,7 @@ static void do_make_lights(int side, AtLightDatabase* s, AtMaterialOwner* owner)
     g_log[side].add('m', owner == g_own[side]);
     g_log[side].add('y', s->m_group != nullptr);
     if (g_keep_lights) return;
-    make_items<TestLight>(g_lights[side], side, s->m_count);
+    make_lights_in(side, s->m_count);
     for (unsigned i = 0; i < std::min(s->m_count, (unsigned)kPool); i++) ((TestLight*)g_lights[side][i])->m_owner = nullptr;
 }
 void TestLightDb::MakeLights(AtMaterialOwner* owner) { do_make_lights(1, this, owner); }
@@ -336,6 +422,7 @@ static void gather(const std::vector<unsigned char>& d, std::set<std::string>& n
 // ---- one format, as its object on each side ----------------------------------------------------------------------------
 
 static unsigned g_items_seen;
+static unsigned g_bodies_seen[2];  // image and font bodies compared field by field
 
 template <class Db> static Db* raw_object(size_t size, unsigned char fill) {
     unsigned char* p = (unsigned char*)std::malloc(size);
@@ -536,6 +623,8 @@ struct Agi {
         eq("demand count", *(unsigned*)(uintptr_t)0x002C6360, AtImageDatabase::s_demandLoadCount);
         same_map(o, r, g_images[0], g_images[1]);
         same_table(o, r, g_own[0]->m_images, g_own[1]->m_images, g_own[0]->m_imageSpaces, g_own[1]->m_imageSpaces);
+        for (unsigned i = 0; i < std::min(std::min(o->m_count, r->m_count), (unsigned)kPool); i++) same_image((const AtImage*)(const TestImage*)g_images[0][i], (const AtImage*)(const TestImage*)g_images[1][i], o, r);
+        g_bodies_seen[0] += std::min(o->m_count, (unsigned)kPool);
     }
     static void more(Db* o, Db* r) { same_directory_calls<Db>(o, r, 0x0002A450, 0x00029F40, &Db::PushDirectory, &Db::PopDirectory); }
 };
@@ -571,8 +660,21 @@ struct Agf {
         eq("demand count", *(unsigned*)(uintptr_t)0x002C636C, AtFontDatabase::s_demandLoadCount);
         same_map(o, r, g_fonts[0], g_fonts[1]);
         same_table(o, r, g_own[0]->m_fonts, g_own[1]->m_fonts, g_own[0]->m_fontSpaces, g_own[1]->m_fontSpaces);
+        for (unsigned i = 0; i < std::min(std::min(o->m_count, r->m_count), (unsigned)kPool); i++) same_font((const AtGrI2DFont*)(const TestFont*)g_fonts[0][i], (const AtGrI2DFont*)(const TestFont*)g_fonts[1][i], o, r);
+        g_bodies_seen[1] += std::min(o->m_count, (unsigned)kPool);
     }
-    static void more(Db* o, Db* r) { same_directory_calls<Db>(o, r, 0x0002A450, 0x00029F40, &Db::PushDirectory, &Db::PopDirectory); }
+    static void more(Db* o, Db* r) {
+        same_directory_calls<Db>(o, r, 0x0002A450, 0x00029F40, &Db::PushDirectory, &Db::PopDirectory);
+        // The search by halves on each table read, for every code to 0x1FF and a few above.
+        typedef int(__fastcall* FnFindChar)(void*, void*, unsigned short);
+        for (unsigned i = 0; i < std::min(std::min(o->m_count, r->m_count), (unsigned)kPool); i++) {
+            AtGrI2DFont* x = (AtGrI2DFont*)g_fonts[0][i];
+            AtGrI2DFont* y = (AtGrI2DFont*)(TestFont*)g_fonts[1][i];
+            if (!x->m_chars || !y->m_chars || x->m_count != y->m_count || x->m_count > 0x10000) continue;
+            for (unsigned code = 0; code < 0x200; code++) eq("character found", at<FnFindChar>(0x000FE950)(x, nullptr, (unsigned short)code), y->FindCharacter((unsigned short)code));
+            for (unsigned code : {0x7FFFu, 0xFFE9u, 0xFFFFu}) eq("character found", at<FnFindChar>(0x000FE950)(x, nullptr, (unsigned short)code), y->FindCharacter((unsigned short)code));
+        }
+    }
 };
 
 struct Agl {
@@ -813,6 +915,11 @@ static void run_written() {
         "Image[1]\n{\n Image \"A\"\n {\n }\n",
         "Image\n{\n}\n",
         "MatAssignment[1]\n{\n \"M\"\n}\nMatAssignment[1]\n{\n \"N\"\n}\n",
+        // Every word of an image's body, and what is not one.
+        "MatAssignment[2]\n{\n \"M\"\n \"N\"\n}\nImage[3]\n{\n Image \"A\"\n {\n MatAssignment 1\n TransparentColor 10 20 300\n ColorValueRectangle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16\n BmpSource\n FlipTextureHorizontally\n FlipTextureVertically\n }\n"
+        " Image \"B\"\n {\n MatAssignment 2\n DdsSource\n MpegMacroBlocks\n InfrequentModify\n FrequentModify\n }\n Image \"C\"\n {\n PlatformSource\n Tm2Source\n DemandLoad\n }\n}\n",
+        "Image[4]\n{\n Image \"A\"\n {\n TplSource\n }\n Image \"B\"\n {\n PntSource\n TgaSource\n }\n Image \"C\"\n {\n Image\n NameSpace\n 5\n \"M\"\n MatAssignment 0\n }\n Image \"D\"\n {\n FrequentModify\n BmpSource\n TgaSource\n DdsSource\n }\n}\n",
+        "MatAssignment[1]\n{\n \"M\"\n}\nImage[2]\n{\n Image \"A\"\n {\n MatAssignment 65536\n }\n Image \"B\"\n {\n MatAssignment 65535\n PlatformSource\n BmpSource\n }\n}\n",
     };
     RUN_LIST(Agi, agi);
 
@@ -837,6 +944,11 @@ static void run_written() {
         "Font[1]\nOther\n",
         "Font[1]\nFont2D[1]\n{\n Other \"A\"\n {\n }\n}\n",
         "Font[1]\nFont2D[1]\n{\n Font2D \"A\"\n {\n }\n",
+        // Every word of a font's body, and what is not one.
+        "Font[2]\nMatAssignment[2]\n{\n \"M\"\n \"N\"\n}\nFont2D[2]\n{\n Font2D \"A\"\n {\n Kerning 1.5\n Leading -2.25\n Scale 0.5 3.0\n ColorValueRectangle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16\n ColorRectangleCharX\n"
+        " ColorRectangleCharY\n MatAssignment 1\n TransparentColor 7 8 9\n BmpSource\n }\n Font2D \"B\"\n {\n MatAssignment 2\n FrequentModify\n TgaSource\n InfrequentModify\n DemandLoad\n }\n}\n",
+        "Font[3]\nFont2D[3]\n{\n Font2D \"A\"\n {\n CharacterSet[6]\n {\n \"a b\" 10\n 32 \"\xE9\"\n }\n Tm2Source\n }\n Font2D \"B\"\n {\n CharacterSet[3]\n {\n 65 Kerning 1.5 66\n 67\n }\n CharacterSet[1]\n {\n 70000\n }\n TplSource\n }\n"
+        " Font2D \"C\"\n {\n CharacterSet[0]\n {\n }\n Font\n Font2D\n 5\n \"M\"\n 1.5\n FrequentModify\n }\n}\n",
     };
     RUN_LIST(Agf, agf);
 
@@ -1252,6 +1364,355 @@ static void run_parts() {
     }
 }
 
+// ---- image and font bodies called directly ------------------------------------------------------------------------------
+//
+// What loading does not reach, or reaches only once: a second read over an item, the reads that make an item with no file, the search by halves, the strips, the pass to the graphics layer, the
+// destructors. Each pair of calls is on items made as each side's database makes them.
+
+typedef void(__fastcall* FnImgInit)(void*, void*, void*, void*, const char*, unsigned);
+typedef void(__fastcall* FnFontAlloc)(void*, void*, void*, void*, const char*, void*, unsigned);
+typedef void(__fastcall* FnSetColor)(void*, void*, const void*);
+typedef unsigned(__fastcall* FnSplit)(void*, void*, unsigned, unsigned, unsigned, unsigned, unsigned*);
+typedef int(__fastcall* FnPass)(void*, void*, void*, const void*, int);
+typedef int(__fastcall* FnFindChar)(void*, void*, unsigned short);
+typedef void(__fastcall* FnBuild)(void*, void*, void*);
+
+// What the pass to the graphics layer reaches, on both sides: the harness's, by slots 16 and 12.
+class TestSink : public AtGrNameSink {
+public:
+    int TakeName(const char* name, int value) override {
+        g_log[g_side].add('K', value);
+        for (int i = 0; i < 8 && name[i] != 0; i++) g_log[g_side].add('k', (unsigned char)name[i]);
+        return value * 3 + 1;
+    }
+};
+class TestDevice : public AtGrDevice {
+public:
+    TestSink sink;
+    AtGrNameSink* NameSink() override { g_log[g_side].add('G'); return &sink; }
+};
+
+// Characters for a font made with no file. Its count is the difference of its two byte pointers.
+class TestSource : public AtGrCharacterSource {
+public:
+    std::vector<unsigned short> codes;
+    std::vector<char> bytes;
+    explicit TestSource(std::vector<unsigned short> c) : codes(std::move(c)), bytes(codes.size() + 1) {
+        m_unknown04 = 0x77;
+        m_begin = bytes.data();
+        m_end = bytes.data() + codes.size();
+    }
+    unsigned short At(unsigned int index) override {
+        g_log[g_side].add('S', index);
+        return index < codes.size() ? codes[index] : 0xBEEF;
+    }
+};
+
+// A font with nothing over the base class, for the base's own destructors.
+class TestBaseFont : public AtFont {
+public:
+    void ReadWord(AtMaterialOwner*, AtIoTokenizer*, int) override {}
+    void BuildCharacterSet(AtGrCharacterSource*) override {}
+    int FindCharacter(unsigned short) override { return 0; }
+    void Slot3() override {}
+    void Slot4() override {}
+    void OnLoaded(AtMaterialOwner*) override {}
+    void FreeData() override {}
+};
+
+static void same_raw(const char* what, const void* x, const void* y, size_t n) { eq(what, std::memcmp((const char*)x + 4, (const char*)y + 4, n - 4), 0); }
+
+static void run_bodies() {
+    g_context = "bodies";
+    Env env({"M", "N"}, {"Space"});
+    g_fill = 0xCD;
+    AtImageDatabase* dio = Agi::make(0, 0xCD);
+    AtImageDatabase* dir = Agi::make(1, 0xCD);
+    AtFontDatabase* dfo = Agf::make(0, 0xCD);
+    AtFontDatabase* dfr = Agf::make(1, 0xCD);
+    // Two materials in each list, for MatAssignment's test; ReadWord reads only the count.
+    dio->m_materials.m_count = dir->m_materials.m_count = 2;
+    dfo->m_materials.m_count = dfr->m_materials.m_count = 2;
+
+    // ---- images
+    alignas(8) unsigned char io[sizeof(TestImage)], ir[sizeof(TestImage)];
+    std::memset(io, 0x5A, sizeof io);
+    std::memset(ir, 0x5A, sizeof ir);
+    make_image(0, io);
+    make_image(1, ir);
+    AtImage* xo = (AtImage*)io;
+    AtImage* xr = (AtImage*)(TestImage*)ir;
+    same_raw("image from new", io, ir, sizeof(AtImage));
+    static const char* const image_texts[] = {
+        "{\n TgaSource\n MatAssignment 1\n TransparentColor 1 2 3\n FlipTextureVertically\n}\n",
+        "{\n DemandLoad\n PlatformSource\n ColorValueRectangle 9 8 7 6 5 4 3 2 1 0 255 256 -1 4 5 6\n}\n",
+        "{\n MatAssignment 2\n PntSource\n Tm2Source\n MpegMacroBlocks\n}\n",
+        "{\n MatAssignment 65537\n FrequentModify\n TplSource\n InfrequentModify\n BmpSource\n}\n",
+        "{\n MatAssignment -1\n DdsSource\n FlipTextureHorizontally\n Image\n NameSpace\n 5\n \"M\"\n 1.5\n}\n",
+        "Other\n{\n}\n",
+        "{\n MatAssignment 1\n TransparentColor 4 5 6\n MpegMacroBlocks\n}\n",
+    };
+    for (const char* text : image_texts) {
+        // Each over the one before, which is emptied first.
+        Direct da(text, AtImageDatabase::s_keywords, AtImageDatabase::kKeywordCount), db(text, AtImageDatabase::s_keywords, AtImageDatabase::kKeywordCount);
+        { On on(0); at<FnItemRead>(0x000586A0)(xo, nullptr, g_own[0], dio, "Name", &da.tokenizer); }
+        { On on(1); xr->AtImage::Read(g_own[1], dir, "Name", &db.tokenizer); }
+        same_image(xo, xr, dio, dir);
+        compare_logs((std::string("image read over [") + text + "]").c_str());
+    }
+    // Made with no file: over a read image, then over a made one, with flags from every bit.
+    for (unsigned flags : {0u, 0xFFFFFFFFu, 0x00000E10u, 0x00000200u, 0x12345678u}) {
+        { On on(0); at<FnImgInit>(0x00057E80)(xo, nullptr, g_own[0], dio, "LongName9", flags); }
+        { On on(1); xr->Init(g_own[1], dir, "LongName9", flags); }
+        same_image(xo, xr, dio, dir);
+        compare_logs("image made");
+    }
+    // The transparent colour, set and cleared.
+    {
+        const AtColor c = {11, 22, 33, 44};
+        { On on(0); at<FnSetColor>(0x00058620)(xo, nullptr, &c); }
+        { On on(1); xr->SetTransparentColor(&c); }
+        same_image(xo, xr, dio, dir);
+        { On on(0); at<Fn0>(0x00057E10)(xo, nullptr); }
+        { On on(1); xr->ClearTransparentColor(); }
+        same_image(xo, xr, dio, dir);
+        compare_logs("transparent");
+    }
+    // The pixels: kept when they are not the image's own, freed when they are, and freed by Free whatever.
+    for (const bool own : {false, true}) {
+        xo->m_data = std::malloc(16);
+        xr->m_data = std::malloc(16);
+        if (own) { xo->m_flags |= AtImage::kOwnsData; xr->m_flags |= AtImage::kOwnsData; }
+        else { xo->m_flags &= ~AtImage::kOwnsData; xr->m_flags &= ~AtImage::kOwnsData; }  // Init has just set every bit.
+        { On on(0); at<Fn0>(0x00057ED0)(xo, nullptr); }
+        { On on(1); xr->FreeData(); }
+        same_image(xo, xr, dio, dir);
+        compare_logs("image's data");
+        xo->m_unknown14 = xr->m_unknown14 = 0x1111;
+        xo->m_unknown16 = xr->m_unknown16 = 0x2222;
+        xo->m_unknown1E = xr->m_unknown1E = 0x3333;
+        { On on(0); at<Fn0>(0x00057F00)(xo, nullptr); }
+        { On on(1); xr->AtImage::Free(); }
+        same_image(xo, xr, dio, dir);
+        compare_logs("image freed");
+    }
+    // The strips. this is not read.
+    {
+        static unsigned oo[4096], rr[4096];
+        for (unsigned minimum : {0u, 1u, 3u, 4u, 5u, 8u, 16u, 100u}) {
+            for (unsigned maximum : {0u, 4u, 8u, 9u, 64u, 100u, 256u, 0x80000000u}) {
+                for (unsigned total : {0u, 1u, 3u, 4u, 5u, 8u, 63u, 64u, 65u, 100u, 1000u, 4000u}) {
+                    std::memset(oo, 0xEE, sizeof oo);
+                    std::memset(rr, 0xEE, sizeof rr);
+                    const unsigned a = at<FnSplit>(0x00057DC0)(nullptr, nullptr, minimum, maximum, total, 0x5A5A, oo);
+                    const unsigned b = xr->SplitStrips(minimum, maximum, total, 0x5A5A, rr);
+                    eq("strips", a, b);
+                    eq("strips' widths", std::memcmp(oo, rr, sizeof oo), 0);
+                }
+            }
+        }
+    }
+    // The pass to the graphics layer. this is not read; the font's slot 13 is the same body.
+    {
+        TestDevice device;
+        std::strcpy(xo->m_name, "Pass");
+        std::strcpy(xr->m_name, "Pass");
+        int a, b;
+        { On on(0); a = at<FnPass>(0x00057FB0)(nullptr, nullptr, &device, xo, 41); }
+        { On on(1); b = xr->PassName(&device, xr, 41); }
+        eq("passed", a, b);
+        compare_logs("image's name passed");
+    }
+    // The destructors: the complete one, then the deleting one, without and with the delete.
+    {
+        xo->m_data = std::malloc(4);
+        xr->m_data = std::malloc(4);
+        { On on(0); at<Fn0>(0x00058650)(xo, nullptr); }
+        { On on(1); xr->AtImage::~AtImage(); }
+        same_image(xo, xr, nullptr, nullptr);
+        compare_logs("image destroyed");
+        for (unsigned flags : {0u, 1u}) {
+            void* po = std::malloc(sizeof(TestImage));
+            void* pr = std::malloc(sizeof(TestImage));
+            std::memset(po, 0x5A, sizeof(TestImage));
+            std::memset(pr, 0x5A, sizeof(TestImage));
+            make_image(0, po);
+            make_image(1, pr);
+            ((AtImage*)po)->m_data = std::malloc(4);
+            ((AtImage*)(TestImage*)pr)->m_data = std::malloc(4);
+            { On on(0); eq("returns this", (uintptr_t)at<FnDel>(0x00058A30)(po, nullptr, flags), (uintptr_t)po); }
+            { On on(1); if (flags) delete (AtImage*)(TestImage*)pr; else ((AtImage*)(TestImage*)pr)->AtImage::~AtImage(); }
+            if (!flags) { same_image((AtImage*)po, (AtImage*)(TestImage*)pr, nullptr, nullptr); std::free(po); std::free(pr); }
+            compare_logs("image deleted");
+        }
+    }
+
+    // ---- fonts
+    alignas(8) unsigned char fo_[sizeof(TestFont)], fr_[sizeof(TestFont)];
+    std::memset(fo_, 0x5A, sizeof fo_);
+    std::memset(fr_, 0x5A, sizeof fr_);
+    make_font(0, fo_);
+    make_font(1, fr_);
+    AtGrI2DFont* fo = (AtGrI2DFont*)fo_;
+    AtGrI2DFont* fr = (AtGrI2DFont*)(TestFont*)fr_;
+    same_raw("font from new", fo_, fr_, sizeof(AtGrI2DFont));
+    static const char* const font_texts[] = {
+        "{\n Kerning 1.5\n Leading -2.25\n Scale 0.5 3.0\n ColorRectangleCharX\n MatAssignment 1\n TransparentColor 7 8 9\n FrequentModify\n BmpSource\n TgaSource\n FrequentModify\n}\n",
+        "{\n CharacterSet[4]\n {\n 65 \"b c\"\n }\n ColorRectangleCharY\n ColorValueRectangle 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16\n MatAssignment 2\n FrequentModify\n TgaSource\n InfrequentModify\n}\n",
+        "{\n CharacterSet[3]\n {\n 10 Kerning 1.5 32\n 300\n }\n CharacterSet[2]\n {\n \"\xE9\xFF\"\n }\n Tm2Source\n DemandLoad\n}\n",
+        "{\n CharacterSet[0]\n {\n }\n TplSource\n MatAssignment -1\n Font\n Font2D\n 5\n \"M\"\n}\n",
+        "{\n Kerning 2\n Scale 1 2\n}\n",
+        "Other\n{\n}\n",
+        "{\n Kerning 2.5\n Scale 1.5 2.5\n Leading 0.75\n}\n",
+    };
+    for (const char* text : font_texts) {
+        Direct da(text, AtFontDatabase::s_keywords, AtFontDatabase::kKeywordCount), db(text, AtFontDatabase::s_keywords, AtFontDatabase::kKeywordCount);
+        { On on(0); at<FnItemRead>(0x000415A0)(fo, nullptr, g_own[0], dfo, "Name", &da.tokenizer); }
+        { On on(1); fr->AtFont::Read(g_own[1], dfr, "Name", &db.tokenizer); }
+        same_font(fo, fr, dfo, dfr);
+        compare_logs((std::string("font read over [") + text + "]").c_str());
+    }
+    // The search by halves: on what was read last, and on tables made with no file, sorted and not, over the one before.
+    static const std::vector<std::vector<unsigned short>> sources = {
+        {}, {65}, {10}, {32, 65, 66, 67, 0xFFE9}, {67, 66, 65, 10, 32}, {1, 3, 5, 7, 9, 11, 13, 15, 17}, {65, 65, 65, 66}, {0xFFFF, 0, 0x8000, 0x7FFF},
+    };
+    const auto same_search = [&](const char* what) {
+        for (unsigned code = 0; code < 0x110; code++) eq(what, at<FnFindChar>(0x000FE950)(fo, nullptr, (unsigned short)code), fr->FindCharacter((unsigned short)code));
+        for (unsigned code : {0x7FFFu, 0x8000u, 0xFFE9u, 0xFFFFu}) eq(what, at<FnFindChar>(0x000FE950)(fo, nullptr, (unsigned short)code), fr->FindCharacter((unsigned short)code));
+    };
+    same_search("found after read");
+    for (const auto& codes : sources) {
+        TestSource so(codes), sr(codes);
+        { On on(0); at<FnFontAlloc>(0x00041610)(fo, nullptr, g_own[0], dfo, "Made", &so, 0x10 | (unsigned)codes.size()); }
+        { On on(1); fr->Allocate(g_own[1], dfr, "Made", &sr, 0x10 | (unsigned)codes.size()); }
+        same_font(fo, fr, dfo, dfr);
+        compare_logs("font made");
+        same_search("found");
+    }
+    // The table built on its own, over a count set by hand: what was held is left, so it is freed here first.
+    {
+        TestSource so({32, 10, 77}), sr({32, 10, 77});
+        for (unsigned i = 0; i < 5; i++) fo->m_unknown44[i] = fr->m_unknown44[i] = 0x100 + i;
+        { On on(0); at<Fn0>(0x000FEA50)(fo, nullptr); }
+        { On on(1); fr->AtGrI2DFont::Free(); }
+        fo->m_count = fr->m_count = 3;
+        { On on(0); at<FnBuild>(0x000FE880)(fo, nullptr, &so); }
+        { On on(1); fr->BuildCharacterSet(&sr); }
+        same_font(fo, fr, dfo, dfr);
+        compare_logs("characters built");
+        // No room for them: the raise, then the zeroing through null on both sides.
+        TestSource so2({1}), sr2({1});
+        fo->m_count = fr->m_count = 1;
+        { On on(0); at<Fn0>(0x000FEA50)(fo, nullptr); }
+        { On on(1); fr->AtGrI2DFont::Free(); }
+        fo->m_count = fr->m_count = 1;
+        g_fail_alloc = true;
+        const bool oc = guarded([&] { On on(0); at<FnBuild>(0x000FE880)(fo, nullptr, &so2); });
+        const bool rc = guarded([&] { On on(1); fr->BuildCharacterSet(&sr2); });
+        g_fail_alloc = false;
+        g_recording = false;
+        eq("no room for characters: crash", oc, rc);
+        compare_logs("no room for characters");
+        fo->m_chars = fr->m_chars = nullptr;
+    }
+    // The transparent colour.
+    {
+        const AtColor c = {5, 6, 7, 8};
+        { On on(0); at<FnSetColor>(0x000FFF30)(fo, nullptr, &c); }
+        { On on(1); fr->SetTransparentColor(&c); }
+        same_font(fo, fr, dfo, dfr);
+        { On on(0); at<Fn0>(0x000FE9F0)(fo, nullptr); }
+        { On on(1); fr->ClearTransparentColor(); }
+        same_font(fo, fr, dfo, dfr);
+        compare_logs("font's transparent");
+    }
+    // The table: kept when it is not the font's own; freed when it is, the pointer left behind.
+    for (const bool own : {false, true}) {
+        TestSource so({65, 66}), sr({65, 66});
+        { On on(0); at<FnFontAlloc>(0x00041610)(fo, nullptr, g_own[0], dfo, "Own", &so, own ? 0x10u : 0u); }
+        { On on(1); fr->Allocate(g_own[1], dfr, "Own", &sr, own ? 0x10u : 0u); }
+        { On on(0); at<Fn0>(0x000FEA30)(fo, nullptr); }
+        { On on(1); fr->FreeData(); }
+        eq("font's flags", fo->m_flags, fr->m_flags);
+        eq("table left behind", fo->m_chars != nullptr, fr->m_chars != nullptr);
+        compare_logs("font's data");
+        if (own) fo->m_chars = fr->m_chars = nullptr;  // Freed: a later Free would free it again, on both sides.
+    }
+    // The pass, through the font's slot 13.
+    {
+        TestDevice device;
+        std::strcpy(fo->m_name, "FPass");
+        std::strcpy(fr->m_name, "FPass");
+        int a, b;
+        { On on(0); a = at<FnPass>(0x00057FB0)(nullptr, nullptr, &device, fo, -7); }
+        { On on(1); b = fr->PassName(&device, fr, -7); }
+        eq("passed", a, b);
+        compare_logs("font's name passed");
+    }
+    // The base's Free, on its own.
+    {
+        fo->m_unknown14 = fr->m_unknown14 = 0x4444;
+        { On on(0); at<Fn0>(0x00042090)(fo, nullptr); }
+        { On on(1); fr->AtFont::Free(); }
+        same_font(fo, fr, dfo, dfr);
+        compare_logs("font's base freed");
+    }
+    // The destructors: the 2D font's, holding a table, and the base's.
+    {
+        TestSource so({1, 2}), sr({1, 2});
+        { On on(0); at<FnFontAlloc>(0x00041610)(fo, nullptr, g_own[0], dfo, "Gone", &so, 0); }
+        { On on(1); fr->Allocate(g_own[1], dfr, "Gone", &sr, 0); }
+        compare_logs("font before destroyed");
+        { On on(0); at<Fn0>(0x000FFF60)(fo, nullptr); }
+        { On on(1); fr->AtGrI2DFont::~AtGrI2DFont(); }
+        same_font(fo, fr, nullptr, nullptr);
+        compare_logs("font destroyed");
+        for (unsigned flags : {0u, 1u}) {
+            void* po = std::malloc(sizeof(TestFont));
+            void* pr = std::malloc(sizeof(TestFont));
+            std::memset(po, 0x5A, sizeof(TestFont));
+            std::memset(pr, 0x5A, sizeof(TestFont));
+            make_font(0, po);
+            make_font(1, pr);
+            TestSource so2({9}), sr2({9});
+            { On on(0); at<FnFontAlloc>(0x00041610)(po, nullptr, g_own[0], dfo, "Del", &so2, 0); }
+            { On on(1); ((AtGrI2DFont*)(TestFont*)pr)->Allocate(g_own[1], dfr, "Del", &sr2, 0); }
+            { On on(0); eq("returns this", (uintptr_t)at<FnDel>(0x00100140)(po, nullptr, flags), (uintptr_t)po); }
+            { On on(1); if (flags) delete (AtGrI2DFont*)(TestFont*)pr; else ((AtGrI2DFont*)(TestFont*)pr)->AtGrI2DFont::~AtGrI2DFont(); }
+            if (!flags) { same_font((AtGrI2DFont*)po, (AtGrI2DFont*)(TestFont*)pr, nullptr, nullptr); std::free(po); std::free(pr); }
+            compare_logs("font deleted");
+        }
+        // The base class's own: its constructor, 0x00042050, and destructors.
+        for (unsigned flags : {2u, 0u, 1u}) {
+            void* po = std::malloc(sizeof(TestBaseFont));
+            void* pr = std::malloc(sizeof(TestBaseFont));
+            std::memset(po, 0x5A, sizeof(TestBaseFont));
+            std::memset(pr, 0x5A, sizeof(TestBaseFont));
+            at<Fn0>(0x00042050)(po, nullptr);
+            new (pr) TestBaseFont;
+            same_raw("base font from new", po, pr, sizeof(AtFont));
+            std::strcpy(((AtFont*)po)->m_name, "Base");
+            std::strcpy(((AtFont*)(TestBaseFont*)pr)->m_name, "Base");
+            ((AtFont*)po)->m_kerning = ((AtFont*)(TestBaseFont*)pr)->m_kerning = 4.0f;
+            if (flags == 2) {
+                { On on(0); at<Fn0>(0x000420C0)(po, nullptr); }
+                { On on(1); ((AtFont*)(TestBaseFont*)pr)->AtFont::~AtFont(); }
+            } else {
+                { On on(0); eq("returns this", (uintptr_t)at<FnDel>(0x000420F0)(po, nullptr, flags), (uintptr_t)po); }
+                { On on(1); if (flags) delete (AtFont*)(TestBaseFont*)pr; else ((AtFont*)(TestBaseFont*)pr)->AtFont::~AtFont(); }
+            }
+            if (flags != 1) { same_raw("base font gone", po, pr, sizeof(AtFont)); std::free(po); std::free(pr); }
+            compare_logs("base font gone");
+        }
+    }
+
+    dio->m_materials.m_count = dir->m_materials.m_count = 0;
+    dfo->m_materials.m_count = dfr->m_materials.m_count = 0;
+    { On on(0); Agi::del(0, dio, 1); Agf::del(0, dfo, 1); }
+    { On on(1); Agi::del(1, dir, 1); Agf::del(1, dfr, 1); }
+    compare_logs("bodies' databases gone");
+}
+
 // The reads that make room, with none to be had: the raise, and whatever follows the same on both sides.
 template <class T> static void run_broken(const char* text) {
     std::vector<unsigned char> data = bytes(text);
@@ -1285,7 +1746,7 @@ static void run_failures() {
     typedef void(__cdecl* Set)(void*);
     struct Heap { uint32_t va; void** mine; } heaps[] = {
         {0x002C63E0, &AtMatAssignment::s_heap}, {0x002C6350, &AtMatAssignmentDatabase::s_heap}, {0x002C63E4, &AtGrFrameNumberSet::s_heap}, {0x002C6354, &AtMatAnimationDatabase::s_heap},
-        {0x002C6364, &AtImageDatabase::s_heap}, {0x002C6370, &AtFontDatabase::s_heap}, {0x002C6418, &AtLensFlareDatabase::s_heap}, {0x002C7E24, &AtLensFlare::s_heap},
+        {0x002C6364, &AtImageDatabase::s_heap}, {0x002C6370, &AtFontDatabase::s_heap}, {0x002C6418, &AtLensFlareDatabase::s_heap}, {0x002C7E24, &AtLensFlare::s_heap}, {0x003B1FCC, &AtGrI2DFont::s_heap},
     };
 
     // No heaps: each raise. A demand-loaded item asks for the path on the heap of its database.
@@ -1295,6 +1756,8 @@ static void run_failures() {
     run_text<Agi>(bytes("MatAssignment[1]\n{\n \"M\"\n}\nImage[1]\n{\n Image \"A\"\n {\n DemandLoad\n }\n}\n"), "no heap agi", 0xCD);
     run_text<Agf>(bytes("Font[1]\nMatAssignment[1]\n{\n \"M\"\n}\nFont2D[1]\n{\n Font2D \"A\"\n {\n DemandLoad\n }\n}\n"), "no heap agf", 0xCD);
     run_text<Asl>(bytes("LensFlare[1]\n{\n LensFlare \"A\"\n {\n Flare[1]\n {\n Flare\n {\n }\n }\n }\n}\n"), "no heap asl", 0xCD);
+    // A 2D font's characters, on no heap: the raise, then the table on whatever heap is current.
+    run_text<Agf>(bytes("Font[1]\nFont2D[1]\n{\n Font2D \"A\"\n {\n CharacterSet[2]\n {\n 65 66\n }\n }\n}\n"), "no heap agf characters", 0xCD);
     {
         g_context = "no heap: copy";
         g_fill = 0xCD;
@@ -1321,6 +1784,8 @@ static void run_failures() {
     AtLensFlareDatabase::SetHeap(&g_heap_token);
     at<FnSetHeap>(0x00052190)(&g_heap_token);
     AtLensFlare::SetHeap(&g_heap_token);
+    at<FnSetHeap>(0x000FE870)(&g_heap_token);
+    AtGrI2DFont::SetHeap(&g_heap_token);
     g_context = "heaps set";
     for (const Heap& h : heaps) eq("heap", (uintptr_t)*(void**)(uintptr_t)h.va, (uintptr_t)*h.mine);
 
@@ -1492,7 +1957,7 @@ int main(int argc, char** argv) {
     g_ctx_stack[0] = g_fs;
     *(AtIoContext**)(uintptr_t)0x002C6278 = &g_ctx;
     AtIoFileRef::s_context = &g_ctx;
-    for (uint32_t va : {0x002C60B0u, 0x002C63CCu, 0x002C632Cu, 0x002C6274u, 0x002C63E0u, 0x002C6350u, 0x002C63E4u, 0x002C6354u, 0x002C6364u, 0x002C6370u, 0x002C6418u, 0x002C7E24u}) *(void**)(uintptr_t)va = &g_heap_token;
+    for (uint32_t va : {0x002C60B0u, 0x002C63CCu, 0x002C632Cu, 0x002C6274u, 0x002C63E0u, 0x002C6350u, 0x002C63E4u, 0x002C6354u, 0x002C6364u, 0x002C6370u, 0x002C6418u, 0x002C7E24u, 0x003B1FCCu}) *(void**)(uintptr_t)va = &g_heap_token;
     AtIoTokenFile::s_heap = &g_heap_token;
     AtIoStream::s_heap = &g_heap_token;
     GmNameMap::s_heap = &g_heap_token;
@@ -1505,6 +1970,7 @@ int main(int argc, char** argv) {
     AtFontDatabase::s_heap = &g_heap_token;
     AtLensFlareDatabase::s_heap = &g_heap_token;
     AtLensFlare::s_heap = &g_heap_token;
+    AtGrI2DFont::s_heap = &g_heap_token;
 
     if (g_mutate) eq("deliberate", 1, 2);  // Positive control of the harness.
     same_keywords("agn keywords", 0x002B06B0, AtMatAssignmentDatabase::s_keywords, AtMatAssignmentDatabase::kKeywordCount);
@@ -1518,6 +1984,7 @@ int main(int argc, char** argv) {
     run_lists();
     run_sets();
     run_parts();
+    run_bodies();
     run_failures();
 
     g_items_seen = 0;
@@ -1552,6 +2019,7 @@ int main(int argc, char** argv) {
     std::fclose(index);
     report_entries();
     std::printf("loads that crashed the same on both sides: %u\n", g_crashes_seen);
+    std::printf("image bodies compared field by field: %u; font bodies: %u\n", g_bodies_seen[0], g_bodies_seen[1]);
     std::printf("%s: files AGN %u, AGA %u, AGI %u, AGF %u, AGL %u, ASL %u, %u items; %llu comparisons, %d differences\n", g_failures ? "DIFFERENT" : "NO DIFFERENCE OBSERVED", g_files[0], g_files[1], g_files[2], g_files[3], g_files[4], g_files[5], g_items_seen, g_checks, g_failures);
     return g_failures ? 1 : 0;
 }

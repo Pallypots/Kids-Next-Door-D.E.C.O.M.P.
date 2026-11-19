@@ -5,6 +5,8 @@
 #include "at/AtIoJam.h"
 #include "at/AtIoTokenizer.h"
 
+void AtFatal(const char* message, int file, int line, int unused);
+
 // Creates the file systems beneath the archives. Only two slots are known. The original's is reached at +0x318 of the owner in the Init parameters.
 class AtIoFileSystemFactory {
 public:
@@ -24,6 +26,8 @@ class AtIoContextDevice {
 public:
     virtual void Unknown0() = 0;
     virtual int Unknown1() = 0;     // slot 1
+    // Slot 2: start-up (0x0008E907) calls it on the space manager's device with (4, 0) and hands the result to 0x0007D070. Not recovered.
+    virtual void* Unknown2(int a, int b) { AtFatal("AtIoContextDevice: slot 2 is not recovered", a, b, 0); return 0; }
 };
 
 // 0x10 bytes. Its users at 0x0007CF00-0x0007D0E9 are not recovered. Created by the mount manager.

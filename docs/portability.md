@@ -103,3 +103,15 @@ The hash divides by the table's size, which a cleared map has as zero. The origi
 * A joint is reached through `AtSceneJointedModelActor::m_joints`, by a cast from a node whose class the code has checked or trusts.
 * `AtSegmentHitList` holds the 8-byte keys and 0x2C-byte hits opaque here, at those sizes on any pointer size. Whoever recovers what is in a hit should check that.
 * `DrawBox`'s and `DrawSphere`'s `instances` is the address of the caller's own argument: one pointer on x64 too.
+
+## Matrices
+
+* x87 to SSE: `double` where the original keeps a value in a register, `float` where it stores, gives its bits at precision 53 with SSE2 arithmetic, on x86 and x64 alike, provided the compiler does **not contract** a multiplication and an addition into a fused one. `src/at/AtMatrix.cpp` turns contraction off for MSVC (`#pragma fp_contract(off)`) and clang (`#pragma STDC FP_CONTRACT OFF`). **GCC ignores the standard pragma and contracts by default** for GNU C++: an ARM64 or x86-64 GCC build needs `-ffp-contract=off` for these files at least, or its results will differ in the last bit. That is a build flag for the integrator to decide; it is not set anywhere yet.
+* Exponent range: x87 at precision 53 still has a 15-bit exponent, so a sum that overflows or underflows a double in the middle would differ. Products of two floats and sums of four cannot reach that, so for these functions it does not arise.
+* An x86 build with `/arch:IA32` (x87 code) would differ: it would quiet signalling NaNs on every float move and round differently. The oracle and verify builds use the default SSE2.
+* Signalling NaNs: `ThroughRegister` relies on float-to-double conversion quieting them, which SSE `cvtss2sd` and ARM64 `fcvt` both do, keeping the payload, as x87 `fld` does.
+
+## Scene lists
+
+* `AtCellPortal::m_vertices` points into a locked vertex array, a host pointer. `AtVertexLock` keeps 0x48 bytes of room past its two known words, for whatever the graphics layer's lock writes there.
+* Counts ahead of arrays are `size_t`, through `AtSceneArray.h`.

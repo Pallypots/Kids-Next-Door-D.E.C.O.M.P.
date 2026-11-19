@@ -1,7 +1,7 @@
 // See include/at/AtAudioDatabase.h. The Xbox classes that a database, its lists and what they list are made of.
 #include "at/AtAudioDatabase.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 
 void AtRaise(int code, int a, int b, int c);
 void AtPushHeap(void* heap);

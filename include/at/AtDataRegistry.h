@@ -5,7 +5,9 @@
 // Loading a file reaches the value classes' slots 0 to 4. Slots 5 to 9 are how the game reads and writes values afterwards; they are not recovered, and stop with a diagnostic. See AtDataComponent.
 #pragma once
 
+#include "at/AtIoTokenizer.h"
 #include "at/AtText.h"
+#include "gm/GmNameMap.h"
 
 class AtDataComponent;
 class AtDataRegistry;
@@ -25,16 +27,18 @@ public:
     int SetRealBounds(float floor, float ceiling);     // 0x0006BB40 -1 and nothing done unless the type holds reals
     int GetIntBounds(int* floor, int* ceiling);        // 0x0006BAD0 0
     int SetFormat(const char* format);                 // 0x0006BB70 frees any before. Allocates its length with no room for the terminator, and copies the terminator: as the original does
+    // 0x0006BDB0, the .ADB reader of a DataComponentDesc (src/at/AtDatabaseManager.cpp, with that format's words). Skips to the first left curly, whatever comes before it. A file that ends first never
+    // returns, as in the original.
+    int Read(AtIoTokenizer* tokenizer);
 
     static void SetHeap(void* heap);                   // 0x0006BAC0
 
-    int m_unknown04;           // +0x04 only cleared here
-    int m_unknown08;           // +0x08 only cleared here
-    unsigned int m_type;       // +0x0C AtDataRegistry::Type
+    char m_name[8];            // +0x04 cleared as two words here; Read (0x0006BDB0) shows it is the name. Not always terminated. An .ADR descriptor has none
+    unsigned int m_type;       // +0x0C AtDataRegistry::Type; 13 untyped. An .ADB Relational gives 12, which no table can hold
     unsigned int m_flags;      // +0x10
     unsigned int m_count;      // +0x14 elements, for the array types
     int m_intFloor;            // +0x18
-    int m_intCeiling;          // +0x1C
+    int m_intCeiling;          // +0x1C for a string, the longest it can be
     float m_realFloor;         // +0x20
     float m_realCeiling;       // +0x24
     char* m_format;            // +0x28
@@ -131,13 +135,18 @@ public:
     static void* s_heap;       // 0x002C9F9C
 };
 
-// The class with vftable 0x00277420, of which only what the loader uses is recovered. Its constructor (near 0x0005EFF0) and other members are not; these members' own constructors stand in. Its other
-// tables and adds (0x0005F0F0, 0x0005F130) take other classes into the same two members, by links elsewhere.
+// The class with vftable 0x00277420, of which only what the loaders use is recovered: the object at offset 0x394 of the class at 0x003B357C, which start-up hands to the .ADD library. Its
+// constructor (near 0x0005EFF0) and other members are not; these members' own constructors stand in. Its other tables and adds (0x0005F0F0, 0x0005F130) take other classes into the same members, by
+// links elsewhere. The .ADR and .ADD work named it twice (AtDataRegistryOwner, AtDataOwner): the database groups at +0x08 and +0x20 run with no gap into the registry groups at +0x44 and +0x58.
 struct AtDataRegistryOwner {
     void Add(AtDataRegistry* registry, const char* space);  // 0x0005F0B0 a null or empty name means the plain group
     void Remove(AtDataRegistry* registry);             // 0x0005F1F0
+    void AddDatabase(GmNameMap* map, const char* space);  // 0x000992D0 a null or empty name means the plain group
 
-    char m_unknown00[0x44];
+    void* m_unknown00;                  // +0x00
+    int m_unknown04;                    // +0x04
+    GmNameMapGroup m_databases;         // +0x08 .ADB managers with no name space
+    GmNameSpaceDb m_databaseSpaces;     // +0x20
     AtDataRegistryGroup m_plain;        // +0x44
     AtDataRegistryNameSpaces m_spaces;  // +0x58
 };
@@ -159,6 +168,12 @@ public:
     void Clamp(unsigned int type, AtDataComponent* value);  // 0x00067A60 into the descriptor's bounds, by the type given, not the value's own
 
     static void SetHeap(void* heap);                   // 0x00066100
+
+    // Called by App's start-up (src/gm/GmApp.cpp) and not recovered: each stops with a diagnostic, in src/gm/GmAppHost.cpp. Names inferred from what start-up does with them.
+    int AttachUnder(AtDataRegistry* parent, const char* path);  // 0x00067D40 m_root under the parent's node at path
+    void Prepare(AtDataRegistryOwner* owner);          // 0x000675B0 the original takes thirteen more arguments; start-up passes zeros
+    void SetFileName(const char* name);                // 0x00066860
+    AtDataLink* FindPath(AtDataLink* from, const char* path, int deep);  // 0x000679E0
 
     int m_unknown04;           // +0x04 never touched
     int m_unknown08;           // +0x08 never touched
@@ -208,6 +223,7 @@ public:
     ~AtDataBoolean() override;                         // slot 0; 0x00069E70 complete, 0x00066200 vector deleting
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006A080
     void Reset() override;                             // slot 3, 0x00069F50
+    int Equals(const AtDataComponent* other) override; // slot 7, 0x0006A0A0 1 if the two values are the same word; other is taken to be of this class. Reached from AtDataRecordDatabase::FindByValue
     int m_value;               // +0x0C
 };
 
@@ -218,6 +234,7 @@ public:
     ~AtDataInt() override;                             // slot 0; 0x00069EA0 complete, 0x00066260 vector deleting
     int Read(AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer) override;  // slot 1, 0x0006A080 folded with AtDataBoolean's
     void Reset() override;                             // slot 3, 0x00069F50 folded
+    int Equals(const AtDataComponent* other) override; // slot 7, 0x0006A0A0 folded with AtDataBoolean's
     int m_value;               // +0x0C
 };
 
@@ -332,6 +349,8 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
+static_assert(offsetof(AtDataDescriptor, m_name) == 0x04, "AtDataDescriptor::m_name");
+static_assert(offsetof(AtDataDescriptor, m_intCeiling) == 0x1C, "AtDataDescriptor::m_intCeiling");
 static_assert(offsetof(AtDataDescriptor, m_format) == 0x28, "AtDataDescriptor::m_format");
 static_assert(sizeof(AtDataDescriptor) == 0x2C, "AtDataDescriptor");
 static_assert(offsetof(AtDataLink, m_inUse) == 0x18, "AtDataLink::m_inUse");
@@ -340,6 +359,8 @@ static_assert(sizeof(AtDataLinkRoot) == 0x20, "AtDataLinkRoot");
 static_assert(sizeof(AtDataComponentPool) == 0x20, "AtDataComponentPool");
 static_assert(sizeof(AtDataRegistryGroup) == 0x14, "AtDataRegistryGroup");
 static_assert(sizeof(AtDataRegistryNameSpaces) == 0x24, "AtDataRegistryNameSpaces");
+static_assert(offsetof(AtDataRegistryOwner, m_databases) == 0x08, "AtDataRegistryOwner::m_databases");
+static_assert(offsetof(AtDataRegistryOwner, m_databaseSpaces) == 0x20, "AtDataRegistryOwner::m_databaseSpaces");
 static_assert(offsetof(AtDataRegistryOwner, m_plain) == 0x44, "AtDataRegistryOwner::m_plain");
 static_assert(offsetof(AtDataRegistryOwner, m_spaces) == 0x58, "AtDataRegistryOwner::m_spaces");
 static_assert(offsetof(AtDataRegistry, m_root) == 0x0C, "AtDataRegistry::m_root");

@@ -1,0 +1,697 @@
+# Scene lists (.ASD), cell graphs (.ASC), flat images (.ASI) and flat text (.AST). See include/at/AtSceneDatabaseLoader.h, AtCellGraph.h, AtDrawItem.h. Sizes are the inventory's.
+
+[[function]]
+va = 0x0002E200
+size = 10
+symbol = "?SetHeap@AtSceneDatabaseLoader@@SAXPAX@Z"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "stores 0x002C639C, the heap each Make pushes"
+
+[[function]]
+va = 0x0002E210
+size = 185
+symbol = "?MakeImageDraws@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x1C with 0x0003B0A0 and 0x0003B290, count +0x6C, into +0x28"
+
+[[function]]
+va = 0x0002E330
+size = 185
+symbol = "?MakeTextDraws@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x1C with 0x0003B430 and 0x0003B660, count +0x6E, into +0x2C"
+
+[[function]]
+va = 0x0002E450
+size = 185
+symbol = "?MakeStrings@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x34 with 0x0001F6B0 and 0x0001FB70, count +0x6A, into +0x24"
+
+[[function]]
+va = 0x0002E570
+size = 204
+symbol = "?MakeNodes@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0xF8 with the scene's constructor, count +0x5C, into +0x08; then the map at +0x34"
+
+[[function]]
+va = 0x0002E6A0
+size = 185
+symbol = "?MakeModifiers@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x44 with 0x0003EA00 and 0x0003F530, count +0x5E, into +0x0C"
+
+[[function]]
+va = 0x0002E7C0
+size = 185
+symbol = "?MakeEmitters@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x1C with 0x0003F590 and 0x0003F850, count +0x60, into +0x10"
+
+[[function]]
+va = 0x0002E8E0
+size = 185
+symbol = "?MakeLensFlares@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x1C with 0x0003F8F0 and 0x0003FBA0, count +0x62, into +0x14"
+
+[[function]]
+va = 0x0002EA00
+size = 185
+symbol = "?MakeCellGraphs@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x1C with 0x0003FC40 and 0x0003FEE0, count +0x64, into +0x20"
+
+[[function]]
+va = 0x0002EB20
+size = 210
+symbol = "?MakeSpaceGraphs@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x60 with 0x00039FD0 and 0x0003A450, count +0x66, into +0x18; the map at +0x48 to 0x00040130"
+
+[[function]]
+va = 0x0002EC00
+size = 185
+symbol = "?MakeGeometry@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x2C with 0x00040A70 and 0x00041090, count +0x68, into +0x1C"
+
+[[function]]
+va = 0x0002F6D0
+size = 185
+symbol = "?MakeLoaders@AtSceneDatabaseLoader@@AAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "array of 0x78 with 0x0002EE30 and 0x0002F660, count +0x70, into +0x30"
+
+[[function]]
+va = 0x0002ED20
+size = 18
+symbol = "?NodeDatabaseAt@AtSceneDatabaseLoader@@QAEPAVAtScene@@I@Z"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "+0x08 plus index times 0xF8; called by 0x000A164E's neighbour"
+
+[[function]]
+va = 0x0002ED40
+size = 18
+symbol = "?SpaceGraphAt@AtSceneDatabaseLoader@@QAEPAVAtSpaceGraph@@I@Z"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "+0x18 plus index times 0x60; called by 0x000A1650"
+
+[[function]]
+va = 0x0002ED60
+size = 15
+symbol = "?LoaderAt@AtSceneDatabaseLoader@@QAEPAV1@I@Z"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "+0x30 plus index times 0x78"
+
+[[function]]
+va = 0x0002EE30
+size = 160
+symbol = "??0AtSceneDatabaseLoader@@QAE@XZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002749C4; called by 0x000A1608 with a block of 0x78"
+
+[[function]]
+va = 0x0002EED0
+size = 1427
+symbol = "?LoadDatabases@AtSceneDatabaseLoader@@QAEXPAUAtNameTableOwner@@HH@Z"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x0002F7F0 after the file is closed; calls each kind's Load in turn"
+
+[[function]]
+va = 0x0002F470
+size = 488
+symbol = "?Clear@AtSceneDatabaseLoader@@UAEXXZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002749C4 slot 1"
+
+[[function]]
+va = 0x0002F660
+size = 100
+symbol = "??1AtSceneDatabaseLoader@@UAE@XZ"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002749C4, calls 0x0002F470 if loaded"
+
+[[function]]
+va = 0x0002F790
+size = 84
+symbol = "??_GAtSceneDatabaseLoader@@UAEPAXI@Z"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002749C4 slot 0; element size 0x78; the vector deleter is the compiler's"
+
+[[function]]
+va = 0x0002F7F0
+size = 2642
+symbol = "?Load@AtSceneDatabaseLoader@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+subsystem = "at/asd"
+evidence = "the string ASD at 0x002749CC; keyword table 0x002B13A0; called by 0x000A1646 and 0x001B4384"
+
+[[function]]
+va = 0x0002E2D0
+size = 84
+symbol = "??_GAtImageDrawDatabase@@UAEPAXI@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002752CC slot 0; element size 0x1C"
+
+[[function]]
+va = 0x0002E3F0
+size = 84
+symbol = "??_GAtTextDrawDatabase@@UAEPAXI@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002752F0 slot 0; element size 0x1C"
+
+[[function]]
+va = 0x0003B030
+size = 10
+symbol = "?SetHeap@AtImageDrawDatabase@@SAXPAX@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores 0x002C6404, the heap 0x0003B0C0 pushes"
+
+[[function]]
+va = 0x0003B040
+size = 84
+symbol = "??_GAtImageDraw@@UAEPAXI@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002764F0 slot 1; element size 0x58"
+
+[[function]]
+va = 0x0003B0A0
+size = 26
+symbol = "??0AtImageDrawDatabase@@QAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002752CC; passed to the array iterator by 0x0002E279"
+
+[[function]]
+va = 0x0003B0C0
+size = 452
+symbol = "?Read@AtImageDrawDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "keyword table 0x002B18A8; called by 0x0003B388"
+
+[[function]]
+va = 0x0003B290
+size = 130
+symbol = "??1AtImageDrawDatabase@@UAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002752CC; passed to the array iterator by 0x0002E274"
+
+[[function]]
+va = 0x0003B320
+size = 154
+symbol = "?Load@AtImageDrawDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "the string ASI at 0x002752D4; called from 0x0002EF85"
+
+[[function]]
+va = 0x0003B3C0
+size = 10
+symbol = "?SetHeap@AtTextDrawDatabase@@SAXPAX@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores 0x002C6408, the heap 0x0003B490 pushes"
+
+[[function]]
+va = 0x0003B3D0
+size = 84
+symbol = "??_GAtTextDraw@@UAEPAXI@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00276504 slot 1; element size 0x64"
+
+[[function]]
+va = 0x0003B430
+size = 26
+symbol = "??0AtTextDrawDatabase@@QAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002752F0; passed to the array iterator by 0x0002E399"
+
+[[function]]
+va = 0x0003B450
+size = 61
+symbol = "?Clear@AtImageDrawDatabase@@UAEXXZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "slot 1 of both vftables 0x002752CC and 0x002752F0: one code for both lists"
+
+[[function]]
+va = 0x0003B490
+size = 452
+symbol = "?Read@AtTextDrawDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "keyword table 0x002B1910; called by 0x0003B758"
+
+[[function]]
+va = 0x0003B660
+size = 130
+symbol = "??1AtTextDrawDatabase@@UAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002752F0; passed to the array iterator by 0x0002E394"
+
+[[function]]
+va = 0x0003B6F0
+size = 154
+symbol = "?Load@AtTextDrawDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "the string AST at 0x002752F8; called from 0x0002EF45"
+
+[[function]]
+va = 0x00048E50
+size = 55
+symbol = "?FindImage@AtSceneDevice@@QAEPAXPBD0@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "the device's +0x294 and +0x2AC; called by 0x000490EA"
+
+[[function]]
+va = 0x00048E90
+size = 25
+symbol = "??0AtImageDraw@@QAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002764F0; passed to the array iterator by 0x0003B1A8"
+
+[[function]]
+va = 0x00048EB0
+size = 43
+symbol = "?Read@AtImageDraw@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002764F0 slot 2; kind 1, then 0x00057CE0"
+
+[[function]]
+va = 0x00048EE0
+size = 24
+symbol = "?Clear@AtImageDraw@@UAEXXZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002764F0 slot 3"
+
+[[function]]
+va = 0x000490A0
+size = 358
+symbol = "?ReadWord@AtImageDraw@@UAEXPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x002764F0 slot 0; jump table 0x00049208"
+
+[[function]]
+va = 0x00049230
+size = 93
+symbol = "??1AtImageDraw@@UAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x002764F0; passed to the array iterator by 0x0003B1A3"
+
+[[function]]
+va = 0x00049290
+size = 55
+symbol = "?FindFont@AtSceneDevice@@QAEPAXPBD0@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "the device's +0x258 and +0x270; called by 0x000495DA"
+
+[[function]]
+va = 0x000492D0
+size = 36
+symbol = "??0AtTextDraw@@QAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x00276504; passed to the array iterator by 0x0003B578"
+
+[[function]]
+va = 0x00049300
+size = 45
+symbol = "?Clear@AtTextDraw@@UAEXXZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00276504 slot 3"
+
+[[function]]
+va = 0x00049560
+size = 43
+symbol = "?Read@AtTextDraw@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00276504 slot 2; kind 2, then 0x00057CE0"
+
+[[function]]
+va = 0x00049590
+size = 448
+symbol = "?ReadWord@AtTextDraw@@UAEXPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00276504 slot 0; jump table 0x00049750"
+
+[[function]]
+va = 0x00049780
+size = 102
+symbol = "??1AtTextDraw@@UAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x00276504; passed to the array iterator by 0x0003B573"
+
+[[function]]
+va = 0x00057C70
+size = 14
+symbol = "?ReadWord@AtDrawItem@@UAEXPAVAtIoTokenizer@@H@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00277108 slot 0; reports 0x27"
+
+[[function]]
+va = 0x00057C80
+size = 84
+symbol = "?Reset@AtDrawItem@@QAEXXZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x00057D53 and 0x00057D60"
+
+[[function]]
+va = 0x00057CE0
+size = 94
+symbol = "?Read@AtDrawItem@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00277108 slot 2; called by 0x00048ED2 and 0x00049582"
+
+[[function]]
+va = 0x00057D40
+size = 28
+symbol = "??0AtDrawItem@@QAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x00277108; called by 0x00048E93 and 0x000492D3"
+
+[[function]]
+va = 0x00057D60
+size = 5
+symbol = "?Clear@AtDrawItem@@UAEXXZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00277108 slot 3; a jump to 0x00057C80"
+
+[[function]]
+va = 0x00057D70
+size = 11
+symbol = "??1AtDrawItem@@UAE@XZ"
+source = "src/at/AtDrawItem.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x00277108 and jumps to 0x00057C80"
+
+[[function]]
+va = 0x000421A0
+size = 98
+symbol = "?SetAll@AtColorRectangle@@QAEXABUAtColor@@@Z"
+source = "src/at/AtImage.cpp"
+subsystem = "at/asd"
+evidence = "one colour to four; called by 0x00057CBB"
+
+[[function]]
+va = 0x0002EAC0
+size = 84
+symbol = "??_GAtCellGraphDatabase@@UAEPAXI@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00276148 slot 0; element size 0x1C"
+
+[[function]]
+va = 0x00036AD0
+size = 60
+symbol = "?VertexArray@AtMesh@@QAEPAVAtVertexArray@@I@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "slot 13 of the mesh, or slot 10 of its database at +0x18; called by 0x00052DB9"
+
+[[function]]
+va = 0x0003FC30
+size = 10
+symbol = "?SetHeap@AtCellGraphDatabase@@SAXPAX@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "stores 0x002C641C, the heap 0x0003FC60 pushes"
+
+[[function]]
+va = 0x0003FC40
+size = 26
+symbol = "??0AtCellGraphDatabase@@QAE@XZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x00276148; passed to the array iterator by 0x0002EA69"
+
+[[function]]
+va = 0x0003FC60
+size = 408
+symbol = "?Read@AtCellGraphDatabase@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "keyword table 0x002B2120; called by 0x0003FE68"
+
+[[function]]
+va = 0x0003FE00
+size = 154
+symbol = "?Load@AtCellGraphDatabase@@QAEXPAUAtNameTableOwner@@PBDH@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "the string ASC at 0x00276150; called from 0x0002F134"
+
+[[function]]
+va = 0x0003FEA0
+size = 64
+symbol = "?Clear@AtCellGraphDatabase@@UAEXXZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "vftable 0x00276148 slot 1"
+
+[[function]]
+va = 0x0003FEE0
+size = 133
+symbol = "??1AtCellGraphDatabase@@UAE@XZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "stores vftable 0x00276148; passed to the array iterator by 0x0002EA64"
+
+[[function]]
+va = 0x000400F0
+size = 50
+symbol = "?AddCellGraphs@AtNameTableOwner@@QAEXPAVGmNameMap@@PBD@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "the owner's +0x1BC or +0x1D4; called by 0x0003FCF1"
+
+[[function]]
+va = 0x00040130
+size = 11
+symbol = "?AddSpaceGraphs@AtNameTableOwner@@QAEXPAVGmNameMap@@@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "the owner's +0x1F8; called by 0x0002EBDB"
+
+[[function]]
+va = 0x00052CC0
+size = 10
+symbol = "?SetHeap@AtCellGraph@@SAXPAX@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "stores 0x002C7EB0, the heap 0x00052EE0 pushes"
+
+[[function]]
+va = 0x00052CD0
+size = 94
+symbol = "??0AtCellGraph@@QAE@XZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "passed to the array iterator by 0x0003FD46"
+
+[[function]]
+va = 0x00052D30
+size = 82
+symbol = "?Clear@AtCellGraph@@QAEXXZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x00052EA5 and 0x00052F0A"
+
+[[function]]
+va = 0x00052D90
+size = 104
+symbol = "?LockedVertex@AtCellGraph@@QAEPBDII@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "0x002C7EAC and the lock at 0x002C7E30; called by 0x0005C5AE"
+
+[[function]]
+va = 0x00052E80
+size = 87
+symbol = "??1AtCellGraph@@QAE@XZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "passed to the array iterator by 0x0003FD41"
+
+[[function]]
+va = 0x00052EE0
+size = 1370
+symbol = "?Read@AtCellGraph@@QAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x0003FDC5"
+
+[[function]]
+va = 0x00057040
+size = 19
+symbol = "??0AtCell@@QAE@XZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x00053275 for each cell"
+
+[[function]]
+va = 0x00057060
+size = 116
+symbol = "?Read@AtCell@@QAEXPAVAtCellGraph@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x000532FF"
+
+[[function]]
+va = 0x0005BAE0
+size = 141
+symbol = "?Resolve@AtCellPortal@@QAEXPAUAtNameTableOwner@@PAVAtCellGraph@@PBD22@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "the strings at 0x002773E8 and 0x002773B8; called by 0x000533BB"
+
+[[function]]
+va = 0x0005BB70
+size = 253
+symbol = "?ComputeCenter@AtCellPortal@@QAEXXZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x0005C620"
+
+[[function]]
+va = 0x0005BC70
+size = 112
+symbol = "?ComputeNormal@AtCellPortal@@QAEXXZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "called by 0x0005C625"
+
+[[function]]
+va = 0x0005C490
+size = 53
+symbol = "??0AtCellPortal@@QAE@XZ"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "passed to 0x00011000 by 0x0005300D"
+
+[[function]]
+va = 0x0005C4D0
+size = 351
+symbol = "?Read@AtCellPortal@@QAEXPAVAtCellGraph@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtCellGraph.cpp"
+subsystem = "at/asd"
+evidence = "jump table 0x0005C630; called by 0x000531D9"
+
+[[vtable]]
+va = 0x002749C4
+slots = 2
+symbol = "??_7AtSceneDatabaseLoader@@6B@"
+source = "src/at/AtSceneDatabaseLoader.cpp"
+
+[[vtable]]
+va = 0x002752CC
+slots = 2
+symbol = "??_7AtImageDrawDatabase@@6B@"
+source = "src/at/AtDrawItem.cpp"
+
+[[vtable]]
+va = 0x002752F0
+slots = 2
+symbol = "??_7AtTextDrawDatabase@@6B@"
+source = "src/at/AtDrawItem.cpp"
+
+[[vtable]]
+va = 0x00276148
+slots = 2
+symbol = "??_7AtCellGraphDatabase@@6B@"
+source = "src/at/AtCellGraph.cpp"
+
+[[vtable]]
+va = 0x002764F0
+slots = 5
+symbol = "??_7AtImageDraw@@6B@"
+source = "src/at/AtDrawItem.cpp"
+
+[[vtable]]
+va = 0x00276504
+slots = 5
+symbol = "??_7AtTextDraw@@6B@"
+source = "src/at/AtDrawItem.cpp"
+
+[[vtable]]
+va = 0x00277108
+slots = 5
+symbol = "??_7AtDrawItem@@6B@"
+source = "src/at/AtDrawItem.cpp"
+
+[symbols]
+"?Clear@AtTextDrawDatabase@@UAEXXZ" = 0x0003B450  # the same code as the image list's Clear
+"??_GAtDrawItem@@UAEPAXI@Z" = 0x00057D80  # the base's deleting destructor, a vftable slot: never called, the base having no instances of its own
+"?Draw@AtImageDraw@@UAEXPAX@Z" = 0x00048F00  # not recovered: a vftable slot
+"?Draw@AtTextDraw@@UAEXPAX@Z" = 0x00049330  # not recovered: a vftable slot
+"?s_heap@AtSceneDatabaseLoader@@2PAXA" = 0x002C639C
+"?s_heap@AtImageDrawDatabase@@2PAXA" = 0x002C6404
+"?s_heap@AtTextDrawDatabase@@2PAXA" = 0x002C6408
+"?s_heap@AtCellGraphDatabase@@2PAXA" = 0x002C641C
+"?s_heap@AtCellGraph@@2PAXA" = 0x002C7EB0
+"?s_nodeNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63A0
+"?s_modifierNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63A4
+"?s_emitterNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63A8
+"?s_lensFlareNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63AC
+"?s_cellGraphNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63B0
+"?s_spaceGraphNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63B4
+"?s_geometryNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63B8
+"?s_stringNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C6398
+"?s_imageDrawNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63BC
+"?s_textDrawNames@AtSceneDatabaseLoader@@2PAPADA" = 0x002C63C0
+"?s_graphNames@AtCellGraph@@2PADA" = 0x002C7EA0
+"?s_spaceNames@AtCellGraph@@2PADA" = 0x002C7EA4
+"?s_cellNames@AtCellGraph@@2PADA" = 0x002C7EA8
+"?s_portalIndex@AtCellGraph@@2IA" = 0x002C7E28
+"?s_lockedArray@AtCellGraph@@2IA" = 0x002C7EAC
+"?s_lock@AtCellGraph@@2UAtVertexLock@@A" = 0x002C7E30
+"??_C@_0DE@FNPALNEK@Atlas?5Scene?3?5invalid?5cell?5graph@" = 0x002773E8
+"??_C@_0CO@CDCFALHG@Atlas?5Scene?3?5invalid?5cell?5refer@" = 0x002773B8
+"??_C@_0DF@BBPBINOI@Atlas?5Graphics?3?5vertex?5array?5re@" = 0x00274C80

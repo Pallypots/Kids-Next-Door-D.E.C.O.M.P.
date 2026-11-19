@@ -4,7 +4,6 @@
 //
 // Cases: every .AFX and .AFL file listed in index.txt, loaded through the file code on both sides; written text; and each reader called directly on a tokenizer of the harness's, whose Error can stop a reader
 // that would otherwise never finish. Through the file code a bad word's report comes back, as it does not in the game, and the readers go on: so text sent that way always closes its braces, or both sides spin.
-// The setter at 0x00058AF0 is not recovered: the recovered side uses this file's definition of it, the original its own code. Both are compared by what they store.
 #define NOMINMAX
 #include <windows.h>
 
@@ -57,7 +56,6 @@ public:
     }
 };
 
-void AtFlashHeapUser::SetHeap(void* heap) { m_heap = heap; }
 
 static MemFs* g_fs;
 static AtIoContext g_ctx;

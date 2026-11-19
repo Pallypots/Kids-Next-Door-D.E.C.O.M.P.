@@ -4,8 +4,9 @@
 //   oracle_manifest <default.xbe> <cases dir> [--entries FILE] [--mutate]
 //
 // The original side runs the original's code for everything recovered here. What is not recovered is a double on both sides, logging what it is asked: the base's word parser (0x0015D000,
-// which skips a base word's block here) and its Finished, the sound notes' item (recovered on another branch), and what each item loads into. A green result therefore says the parser, the
-// arrays, the queue, the items and their teardown agree, and says nothing about what any real database does with a path.
+// which skips a base word's block here) and its Finished, and what each item loads into. A green result therefore says the parser, the arrays, the queue, the items and their teardown agree,
+// and says nothing about what any real database does with a path. The exception is the sound notes: their item (gm/gon) is real on both sides, and loads one written .GON for every path into a
+// real GmAudioData of its side's, with no sound lists, so no segment is found; its banks are compared after each step.
 #include <windows.h>
 
 #include <cstdint>
@@ -16,6 +17,7 @@
 #include <string>
 #include <vector>
 
+#include "gm/GmAudioData.h"
 #include "gm/GmLevelManifest.h"
 #include "oracle_image.h"
 
@@ -37,7 +39,30 @@ template <class F> static F at(uint32_t va) { return (F)(uintptr_t)va; }
 
 #include "oracle_doubles.h"
 
-static MemFs* g_fs;
+// Every .GON a sound notes item asks for is this text, in a file of its own so that the .MNG being read is left alone.
+static const char kNotesText[] =
+    "SoundNotes[ 3 ]\n{\n Note \"Step\" { AnimationTrigger \"foot\" Segments[ 2 ] { \"a\" 0.25 \"b\" } }\n"
+    " Note \"Jump\" { Singleton Stop \"Step\" VFXTrigger \"dust\" }\n Note \"Land\" { AnimationTrigger \"land\" Segments[ 1 ] { \"c\" } }\n}\n";
+class Fs : public MemFs {
+public:
+    MemFile notes[2];
+    int Open(const char* path, int flags, AtIoFile** out) override {
+        if (!std::strstr(path, ".GON")) return MemFs::Open(path, flags, out);
+        g_log[g_side].add('O', (uint32_t)flags);
+        record_message(path, g_side);
+        MemFile& f = notes[g_side];
+        f.side = g_side;
+        f.m_position = 0;
+        f.reads = 0;
+        f.m_flags = (flags & 0x21) ? 0x0C : 2;
+        f.data = (const unsigned char*)kNotesText;
+        f.size = sizeof kNotesText - 1;
+        strncpy_s(f.m_path, path, _TRUNCATE);  // a path of 128 characters and the extension do not fit
+        *out = &f;
+        return 0;
+    }
+};
+static Fs* g_fs;
 static AtIoContext g_ctx;
 static AtIoFileSystem* g_ctx_stack[4];
 static int g_heap_token;
@@ -65,8 +90,11 @@ static void* make_fake(void** vtable) {
     f->id = g_pool_used[s];
     return f;
 }
+static GmAudioData* g_audio[2];
 static long long ident(const void* p) {
     for (int s = 0; s < 2; s++) {
+        if (g_audio[s] && p >= (const void*)&g_audio[s]->m_noteBanks[0] && p < (const void*)&g_audio[s]->m_noteBanks[GmAudioData::kNoteBanks])
+            return 0x60000000 + ((const GmSoundNoteBank*)p - &g_audio[s]->m_noteBanks[0]);
         if (p >= (const void*)&g_pool[s][0] && p < (const void*)&g_pool[s][4096]) return 0x70000000 + ((const Fake*)p - &g_pool[s][0]);
     }
     return (long long)(uintptr_t)p;
@@ -85,7 +113,6 @@ static void log_ptr(uint32_t a, const void* p) { note(a, (uint32_t)ident(p)); }
 static GmBehaviorSystem g_behavior;
 static GmSpaceGraphOwner g_graph_owner;
 static GmDynamicNodeState g_node_state;
-static int g_audio_token;
 #define OWNER(n) ((void*)(uintptr_t)(0x00005123 + (n) * 0x100))
 
 // The current manifest of each side, so that a double can say which item it was given.
@@ -227,60 +254,6 @@ void GmMusicManager::Stop(GmMusicChain* chain) { note('E', (uint32_t)(uintptr_t)
 static void __fastcall o_music_free(void* mgr, void*, void* chain) { note('F', (uint32_t)(uintptr_t)mgr); log_ptr('F', chain); }
 void GmMusicManager::Free(GmMusicChain* chain) { note('F', (uint32_t)(uintptr_t)this); log_ptr('F', chain); }
 
-// The sound notes' item. The original side keeps the original's table (0x002950AC) so that its own array deleting destructor runs; its other functions are doubles.
-struct NoteFields {
-    void* vptr;
-    char ext[4];
-    char path[0x80];
-    void* next;
-    int bank;
-};
-static void* __fastcall o_note_ctor(void* self, void*) {
-    NoteFields* n = (NoteFields*)self;
-    n->vptr = (void*)(uintptr_t)0x002950AC;
-    n->ext[0] = 0; n->path[0] = 0; n->next = nullptr; n->bank = 0;
-    note('c');
-    return self;
-}
-static void __fastcall o_note_dtor(void* self, void*) { note('d', hash(((NoteFields*)self)->path)); }
-static void __fastcall o_note_configure(void* self, void*, const GmManifestItemRequest* r) {
-    NoteFields* n = (NoteFields*)self;
-    note('e', hash(r->m_path)); note('e', (uint32_t)(uintptr_t)r->m_context);
-    std::strcpy(n->path, r->m_path); std::strcpy(n->ext, "GON");
-}
-static void __fastcall o_note_unknown0(void*, void*) { note('w'); }
-static void __fastcall o_note_run(void* self, void*) { NoteFields* n = (NoteFields*)self; note('R', hash(n->path)); n->bank = 0x6600 + (int)hash(n->path) % 256; }
-static void __fastcall o_register_notes(void*, void*, int bank) { note('O', (uint32_t)bank); }
-class NoteItem : public GmManifestItem {
-public:
-    NoteItem() { m_extension[0] = 0; m_path[0] = 0; m_next = nullptr; m_bank = 0; note('c'); }
-    virtual ~NoteItem() { note('d', hash(m_path)); }
-    void Unknown0() override { note('w'); }
-    void Run() override { note('R', hash(m_path)); m_bank = 0x6600 + (int)hash(m_path) % 256; }
-    int m_bank;
-};
-static_assert(sizeof(NoteItem) == 0x90, "NoteItem");
-GmSoundNoteItem* GmSoundNoteItemsNew(unsigned int count) {
-    uint32_t* block = (uint32_t*)operator new(count * sizeof(NoteItem) + 4);
-    if (!block) return nullptr;
-    *block = count;
-    NoteItem* first = (NoteItem*)(block + 1);
-    for (unsigned int i = 0; i < count; i++) new (first + i) NoteItem;
-    return (GmSoundNoteItem*)first;
-}
-GmManifestItem* GmSoundNoteItemAt(GmSoundNoteItem* items, unsigned int index) { return &((NoteItem*)items)[index]; }
-void GmSoundNoteItemConfigure(GmManifestItem* item, const GmManifestItemRequest* r) {
-    note('e', hash(r->m_path)); note('e', (uint32_t)(uintptr_t)r->m_context);
-    std::strcpy(item->m_path, r->m_path); std::strcpy(item->m_extension, "GON");
-}
-void GmSoundNoteItemRegister(GmManifestItem* item) { note('O', (uint32_t)((NoteItem*)item)->m_bank); }
-void GmSoundNoteItemsDelete(GmSoundNoteItem* items) {
-    uint32_t* block = (uint32_t*)items - 1;
-    NoteItem* first = (NoteItem*)items;
-    for (uint32_t i = *block; i > 0; i--) first[i - 1].~NoteItem();
-    operator delete(block);
-}
-
 // ---- the pair --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 typedef void(__fastcall* Fn0)(void*, void*);
 typedef int(__fastcall* FnU)(void*, void*, unsigned int);
@@ -303,14 +276,87 @@ static void set_globals(void* heap) {
     GmDynamicNodeState::s_instance = &g_node_state;
     *(void**)(uintptr_t)0x003B3568 = OWNER(6);
     GmMusicManager::s_instance = (GmMusicManager*)OWNER(6);
-    *(void**)(uintptr_t)0x003B354C = &g_audio_token;
     *(void**)(uintptr_t)0x002CD138 = OWNER(7);
+}
+
+// The sound manager of each side, fresh for each pair: only its sixty note banks are used.
+typedef void*(__fastcall* FnCtor)(void*, void*);
+static void new_audio() {
+    for (int side = 0; side < 2; side++) {
+        GmAudioData* m = (GmAudioData*)std::calloc(1, sizeof(GmAudioData));
+        for (int i = 0; i < GmAudioData::kNoteBanks; i++) {
+            std::memset(&m->m_noteBanks[i], 0xCD, sizeof(GmSoundNoteBank));
+            if (side == 0) at<FnCtor>(0x00136CC0)(&m->m_noteBanks[i], nullptr);
+            else new (&m->m_noteBanks[i]) GmSoundNoteBank;
+        }
+        g_audio[side] = m;
+    }
+    *(GmAudioData**)(uintptr_t)0x003B354C = g_audio[0];
+    GmAudioData::s_instance = g_audio[1];
+}
+// What is left in the banks is freed with them, compared.
+static void free_audio() {
+    { On on(0); for (int i = 0; i < GmAudioData::kNoteBanks; i++) at<Fn0>(0x00136740)(&g_audio[0]->m_noteBanks[i], nullptr); }
+    { On on(1); for (int i = 0; i < GmAudioData::kNoteBanks; i++) g_audio[1]->m_noteBanks[i].~GmSoundNoteBank(); }
+    compare_logs("note banks freed");
+    std::free(g_audio[0]);
+    std::free(g_audio[1]);
+    g_audio[0] = g_audio[1] = nullptr;
+}
+
+static uint32_t name8(const char* s) {
+    char n[9] = {0};
+    std::strncpy(n, s, 8);
+    return hash(n);
+}
+static void same_map(const char* what, const GmSoundNoteBank* a, const GmNameMap& x, const GmSoundNoteBank* b, const GmNameMap& y) {
+    eq(what, x.m_size, y.m_size);
+    eq(what, x.m_entries != nullptr, y.m_entries != nullptr);
+    if (!x.m_entries || !y.m_entries || x.m_size != y.m_size) return;
+    for (unsigned int i = 0; i < x.m_size; i++) {
+        const void* u = x.m_entries[i].m_value;
+        const void* v = y.m_entries[i].m_value;
+        eq(what, u ? (const GmSoundNote*)u - a->m_notes : -1, v ? (const GmSoundNote*)v - b->m_notes : -1);
+        if (u && v) eq(what, name8(x.m_entries[i].m_name), name8(y.m_entries[i].m_name));
+    }
+}
+static void same_banks(const char* what) {
+    for (int i = 0; i < GmAudioData::kNoteBanks; i++) {
+        eq("bank used", g_audio[0]->m_noteBankUsed[i], g_audio[1]->m_noteBankUsed[i]);
+        const GmSoundNoteBank* a = &g_audio[0]->m_noteBanks[i];
+        const GmSoundNoteBank* b = &g_audio[1]->m_noteBanks[i];
+        eq("bank's notes", a->m_notes != nullptr, b->m_notes != nullptr);
+        eq("bank's note count", a->m_noteCount, b->m_noteCount);
+        if (!a->m_notes || !b->m_notes || a->m_noteCount != b->m_noteCount) continue;
+        eq("bank's name", name8(a->m_name), name8(b->m_name));
+        for (unsigned int k = 0; k < a->m_noteCount && k < 64; k++) {
+            const GmSoundNote& x = a->m_notes[k];
+            const GmSoundNote& y = b->m_notes[k];
+            eq("note's name", name8(x.m_name), name8(y.m_name));
+            eq("note's trigger", name8(x.m_trigger), name8(y.m_trigger));
+            eq("note's stop", name8(x.m_stop), name8(y.m_stop));
+            eq("note's singleton", x.m_singleton, y.m_singleton);
+            eq("note's choices", x.m_choiceCount, y.m_choiceCount);
+            if (x.m_choices && y.m_choices && x.m_choiceCount == y.m_choiceCount) {
+                for (unsigned int c = 0; c < x.m_choiceCount; c++) {
+                    eq("choice's name", name8(x.m_choices[c].m_name), name8(y.m_choices[c].m_name));
+                    eq("choice's weight", *(const uint32_t*)&x.m_choices[c].m_weight, *(const uint32_t*)&y.m_choices[c].m_weight);
+                    eq("choice's segment", x.m_choices[c].m_segment != nullptr, y.m_choices[c].m_segment != nullptr);
+                }
+            }
+        }
+        same_map("notes by name", a, a->m_byName, b, b->m_byName);
+        same_map("notes by trigger", a, a->m_byTrigger, b, b->m_byTrigger);
+        same_map("notes by VFX trigger", a, a->m_byVfxTrigger, b, b->m_byVfxTrigger);
+    }
+    (void)what;
 }
 
 struct Pair {
     GmLevelManifest* o;
     GmLevelManifest* r;
     Pair() {
+        new_audio();
         o = (GmLevelManifest*)std::malloc(sizeof(GmLevelManifest));
         r = (GmLevelManifest*)std::malloc(sizeof(GmLevelManifest));
         std::memset(o, 0xCD, sizeof(GmLevelManifest));
@@ -329,6 +375,7 @@ struct Pair {
         g_cur[0] = g_cur[1] = nullptr;
         std::free(o);
         std::free(r);
+        free_audio();
     }
     void same(const char* what);
 };
@@ -408,6 +455,7 @@ void Pair::same(const char* what) {
     eq(what, queue_place(o, o->m_tail), queue_place(r, r->m_tail));
     eq(what, o->m_state, r->m_state);
     eq(what, o->m_done, r->m_done);
+    same_banks(what);
     // The whole queue, in order.
     const GmManifestItem* qo = o->m_head;
     const GmManifestItem* qr = r->m_head;
@@ -531,8 +579,10 @@ static void run_words() {
                            block("GraphicsDatabasesLoaders", {"g1", "g2"}) + block("DynamicNodes", {"D"}) + block("MusicChainDatabases", {"M"}));
     // Path lengths at the limit and one past it: the first seven words report it, and the copy runs one byte into the request's next field.
     const std::string p127(127, 'p'), p128(128, 'q');
+    // The sound notes' items are real here and load what their path names: a path this long overruns the file name's buffer on both sides (127 characters and the extension), or is unterminated
+    // (128), so for that word these are parsed and queued, not run. Real files' paths are short.
     for (const char* w : kWords) {
-        text_case(std::string(w) + " long", block(w, {p127, p128, "after"}));
+        text_case(std::string(w) + " long", block(w, {p127, p128, "after"}), std::strcmp(w, "SoundNoteDatabases") != 0);
     }
     // Errors: each one reported, and the parse goes on as the original's does once its report returns.
     text_case("no bracket", "VFXDatabases 2 ] { \"a\" \"b\" }");
@@ -999,25 +1049,23 @@ int main(int argc, char** argv) {
     redirect(0x0013CFF0, (const void*)o_chain_clear);
     redirect(0x0013D3A0, (const void*)o_music_stop);
     redirect(0x0013D360, (const void*)o_music_free);
-    redirect(0x001B3640, (const void*)o_note_ctor);
-    redirect(0x001B3680, (const void*)o_note_dtor);
-    redirect(0x001B3540, (const void*)o_note_configure);
-    redirect(0x001B3580, (const void*)o_note_unknown0);
-    redirect(0x001B35D0, (const void*)o_note_run);
-    redirect(0x00139550, (const void*)o_register_notes);
     at<void(__cdecl*)()>(0x00125BC7)();
     if (entries && !arm_entries(entries)) return 2;
 
-    g_fs = new MemFs;
+    g_fs = new Fs;
     g_ctx.m_stackCount = 1;
     g_ctx.m_stackSize = 4;
     g_ctx.m_stack = g_ctx_stack;
     g_ctx_stack[0] = g_fs;
     *(AtIoContext**)(uintptr_t)0x002C6278 = &g_ctx;
     AtIoFileRef::s_context = &g_ctx;
-    for (uint32_t va : {0x002C60B0u, 0x002C63CCu}) *(void**)(uintptr_t)va = &g_heap_token;
+    for (uint32_t va : {0x002C60B0u, 0x002C63CCu, 0x002C632Cu, 0x002C6274u}) *(void**)(uintptr_t)va = &g_heap_token;
     AtIoTokenFile::s_heap = &g_heap_token;
     AtIoStream::s_heap = &g_heap_token;
+    GmNameMap::s_heap = &g_heap_token;
+    GmNameSpaceDb::s_heap = &g_heap_token;
+    *(void**)(uintptr_t)0x003B3548 = &g_heap_token;  // the sound manager's, for the note banks
+    GmAudioData::s_heap = &g_heap_token;
     *(AtHeapManager**)(uintptr_t)0x002C60ACu = &g_manager[0];
     AtHeapManager::s_instance = &g_manager[1];
     g_behavior.m_animationLists = (GmBehaviorListOwner*)OWNER(0);

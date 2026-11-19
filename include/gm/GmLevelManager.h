@@ -41,6 +41,7 @@ public:
     virtual void Unload();              // slot 2, 0x0013E670
 
     void Reset();                       // 0x0013D950
+    int FindLevel(const char* name);    // 0x0008E420 the index of the first level named so, compared over eight characters, or -1; src/gm/GmApp.cpp
     void ReleaseLevelData();            // 0x0013E530 NOT recovered: stops with a diagnostic in GmLevelPending.cpp
 
     static void SetHeap(void* heap);    // 0x0013D8E0
@@ -56,7 +57,7 @@ public:
     int m_unknown02C[12];      // +0x02C
     int m_unknown05C;          // +0x05C
     int m_unknown060;          // +0x060
-    char m_unknown064[0x13C];  // +0x064 not recovered: level content
+    char m_unknown064[0x13C];  // +0x064 a GmLevelManifest (include/gm/GmLevelManifest.h, 0x13C bytes), built in place by 0x0013E150 at 0x0013E176. Bytes here while that constructor and the destructor are not recovered: typed, the partial constructor above would build and destroy one the original's order of work is not known for
     GmLevelNameArray m_names;  // +0x1A0
     char** m_descriptions;     // +0x1A8 null where a level has no description
     int* m_kinds;              // +0x1AC unset for an entry with no kind keyword: the heap is not cleared

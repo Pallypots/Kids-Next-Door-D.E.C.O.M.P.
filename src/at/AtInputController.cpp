@@ -1,7 +1,7 @@
 // See include/at/AtInputController.h.
 #include "at/AtInputController.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 #include "at/AtInputMapper.h"
 
 void AtRaise(int code, int a, int b, int c);

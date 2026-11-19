@@ -37,47 +37,25 @@ struct Text {
     }
 };
 
-class TestFont : public AtFontItem {
+// The real items, with the concrete slots the graphics layer fills (not recovered) left empty.
+class TestFont : public AtGrI2DFont {
 public:
     int loaded = 0;
-    void Slot0() override {}
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
     void Slot4() override {}
-    void Slot5() override {}
-    void Slot6() override {}
-    void Slot8() override {}
-    void Read(AtMaterialOwner*, AtFontDatabase*, const char*, AtIoTokenizer* tokenizer) override {
-        m_flags = 0;
-        tokenizer->ExpectLeftCurly();
-        for (int t = tokenizer->Next(); t != AtIoTokenizer::kRightCurly && t != AtIoTokenizer::kEnd; t = tokenizer->Next()) {
-            if (t == 0x48) m_flags |= 8;
-        }
-    }
     void OnLoaded(AtMaterialOwner*) override { loaded++; }
+    void Slot11() override {}
+    void Slot12() override {}
 };
 
-class TestImage : public AtImageItem {
+class TestImage : public AtImage {
 public:
     int loaded = 0;
     void Slot0() override {}
     void Slot1() override {}
     void Slot2() override {}
     void Slot3() override {}
-    void Slot4() override {}
-    void Slot5() override {}
-    void Slot6() override {}
-    void Slot7() override {}
-    void Slot9() override {}
-    void Read(AtMaterialOwner*, AtImageDatabase*, const char*, AtIoTokenizer* tokenizer) override {
-        m_flags = 0;
-        tokenizer->ExpectLeftCurly();
-        for (int t = tokenizer->Next(); t != AtIoTokenizer::kRightCurly && t != AtIoTokenizer::kEnd; t = tokenizer->Next()) {
-            if (t == 0x41) m_flags |= 8;
-        }
-    }
     void OnLoaded(AtMaterialOwner*) override { loaded++; }
+    void Slot14() override {}
 };
 
 class Fonts : public AtFontDatabase {
@@ -86,7 +64,7 @@ public:
     int ready = 0;
     void OnReady(AtMaterialOwner*) override { ready++; }
     void MakeFonts2D() override {}
-    AtFontItem* Font2DAt(unsigned int i) override { return &items[i]; }
+    AtGrI2DFont* Font2DAt(unsigned int i) override { return &items[i]; }
 };
 class Images : public AtImageDatabase {
 public:
@@ -94,7 +72,7 @@ public:
     int made = 0;
     void MakeItems() override { made++; }
     void OnReady(AtMaterialOwner*) override {}
-    AtImageItem* ImageAt(unsigned int i) override { return &items[i]; }
+    AtImage* ImageAt(unsigned int i) override { return &items[i]; }
 };
 class TestLight : public AtLight {
 public:
@@ -180,7 +158,7 @@ int main() {
         list.m_count = 0;
     }
     {
-        char text[] = "NameSpace \"S\"\nFont[2]\nMatAssignment[1]\n{\n \"XNone\"\n}\nFont2D[2]\n{\n Font2D \"A\"\n {\n Kerning\n }\n Font2D \"B\"\n {\n DemandLoad\n }\n}\n";
+        char text[] = "NameSpace \"S\"\nFont[2]\nMatAssignment[1]\n{\n \"XNone\"\n}\nFont2D[2]\n{\n Font2D \"A\"\n {\n Kerning 1.5\n }\n Font2D \"B\"\n {\n DemandLoad\n }\n}\n";
         Fonts db;
         owner.m_fontSpaces.Init(2);
         owner.m_materialSpaces.Init(2);
@@ -192,6 +170,7 @@ int main() {
         CHECK(db.items[1].loaded == 0);
         CHECK(AtFontDatabase::s_demandLoadCount == 1);
         CHECK(db.Find("B") == &db.items[1]);
+        CHECK(db.items[0].m_kerning == 1.5f);
     }
     {
         char text[] = "MatAssignment[1]\n{\n \"M\"\n}\nImage[2]\n{\n Image \"A\"\n {\n TgaSource\n }\n Image \"B\"\n {\n TgaSource\n }\n}\n";
@@ -202,6 +181,7 @@ int main() {
         CHECK(db.m_count == 2);
         CHECK(db.m_materials.m_items[0] == &a);
         CHECK(db.items[1].loaded == 1);
+        CHECK(db.items[1].m_format == AtImage::kTgaSource);
         CHECK(AtImageDatabase::s_demandLoadCount == 0);
         CHECK(db.m_group == &owner.m_images);
     }

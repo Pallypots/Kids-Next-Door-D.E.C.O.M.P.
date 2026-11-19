@@ -1,7 +1,7 @@
 // See include/at/AtBoundingGeometry.h. The reader, the classes of geometry and what they do with each other. Original address clusters 0x00040A60-0x000410DF, 0x000539F0-0x000551BF. The list of hits is in src/at/AtSegmentQuery.cpp.
 #include "AtBoundingMath.h"
 
-#include "AtSceneArray.h"
+#include "AtArray.h"
 #include "at/AtSceneActor.h"
 #include "at/AtText.h"
 

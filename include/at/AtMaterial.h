@@ -7,8 +7,18 @@
 
 struct AtColor {
     void SetWhite();                           // 0x000412B0 all 255
+    void SetBlack();                           // 0x000412C0 0, 0, 0 and alpha 255; in src/at/AtImage.cpp
     void Read(AtIoTokenizer* tokenizer);       // 0x00041270 four integers
     unsigned char r, g, b, a;
+};
+
+// Four colours, one for each corner, read in order ("ColorValueRectangle"). 16 bytes. The bodies are in src/at/AtImage.cpp. The .ASD work (as AtColorRectangle, for the flat
+// lists) and the image and font work (as AtColorRect) recovered it twice; folded.
+struct AtColorRectangle {
+    AtColorRectangle();                                // 0x00042170 all white
+    void Read(AtIoTokenizer* tokenizer);               // 0x00042140 four colours of four integers
+    void SetAll(const AtColor& color);                 // 0x000421A0
+    AtColor m_colors[4];
 };
 
 class AtMaterialDatabase;  // include/at/AtMaterialDatabase.h
@@ -18,7 +28,7 @@ void AtFatal(const char* message, int file, int line, int unused);
 // What materials load for, known here by the tables they use: for each of textures, materials and shaders, a group with no name space and a database of name spaces.
 // Most of it is not recovered. Its constructor and vftable are not known either; these members' own constructors stand in.
 struct AtMaterialOwner {
-    // Its vftable is not recovered, and what fills these is not known. 0x0001A68C calls slot 17; no other slot is known. Doubles override it. It stops if nothing has.
+    // Its vftable is not recovered, and what fills these is not known. 0x0001A68C calls slot 17, 0x00013245 slot 18; no other slot is known. Doubles override it. It stops if nothing has.
     virtual void Slot0() {}
     virtual void Slot1() {}
     virtual void Slot2() {}
@@ -37,6 +47,7 @@ struct AtMaterialOwner {
     virtual void Slot15() {}
     virtual void Slot16() {}
     virtual AtMatrixDevice* MatrixDevice() { AtFatal("AtMaterialOwner: slot 17, the matrix device, is not recovered", 0, 0, 0); return 0; }  // slot 17
+    virtual class AtFlashGraphicsFactory* GraphicsFactory() { AtFatal("AtMaterialOwner: slot 18, the graphics factory, is not recovered", 0, 0, 0); return 0; }  // slot 18, called at 0x00012CC2 and 0x00013245
 
     // src/at/AtDatabaseLoader.cpp.
     void AddMeshes(GmNameMap* map, const char* ns);          // 0x00025F30 ns may be empty or null
