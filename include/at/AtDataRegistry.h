@@ -131,13 +131,21 @@ public:
     static void* s_heap;       // 0x002C9F9C
 };
 
-// The class with vftable 0x00277420, of which only what the loader uses is recovered. Its constructor (near 0x0005EFF0) and other members are not; these members' own constructors stand in. Its other
-// tables and adds (0x0005F0F0, 0x0005F130) take other classes into the same two members, by links elsewhere.
-struct AtDataRegistryOwner {
+// The class with vftable 0x00277420 (one slot, 0x7C bytes): the data management layer's owner, at App+0x394 (include/at/AtApMidLayers.h). Its other
+// tables and adds (0x0005F0F0, 0x0005F130) take other classes into the same members, by links elsewhere. AtDataOwner (include/at/AtDataLibrary.h) is its
+// first 0x44 bytes, named by the .ADD work: m_databases and m_databaseSpaces here.
+class AtDataRegistryOwner {
+public:
+    AtDataRegistryOwner();                             // 0x0005EFD0 (at/atlayers)
+    virtual void DeletingDestructor(unsigned int flags);  // slot 0, 0x0005F260 not recovered (at/atlayers seam)
+    void Init(unsigned int databaseSpaces, unsigned int registrySpaces);  // 0x0005F030 (at/atlayers) names both plain groups empty, sizes each database given a size
+    void Clear();                                      // 0x0005F080 (at/atlayers)
     void Add(AtDataRegistry* registry, const char* space);  // 0x0005F0B0 a null or empty name means the plain group
     void Remove(AtDataRegistry* registry);             // 0x0005F1F0
 
-    char m_unknown00[0x44];
+    int m_unknown04;                    // +0x04 not touched by the constructor
+    GmNameMapGroup m_databases;         // +0x08
+    GmNameSpaceDb m_databaseSpaces;     // +0x20
     AtDataRegistryGroup m_plain;        // +0x44
     AtDataRegistryNameSpaces m_spaces;  // +0x58
 };
@@ -340,7 +348,10 @@ static_assert(sizeof(AtDataLinkRoot) == 0x20, "AtDataLinkRoot");
 static_assert(sizeof(AtDataComponentPool) == 0x20, "AtDataComponentPool");
 static_assert(sizeof(AtDataRegistryGroup) == 0x14, "AtDataRegistryGroup");
 static_assert(sizeof(AtDataRegistryNameSpaces) == 0x24, "AtDataRegistryNameSpaces");
+static_assert(offsetof(AtDataRegistryOwner, m_databases) == 0x08, "AtDataRegistryOwner::m_databases");
+static_assert(offsetof(AtDataRegistryOwner, m_databaseSpaces) == 0x20, "AtDataRegistryOwner::m_databaseSpaces");
 static_assert(offsetof(AtDataRegistryOwner, m_plain) == 0x44, "AtDataRegistryOwner::m_plain");
+static_assert(sizeof(AtDataRegistryOwner) == 0x7C, "AtDataRegistryOwner");
 static_assert(offsetof(AtDataRegistryOwner, m_spaces) == 0x58, "AtDataRegistryOwner::m_spaces");
 static_assert(offsetof(AtDataRegistry, m_root) == 0x0C, "AtDataRegistry::m_root");
 static_assert(offsetof(AtDataRegistry, m_owner) == 0x2C, "AtDataRegistry::m_owner");

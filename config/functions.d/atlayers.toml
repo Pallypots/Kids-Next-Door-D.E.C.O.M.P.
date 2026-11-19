@@ -1,0 +1,371 @@
+# The math, data management, script and kinematics layers' objects, the registries' owner's start-up and the small-C script system's (at/atlayers).
+# Names inferred; see include/at/AtApMidLayers.h. Sizes run to the padding after each function's last instruction.
+
+[[function]]
+va = 0x000B38B0
+size = 17
+symbol = "??0AtMathSystem@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores vftable 0x002847FC, clears +4 and +8; called by App's constructor chain (0x00141D00 region); tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B38D0
+size = 38
+symbol = "?Init@AtMathSystem@@UAEXPBUAtMathConfig@@PAX1@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "vftable 0x002847FC slot 1; slot 2 if +4, stores below at +4, slot 3 with the config; called by 0x0009CFF0; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B3870
+size = 60
+symbol = "?SetHeaps@AtMathSystem@@UAEXPBUAtMathConfig@@@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 3: 0x000552A0 (AtSegmentHitList) with +8 or +4, 0x00057330 (AtQueryPool) with +0xC or +4; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B3770
+size = 31
+symbol = "??0AtDataManagementSystem@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "vftable 0x002847EC, 0x0005EFD0 on +4, clears +0x80; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B3790
+size = 61
+symbol = "?Init@AtDataManagementSystem@@UAEXPBUAtDataManagementConfig@@PAX1@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 1; slot 2 if +0x80, below at +0x80, slot 3, then 0x0005F030 on +4 with config +0 and +4; called by 0x0009CEB0; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B37D0
+size = 23
+symbol = "?Shutdown@AtDataManagementSystem@@UAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 2: 0x0005F080 on +4, clears +0x80; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B3690
+size = 217
+symbol = "?SetHeaps@AtDataManagementSystem@@UAEXPBUAtDataManagementConfig@@@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 3: ten heap setters of the .ADR and .ADD classes and 0x000C8960, each with its field or +8; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C8960
+size = 10
+symbol = "?AtSetHeap3ADF80@@YAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x003ADF80; called by 0x000B3690; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0005EFD0
+size = 93
+symbol = "??0AtDataRegistryOwner@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "vftable 0x00277420; 0x00017F30 on +8, 0x00018040 on +0x20, 0x000603A0 on +0x44, 0x0005FFF0 on +0x58; called by 0x000B3770; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0005F030
+size = 78
+symbol = "?Init@AtDataRegistryOwner@@QAEXII@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x00017E60 on +8 and 0x000602C0 on +0x44 with an empty name; 0x00018060 on +0x20 and 0x00060010 on +0x58 when sizes are given; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0005F080
+size = 38
+symbol = "?Clear@AtDataRegistryOwner@@QAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x00017F50 on +8, 0x000B3F70 on +0x44, slot 1 of +0x20 and of +0x58; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0009EE60
+size = 29
+symbol = "??0AtScriptSystem@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "vftable 0x0027D03C, 0x000B4260 on +0xC, clears +8 and +4; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0009EE80
+size = 53
+symbol = "?Init@AtScriptSystem@@UAEXPBUAtScriptConfig@@PAX1@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 1; slot 2 if +4, below at +8, 0x0009EE00, 0x000B42B0 on +0xC, +4 = 1; called by 0x0009CD50; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0009EEC0
+size = 21
+symbol = "?Shutdown@AtScriptSystem@@UAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 2: 0x000B42F0 on +0xC, clears +8 and +4; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0009EE00
+size = 82
+symbol = "?SetHeaps@AtScriptSystem@@QAEXPBUAtScriptConfig@@@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x000B4250, 0x0006F590, 0x00075400 with config +8, +0xC, +0x10 or +4; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B4260
+size = 77
+symbol = "??0AtScriptHost@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x00057E20 on +4, 0x000756C0 on +8, clears +0; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B42B0
+size = 63
+symbol = "?Init@AtScriptHost@@QAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x000756E0 on +8, 0x00075400 and 0x0006F590 with 0x003ADE54, +0x5B1C = this+4, +0 = 1; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B42F0
+size = 27
+symbol = "?Shutdown@AtScriptHost@@QAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x000757A0 on +8, clears +0; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B4250
+size = 10
+symbol = "?SetHeap@AtScriptHost@@SAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x003ADE54; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x0006F590
+size = 10
+symbol = "?SetHeap@AtSmallCScriptFactory@@SAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x002CD0E8, read by 0x0006F5A0; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x00075400
+size = 10
+symbol = "?SetHeap@AtSmallCSystem@@SAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x002CF170, what 0x0007AF10 makes the 0x5B48-byte system from; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000756C0
+size = 25
+symbol = "??0AtSmallCSystem@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x00024C60 on +0x5B1C, then 0x00075590; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x00075590
+size = 104
+symbol = "?Clear@AtSmallCSystem@@QAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "clears +0x5B44, 0x002CF170 and nine fields, +0x5B3C = 4, 0xE00 words at +0 and 0x7D0 at +0x3BC0; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000756E0
+size = 116
+symbol = "?Init@AtSmallCSystem@@QAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x002CF174 = this; 0x000754D0 for each entry of the tables at 0x002B3488 and 0x002B3370; 0x00024DA0 on +0x5B1C with 2000; +0x5B44 = 1; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000754D0
+size = 94
+symbol = "?Register@AtSmallCSystem@@QAEHPAXPBDP6AH0PAH@Z@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "entry +0x5B00 of 0x1C bytes: context, function, name copied; 0 past 0x200; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000757A0
+size = 186
+symbol = "?Shutdown@AtSmallCSystem@@QAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "if +0x5B44: slot 1 of +0x5B1C, 0x0006F640 on +0x5B14 for each word at +0x3BC0, then as 0x00075590; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C8740
+size = 16
+symbol = "??0AtKinematicsSystemBase@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "vftable 0x0028662C, clears +8; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C8750
+size = 38
+symbol = "?Init@AtKinematicsSystemBase@@UAEXPBUAtKinematicsConfig@@PAX1@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 1 of 0x0028662C: slot 2 if +8, below at +8, slot 3; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C8780
+size = 8
+symbol = "?Shutdown@AtKinematicsSystemBase@@UAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 2 of 0x0028662C: clears +8; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C8660
+size = 217
+symbol = "?SetHeaps@AtKinematicsSystemBase@@UAEXPBUAtKinematicsConfig@@@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 3 of 0x0028662C: ten heap setters with config +8 ... +0x30 but +0x18, or +4; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B34B0
+size = 18
+symbol = "??0AtKinematicsSystem@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "0x000C8740 then vftable 0x002847DC; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B34D0
+size = 162
+symbol = "?Init@AtKinematicsSystem@@UAEXPBUAtKinematicsConfig@@PAX1@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 1 of 0x002847DC: 0x000C8750, slot 3, then a 4-byte 0x000C8920 on config +4, raise -4 if null, stored at +4; called by 0x0009CC10; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B35B0
+size = 54
+symbol = "?Shutdown@AtKinematicsSystem@@UAEXXZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 2: 0x000C8930 and delete on +4, then 0x000C8780; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000B3580
+size = 34
+symbol = "?SetHeaps@AtKinematicsSystem@@UAEXPBUAtKinematicsConfig@@@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "slot 3: 0x000C8660, then 0x000C87D0 with +0x18 or +4; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C87D0
+size = 10
+symbol = "?SetHeap@AtKinematicsFactory@@SAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x003ADF7C, read by 0x000C87E0 (slot 0 of 0x0028663C); tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000272D0
+size = 10
+symbol = "?AtSetHeap2C6348@@YAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x002C6348; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x001015B0
+size = 10
+symbol = "?AtSetHeap3B23E8@@YAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x003B23E8; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x00101390
+size = 10
+symbol = "?AtSetHeap3B23E4@@YAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x003B23E4; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x00034500
+size = 10
+symbol = "?AtSetHeap2C63DC@@YAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x002C63DC; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x00027850
+size = 10
+symbol = "?AtSetHeap2C634C@@YAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x002C634C; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x00100FB0
+size = 10
+symbol = "?AtSetHeap3B23E0@@YAXPAX@Z"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores 0x003B23E0; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C8920
+size = 9
+symbol = "??0AtKinematicsFactory@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores vftable 0x0028663C; tests/oracle/oracle_atlayers.cpp"
+
+[[function]]
+va = 0x000C8930
+size = 7
+symbol = "??1AtKinematicsFactory@@QAE@XZ"
+source = "src/at/AtApMidLayers.cpp"
+subsystem = "at/atlayers"
+evidence = "stores vftable 0x0028663C; called by 0x000B35B0; tests/oracle/oracle_atlayers.cpp"
+
+[symbols]
+"?Shutdown@AtMathSystem@@UAEXXZ" = 0x000E7880  # folded with AtDataComponent::Reset (at/adr)
+"?g_smallCCoreNatives@@3QBUAtSmallCNativeEntry@@B" = 0x002B3488  # data: ten entries of 0x1C bytes, then a null function
+"?g_smallCFloatNatives@@3QBUAtSmallCNativeEntry@@B" = 0x002B3370  # data: nine entries, then a null function
+"?s_heap@AtSmallCSystem@@2PAXA" = 0x002CF170
+"?s_instance@AtSmallCSystem@@2PAV1@A" = 0x002CF174
+"?s_heap@AtSmallCScriptFactory@@2PAXA" = 0x002CD0E8
+"?s_heap@AtScriptHost@@2PAXA" = 0x003ADE54
+"?s_heap@AtKinematicsFactory@@2PAXA" = 0x003ADF7C
+"?g_heap3ADF80@@3PAXA" = 0x003ADF80
+"?g_heap2C6348@@3PAXA" = 0x002C6348
+"?g_heap3B23E8@@3PAXA" = 0x003B23E8
+"?g_heap3B23E4@@3PAXA" = 0x003B23E4
+"?g_heap2C63DC@@3PAXA" = 0x002C63DC
+"?g_heap2C634C@@3PAXA" = 0x002C634C
+"?g_heap3B23E0@@3PAXA" = 0x003B23E0
+"??_7AtMathSystem@@6B@" = 0x002847FC  # mapped, not claimed: slot 0 is a seam
+"??_7AtDataManagementSystem@@6B@" = 0x002847EC  # mapped, not claimed: slot 0 is a seam
+"??_7AtDataRegistryOwner@@6B@" = 0x00277420  # mapped, not claimed: its one slot is a seam
+"??_7AtScriptSystem@@6B@" = 0x0027D03C  # mapped, not claimed: slot 0 is a seam
+"??_7AtKinematicsSystemBase@@6B@" = 0x0028662C  # mapped, not claimed: slot 0 is a seam
+"??_7AtKinematicsSystem@@6B@" = 0x002847DC  # mapped, not claimed: slot 0 is a seam
+"??_7AtKinematicsFactory@@6B@" = 0x0028663C  # mapped, not claimed: every slot is a seam
+"__ehhandler$??0AtDataRegistryOwner@@QAE@XZ" = 0x001F7DDB  # the handler 0x0005EFD0 registers; compiler-made

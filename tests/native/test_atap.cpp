@@ -61,19 +61,19 @@ static void test_configs() {
     AppMathConfig math;
     std::memset(&math, 0x5A, sizeof math);
     app->GetMathConfig(&math);
-    CHECK(math.m_heap == heaps[0] && math.m_unknown00 == 0 && math.m_unknown08[1] == 0);
+    CHECK(math.m_heap == heaps[0] && math.m_unknown00 == 0 && math.m_segmentHeap == nullptr && math.m_queryHeap == nullptr);
     AppDataManagementConfig data;
     std::memset(&data, 0x5A, sizeof data);
     app->GetDataManagementConfig(&data);
-    CHECK(data.m_unknown00 == 0x80 && data.m_unknown04 == 0x80 && data.m_heap == heaps[0] && data.m_unknown0C[9] == 0);
+    CHECK(data.m_databaseSpaces == 0x80 && data.m_registrySpaces == 0x80 && data.m_heap == heaps[0] && data.m_libraryHeap == nullptr);
     AppScriptConfig script;
     std::memset(&script, 0x5A, sizeof script);
     app->GetScriptConfig(&script);
-    CHECK(script.m_heap == heaps[0] && script.m_unknown00 == 0 && script.m_unknown08[2] == 0);
+    CHECK(script.m_heap == heaps[0] && script.m_unknown00 == 0 && script.m_systemHeap == nullptr);
     AppKinematicsConfig kinematics;
     std::memset(&kinematics, 0x5A, sizeof kinematics);
     app->GetKinematicsConfig(&kinematics);
-    CHECK(kinematics.m_heap == heaps[0] && kinematics.m_unknown00 == 0 && kinematics.m_unknown08[10] == 0);
+    CHECK(kinematics.m_heap == heaps[0] && kinematics.m_unknown00 == 0 && kinematics.m_heap30 == nullptr);
     AppGraphicsConfig graphics;
     std::memset(&graphics, 0x5A, sizeof graphics);
     app->GetGraphicsConfig(&graphics);
@@ -200,10 +200,16 @@ static std::vector<const void*> g_below;
     public: \
         void Init(const void*, void* below) override { g_order.push_back(#Base); g_below.push_back(below); } \
     }
-LAYER3(Math, AppMathLayer);
-LAYER3(Data, AppDataManagementLayer);
-LAYER3(Script, AppScriptLayer);
-LAYER3(Kinematics, AppKinematicsLayer);
+// The four of at/atlayers take their own configs.
+#define LAYERC(Name, Base, Config) \
+    class Name : public Base { \
+    public: \
+        void Init(const Config*, void* below, void*) override { g_order.push_back(#Base); g_below.push_back(below); } \
+    }
+LAYERC(Math, AtMathSystem, AtMathConfig);
+LAYERC(Data, AtDataManagementSystem, AtDataManagementConfig);
+LAYERC(Script, AtScriptSystem, AtScriptConfig);
+LAYERC(Kinematics, AtKinematicsSystem, AtKinematicsConfig);
 LAYER3(Controller, AppControllerLayer);
 LAYER2(Sound, AppSoundLayer);
 LAYER3(Video, AppVideoLayer);
@@ -224,7 +230,7 @@ static void test_chain() {
     // The real chain stops at the first layer that is not recovered.
     std::string stopped = stop_of([&] { app->StartUpUserInterface(); });
     std::printf("chain stopped: %s\n", stopped.c_str());
-    CHECK(stopped == "App start-up: the math layer's Init (0x000B38D0) is not recovered");
+    CHECK(stopped == "App start-up: the graphics layer's Init (0x000B3000) is not recovered");
     CHECK(app->m_memory.m_started == 1 && AtHeapManager::s_instance == &app->m_memory.m_manager && app->m_memory.m_region != nullptr);
     for (int i = 0; i < 4; i++) CHECK(app->m_heaps[i] != nullptr && app->m_heaps[i]->m_size == app->m_heapConfig[i].m_size);
     CHECK(app->m_events.m_below == &app->m_memory && AtEventSystem::s_heap3ADF8C == app->m_heaps[0]);
@@ -239,10 +245,10 @@ static void test_chain() {
     // Every layer, with stand-ins above the I/O layer: the order, and what each is handed.
     App* b = new App;
     App::s_instance = b;
-    new (b->m_math.m_bytes) Math;
-    new (b->m_dataManagement.m_bytes) Data;
-    new (b->m_script.m_bytes) Script;
-    new (b->m_kinematics.m_bytes) Kinematics;
+    new (&b->m_math) Math;
+    new (&b->m_dataManagement) Data;
+    new (&b->m_script) Script;
+    new (&b->m_kinematics) Kinematics;
     new (b->m_device.m_bytes) Graphics;
     b->m_device->m_flags = 0;
     new (b->m_controller.m_bytes) Controller;
@@ -252,8 +258,8 @@ static void test_chain() {
     new (b->m_userInterface.m_bytes) Ui;
     stopped = stop_of([&] { b->StartUpUserInterface(); });
     CHECK(stopped == "App start-up: the user interface layer's config (slot 56, 0x0008DB30) is not recovered");
-    const char* order[] = {"AppMathLayer", "AppDataManagementLayer", "AppScriptLayer", "AppKinematicsLayer", "AppDevice", "AppControllerLayer", "AppSoundLayer", "AppVideoLayer", "AppSceneLayer"};
-    const void* below[] = {&b->m_io, b->m_math.m_bytes, b->m_dataManagement.m_bytes, b->m_script.m_bytes, b->m_kinematics.m_bytes, b->m_device.m_bytes, b->m_controller.m_bytes, b->m_sound.m_bytes, b->m_video.m_bytes};
+    const char* order[] = {"AtMathSystem", "AtDataManagementSystem", "AtScriptSystem", "AtKinematicsSystem", "AppDevice", "AppControllerLayer", "AppSoundLayer", "AppVideoLayer", "AppSceneLayer"};
+    const void* below[] = {&b->m_io, &b->m_math, &b->m_dataManagement, &b->m_script, &b->m_kinematics, b->m_device.m_bytes, b->m_controller.m_bytes, b->m_sound.m_bytes, b->m_video.m_bytes};
     CHECK(g_order.size() == 9);
     for (size_t i = 0; i < g_order.size() && i < 9; i++) {
         CHECK(g_order[i] == order[i]);

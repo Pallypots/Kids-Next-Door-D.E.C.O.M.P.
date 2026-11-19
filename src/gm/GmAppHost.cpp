@@ -62,14 +62,6 @@ void AppGraphics::Slot28() { StopHere("App graphics: not recovered"); }
 AtDatabaseLoader* AppGraphics::DatabaseLoader() { StopHere("App graphics: the database loader (slot 29) is not recovered"); return 0; }
 
 // The AtAp layers' objects above the I/O layer.
-void AppMathLayer::Slot0() { StopHere("App math layer: slot 0 is not recovered"); }
-void AppMathLayer::Init(const void*, void*, void*) { StopHere("App start-up: the math layer's Init (0x000B38D0) is not recovered"); }
-void AppDataManagementLayer::Slot0() { StopHere("App data management layer: slot 0 is not recovered"); }
-void AppDataManagementLayer::Init(const void*, void*, void*) { StopHere("App start-up: the data management layer's Init (0x000B3790) is not recovered"); }
-void AppScriptLayer::Slot0() { StopHere("App script layer: slot 0 is not recovered"); }
-void AppScriptLayer::Init(const void*, void*, void*) { StopHere("App start-up: the script layer's Init (0x0009EE80) is not recovered"); }
-void AppKinematicsLayer::Slot0() { StopHere("App kinematics layer: slot 0 is not recovered"); }
-void AppKinematicsLayer::Init(const void*, void*, void*) { StopHere("App start-up: the kinematics layer's Init (0x000B34D0) is not recovered"); }
 void AppControllerLayer::Slot0() { StopHere("App controller layer: slot 0 is not recovered"); }
 void AppControllerLayer::Init(const void*, void*, void*) { StopHere("App start-up: the controller layer's Init (0x000B2E00) is not recovered"); }
 void AppSoundLayer::Slot0() { StopHere("App sound layer: slot 0 is not recovered"); }

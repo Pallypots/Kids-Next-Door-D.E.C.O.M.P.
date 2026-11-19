@@ -189,19 +189,11 @@ GmAppAudioOptions* App::AudioOptionsView() {
 
 App::App() {
     // The layers above the I/O layer: their seam objects, and the running flags their constructors clear (0x000B38B0 and the rest, not recovered).
-    new (m_math.m_bytes, InPlace()) AppMathLayer();
-    new (m_dataManagement.m_bytes, InPlace()) AppDataManagementLayer();
-    new (m_script.m_bytes, InPlace()) AppScriptLayer();
-    new (m_kinematics.m_bytes, InPlace()) AppKinematicsLayer();
     new (m_controller.m_bytes, InPlace()) AppControllerLayer();
     new (m_sound.m_bytes, InPlace()) AppSoundLayer();
     new (m_video.m_bytes, InPlace()) AppVideoLayer();
     new (m_scene.m_bytes, InPlace()) AppSceneLayer();
     new (m_userInterface.m_bytes, InPlace()) AppUserInterfaceLayer();
-    m_mathRunning = 0;
-    m_dataManagementRunning = 0;
-    m_scriptRunning = 0;
-    m_kinematicsRunning = 0;
     m_controllerRunning = 0;
     m_soundFlags = 0;
     m_videoRunning = 0;
