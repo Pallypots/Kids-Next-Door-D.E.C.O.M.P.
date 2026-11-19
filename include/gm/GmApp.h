@@ -320,7 +320,7 @@ struct GmDataRoot {
     AtDataRegistryOwner* Owner() { return (AtDataRegistryOwner*)(m_ownerBase + 0x394); }
     static GmDataRoot* s_instance;   // 0x003B357C
 };
-// AtDataRegistry's AttachUnder, Prepare, SetFileName and FindPath, which start-up calls, are declared with the class (include/at/AtDataRegistry.h); not recovered, they stop in src/gm/GmAppHost.cpp.
+// AtDataRegistry's AttachUnder, Prepare, SetFileName and FindPath, which start-up calls, are declared with the class (include/at/AtDataRegistry.h) and recovered by at/datalookup.
 // The object at 0x003B3524 keeps the library's registry and its root node; the name map at 0x002CD138 is told of the registry. Neither is recovered.
 struct GmRegistryUser {
     char m_unknown00[0x40];

@@ -90,22 +90,22 @@ int main() {
     CHECK(actor && flags && range && more);
 
     // By path.
-    CHECK(base.Find(nullptr, "Actor\\Flags", 0) == flags);
-    CHECK(base.Find(nullptr, "Actor\\Flags\\", 0) == flags);
-    CHECK(base.Find(nullptr, "Actor", 0) == actor);
-    CHECK(base.Find(nullptr, "Flags", 0) == nullptr);
-    CHECK(base.Find(nullptr, "actor", 0) == nullptr);
-    CHECK(base.Find(actor, "", 0) == actor);
-    CHECK(base.Find(actor, nullptr, 1) == actor);
-    CHECK(base.Find(nullptr, "Actor\\Nope", 0) == nullptr);
+    CHECK(base.FindPath(nullptr, "Actor\\Flags", 0) == flags);
+    CHECK(base.FindPath(nullptr, "Actor\\Flags\\", 0) == flags);
+    CHECK(base.FindPath(nullptr, "Actor", 0) == actor);
+    CHECK(base.FindPath(nullptr, "Flags", 0) == nullptr);
+    CHECK(base.FindPath(nullptr, "actor", 0) == nullptr);
+    CHECK(base.FindPath(actor, "", 0) == actor);
+    CHECK(base.FindPath(actor, nullptr, 1) == actor);
+    CHECK(base.FindPath(nullptr, "Actor\\Nope", 0) == nullptr);
     // Climbing: More is not among Range's children but among its parent's.
-    CHECK(base.Find(range, "More", 0) == nullptr);
-    CHECK(base.Find(range, "More", 1) == more);
-    CHECK(base.Find(range, "Actor\\Range", 1) == range);
+    CHECK(base.FindPath(range, "More", 0) == nullptr);
+    CHECK(base.FindPath(range, "More", 1) == more);
+    CHECK(base.FindPath(range, "Actor\\Range", 1) == range);
     // A part found nowhere leaves nothing, and the next part is looked for from the root.
-    CHECK(base.Find(range, "Zip\\Actor", 1) == actor);
-    CHECK(base.Find(range, "Zip", 1) == nullptr);
-    CHECK(base.FindPath("Actor\\More", 0) == more);
+    CHECK(base.FindPath(range, "Zip\\Actor", 1) == actor);
+    CHECK(base.FindPath(range, "Zip", 1) == nullptr);
+    CHECK(base.FindFromRoot("Actor\\More", 0) == more);
     CHECK(base.ValueAtPath("Actor\\More", 0) == more->m_value);
     CHECK(base.ValueAtPath("Actor\\Gone", 1) == nullptr);
     CHECK(base.ValueAt(actor, "Flags", 0) == flags->m_value);
@@ -163,9 +163,9 @@ int main() {
     AtDataRegistry copy;
     CHECK(copy.CopyFrom(&base) == 0);
     CHECK(copy.m_loaded == 1 && copy.m_group == &owner.m_plain && copy.m_parent == nullptr);
-    AtDataLink* copiedFlags = copy.Find(nullptr, "Flags", 0);
+    AtDataLink* copiedFlags = copy.FindPath(nullptr, "Flags", 0);
     CHECK(copiedFlags != nullptr && copiedFlags != flags);
-    CHECK(copiedFlags->m_parent == copy.Find(nullptr, "Actor", 0));
+    CHECK(copiedFlags->m_parent == copy.FindPath(nullptr, "Actor", 0));
     CHECK(static_cast<AtDataInt*>(copiedFlags->m_value)->m_value == 3);
     CHECK(copiedFlags->m_value->m_registry == &copy);
     AtDataString* copiedTitle = static_cast<AtDataString*>(copy.FindInPools("Title", 1)->m_value);
@@ -175,11 +175,11 @@ int main() {
 
     // Start-up: an empty registry everything hangs under, a loaded one attached beneath it, and its file name.
     AtDataRegistry top;
-    CHECK(top.Create(&owner, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr) == 0);
+    CHECK(top.Prepare(&owner, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr) == 0);
     CHECK(top.m_loaded == 1 && top.m_group == &owner.m_plain && top.m_pools[AtDataRegistry::kInt].m_count == 0);
     CHECK(base.AttachUnder(&top, nullptr) == 1);
     CHECK(base.m_root.m_parent == &top.m_root);
-    CHECK(top.Find(nullptr, "Actor\\More", 0) == more);  // Through base's root, which has no value.
+    CHECK(top.FindPath(nullptr, "Actor\\More", 0) == more);  // Through base's root, which has no value.
     CHECK(copy.AttachUnder(&base, "Nowhere") == 0);
     CHECK(copy.m_root.m_parent == nullptr);
     top.SetFileName("Library");
@@ -190,7 +190,7 @@ int main() {
     top.SetFileName("A longer name");
     CHECK(std::strcmp(top.m_fileName, "A longer name") == 0);
     AtDataRegistry counted;
-    CHECK(counted.Create(&owner, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, &top) == 0);
+    CHECK(counted.Prepare(&owner, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, &top) == 0);
     CHECK(counted.m_pools[AtDataRegistry::kBoolean].m_count == 2 && counted.m_pools[AtDataRegistry::kBoolean].m_values != nullptr);
     CHECK(counted.m_pools[AtDataRegistry::kStringArray].m_links != nullptr && counted.m_parent == &top);
 

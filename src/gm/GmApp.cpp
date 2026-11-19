@@ -416,7 +416,7 @@ void App::LoadRegistries() {
     s_instance->m_gameState->SetRegistry(&m_genericRegistry);
     AtIoMountManager::s_instance->m_context->PushPath("");
     if (AtIoMountManager::s_instance->m_context->FindFile("Library.ADD", &fs) == 0) {
-        GmDataRoot::s_instance->m_registry.Prepare(GmDataRoot::s_instance->Owner());
+        GmDataRoot::s_instance->m_registry.Prepare(GmDataRoot::s_instance->Owner(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         GmDataRoot::s_instance->m_registry.SetFileName("Library");
         m_library.Load((AtDataRegistryOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, &GmDataRoot::s_instance->m_registry);
         AtDataRegistry* root = &GmDataRoot::s_instance->m_registry;

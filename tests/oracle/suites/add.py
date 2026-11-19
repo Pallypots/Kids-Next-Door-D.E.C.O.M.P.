@@ -215,7 +215,7 @@ TABLE = [
     ("table read: string's characters", D, "char* characters = m_characters + m_characterUsed;", "char* characters = m_characters;"),
     ("table read: string's room", D, "const unsigned int size = field->m_intCeiling + 1;", "const unsigned int size = field->m_intCeiling;"),
     ("table read: characters not counted", D, "                m_characterUsed += size * manager->m_characterScale;\n", ""),
-    ("table read: strings given read when not", D, "                if (given != 0) {\n                    AtDataStringBindAndRead", "                if (given == 0) {\n                    AtDataStringBindAndRead"),
+    ("table read: strings given read when not", D, "                if (given != 0) {\n                    ((AtDataString*)value)->BindAndRead", "                if (given == 0) {\n                    ((AtDataString*)value)->BindAndRead"),
     ("table read: values given read when not", D, "            } else if (given != 0) {\n                value->Read(field, tokenizer);", "            } else if (given == 0) {\n                value->Read(field, tokenizer);"),
     ("table read: values from no file read", D, "                value->SetDescriptor(field);\n", "                value->Read(field, tokenizer);\n"),
     ("table read: one right curly", D, "    if (fromFile != 0) {\n        tokenizer->ExpectRightCurly();\n        tokenizer->ExpectRightCurly();\n    }", "    if (fromFile != 0) {\n        tokenizer->ExpectRightCurly();\n    }"),

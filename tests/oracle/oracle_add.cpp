@@ -168,14 +168,7 @@ static uint32_t& orig_u32(uint32_t va) { return *(uint32_t*)(uintptr_t)va; }
 static AtDataRegistryOwner* g_owner[2];
 static AtDataRegistry* g_parent[2];
 
-// The three members of AtDataString no branch has recovered: the original's, on the recovered side's objects.
-void AtDataStringReset(AtDataString* value) { at<Fn0>(0x0006A1D0)(value, nullptr); }
-void AtDataStringBindAndRead(AtDataString* value, AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size) {
-    at<int(__fastcall*)(void*, void*, void*, void*, char*, unsigned)>(0x0006A4D0)(value, nullptr, descriptor, tokenizer, characters, size);
-}
-void AtDataStringBind(AtDataString* value, AtDataDescriptor* descriptor, char* characters, unsigned int size) {
-    at<int(__fastcall*)(void*, void*, void*, char*, unsigned)>(0x00069FD0)(value, nullptr, descriptor, characters, size);
-}
+// AtDataString's Forget, BindAndRead and Bind (0x0006A1D0, 0x0006A4D0, 0x00069FD0) are at/datalookup's: each side runs its own.
 
 // Each value class, by type: the original's vftable and size, and the recovered class's vftable, read from one made here.
 static const uint32_t kOrigVft[12] = {0x00277754, 0x0027777C, 0x002777A4, 0x002777CC, 0x002777F4, 0x0027781C, 0x0027784C, 0x00277874, 0x0027789C, 0x002778C4, 0x002778EC, 0x00277914};
@@ -947,16 +940,20 @@ static void run_table_methods() {
                 eq("field named", (char*)an - (char*)a->m_columns[c], (char*)bn - (char*)b->m_columns[c]);
             }
         }
-        // By value: in every column of booleans or integers (slot 7 of those two classes is recovered; of the others it is not, and stops).
+        // By value: in every column but strings (slot 7 of every value class is recovered, at/datalookup). Strings are left out: their slot 7 compares
+        // what slot 5 answers, which is null, so two texts of one length other than empty crash on both sides, and every real string column has them.
+        static const char* const kFoundBy[12] = {"found by an empty value", "found by a boolean", "found by an integer", "found by a real", "found by a short name", "",
+                                                 "found by a boolean array", "found by a byte array", "found by an integer array", "found by a real array",
+                                                 "found by a short name array", "found by a string array"};
         for (unsigned c = 0; c < a->m_layout->m_count; c++) {
             const unsigned type = a->m_layout->m_fields[c]->m_type;
-            if (type != 1 && type != 2) continue;
+            if (type == 5 || type >= 12) continue;
             for (unsigned i = 0; i < a->m_count; i++) {
                 void* av = at<FnAt>(0x000BAAC0)(&a->m_records[i], nullptr, c);
                 AtDataComponent* bv = b->m_records[i].FieldAt(c);
                 void* af; { On on(0); af = at<FnFindValue>(0x000BA9A0)(a, nullptr, c, av); }
                 AtDataRecord* bf; { On on(1); bf = b->FindByValue(c, bv); }
-                eq(type == 1 ? "found by a boolean" : "found by an integer", index_of(a->m_records, af, sizeof(AtDataRecord)), index_of(b->m_records, bf, sizeof(AtDataRecord)));
+                eq(kFoundBy[type], index_of(a->m_records, af, sizeof(AtDataRecord)), index_of(b->m_records, bf, sizeof(AtDataRecord)));
             }
         }
         eq("slot 7", at<FnSlot7>(0x000B15B0)(a, nullptr, 3), b->Unknown7(3));

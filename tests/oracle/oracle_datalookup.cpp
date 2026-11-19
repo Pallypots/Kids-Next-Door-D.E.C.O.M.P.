@@ -819,14 +819,14 @@ static void lookups(size_t which, bool by_name) {
         const std::string lower = cased(path, false);
         const std::string lost = "Nowhere\\" + path;
         const char* leaf = lo->m_name;
-        same_found(ids, "find", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, p, 0); }, [&] { return r->Find(nullptr, p, 0); });
-        same_found(ids, "find, climbing", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, p, 1); }, [&] { return r->Find(nullptr, p, 1); });
-        same_found(ids, "find, ending in a backslash", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, slash.c_str(), 0); }, [&] { return r->Find(nullptr, slash.c_str(), 0); });
-        same_found(ids, "find, in lower case", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, lower.c_str(), 0); }, [&] { return r->Find(nullptr, lower.c_str(), 0); });
-        same_found(ids, "find, climbing from nowhere", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, lost.c_str(), 1); }, [&] { return r->Find(lr, lost.c_str(), 1); });
-        same_found(ids, "find, not climbing from the link", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, p, 0); }, [&] { return r->Find(lr, p, 0); });
-        same_found(ids, "path from the root", [&] { return at<FnNameFlag>(0x00067D20)(o, nullptr, p, 0); }, [&] { return r->FindPath(p, 0); });
-        same_found(ids, "path from nowhere, climbing", [&] { return at<FnNameFlag>(0x00067D20)(o, nullptr, lost.c_str(), 1); }, [&] { return r->FindPath(lost.c_str(), 1); });
+        same_found(ids, "find", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, p, 0); }, [&] { return r->FindPath(nullptr, p, 0); });
+        same_found(ids, "find, climbing", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, p, 1); }, [&] { return r->FindPath(nullptr, p, 1); });
+        same_found(ids, "find, ending in a backslash", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, slash.c_str(), 0); }, [&] { return r->FindPath(nullptr, slash.c_str(), 0); });
+        same_found(ids, "find, in lower case", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, lower.c_str(), 0); }, [&] { return r->FindPath(nullptr, lower.c_str(), 0); });
+        same_found(ids, "find, climbing from nowhere", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, lost.c_str(), 1); }, [&] { return r->FindPath(lr, lost.c_str(), 1); });
+        same_found(ids, "find, not climbing from the link", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, p, 0); }, [&] { return r->FindPath(lr, p, 0); });
+        same_found(ids, "path from the root", [&] { return at<FnNameFlag>(0x00067D20)(o, nullptr, p, 0); }, [&] { return r->FindFromRoot(p, 0); });
+        same_found(ids, "path from nowhere, climbing", [&] { return at<FnNameFlag>(0x00067D20)(o, nullptr, lost.c_str(), 1); }, [&] { return r->FindFromRoot(lost.c_str(), 1); });
         same_found(ids, "value at a path", [&] { return at<FnNameFlag>(0x00068860)(o, nullptr, p, 1); }, [&] { return r->ValueAtPath(p, 1); });
         const size_t top0 = top_of(0, lo);
         const size_t top1 = top_of(1, lr);
@@ -834,14 +834,14 @@ static void lookups(size_t which, bool by_name) {
         if (top0 != (size_t)-1 && top0 == top1 && top0 != which) {
             AtDataRegistry* to = g_regs[0][top0];
             AtDataRegistry* tr = g_regs[1][top1];
-            same_found(ids, "find from the top", [&] { return at<FnFind>(0x000679E0)(to, nullptr, nullptr, p, 0); }, [&] { return tr->Find(nullptr, p, 0); });
+            same_found(ids, "find from the top", [&] { return at<FnFind>(0x000679E0)(to, nullptr, nullptr, p, 0); }, [&] { return tr->FindPath(nullptr, p, 0); });
             same_found(ids, "value at a path from the top", [&] { return at<FnNameFlag>(0x00068860)(to, nullptr, p, 0); }, [&] { return tr->ValueAtPath(p, 0); });
         }
         if (leaf && leaf[0]) {
             const std::string upper = cased(leaf, true);
-            same_found(ids, "find from the parent", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo->m_parent, leaf, 0); }, [&] { return r->Find(lr->m_parent, leaf, 0); });
-            same_found(ids, "climb from itself", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, leaf, 1); }, [&] { return r->Find(lr, leaf, 1); });
-            same_found(ids, "climb to the top", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, "No such name", 1); }, [&] { return r->Find(lr, "No such name", 1); });
+            same_found(ids, "find from the parent", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo->m_parent, leaf, 0); }, [&] { return r->FindPath(lr->m_parent, leaf, 0); });
+            same_found(ids, "climb from itself", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, leaf, 1); }, [&] { return r->FindPath(lr, leaf, 1); });
+            same_found(ids, "climb to the top", [&] { return at<FnFind>(0x000679E0)(o, nullptr, lo, "No such name", 1); }, [&] { return r->FindPath(lr, "No such name", 1); });
             same_found(ids, "value from the link", [&] { return at<FnFind>(0x00067CF0)(o, nullptr, lo, leaf, 1); }, [&] { return r->ValueAt(lr, leaf, 1); });
             same_found(ids, "value from the parent", [&] { return at<FnFind>(0x00067CF0)(o, nullptr, lo->m_parent, leaf, 0); }, [&] { return r->ValueAt(lr->m_parent, leaf, 0); });
             if (by_name || (k % 7) == 0) {
@@ -952,7 +952,7 @@ static void run_startup(const std::vector<unsigned char>& generic, const std::ve
     eq("attached says so", ret1, 1);
     same_all("attached");
     { On on(0); ret0 = at<FnCreate>(0x000675B0)(g_regs[0][0], nullptr, g_own[0], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr); }
-    { On on(1); ret1 = g_regs[1][0]->Create(g_own[1], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr); }
+    { On on(1); ret1 = g_regs[1][0]->Prepare(g_own[1], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr); }
     eq("created", ret0, ret1);
     same_all("created");
     { On on(0); at<FnSetName>(0x00066860)(g_regs[0][0], nullptr, "Library"); }
@@ -970,7 +970,7 @@ static void run_startup(const std::vector<unsigned char>& generic, const std::ve
     g_context = "start-up, loaded";
     {
         const Ids ids[2] = {ids_of(0), ids_of(1)};
-        same_found(ids, "the root, by an empty path", [&] { return at<FnFind>(0x000679E0)(g_regs[0][0], nullptr, &g_regs[0][0]->m_root, "", 0); }, [&] { return g_regs[1][0]->Find(&g_regs[1][0]->m_root, "", 0); });
+        same_found(ids, "the root, by an empty path", [&] { return at<FnFind>(0x000679E0)(g_regs[0][0], nullptr, &g_regs[0][0]->m_root, "", 0); }, [&] { return g_regs[1][0]->FindPath(&g_regs[1][0]->m_root, "", 0); });
     }
     for (size_t k = 0; k < g_regs[0].size(); k++) {
         g_context = k < 2 ? (k ? "start-up: generic" : "start-up: top") : "start-up: " + names[k - 2];
@@ -997,7 +997,7 @@ static void run_startup(const std::vector<unsigned char>& generic, const std::ve
     make_registries(0xCD);
     const size_t x = g_regs[0].size() - 1;
     { On on(0); at<FnCreate>(0x000675B0)(g_regs[0][x], nullptr, g_own[0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nullptr); }
-    { On on(1); g_regs[1][x]->Create(g_own[1], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nullptr); }
+    { On on(1); g_regs[1][x]->Prepare(g_own[1], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nullptr); }
     same_all("another made");
     std::string first;
     for (int p = 0; p < 13 && first.empty(); p++) {
@@ -1096,8 +1096,8 @@ static void run_written() {
                 AtDataRegistry* r = g_regs[1][at_];
                 for (const char* p : {"", "\\", "\\A", "A\\\\B", "A\\B\\C\\", "A\\b\\C", "X\\Y", "X", "AB\\", "A\\Same", "A\\B\\Same", "Same", "K", "A\\K", "Nowhere", (const char*)nullptr}) {
                     for (int climb = 0; climb < 2; climb++) {
-                        same_found(ids, "written path", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, p, climb); }, [&] { return r->Find(nullptr, p, climb); });
-                        same_found(ids, "written path from the root", [&] { return at<FnFind>(0x000679E0)(o, nullptr, &o->m_root, p, climb); }, [&] { return r->Find(&r->m_root, p, climb); });
+                        same_found(ids, "written path", [&] { return at<FnFind>(0x000679E0)(o, nullptr, nullptr, p, climb); }, [&] { return r->FindPath(nullptr, p, climb); });
+                        same_found(ids, "written path from the root", [&] { return at<FnFind>(0x000679E0)(o, nullptr, &o->m_root, p, climb); }, [&] { return r->FindPath(&r->m_root, p, climb); });
                         same_found(ids, "written value", [&] { return at<FnNameFlag>(0x00068860)(o, nullptr, p, climb); }, [&] { return r->ValueAtPath(p, climb); });
                     }
                     if (!p) continue;
@@ -1154,7 +1154,7 @@ static void run_create() {
                 int ret0 = 7, ret1 = 7;
                 const unsigned* n = counts;
                 { On on(0); ret0 = at<FnCreate>(0x000675B0)(g_regs[0][1], nullptr, g_own[0], n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7], n[8], n[9], n[10], n[11], parent ? g_regs[0][0] : nullptr); }
-                { On on(1); ret1 = g_regs[1][1]->Create(g_own[1], n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7], n[8], n[9], n[10], n[11], parent ? g_regs[1][0] : nullptr); }
+                { On on(1); ret1 = g_regs[1][1]->Prepare(g_own[1], n[0], n[1], n[2], n[3], n[4], n[5], n[6], n[7], n[8], n[9], n[10], n[11], parent ? g_regs[1][0] : nullptr); }
                 eq("created", ret0, ret1);
                 eq("type count", g_regs[0][1]->m_componentTypes, g_regs[1][1]->m_componentTypes);
                 eq("thirteenth block", g_regs[0][1]->m_pools[12].m_count, g_regs[1][1]->m_pools[12].m_count);
@@ -1203,7 +1203,7 @@ static void run_create() {
             { On on(1); ret1 = g_regs[1][1]->CopyFrom(g_regs[1][0]); }
         } else {
             { On on(0); ret0 = at<FnCreate>(0x000675B0)(g_regs[0][1], nullptr, g_own[0], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nullptr); }
-            { On on(1); ret1 = g_regs[1][1]->Create(g_own[1], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nullptr); }
+            { On on(1); ret1 = g_regs[1][1]->Prepare(g_own[1], 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, nullptr); }
         }
         eq("over leftovers", ret0, ret1);
         for (int p = 0; p < 13; p++) {
@@ -1233,7 +1233,7 @@ static void run_create() {
         compare_logs("no name");
         const bool d0 = guarded([&] { On on(0); at<FnCreate>(0x000675B0)(g_regs[0][0], nullptr, g_own[0], 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr); });
         g_recording = false;
-        const bool d1 = guarded([&] { On on(1); g_regs[1][0]->Create(g_own[1], 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr); });
+        const bool d1 = guarded([&] { On on(1); g_regs[1][0]->Prepare(g_own[1], 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, nullptr); });
         g_recording = false;
         eq("no blocks: crash", d0, d1);
         compare_logs("no blocks");

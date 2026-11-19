@@ -204,7 +204,7 @@ PARTS = [
     ("Registries: game state", A, "s_instance->m_gameState->SetRegistry(&m_genericRegistry);", "s_instance->m_gameState->SetRegistry(&m_registry6B54);"),
     ("Registries: second directory", A, 'PushPath("");', 'PushPath("x");'),
     ("Registries: Library found", A, 'FindFile("Library.ADD", &fs) == 0', 'FindFile("Library.ADD", &fs) != 0'),
-    ("Registries: prepare", A, "        GmDataRoot::s_instance->m_registry.Prepare(GmDataRoot::s_instance->Owner());\n", ""),
+    ("Registries: prepare", A, "        GmDataRoot::s_instance->m_registry.Prepare(GmDataRoot::s_instance->Owner(), 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);\n", ""),
     ("Registries: file name", A, '        GmDataRoot::s_instance->m_registry.SetFileName("Library");\n', ""),
     ("Registries: library parent", A, 'm_library.Load((AtDataRegistryOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, &GmDataRoot::s_instance->m_registry);', 'm_library.Load((AtDataRegistryOwner*)GmDataRoot::s_instance->Owner(), "Library", 0, 0);'),
     ("Registries: user's registry", A, "        user->m_registry = root;\n", ""),

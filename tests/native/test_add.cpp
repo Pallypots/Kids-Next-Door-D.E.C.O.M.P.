@@ -19,18 +19,6 @@ static int g_fail = 0;
 
 namespace {
 
-// What the three string seams were asked, by value.
-struct Bound {
-    char* characters = nullptr;
-    unsigned int size = 0;
-    int resets = 0;
-};
-std::vector<std::pair<const void*, Bound>> g_bound;
-Bound& bound(const void* value) {
-    for (auto& b : g_bound) if (b.first == value) return b.second;
-    g_bound.push_back({value, Bound()});
-    return g_bound.back().second;
-}
 
 class Memory : public AtIoStream {
 public:
@@ -92,22 +80,6 @@ public:
 };
 
 }  // namespace
-
-// ---- the seams, for this test --------------------------------------------------------------------------------------------
-void AtDataStringReset(AtDataString* value) {
-    value->Reset();
-    bound(value).resets++;
-}
-void AtDataStringBindAndRead(AtDataString* value, AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size) {
-    value->Read(descriptor, tokenizer);
-    bound(value).characters = characters;
-    bound(value).size = size;
-}
-void AtDataStringBind(AtDataString* value, AtDataDescriptor* descriptor, char* characters, unsigned int size) {
-    value->SetDescriptor(descriptor);
-    bound(value).characters = characters;
-    bound(value).size = size;
-}
 
 // One registry, the same text for every name.
 static const char kAdr[] =
@@ -223,15 +195,13 @@ int main() {
         CHECK(((AtDataInt*)r->FieldNamed("i"))->m_value == 3);
         CHECK(r->DescriptorAt(0) == &m->m_descriptors[0]);
         CHECK(r->FieldNamed("s")->m_descriptor == &m->m_descriptors[2]);
-        CHECK(bound(r->FieldNamed("s")).characters == t->m_characters + 8);
-        CHECK(bound(r->FieldNamed("s")).size == 8);
+        CHECK(((AtDataString*)r->FieldNamed("s"))->m_narrow.m_data == t->m_characters + 8);  // bound by AtDataString::Bind or BindAndRead
+        CHECK(((AtDataString*)r->FieldNamed("s"))->m_narrow.m_capacity == 8);
         unsigned int index = 77;
         CHECK(t->TakeUnused(&index) == nullptr && index == 77);
         CHECK(t->Unknown7(1) == 0);
-        const void* firstString = t->m_columns[2];
         library.Clear();
         CHECK(AtDatabaseManager::s_first == nullptr);
-        CHECK(bound(firstString).resets == 1);
     }
 
     // Rows no file gave, on a manager of its own.

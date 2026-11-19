@@ -148,11 +148,7 @@ public:
     static const AtIoKeyword s_keywords[kKeywordCount];  // 0x002B47F0
 };
 
-// ---- Seams, in src/at/AtDataLibraryHost.cpp, each stopping with a diagnostic, in a file of its own so that a test can supply them. Three members of AtDataString that only the table reader calls, which
-// no branch has recovered: they reach its text classes.
-void AtDataStringReset(AtDataString* value);        // 0x0006A1D0
-void AtDataStringBindAndRead(AtDataString* value, AtDataDescriptor* descriptor, AtIoTokenizer* tokenizer, char* characters, unsigned int size);  // 0x0006A4D0
-void AtDataStringBind(AtDataString* value, AtDataDescriptor* descriptor, char* characters, unsigned int size);  // 0x00069FD0
+// The table reader's three AtDataString calls (0x0006A1D0, 0x0006A4D0, 0x00069FD0) are the members Forget, BindAndRead and Bind (include/at/AtDataRegistry.h, at/datalookup).
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
 #pragma push_macro("offsetof")

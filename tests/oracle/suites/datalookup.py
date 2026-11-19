@@ -55,10 +55,10 @@ M = [
     ("value named: exact", L, "        AtDataLink* found = m_pools[i].FindByName(name, 0);", "        AtDataLink* found = m_pools[i].FindByName(name, 1);"),
     ("value named: the link", L, "        if (found != 0) {\n            return found->m_value;\n        }\n    }\n    return 0;\n}\n\nAtDataComponent* AtDataRegistry::ValueAt", "        if (found != 0) {\n            return (AtDataComponent*)found;\n        }\n    }\n    return 0;\n}\n\nAtDataComponent* AtDataRegistry::ValueAt"),
     ("value named: from the second block", L, "AtDataComponent* AtDataRegistry::ValueNamed(const char* name) {\n    for (unsigned int i = 0; i < kTypeCount; i++) {", "AtDataComponent* AtDataRegistry::ValueNamed(const char* name) {\n    for (unsigned int i = 1; i < kTypeCount; i++) {"),
-    ("value at: climb lost", L, "    AtDataLink* found = Find(from, path, climb);", "    AtDataLink* found = Find(from, path, 0);"),
-    ("value at: from lost", L, "    AtDataLink* found = Find(from, path, climb);\n    return found != 0 ? found->m_value : 0;", "    AtDataLink* found = Find(0, path, climb);\n    return found != 0 ? found->m_value : 0;"),
-    ("find path: climb lost", L, "    return Find(0, path, climb);", "    return Find(0, path, 0);"),
-    ("value at path: climb lost", L, "    AtDataLink* found = Find(0, path, climb);\n    return found != 0 ? found->m_value : 0;", "    AtDataLink* found = Find(0, path, 1);\n    return found != 0 ? found->m_value : 0;"),
+    ("value at: climb lost", L, "    AtDataLink* found = FindPath(from, path, climb);", "    AtDataLink* found = FindPath(from, path, 0);"),
+    ("value at: from lost", L, "    AtDataLink* found = FindPath(from, path, climb);\n    return found != 0 ? found->m_value : 0;", "    AtDataLink* found = FindPath(0, path, climb);\n    return found != 0 ? found->m_value : 0;"),
+    ("find path: climb lost", L, "    return FindPath(0, path, climb);", "    return FindPath(0, path, 0);"),
+    ("value at path: climb lost", L, "    AtDataLink* found = FindPath(0, path, climb);\n    return found != 0 ? found->m_value : 0;", "    AtDataLink* found = FindPath(0, path, 1);\n    return found != 0 ? found->m_value : 0;"),
     # descriptor copy
     ("descriptor copy: no clear", L, "    if (m_flags & kTyped) {\n        Clear();\n    }\n    m_type = other->m_type;", "    m_type = other->m_type;"),
     ("descriptor copy: type", L, "    m_type = other->m_type;\n    m_flags = other->m_flags;", "    m_flags = other->m_flags;"),
@@ -103,7 +103,7 @@ M = [
     ("pool copy: registry", L, "        value->m_registry = registry;\n    }\n}", "    }\n}"),
     # relink
     ("relink: path not cleared", L, "        path[0] = 0;\n        from->m_parent->AppendPath", "        path[0] = 'Q';\n        path[1] = 0;\n        from->m_parent->AppendPath"),
-    ("relink: climbing", L, "        AtDataLink* parent = registry->Find(0, path, 0);", "        AtDataLink* parent = registry->Find(0, path, 1);"),
+    ("relink: climbing", L, "        AtDataLink* parent = registry->FindPath(0, path, 0);", "        AtDataLink* parent = registry->FindPath(0, path, 1);"),
     ("relink: parent not set", L, "            m_links[i].m_parent = parent;\n", ""),
     ("relink: joins the list", L, "            m_links[i].m_parent = parent;", "            m_links[i].Detach();\n            m_links[i].AttachTo(parent);"),
     # registry copy
@@ -116,9 +116,9 @@ M = [
     ("copy: not filed", L, "    m_owner->Add(this, \"\");\n    return 0;\n}\n\n// ---- start-up", "    return 0;\n}\n\n// ---- start-up"),
     ("copy: filed in a space", L, "    m_owner->Add(this, \"\");\n    return 0;\n}\n\n// ---- start-up", "    m_owner->Add(this, \"Copy\");\n    return 0;\n}\n\n// ---- start-up"),
     # start-up
-    ("attach: null path searched", L, "    AtDataLink* under = path != 0 ? parent->Find(0, path, 0) : &parent->m_root;", "    AtDataLink* under = path != 0 ? parent->Find(0, path, 0) : parent->m_root.m_firstChild;"),
-    ("attach: climbing", L, "parent->Find(0, path, 0) : &parent->m_root;", "parent->Find(0, path, 1) : &parent->m_root;"),
-    ("attach: in this registry", L, "parent->Find(0, path, 0) : &parent->m_root;", "Find(0, path, 0) : &parent->m_root;"),
+    ("attach: null path searched", L, "    AtDataLink* under = path != 0 ? parent->FindPath(0, path, 0) : &parent->m_root;", "    AtDataLink* under = path != 0 ? parent->FindPath(0, path, 0) : parent->m_root.m_firstChild;"),
+    ("attach: climbing", L, "parent->FindPath(0, path, 0) : &parent->m_root;", "parent->FindPath(0, path, 1) : &parent->m_root;"),
+    ("attach: in this registry", L, "parent->FindPath(0, path, 0) : &parent->m_root;", "FindPath(0, path, 0) : &parent->m_root;"),
     ("attach: nothing found attaches", L, "    if (under == 0) {\n        return 0;\n    }\n    m_root.AttachTo(under);", "    if (under == 0) {\n        under = &parent->m_root;\n    }\n    m_root.AttachTo(under);"),
     ("attach: returns", L, "    m_root.AttachTo(under);\n    return 1;", "    m_root.AttachTo(under);\n    return 0;"),
     ("create: pool heap", L, "                           AtDataRegistry* parent) {\n    s_poolHeap = s_heap;\n", "                           AtDataRegistry* parent) {\n"),

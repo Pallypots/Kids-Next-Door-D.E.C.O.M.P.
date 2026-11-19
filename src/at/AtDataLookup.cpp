@@ -91,7 +91,7 @@ void AtDataLink::AppendPath(char* out, int skipNameless) {
 
 // ---- lookups ------------------------------------------------------------------------------------------------------------
 
-AtDataLink* AtDataRegistry::Find(AtDataLink* from, const char* path, int climb) {
+AtDataLink* AtDataRegistry::FindPath(AtDataLink* from, const char* path, int climb) {
     if (path == 0) {
         return from;
     }
@@ -167,16 +167,16 @@ AtDataComponent* AtDataRegistry::ValueNamed(const char* name) {
 }
 
 AtDataComponent* AtDataRegistry::ValueAt(AtDataLink* from, const char* path, int climb) {
-    AtDataLink* found = Find(from, path, climb);
+    AtDataLink* found = FindPath(from, path, climb);
     return found != 0 ? found->m_value : 0;
 }
 
-AtDataLink* AtDataRegistry::FindPath(const char* path, int climb) {
-    return Find(0, path, climb);
+AtDataLink* AtDataRegistry::FindFromRoot(const char* path, int climb) {
+    return FindPath(0, path, climb);
 }
 
 AtDataComponent* AtDataRegistry::ValueAtPath(const char* path, int climb) {
-    AtDataLink* found = Find(0, path, climb);
+    AtDataLink* found = FindPath(0, path, climb);
     return found != 0 ? found->m_value : 0;
 }
 
@@ -294,7 +294,7 @@ void AtDataComponentPool::Relink(AtDataComponentPool* other, AtDataRegistry* reg
             continue;
         }
         // Found by the whole path from this registry's root, where every copied link hangs: so only a parent one part deep is found.
-        AtDataLink* parent = registry->Find(0, path, 0);
+        AtDataLink* parent = registry->FindPath(0, path, 0);
         if (parent != 0) {
             m_links[i].m_parent = parent;
         }
@@ -321,7 +321,7 @@ int AtDataRegistry::CopyFrom(AtDataRegistry* other) {
 // ---- start-up -----------------------------------------------------------------------------------------------------------
 
 int AtDataRegistry::AttachUnder(AtDataRegistry* parent, const char* path) {
-    AtDataLink* under = path != 0 ? parent->Find(0, path, 0) : &parent->m_root;
+    AtDataLink* under = path != 0 ? parent->FindPath(0, path, 0) : &parent->m_root;
     if (under == 0) {
         return 0;
     }
@@ -329,7 +329,7 @@ int AtDataRegistry::AttachUnder(AtDataRegistry* parent, const char* path) {
     return 1;
 }
 
-int AtDataRegistry::Create(AtDataRegistryOwner* owner, unsigned int empties, unsigned int booleans, unsigned int ints, unsigned int reals, unsigned int shortNames, unsigned int strings,
+int AtDataRegistry::Prepare(AtDataRegistryOwner* owner, unsigned int empties, unsigned int booleans, unsigned int ints, unsigned int reals, unsigned int shortNames, unsigned int strings,
                            unsigned int booleanArrays, unsigned int byteArrays, unsigned int intArrays, unsigned int realArrays, unsigned int shortNameArrays, unsigned int stringArrays,
                            AtDataRegistry* parent) {
     s_poolHeap = s_heap;

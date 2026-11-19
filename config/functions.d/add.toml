@@ -389,6 +389,3 @@ evidence = "tests/oracle/oracle_add.cpp (FindByValue on a column of integers); s
 "?s_keywords@AtDatabaseManager@@2QBUAtIoKeyword@@B" = 0x002B5310
 "?s_heap@AtRecordLayout@@2PAXA" = 0x003ADE90
 "?s_heap@AtDataRecordDatabase@@2PAXA" = 0x003ADE94
-"?AtDataStringReset@@YAXPAVAtDataString@@@Z" = 0x0006A1D0  # seam, not recovered
-"?AtDataStringBindAndRead@@YAXPAVAtDataString@@PAVAtDataDescriptor@@PAVAtIoTokenizer@@PADI@Z" = 0x0006A4D0  # seam, not recovered
-"?AtDataStringBind@@YAXPAVAtDataString@@PAVAtDataDescriptor@@PADI@Z" = 0x00069FD0  # seam, not recovered

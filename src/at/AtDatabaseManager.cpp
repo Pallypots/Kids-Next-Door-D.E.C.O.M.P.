@@ -347,7 +347,7 @@ void AtDataRecordDatabase::Clear() {
             if (values->m_descriptor->m_type == kTypeString) {
                 char* value = (char*)values;
                 for (unsigned int i = 0; i < m_count; i++) {
-                    AtDataStringReset((AtDataString*)value);
+                    ((AtDataString*)value)->Forget();
                     value += ValueSize(kTypeString);
                 }
             }
@@ -487,9 +487,9 @@ int AtDataRecordDatabase::Read(AtDatabaseManager* manager, AtIoTokenizer* tokeni
                 const unsigned int size = field->m_intCeiling + 1;
                 m_characterUsed += size * manager->m_characterScale;
                 if (given != 0) {
-                    AtDataStringBindAndRead((AtDataString*)value, field, tokenizer, characters, size);
+                    ((AtDataString*)value)->BindAndRead(field, tokenizer, characters, size);
                 } else {
-                    AtDataStringBind((AtDataString*)value, field, characters, size);
+                    ((AtDataString*)value)->Bind(field, characters, size);
                 }
             } else if (given != 0) {
                 value->Read(field, tokenizer);

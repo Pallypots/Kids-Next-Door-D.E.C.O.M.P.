@@ -128,14 +128,10 @@ void GmClock::Tick(int) { StopHere("Clock: 0x00071A60 is not recovered"); }
 void AppUnknown692C::Init() { StopHere("App+0x692C: 0x00090210 is not recovered"); }
 void AppUnknown692C::Update(int) { StopHere("App+0x692C: 0x0006DEA0 is not recovered"); }
 
-// The registry members of the .ADR work that start-up calls, and their neighbours.
+// The neighbours of the registry members start-up calls (those are at/datalookup's, src/at/AtDataLookup.cpp).
 GmDataRoot* GmDataRoot::s_instance;
 GmRegistryUser* GmRegistryUser::s_instance;
 GmRegistryNames* GmRegistryNames::s_instance;
-int AtDataRegistry::AttachUnder(AtDataRegistry*, const char*) { StopHere("AtDataRegistry: 0x00067D40 is not recovered"); return 0; }
-void AtDataRegistry::Prepare(AtDataRegistryOwner*) { StopHere("AtDataRegistry: 0x000675B0 is not recovered"); }
-void AtDataRegistry::SetFileName(const char*) { StopHere("AtDataRegistry: 0x00066860 is not recovered"); }
-AtDataLink* AtDataRegistry::FindPath(AtDataLink*, const char*, int) { StopHere("AtDataRegistry: 0x000679E0 is not recovered"); return 0; }
 void GmRegistryNames::Add(AtDataRegistry*) { StopHere("Registry names: 0x00071F20 is not recovered"); }
 
 // Save data, sound, and the rest.

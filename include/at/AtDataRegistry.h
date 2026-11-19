@@ -178,31 +178,25 @@ public:
     // 0x000679E0 the search every game object's record reader calls. Part by part from from's children (the root's if null), each part through FindChild.
     // With climb, a part not among from's children is looked for among its parent's, and so on up; one found nowhere leaves null, and the next part is
     // then looked for from the root. A null or empty path answers from.
-    AtDataLink* Find(AtDataLink* from, const char* path, int climb);
+    AtDataLink* FindPath(AtDataLink* from, const char* path, int climb);
     AtDataLink* FindLink(const char* name, AtDataLink* under, int exact);  // 0x000678A0 the whole name, depth first from under (the root if null) through children and then siblings, so past this registry's tree into those hung beside it
     AtDataLink* FindInPools(const char* name, int exact);  // 0x00067950 FindByName in each block, by type
     AtDataComponent* ValueNamed(const char* name);     // 0x00067CB0 FindByName in each block, ignoring case; the value
-    AtDataComponent* ValueAt(AtDataLink* from, const char* path, int climb);  // 0x00067CF0 Find's value
-    AtDataLink* FindPath(const char* path, int climb); // 0x00067D20 Find from the root
-    AtDataComponent* ValueAtPath(const char* path, int climb);  // 0x00068860 Find's value, from the root
+    AtDataComponent* ValueAt(AtDataLink* from, const char* path, int climb);  // 0x00067CF0 FindPath's value
+    AtDataLink* FindFromRoot(const char* path, int climb);  // 0x00067D20 FindPath from the root
+    AtDataComponent* ValueAtPath(const char* path, int climb);  // 0x00068860 FindPath's value, from the root
     // 0x000687D0 the other loading form: every block copied from other (CopyFrom), then the parents (Relink), filed with other's owner in the plain group.
     // No parent registry, file name or count of types is taken. 0
     int CopyFrom(AtDataRegistry* other);
     int AttachUnder(AtDataRegistry* parent, const char* path);  // 0x00067D40 this root under parent's link at path, or its root if path is null; 0 and nothing done if not found, else 1
     // 0x000675B0 empty blocks of the counts given, all allocated, under parent if there is one, and filed in the plain group. Start-up makes the registry every
     // loaded one hangs under this way, with no values. The block of no type, the thirteenth, is not touched. 0
-    int Create(AtDataRegistryOwner* owner, unsigned int empties, unsigned int booleans, unsigned int ints, unsigned int reals, unsigned int shortNames, unsigned int strings,
+    int Prepare(AtDataRegistryOwner* owner, unsigned int empties, unsigned int booleans, unsigned int ints, unsigned int reals, unsigned int shortNames, unsigned int strings,
                unsigned int booleanArrays, unsigned int byteArrays, unsigned int intArrays, unsigned int realArrays, unsigned int shortNameArrays, unsigned int stringArrays,
                AtDataRegistry* parent);
     void SetFileName(const char* name);                // 0x00066860 into the block there if it is long enough
 
     static void SetHeap(void* heap);                   // 0x00066100
-
-    // Called by App's start-up (src/gm/GmApp.cpp) and not recovered: each stops with a diagnostic, in src/gm/GmAppHost.cpp. Names inferred from what start-up does with them.
-    int AttachUnder(AtDataRegistry* parent, const char* path);  // 0x00067D40 m_root under the parent's node at path
-    void Prepare(AtDataRegistryOwner* owner);          // 0x000675B0 the original takes thirteen more arguments; start-up passes zeros
-    void SetFileName(const char* name);                // 0x00066860
-    AtDataLink* FindPath(AtDataLink* from, const char* path, int deep);  // 0x000679E0
 
     int m_unknown04;           // +0x04 never touched
     int m_unknown08;           // +0x08 never touched

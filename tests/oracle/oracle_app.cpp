@@ -447,7 +447,11 @@ GmDataRoot* GmDataRoot::s_instance;
 GmRegistryUser* GmRegistryUser::s_instance;
 GmRegistryNames* GmRegistryNames::s_instance;
 int AtDataRegistry::AttachUnder(AtDataRegistry* parent, const char* path) { return d_attach(this, nullptr, parent, path); }
-void AtDataRegistry::Prepare(AtDataRegistryOwner* owner) { d_prepare(this, nullptr, owner, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0); }
+int AtDataRegistry::Prepare(AtDataRegistryOwner* owner, unsigned int a, unsigned int b, unsigned int c, unsigned int d, unsigned int e, unsigned int f, unsigned int g,
+                            unsigned int h, unsigned int i, unsigned int j, unsigned int k, unsigned int l, AtDataRegistry* parent) {
+    d_prepare(this, nullptr, owner, (int)a, (int)b, (int)c, (int)d, (int)e, (int)f, (int)g, (int)h, (int)i, (int)j, (int)k, (int)l, (int)(uintptr_t)parent);
+    return 0;
+}
 void AtDataRegistry::SetFileName(const char* name) { d_set_name(this, nullptr, name); }
 AtDataLink* AtDataRegistry::FindPath(AtDataLink* from, const char* path, int deep) { return (AtDataLink*)d_find_path(this, nullptr, from, path, deep); }
 void GmRegistryNames::Add(AtDataRegistry* r) { d_names_add(this, nullptr, r); }

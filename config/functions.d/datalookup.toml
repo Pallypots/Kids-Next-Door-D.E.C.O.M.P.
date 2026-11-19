@@ -6,7 +6,7 @@
 [[function]]
 va = 0x000679E0
 size = 118
-symbol = "?Find@AtDataRegistry@@QAEPAVAtDataLink@@PAV2@PBDH@Z"
+symbol = "?FindPath@AtDataRegistry@@QAEPAVAtDataLink@@PAV2@PBDH@Z"
 source = "src/at/AtDataLookup.cpp"
 subsystem = "at/datalookup"
 evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
@@ -46,7 +46,7 @@ evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declara
 [[function]]
 va = 0x00067D20
 size = 20
-symbol = "?FindPath@AtDataRegistry@@QAEPAVAtDataLink@@PBDH@Z"
+symbol = "?FindFromRoot@AtDataRegistry@@QAEPAVAtDataLink@@PBDH@Z"
 source = "src/at/AtDataLookup.cpp"
 subsystem = "at/datalookup"
 evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
@@ -110,7 +110,7 @@ evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declara
 [[function]]
 va = 0x000675B0
 size = 742
-symbol = "?Create@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@IIIIIIIIIIIIPAV1@@Z"
+symbol = "?Prepare@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@IIIIIIIIIIIIPAV1@@Z"
 source = "src/at/AtDataLookup.cpp"
 subsystem = "at/datalookup"
 evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"

@@ -957,7 +957,7 @@ source = "src/at/AtDataRegistry.cpp"
 "?s_heap@AtDataDescriptor@@2PAXA" = 0x002CB0A0
 "?s_heap@AtDataLink@@2PAXA" = 0x002CB0A4
 "?s_heap@AtDataRegistryNameSpaces@@2PAXA" = 0x002C9F9C
-# Where these classes' vftables are. Not recorded as vftables: slots 5 to 9 are not recovered.
+# Where these classes' vftables are. Since slots 5 to 9 are recovered (at/datalookup), they are also recorded as [[vtable]] in datalookup.toml.
 "??_7AtDataComponent@@6B@" = 0x00277754
 "??_7AtDataBoolean@@6B@" = 0x0027777C
 "??_7AtDataInt@@6B@" = 0x002777A4
