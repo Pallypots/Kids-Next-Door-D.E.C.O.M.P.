@@ -108,6 +108,11 @@ public:
     void SetRotation(const AtQuaternion* rotation);  // 0x000272E0
     void SetPosition(const AtVector3* position);     // 0x00027310
     void SetLookAt(const AtVector3* direction, const AtVector3* up);  // 0x00049960
+    // A world matrix given from outside, as a sound node gives its emitter one. In src/at/AtSceneEffectNodes.cpp.
+    void MarkChildrenDirty(unsigned int mask);  // 0x00032310 only the children, not below them
+    void WorldChanged();                       // 0x00032DF0 the local matrix again from the world matrix, through the parent's if it has one
+    void SetWorldFrom(AtCoordSys* from, const AtVector3* scale);  // 0x00032E50 from's world matrix, its axes scaled if given
+    void SetWorld(const AtQuaternion* rotation, const AtVector3* position, const AtVector3* scale);  // 0x00032EF0
     // Called by the game actor's animation callback (src/gm/GmAcActor.cpp) and not recovered: each stops with a diagnostic, in src/gm/GmAcSeams.cpp. Names inferred.
     void WorldPosition(AtVector3* out);        // 0x000332B0
     void Place(const AtVector3* forward, int b, const AtVector3* position, int d);  // 0x00032EA0

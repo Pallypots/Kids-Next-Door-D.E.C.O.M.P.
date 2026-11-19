@@ -37,6 +37,9 @@ public:
     AtScene* NodeDatabaseAt(unsigned int index);          // 0x0002ED20
     AtSpaceGraph* SpaceGraphAt(unsigned int index);       // 0x0002ED40
     AtSceneDatabaseLoader* LoaderAt(unsigned int index);  // 0x0002ED60
+    // What the game calls right after loading a list: each scene's nodes put in a space graph, then the nested lists'; taking them out, the nested lists first. In src/at/AtSceneWalk.cpp.
+    void InsertInto(AtSpaceGraph* graph);                 // 0x0002ED70
+    void RemoveFrom(AtSpaceGraph* graph);                 // 0x0002EDD0
 
     static void SetHeap(void* heap);          // 0x0002E200
 

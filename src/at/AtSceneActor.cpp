@@ -2,6 +2,7 @@
 #include "at/AtSceneActor.h"
 #include "at/AtSpaceGraph.h"
 
+#include "at/AtSceneNodes.h"
 #include "at/AtSceneParticle.h"
 
 #include "AtArray.h"
@@ -69,10 +70,39 @@ unsigned int AtSceneActorsSize(int kind) {
         return sizeof(AtSceneJointedModelActor);
     case kAtActorParticleSystem:
         return sizeof(AtSceneParticleSystemActor);
+    case kAtActorWater:
+        return sizeof(AtSceneWaterActor);
+    case kAtActorLensFlare:
+        return sizeof(AtSceneLensFlareActor);
+    case kAtActorGroup:
+        return sizeof(AtSceneGroupActor);
+    case kAtActorSwitchGroup:
+        return sizeof(AtSceneSwitchGroupActor);
+    case kAtActorLodGroup:
+        return sizeof(AtSceneLodGroupActor);
+    case kAtActorSound:
+        return sizeof(AtSceneSoundNode);
     default:
-        return AtSceneUnrecoveredActorsSize(kind);
+        return 0;
     }
 }
+
+namespace {
+
+template <class T> void ConstructActors(void* first, unsigned int count) {
+    for (unsigned int i = 0; i < count; i++) {
+        new ((T*)first + i, AtPlacement()) T;
+    }
+}
+
+// Last first.
+template <class T> void DestroyActors(void* first, unsigned int count) {
+    for (unsigned int i = count; i > 0; i--) {
+        ((T*)first)[i - 1].~T();
+    }
+}
+
+}  // namespace
 
 void AtSceneActorsConstruct(int kind, void* first, unsigned int count) {
     switch (kind) {
@@ -91,8 +121,25 @@ void AtSceneActorsConstruct(int kind, void* first, unsigned int count) {
             new ((AtSceneParticleSystemActor*)first + i, AtPlacement()) AtSceneParticleSystemActor;
         }
         break;
+    case kAtActorWater:
+        ConstructActors<AtSceneWaterActor>(first, count);
+        break;
+    case kAtActorLensFlare:
+        ConstructActors<AtSceneLensFlareActor>(first, count);
+        break;
+    case kAtActorGroup:
+        ConstructActors<AtSceneGroupActor>(first, count);
+        break;
+    case kAtActorSwitchGroup:
+        ConstructActors<AtSceneSwitchGroupActor>(first, count);
+        break;
+    case kAtActorLodGroup:
+        ConstructActors<AtSceneLodGroupActor>(first, count);
+        break;
+    case kAtActorSound:
+        ConstructActors<AtSceneSoundNode>(first, count);
+        break;
     default:
-        AtSceneUnrecoveredActorsConstruct(kind, first, count);
         break;
     }
 }
@@ -114,8 +161,25 @@ void AtSceneActorsDestroy(int kind, void* first, unsigned int count) {
             ((AtSceneParticleSystemActor*)first)[i - 1].~AtSceneParticleSystemActor();
         }
         break;
+    case kAtActorWater:
+        DestroyActors<AtSceneWaterActor>(first, count);
+        break;
+    case kAtActorLensFlare:
+        DestroyActors<AtSceneLensFlareActor>(first, count);
+        break;
+    case kAtActorGroup:
+        DestroyActors<AtSceneGroupActor>(first, count);
+        break;
+    case kAtActorSwitchGroup:
+        DestroyActors<AtSceneSwitchGroupActor>(first, count);
+        break;
+    case kAtActorLodGroup:
+        DestroyActors<AtSceneLodGroupActor>(first, count);
+        break;
+    case kAtActorSound:
+        DestroyActors<AtSceneSoundNode>(first, count);
+        break;
     default:
-        AtSceneUnrecoveredActorsDestroy(kind, first, count);
         break;
     }
 }

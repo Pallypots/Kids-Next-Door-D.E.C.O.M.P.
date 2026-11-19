@@ -2,8 +2,8 @@
 // own messages, which call this "Atlas Scene": position, rotation, bounding sphere and collision for each node; meshes, animation channels, particles and so on for the classes built on it. Scene names are inferred; keyword names are
 // the original's. Original address clusters 0x0003BB60-0x0003CDFF, 0x0003D6F0-0x0003D91F, 0x0003E8C0-0x0003E91F, 0x00049800-0x0004AFDF, 0x0004F370-0x0004F4AF.
 //
-// The base node and the modifier node are here; ModelActor and JointedModelActor are in at/AtSceneActor.h. Every other class of node (AtSceneActorKind) is not recovered. All those arrays are made through the three AtSceneActors functions
-// below. For a class not recovered, src/at/AtSceneActorsHost.cpp answers with a diagnostic, so a scene that has any stops there. A test may supply them.
+// The base node and the modifier node are here; ModelActor and JointedModelActor are in at/AtSceneActor.h, ParticleSystemActor in at/AtSceneParticle.h, and the group, water, lens flare and sound classes in at/AtSceneNodes.h.
+// All those arrays are made through the three AtSceneActors functions below, in src/at/AtSceneActor.cpp.
 #pragma once
 
 #include "at/AtNameTableOwner.h"
@@ -242,9 +242,6 @@ enum AtSceneActorKind {
 unsigned int AtSceneActorsSize(int kind);                                         // the size of one
 void AtSceneActorsConstruct(int kind, void* first, unsigned int count);           // given room for count
 void AtSceneActorsDestroy(int kind, void* first, unsigned int count);             // last first; not the memory
-unsigned int AtSceneUnrecoveredActorsSize(int kind);                              // The same three, for the classes not recovered. src/at/AtSceneActorsHost.cpp
-void AtSceneUnrecoveredActorsConstruct(int kind, void* first, unsigned int count);
-void AtSceneUnrecoveredActorsDestroy(int kind, void* first, unsigned int count);
 void* AtSceneFindDataLink(AtNameTableOwner* owner, const char* path, const char* ns);  // 0x0005F130 on the owner's +0x10, whose class is not recovered. No real scene file uses the word
 
 // Vftable 0x00275A44. A name map of nodes.
@@ -259,10 +256,18 @@ public:
 
     void Load(AtNameTableOwner* owner, const char* name, int unused);  // 0x0003CD60 name + ".ASN"
     void Read(AtNameTableOwner* owner, AtIoTokenizer* tokenizer);      // 0x0003BCD0
-    // NOT recovered: each passes the graph to four functions over the scene's arrays (0x0003D920, 0x0003DDB0, 0x0003E2B0, 0x0003E7C0, and 0x0003DBB0, 0x0003E070, 0x0003E580, 0x0003E810).
-    // The names are inferred from the pairing; the manifest's dynamic nodes are their callers. Stop with a diagnostic in src/gm/GmLevelManifestHost.cpp.
+    // Each node into the space graph in each of the four kinds its flags ask for: drawing, collision, line segment tests, then modification. Taking them out goes in the same order. Sound nodes and the arrays of unknown
+    // classes are in none. In src/at/AtSceneWalk.cpp, a file of its own, so that a test can supply these two instead.
     void InsertInto(AtSpaceGraph* graph);                              // 0x0003E860
     void RemoveFrom(AtSpaceGraph* graph);                              // 0x0003E890
+    void AddDrawing(AtSpaceGraph* graph);                              // 0x0003D920 actors with kDrawing, no link of kind 2 and sharing no coordinate system
+    void RemoveDrawing(AtSpaceGraph* graph);                           // 0x0003DBB0 actors with a link of kind 2
+    void AddCollision(AtSpaceGraph* graph);                            // 0x0003DDB0 plain nodes, then actors, with kCollision and no link of kind 1; actors sharing no coordinate system
+    void RemoveCollision(AtSpaceGraph* graph);                         // 0x0003E070
+    void AddLineSegIntersect(AtSpaceGraph* graph);                     // 0x0003E2B0 likewise, by kLineSegIntersect and kind 3
+    void RemoveLineSegIntersect(AtSpaceGraph* graph);                  // 0x0003E580
+    void AddModification(AtSpaceGraph* graph);                         // 0x0003E7C0 modifier nodes with kModificationEnabled and no link of kind 0
+    void RemoveModification(AtSpaceGraph* graph);                      // 0x0003E810
 
     AtRotTransCoordSys* NextRotTrans(AtIoTokenizer* tokenizer);    // 0x0003D8C0 reports running out, and hands one back regardless
     AtScaleCoordSys* NextScale(AtIoTokenizer* tokenizer);          // 0x0003D8F0 likewise
@@ -311,7 +316,7 @@ public:
 
 private:
     void ResetFields();                            // 0x0003BB60 all but the owner
-    // A count in brackets and a list of named nodes, of a class not recovered.
+    // A count in brackets and a list of named nodes, of one of the classes in AtSceneActorKind.
     void ReadActors(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, int kind, int word, unsigned int* count, void** actors);
 };
 

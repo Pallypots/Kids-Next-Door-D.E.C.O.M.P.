@@ -9,6 +9,7 @@
 #include "at/AtIoTokenizer.h"
 #include "at/AtScene.h"
 #include "at/AtSceneActor.h"
+#include "at/AtSceneNodes.h"
 
 static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
@@ -18,22 +19,6 @@ namespace {
 class Memory : public AtIoStream {
 public:
     int Refill() override { return 0; }
-};
-
-// A class not recovered, here a base node that takes Mesh and nothing else of its own.
-class Actor : public AtSceneNode {
-public:
-    void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
-        if (token == 113) {
-            char name[8];
-            t->ExpectName(name);
-            t->ExpectName(name);
-            m_meshes++;
-            return;
-        }
-        AtSceneNode::ReadBody(owner, t, token);
-    }
-    int m_meshes = 0;
 };
 
 struct Mat { float position[3]; float rotation[4]; int identity; };
@@ -108,19 +93,8 @@ void read(AtScene& scene, AtNameTableOwner& owner, const char* text) {
     tokenizer.SetStream(nullptr);
 }
 
-int g_actorsMade;
-
 }  // namespace
 
-unsigned int AtSceneUnrecoveredActorsSize(int) { return sizeof(Actor); }
-void AtSceneUnrecoveredActorsConstruct(int, void* first, unsigned int count) {
-    for (unsigned int i = 0; i < count; i++) new ((Actor*)first + i) Actor;
-    g_actorsMade += (int)count;
-}
-void AtSceneUnrecoveredActorsDestroy(int, void* first, unsigned int count) {
-    for (unsigned int i = count; i > 0; i--) ((Actor*)first + i - 1)->~Actor();
-    g_actorsMade -= (int)count;
-}
 void* AtSceneFindDataLink(AtNameTableOwner*, const char*, const char*) { return nullptr; }
 
 int main() {
@@ -176,11 +150,11 @@ int main() {
              "}\n"
              "ModifierNode[1]\n{\n ModifierNode \"Mover\" \n {\n  Modifier \"Mod\" \"\"\n  ModificationEnable\n }\n}\n"
              "ModelActor[1]\n{\n ModelActor \"Thing\" RotTransCoordSys\n {\n  Mesh \"Thing\" \"\"\n  LineSegIntersectEnable\n }\n}\n"
-             "LodGroupActor[1]\n{\n LodGroupActor \"Puff\"\n {\n  Mesh \"Puff\" \"\"\n  CollisionEnable\n }\n}\n");
+             "LodGroupActor[1]\n{\n LodGroupActor \"Puff\"\n {\n  CollisionEnable\n }\n}\n");
         CHECK(scene.m_nodeCount == 2);
         CHECK(scene.m_modifierNodeCount == 1);
         CHECK(scene.m_modelCount == 1);
-        CHECK(g_actorsMade == 1);
+        CHECK(scene.m_lodGroupCount == 1);
         CHECK(scene.m_rotTransUsed == 3);
         CHECK(scene.m_motionUsed == 1);
         CHECK(device.m_matrices.m_pool.m_mats.size() == 6);
@@ -220,9 +194,10 @@ int main() {
         CHECK(thing->m_class == 2);
         CHECK(thing->m_mesh == &mesh);
         CHECK(thing->m_flags & AtSceneNode::kLineSegIntersect);
-        Actor* puff = (Actor*)scene.Find("Puff");
+        AtSceneLodGroupActor* puff = (AtSceneLodGroupActor*)scene.Find("Puff");
         CHECK(puff != nullptr);
-        CHECK(puff->m_meshes == 1);
+        CHECK(puff->m_class == 13);
+        CHECK(puff->m_count == 0);
         CHECK(puff->m_flags & AtSceneNode::kCollision);
 
         // A copy owns a coordinate system and motion state of its own, and gives them back.
@@ -239,7 +214,7 @@ int main() {
 
         // Over what is there, with a name space.
         read(scene, owner, "NameSpace \"Set\"\nRotTransCoordSys[1]\nNode[1]\nNode[1]\n{\n Node \"Again\" RotTransCoordSys\n {\n  Position 1.0 1.0 1.0\n }\n}\n");
-        CHECK(g_actorsMade == 0);
+        CHECK(scene.m_lodGroupCount == 0);
         CHECK(device.m_matrices.m_freedPools == 1);
         CHECK(owner.FindNode("Base", nullptr) == nullptr);
         CHECK(owner.FindNode("Again", "Set") == scene.m_nodes);
@@ -250,7 +225,7 @@ int main() {
         read(scene, owner, "Node[1]\nNode[0]\n{\n}\nModelActor[0]\n{\n}\n");
         CHECK(scene.m_nodes != nullptr);
         CHECK(scene.m_models != nullptr);
-        CHECK(g_actorsMade == 0);
+        CHECK(scene.m_lodGroupCount == 0);
     }
     CHECK(device.m_matrices.m_freedPools == 2);
 
