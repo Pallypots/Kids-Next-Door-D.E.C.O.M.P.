@@ -18,7 +18,8 @@ AtMatrixTable g_atMatrix = {AtMatrixCopy, AtMatrixIdentity, AtMatrixSetTranslati
                             AtMatrixSetScale3x3, AtMatrixSetAxisAngle, AtMatrixSetAxes, AtMatrixSetLookAtZY, AtMatrixSetLookAtXY, AtMatrixMakeTranslation, AtMatrixMakeAxisAngle,
                             AtMatrixMakeRotation, AtMatrixMakeFromAxes, AtMatrixScaleAxes, AtMatrixTranslateAfter, AtMatrixScaleColumnX, AtMatrixScaleColumnY, AtMatrixInvert,
                             AtMatrixTranspose, AtMatrixSetElement, AtMatrixGetElement, AtMatrixGetXAxis, AtMatrixGetYAxis, AtMatrixGetZAxis, AtMatrixMultiplyRight,
-                            AtMatrixTransformPointZ, AtMatrixInverseTransformPoint, AtMatrixInverseTransformDirection};
+                            AtMatrixTransformPointZ, AtMatrixInverseTransformPoint, AtMatrixInverseTransformDirection,
+                            AtMatrixPreRotateX, AtMatrixPreRotateY, AtMatrixPreRotateZ, AtMatrixPostRotateZ, AtMatrixGetRotation};
 
 void AtQuaternion::Read(AtIoTokenizer* tokenizer) {
     x = tokenizer->ExpectReal();

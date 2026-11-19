@@ -54,14 +54,23 @@ struct AtMatrixTable {
     double (*TransformPointZ)(const AtMatrix* m, const AtVector3* point);              // 0x002C6254
     void (*InverseTransformPoint)(const AtMatrix* m, const AtVector3* from, AtVector3* to);      // 0x002C6258
     void (*InverseTransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);  // 0x002C6260
+    // The last five slots some code reads: src/at/AtMatrixAxis.cpp.
+    void (*PreRotateX)(AtMatrix* m, float angle);                                      // 0x002C6158
+    void (*PreRotateY)(AtMatrix* m, float angle);                                      // 0x002C615C
+    void (*PreRotateZ)(AtMatrix* m, float angle);                                      // 0x002C6160
+    void (*PostRotateZ)(AtMatrix* m, float angle);                                     // 0x002C6198
+    void (*GetRotation)(const AtMatrix* m, AtQuaternion* rotation);                    // 0x002C61F4
 };
 extern AtMatrixTable g_atMatrix;
 
 void AtMatrixRead(AtMatrix* m, AtIoTokenizer* tokenizer);  // 0x00117080 sixteen reals, in the order of the sixteen floats a matrix is. In the table's slot Read.
 
-// A block of matrices the device keeps. Only the slots used here are known.
+// A block of matrices the device keeps. Base vftable 0x002892CC, six slots, all pure. The one concrete class is AtMatrixPoolXbox, include/at/AtMatrixDevice.h.
 class AtMatrixPool {
 public:
+    ~AtMatrixPool();                                // 0x0011C1B0 puts the base's vftable back, nothing else. src/at/AtMatrixDevice.cpp
+    // Slot 0 is the original's virtual destructor, pure here, deleting in the concrete class, which its one caller found, the device's FreePool, asks with 1. It stays a plain slot because the
+    // harnesses' own pools override it by this name.
     virtual void Slot0() = 0;
     virtual void Reserve(unsigned int count) = 0;   // slot 1
     virtual void Clear() = 0;                       // slot 2
@@ -69,15 +78,19 @@ public:
     virtual AtMatrix* At(unsigned int index) = 0;   // slot 4
 };
 
-// What hands out matrices; in the graphics layer, not recovered.
+// What hands out matrices. Base vftable 0x0028A658, sixteen slots, all pure; only the six used here are declared on the base. The one concrete class is AtMatrixDeviceXbox, embedded in the graphics
+// device: include/at/AtMatrixDevice.h.
 class AtMatrixDevice {
 public:
+    AtMatrixDevice();                               // 0x0010F800 src/at/AtMatrixDevice.cpp
     virtual AtMatrix* NewMatrix() = 0;              // slot 0
     virtual AtMatrixPool* NewPool() = 0;            // slot 1
     virtual void Slot2() = 0;
     virtual void Slot3() = 0;
     virtual void FreeMatrix(AtMatrix* matrix) = 0;  // slot 4
     virtual void FreePool(AtMatrixPool* pool) = 0;  // slot 5
+
+    int m_unknown04;                                // +0x04 0 from the constructor; handed to what slots 2 and 3 make. Who sets it is not known
 };
 
 // Vftable 0x00274AE8.

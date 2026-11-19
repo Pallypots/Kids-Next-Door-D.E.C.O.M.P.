@@ -68,3 +68,18 @@ void AtMatrixScaleColumnY(AtMatrix* m, float scale);                            
 // 0x001160C0 slot Invert. SetInverse in place, with its own order: the fourth column is left as it was, and 1 and 2 reach 4 and 8 through registers, quieting a signalling NaN.
 void AtMatrixInvert(AtMatrix* m);
 void AtMatrixTranslateAfter(AtMatrix* m, const AtVector3* by);                  // 0x001157B0 slot TranslateAfter. Each row gains by times its fourth element: m = m T
+
+// The last five slots the game reads, in src/at/AtMatrixAxis.cpp (subsystem at/matdev). Each rotation builds a 3x3 on the stack, rows four floats apart with the fourth of each row never written, from the
+// x87's fsin and fcos of the angle (AtSin and AtCos here), and multiplies by it through one of the two helpers. Angles in radians.
+void AtMatrixPreRotateX(AtMatrix* m, float angle);                              // 0x00117EE0 slot PreRotateX. m = Rx m; rows (1 0 0) (0 c -s) (0 s c). Rows 0-2, all four columns
+void AtMatrixPreRotateY(AtMatrix* m, float angle);                              // 0x00117F40 slot PreRotateY. m = Ry m; rows (c 0 s) (0 1 0) (-s 0 c)
+void AtMatrixPreRotateZ(AtMatrix* m, float angle);                              // 0x00117FA0 slot PreRotateZ. m = Rz m; rows (c -s 0) (s c 0) (0 0 1)
+void AtMatrixPostRotateZ(AtMatrix* m, float angle);                             // 0x00118100 slot PostRotateZ. m = m Rz, the same Rz: columns 0-2, all four rows
+// 0x001155F0, in no slot. m = r m for rows 0-2 of m, the fourth column too; r is three rows of four floats of which the first three are read. Sums of three products in a register, rounded to float
+// once: rows 0 and 1 add the first and third product and then the second, row 2 the first and second and then the third. Every element of m is read before it is written, r as it goes.
+void AtMatrixPreMultiply3x3(AtMatrix* m, const float* r);
+// 0x00115850, in no slot. m = m r for columns 0-2 of m, all four rows, the fourth column untouched; r as above. Columns 0 and 1 sum first, third, second; column 2 first, second, third.
+void AtMatrixPostMultiply3x3(AtMatrix* m, const float* r);
+// 0x001163D0 slot GetRotation. The quaternion of the 3x3, by the largest of the trace and the three diagonal elements. Does not normalise: a scaled 3x3 gives a scaled quaternion. A trace not above 0, a NaN
+// included, takes the diagonal way; there the x branch uses the sum of the other two diagonal elements as it was rounded to float, the y and z branches the sum in a register.
+void AtMatrixGetRotation(const AtMatrix* m, AtQuaternion* q);
