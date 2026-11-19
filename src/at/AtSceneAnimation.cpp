@@ -167,7 +167,7 @@ void AtSceneAnimChannel::Read(AtSceneDevice* device, AtIoTokenizer* tokenizer, i
         switch (token) {
         case kAtWordPlayAnimation: {
             tokenizer->ExpectName(name);
-            GmNameMap* animations = (GmNameMap*)device->m_animationDatabases.Find(name);
+            GmNameMap* animations = (GmNameMap*)device->m_animations.Find(name);
             if (animations == 0) {
                 tokenizer->Error(kAtProblemNotFound);
             }
@@ -191,7 +191,7 @@ void AtSceneAnimChannel::Read(AtSceneDevice* device, AtIoTokenizer* tokenizer, i
         }
         case kAtWordWeights: {
             tokenizer->ExpectName(name);
-            GmNameMap* weights = (GmNameMap*)device->m_weightDatabases.Find(name);
+            GmNameMap* weights = (GmNameMap*)device->m_weights.Find(name);
             if (weights == 0) {
                 tokenizer->Error(kAtProblemNotFound);
             }
@@ -217,7 +217,7 @@ void AtSceneAnimChannel::Read(AtSceneDevice* device, AtIoTokenizer* tokenizer, i
             break;
         case kAtWordCoordSysMirrorDatabase:
             tokenizer->ExpectName(name);
-            m_mirrors = device->m_mirrorDatabases.Find(name);
+            m_mirrors = device->m_mirrors.Find(name);
             if (m_mirrors == 0) {
                 tokenizer->Error(kAtProblemNotFound);
             }
@@ -364,7 +364,7 @@ void AtSceneAnimSet::ReadDatabase(AtNameTableOwner* owner, AtIoTokenizer* tokeni
     }
     char name[8];
     tokenizer->ExpectName(name);
-    m_database = (AtCoordSysDatabase*)owner->m_device->m_coordSysDatabases.Find(name);
+    m_database = (AtCoordSysDatabase*)owner->m_device->m_coordSystems.Find(name);
     if (m_database == 0) {
         tokenizer->Error(kAtProblemNotFound);
     }

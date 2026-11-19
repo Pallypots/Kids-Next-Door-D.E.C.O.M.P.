@@ -1,8 +1,8 @@
 // Coordinate systems: a tree of transforms, each with a local and a world matrix, and the table of them that a scene or a skeleton (.AKC) owns. Original address clusters 0x00026820-0x00026E49, 0x000271F0-0x0002732F,
 // 0x00032270-0x000329FF and 0x00032A80-0x00032DEA. All names are inferred, from the words of the .ASN format that fill them (RotTransCoordSys, ScaleCoordSys) and from what each does.
 //
-// Matrices are not read here. The original reaches its matrix functions through a table of pointers in memory, set up by the graphics layer at 0x000EC670, which is not recovered; so a matrix is opaque, and what each pointer does is
-// inferred from its arguments only. They stop with a diagnostic until something sets them. The exception is Read, whose function is recovered and is the table's from the start.
+// Matrices are not read here. The original reaches its matrix functions through a table of pointers in memory, filled by 0x000EC2B0, called from 0x000EC670; neither is recovered as a function. Here a matrix is
+// opaque, and g_atMatrix starts with the recovered functions the original's filler puts in these slots: include/at/AtMatrix.h.
 #pragma once
 
 #include "at/AtQuaternion.h"
@@ -29,14 +29,48 @@ struct AtMatrixTable {
     void (*GetPosition)(const AtMatrix* m, AtVector3* position);                       // 0x002C61F8
     void (*GetAxes)(const AtMatrix* m, AtVector3* x, AtVector3* y, AtVector3* z);      // 0x002C61FC
     void (*TransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);  // 0x002C625C
+    // Slots the game calls that no recovered code does yet: see include/at/AtMatrix.h.
+    void (*SetScale3x3)(AtMatrix* m, const AtVector3* scale);                          // 0x002C60D8
+    void (*SetAxisAngle)(AtMatrix* m, const AtVector3* axis, float angle);             // 0x002C60DC
+    void (*SetAxes)(AtMatrix* m, const AtVector3* x, const AtVector3* y, const AtVector3* z);  // 0x002C60E4
+    void (*SetLookAtZY)(AtMatrix* m, const AtVector3* direction, const AtVector3* up); // 0x002C60F8
+    void (*SetLookAtXY)(AtMatrix* m, const AtVector3* direction, const AtVector3* up); // 0x002C60FC
+    void (*MakeTranslation)(AtMatrix* m, const AtVector3* position);                   // 0x002C6100
+    void (*MakeAxisAngle)(AtMatrix* m, const AtVector3* axis, float angle);            // 0x002C6104
+    void (*MakeRotation)(AtMatrix* m, const AtQuaternion* rotation);                   // 0x002C6108
+    void (*MakeFromAxes)(AtMatrix* m, const AtVector3* x, const AtVector3* y, const AtVector3* z);  // 0x002C610C
+    void (*ScaleAxes)(AtMatrix* m, const AtVector3* scale);                            // 0x002C6168
+    void (*TranslateAfter)(AtMatrix* m, const AtVector3* by);                          // 0x002C6184
+    void (*ScaleColumnX)(AtMatrix* m, float scale);                                    // 0x002C61A4
+    void (*ScaleColumnY)(AtMatrix* m, float scale);                                    // 0x002C61A8
+    void (*Invert)(AtMatrix* m);                                                       // 0x002C61D0
+    void (*Transpose)(AtMatrix* m);                                                    // 0x002C61E0
+    void (*SetElement)(AtMatrix* m, int row, int column, float value);                 // 0x002C61E8
+    float (*GetElement)(const AtMatrix* m, int row, int column);                       // 0x002C61EC
+    void (*GetXAxis)(const AtMatrix* m, AtVector3* axis);                              // 0x002C620C
+    void (*GetYAxis)(const AtMatrix* m, AtVector3* axis);                              // 0x002C6210
+    void (*GetZAxis)(const AtMatrix* m, AtVector3* axis);                              // 0x002C6214
+    void (*MultiplyRight)(AtMatrix* m, const AtMatrix* by);                            // 0x002C622C
+    double (*TransformPointZ)(const AtMatrix* m, const AtVector3* point);              // 0x002C6254
+    void (*InverseTransformPoint)(const AtMatrix* m, const AtVector3* from, AtVector3* to);      // 0x002C6258
+    void (*InverseTransformDirection)(const AtMatrix* m, const AtVector3* from, AtVector3* to);  // 0x002C6260
+    // The last five slots some code reads: src/at/AtMatrixAxis.cpp.
+    void (*PreRotateX)(AtMatrix* m, float angle);                                      // 0x002C6158
+    void (*PreRotateY)(AtMatrix* m, float angle);                                      // 0x002C615C
+    void (*PreRotateZ)(AtMatrix* m, float angle);                                      // 0x002C6160
+    void (*PostRotateZ)(AtMatrix* m, float angle);                                     // 0x002C6198
+    void (*GetRotation)(const AtMatrix* m, AtQuaternion* rotation);                    // 0x002C61F4
 };
 extern AtMatrixTable g_atMatrix;
 
 void AtMatrixRead(AtMatrix* m, AtIoTokenizer* tokenizer);  // 0x00117080 sixteen reals, in the order of the sixteen floats a matrix is. In the table's slot Read.
 
-// A block of matrices the device keeps. Only the slots used here are known.
+// A block of matrices the device keeps. Base vftable 0x002892CC, six slots, all pure. The one concrete class is AtMatrixPoolXbox, include/at/AtMatrixDevice.h.
 class AtMatrixPool {
 public:
+    ~AtMatrixPool();                                // 0x0011C1B0 puts the base's vftable back, nothing else. src/at/AtMatrixDevice.cpp
+    // Slot 0 is the original's virtual destructor, pure here, deleting in the concrete class, which its one caller found, the device's FreePool, asks with 1. It stays a plain slot because the
+    // harnesses' own pools override it by this name.
     virtual void Slot0() = 0;
     virtual void Reserve(unsigned int count) = 0;   // slot 1
     virtual void Clear() = 0;                       // slot 2
@@ -44,15 +78,19 @@ public:
     virtual AtMatrix* At(unsigned int index) = 0;   // slot 4
 };
 
-// What hands out matrices; in the graphics layer, not recovered.
+// What hands out matrices. Base vftable 0x0028A658, sixteen slots, all pure; only the six used here are declared on the base. The one concrete class is AtMatrixDeviceXbox, embedded in the graphics
+// device: include/at/AtMatrixDevice.h.
 class AtMatrixDevice {
 public:
+    AtMatrixDevice();                               // 0x0010F800 src/at/AtMatrixDevice.cpp
     virtual AtMatrix* NewMatrix() = 0;              // slot 0
     virtual AtMatrixPool* NewPool() = 0;            // slot 1
     virtual void Slot2() = 0;
     virtual void Slot3() = 0;
     virtual void FreeMatrix(AtMatrix* matrix) = 0;  // slot 4
     virtual void FreePool(AtMatrixPool* pool) = 0;  // slot 5
+
+    int m_unknown04;                                // +0x04 0 from the constructor; handed to what slots 2 and 3 make. Who sets it is not known
 };
 
 // Vftable 0x00274AE8.

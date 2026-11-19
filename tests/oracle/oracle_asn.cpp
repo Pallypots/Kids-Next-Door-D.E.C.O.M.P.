@@ -243,7 +243,7 @@ public:
     int side = 0;
     void Slot0() override {} void Slot1() override {} void Slot2() override {} void Slot3() override {} void Slot4() override {} void Slot5() override {}
     void Slot6() override {} void Slot7() override {} void Slot8() override {} void Slot9() override {} void Slot10() override {} void Slot11() override {}
-    void Slot12() override {} void Slot13() override {} void Slot14() override {} void Slot15() override {} void Slot16() override {}
+    void Slot12() override {}
     AtMatrixDevice* MatrixDevice() override { note(side, 'd'); return &g_matdev[side]; }
 };
 static TestDevice* g_device[2];
@@ -596,7 +596,7 @@ struct Env {
             d.m_matAnimationSpaces.Init(pool);
             d.m_meshes.Add(fill(5));
             d.m_matAssignments.Add(fill(7));
-            d.m_mirrorDatabases.Add(fill(10));
+            d.m_mirrors.Add(fill(10));
             g_anim_count = (unsigned)names.size() * 2 + 1;
             g_mat_anims[side] = (AtSceneMatAnimation*)std::calloc(g_anim_count, sizeof(AtSceneMatAnimation));
             g_anims[side] = (AtSceneAnimation*)std::calloc(g_anim_count, sizeof(AtSceneAnimation));
@@ -640,9 +640,9 @@ struct Env {
                 databases->Insert(name.c_str(), db);
             }
             d.m_matAnimations.Add(mat_plain);
-            d.m_animationDatabases.Add(anim_tables);
-            d.m_weightDatabases.Add(weight_tables);
-            d.m_coordSysDatabases.Add(databases);
+            d.m_animations.Add(anim_tables);
+            d.m_weights.Add(weight_tables);
+            d.m_coordSystems.Add(databases);
             for (const std::string& s : spaces) {
                 d.m_meshSpaces.Add(s.c_str(), fill(6));
                 d.m_matAssignmentSpaces.Add(s.c_str(), fill(8));

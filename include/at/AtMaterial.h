@@ -2,6 +2,7 @@
 // at 0x002B15C0; the flag names follow them. Other names are inferred. Nothing here draws: slot 0 is what a concrete material, at vftable 0x0028A204, does with this for the graphics device.
 #pragma once
 
+#include "at/AtDisplayDevice.h"
 #include "at/AtIoTokenizer.h"
 #include "gm/GmNameMap.h"
 
@@ -15,28 +16,44 @@ class AtMaterialDatabase;  // include/at/AtMaterialDatabase.h
 class AtMatrixDevice;      // include/at/AtCoordSys.h
 void AtFatal(const char* message, int file, int line, int unused);
 
-// What materials load for, known here by the tables they use: for each of textures, materials and shaders, a group with no name space and a database of name spaces.
-// Most of it is not recovered. Its constructor and vftable are not known either; these members' own constructors stand in.
-struct AtMaterialOwner {
-    // Its vftable is not recovered, and what fills these is not known. 0x0001A68C calls slot 17; no other slot is known. Doubles override it. It stops if nothing has.
-    virtual void Slot0() {}
-    virtual void Slot1() {}
-    virtual void Slot2() {}
-    virtual void Slot3() {}
-    virtual void Slot4() {}
-    virtual void Slot5() {}
-    virtual void Slot6() {}
-    virtual void Slot7() {}
-    virtual void Slot8() {}
-    virtual void Slot9() {}
-    virtual void Slot10() {}
-    virtual void Slot11() {}
-    virtual void Slot12() {}
-    virtual void Slot13() {}
-    virtual void Slot14() {}
-    virtual void Slot15() {}
-    virtual void Slot16() {}
-    virtual AtMatrixDevice* MatrixDevice() { AtFatal("AtMaterialOwner: slot 17, the matrix device, is not recovered", 0, 0, 0); return 0; }  // slot 17
+class AtGfxContext;     // include/at/AtGraphicsDevice.h
+class AtGfxDrawLists;   // include/at/AtGraphicsDevice.h
+class AtGfxBufferSet;   // include/at/AtGraphicsDevice.h
+class AtGfxObject;      // include/at/AtGraphicsDevice.h
+
+// The abstract graphics device: vftable 0x00273030, 26 slots, 0x3A8 bytes, constructor 0x00026190. It holds the name tables every database joins: for each kind, a group with no name space and,
+// for most, a database of name spaces. Original address clusters 0x00025E70-0x000267FB and 0x00027EF0-0x00028464 (the add and find methods). The name is the one the loaders' work gave it; the
+// class is the graphics device's base, and the only class built on it is the concrete device AtGraphicsDeviceXbox (include/at/AtGraphicsDevice.h, vftable 0x00289208): the constructor has the one
+// caller 0x000F1FBF. The scene code knows it as AtSceneDevice (include/at/AtScene.h), the same class: see docs/worklog/2026-11-08-gfxdev.md.
+//
+// Slots 0 to 16 keep the names Slot0 to Slot16, because the harnesses' devices override them by those names. In the original, slots 5 to 10 and 13 to 25 are pure (0x00125F25); here they stop with
+// a diagnostic, as a pure call does. Slots 13 to 16 and 18 to 25 are named for what the concrete device's do.
+struct AtMaterialOwner : AtDisplayDevice {
+    AtMaterialOwner();                 // 0x00026190 every table constructed; +0x34 and +0x39C to +0x3A4 cleared. m_animationDevice is left as it is.
+    ~AtMaterialOwner();                // 0x000266F0 Reset (this class's, not a derived one's), the name space databases destroyed, then the base's
+    void Slot0() override;             // slot 0, 0x00026800 the deleting destructor; the flag 1 is taken as given
+    void Slot1() override;             // slot 1, 0x00026560 Reset: every table's group reset and name space database cleared, the words cleared, then the base's Reset
+    virtual void Slot5();              // slot 5, pure
+    virtual void Slot6();              // slot 6, pure
+    virtual void Slot7();              // slot 7, pure
+    virtual void Slot8();              // slot 8, pure
+    virtual void Slot9();              // slot 9, pure
+    virtual void Slot10();             // slot 10, pure
+    virtual void Slot11() {}           // slot 11, 0x000447F0: takes two arguments in the original, does nothing
+    virtual void Slot12() {}           // slot 12, 0x001CC9F0: does nothing
+    virtual void* RenderTarget0();     // slot 13, pure. The concrete device's member at +0x3B0
+    virtual void* RenderTarget1();     // slot 14, pure. The concrete device's member at +0x400
+    virtual AtGfxContext* Context();   // slot 15, pure
+    virtual AtGfxDrawLists* DrawLists();  // slot 16, pure
+    virtual AtMatrixDevice* MatrixDevice();  // slot 17, pure. 0x0001A68C hands what it returns to AtCoordSysDatabase::Load. Stops with a diagnostic here; the concrete device's returns its member.
+    virtual void* Creator();           // slot 18, pure: the object whose slot made the concrete device
+    virtual void* Slot19(void* unknown);  // slot 19, pure
+    virtual void ReleaseObject(AtGfxObject* object);  // slot 20, pure
+    virtual AtGfxBufferSet* BufferSet();  // slot 21, pure
+    virtual void Slot22();             // slot 22, pure
+    virtual unsigned int Width();      // slot 23, pure: the display mode's
+    virtual unsigned int Height();     // slot 24, pure
+    virtual void Scale(float* out);    // slot 25, pure
 
     // src/at/AtDatabaseLoader.cpp.
     void AddMeshes(GmNameMap* map, const char* ns);          // 0x00025F30 ns may be empty or null
@@ -61,10 +78,8 @@ struct AtMaterialOwner {
     void AddFonts(GmNameMap* map, const char* ns);          // 0x000260B0 ns may be empty or null
     void AddImages(GmNameMap* map, const char* ns);         // 0x000260F0 ns may be empty or null
 
-    char m_unknown04[0x2C];
-    signed char m_noTextures;          // +0x30 negative: a material loaded for it keeps no shader or textures
-    char m_unknown31[0x07];
-    class AtAnimationDevice* m_animationDevice;  // +0x38 include/at/AtAnimationDatabase.h
+    int m_unknown34;                   // +0x34 cleared by the constructor and Reset
+    class AtAnimationDevice* m_animationDevice;  // +0x38 include/at/AtAnimationDatabase.h; the constructor leaves it
     GmNameMapGroup m_textures;         // +0x3C
     GmNameSpaceDb m_textureSpaces;     // +0x54
     GmNameMapGroup m_materials;        // +0x78
@@ -73,7 +88,8 @@ struct AtMaterialOwner {
     GmNameSpaceDb m_shaderSpaces;      // +0xCC
     GmNameMapGroup m_meshes;           // +0xF0
     GmNameSpaceDb m_meshSpaces;        // +0x108
-    char m_unknown12C[0x168 - 0x12C];
+    GmNameMapGroup m_unknown12C;       // +0x12C a table whose add and find methods are not known
+    GmNameSpaceDb m_unknown12CSpaces;  // +0x144
     GmNameMapGroup m_lights;               // +0x168
     GmNameSpaceDb m_lightSpaces;           // +0x180
     GmNameMapGroup m_matAssignments;       // +0x1A4
@@ -94,6 +110,9 @@ struct AtMaterialOwner {
     GmNameMapGroup m_animations;           // +0x354
     GmNameMapGroup m_vertexProcesses;  // +0x36C searched by name by a shader; what fills it is not recovered
     GmNameMapGroup m_pixelProcesses;   // +0x384 searched by name by a shader; what fills it is not recovered
+    int m_unknown39C;                  // +0x39C cleared by the constructor and Reset
+    int m_unknown3A0;                  // +0x3A0 cleared likewise. The concrete device's slot 10 walks a list from here, by each item's +8, calling its slot 5
+    int m_unknown3A4;                  // +0x3A4 cleared likewise
 };
 
 // What a material hands on to the device layer. Filled by Describe.
@@ -221,5 +240,8 @@ static_assert(offsetof(AtMaterialOwner, m_weights) == 0x33C, "AtMaterialOwner::m
 static_assert(offsetof(AtMaterialOwner, m_animations) == 0x354, "AtMaterialOwner::m_animations");
 static_assert(offsetof(AtMaterialOwner, m_vertexProcesses) == 0x36C, "AtMaterialOwner::m_vertexProcesses");
 static_assert(offsetof(AtMaterialOwner, m_pixelProcesses) == 0x384, "AtMaterialOwner::m_pixelProcesses");
+static_assert(offsetof(AtMaterialOwner, m_unknown34) == 0x34, "AtMaterialOwner::m_unknown34");
+static_assert(offsetof(AtMaterialOwner, m_unknown39C) == 0x39C, "AtMaterialOwner::m_unknown39C");
+static_assert(sizeof(AtMaterialOwner) == 0x3A8, "AtMaterialOwner");
 #pragma pop_macro("offsetof")
 #endif

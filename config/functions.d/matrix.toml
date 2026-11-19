@@ -1,0 +1,321 @@
+# The matrix table's functions: see include/at/AtMatrix.h. The table 0x002C60C8 is filled by 0x000EC2B0, which is not recovered; g_atMatrix holds the same targets.
+
+[[function]]
+va = 0x00105440
+size = 43
+symbol = "?AtMatrixCopy@@YAXPAUAtMatrix@@PBU1@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60C8, written by 0x000EC2B0; SSE"
+
+[[function]]
+va = 0x00105470
+size = 289
+symbol = "?AtMatrixSetProduct@@YAXPAUAtMatrix@@PBU1@1@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6234, written by 0x000EC2B0; SSE"
+
+[[function]]
+va = 0x00114FB0
+size = 103
+symbol = "?AtMatrixCopyWords@@YAXPAUAtMatrix@@PBU1@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; in no slot; called by 0x00116A20, compared directly"
+
+[[function]]
+va = 0x00115020
+size = 59
+symbol = "?AtMatrixIdentity@@YAXPAUAtMatrix@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60CC, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001150A0
+size = 26
+symbol = "?AtMatrixSetTranslation@@YAXPAUAtMatrix@@PBVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60D4, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001150F0
+size = 251
+symbol = "?AtMatrixSetRotation@@YAXPAUAtMatrix@@PBVAtQuaternion@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60E0, written by 0x000EC2B0; constants 0x00274B64 2.0f, 0x00272AC4 1.0f"
+
+[[function]]
+va = 0x00115320
+size = 66
+symbol = "?AtMatrixSetUniformScale@@YAXPAUAtMatrix@@M@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C611C, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00115370
+size = 72
+symbol = "?AtMatrixSetScale@@YAXPAUAtMatrix@@PBVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6120, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116150
+size = 161
+symbol = "?AtMatrixSetInverse@@YAXPAUAtMatrix@@PBU1@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61D4, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116540
+size = 26
+symbol = "?AtMatrixGetPosition@@YAXPBUAtMatrix@@PAVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61F8, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116560
+size = 67
+symbol = "?AtMatrixGetAxes@@YAXPBUAtMatrix@@PAVAtVector3@@11@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61FC, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001166A0
+size = 532
+symbol = "?AtMatrixSetProductWords@@YAXPAUAtMatrix@@PBU1@1@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; in no slot; called by 0x00116A20 and 0x00116A50, compared directly"
+
+[[function]]
+va = 0x00116A20
+size = 43
+symbol = "?AtMatrixMultiply@@YAXPAUAtMatrix@@PBU1@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6228, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116E30
+size = 128
+symbol = "?AtMatrixTransformPoint@@YAXPBUAtMatrix@@PBVAtVector3@@PAV2@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6250, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116FA0
+size = 103
+symbol = "?AtMatrixTransformDirection@@YAXPBUAtMatrix@@PBVAtVector3@@PAV2@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C625C, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00117780
+size = 227
+symbol = "?AtMatrixSetLookAt@@YAXPAUAtMatrix@@PBVAtVector3@@1@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60F4, written by 0x000EC2B0; calls 0x00042E80 and 0x00042E20"
+
+[[function]]
+va = 0x00117870
+size = 219
+symbol = "?AtMatrixSetLookAtZY@@YAXPAUAtMatrix@@PBVAtVector3@@1@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60F8, written by 0x000EC2B0; calls 0x00042E80 and 0x00042E20"
+
+[[function]]
+va = 0x00117950
+size = 227
+symbol = "?AtMatrixSetLookAtXY@@YAXPAUAtMatrix@@PBVAtVector3@@1@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60FC, written by 0x000EC2B0; calls 0x00042E80 and 0x00042E20"
+
+[[function]]
+va = 0x001150C0
+size = 45
+symbol = "?AtMatrixSetScale3x3@@YAXPAUAtMatrix@@PBVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60D8, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001151F0
+size = 67
+symbol = "?AtMatrixSetAxes@@YAXPAUAtMatrix@@PBVAtVector3@@11@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60E4, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00115240
+size = 73
+symbol = "?AtMatrixMakeTranslation@@YAXPAUAtMatrix@@PBVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6100, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00115290
+size = 46
+symbol = "?AtMatrixMakeRotation@@YAXPAUAtMatrix@@PBVAtQuaternion@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6108, written by 0x000EC2B0; calls 0x001150F0"
+
+[[function]]
+va = 0x001152C0
+size = 94
+symbol = "?AtMatrixMakeFromAxes@@YAXPAUAtMatrix@@PBVAtVector3@@11@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C610C, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00117690
+size = 40
+symbol = "?AtMatrixSetAxisAngle@@YAXPAUAtMatrix@@PBVAtVector3@@M@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C60DC, written by 0x000EC2B0; calls 0x00033B90 and 0x001150F0"
+
+[[function]]
+va = 0x00117A40
+size = 67
+symbol = "?AtMatrixMakeAxisAngle@@YAXPAUAtMatrix@@PBVAtVector3@@M@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6104, written by 0x000EC2B0; calls 0x00033B90 and 0x001150F0"
+
+[[function]]
+va = 0x00116390
+size = 23
+symbol = "?AtMatrixSetElement@@YAXPAUAtMatrix@@HHM@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61E8, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001163B0
+size = 19
+symbol = "?AtMatrixGetElement@@YAMPBUAtMatrix@@HH@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61EC, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116640
+size = 25
+symbol = "?AtMatrixGetXAxis@@YAXPBUAtMatrix@@PAVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C620C, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116660
+size = 26
+symbol = "?AtMatrixGetYAxis@@YAXPBUAtMatrix@@PAVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6210, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116680
+size = 26
+symbol = "?AtMatrixGetZAxis@@YAXPBUAtMatrix@@PAVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6214, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116A50
+size = 43
+symbol = "?AtMatrixMultiplyRight@@YAXPAUAtMatrix@@PBU1@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C622C, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00116EB0
+size = 33
+symbol = "?AtMatrixTransformPointZ@@YANPBUAtMatrix@@PBVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6254, written by 0x000EC2B0; returns in st(0), compared as a double"
+
+[[function]]
+va = 0x00116EE0
+size = 184
+symbol = "?AtMatrixInverseTransformPoint@@YAXPBUAtMatrix@@PBVAtVector3@@PAV2@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6258, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00117010
+size = 103
+symbol = "?AtMatrixInverseTransformDirection@@YAXPBUAtMatrix@@PBVAtVector3@@PAV2@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6260, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00105780
+size = 56
+symbol = "?AtMatrixScaleAxes@@YAXPAUAtMatrix@@PBVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6168, written by 0x000EC2B0; SSE"
+
+[[function]]
+va = 0x001056A0
+size = 75
+symbol = "?AtMatrixTranspose@@YAXPAUAtMatrix@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61E0, written by 0x000EC2B0; SSE"
+
+[[function]]
+va = 0x00115B00
+size = 43
+symbol = "?AtMatrixScaleColumnX@@YAXPAUAtMatrix@@M@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61A4, written by 0x000EC2B0"
+
+[[function]]
+va = 0x00115B30
+size = 45
+symbol = "?AtMatrixScaleColumnY@@YAXPAUAtMatrix@@M@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61A8, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001160C0
+size = 131
+symbol = "?AtMatrixInvert@@YAXPAUAtMatrix@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C61D0, written by 0x000EC2B0"
+
+[[function]]
+va = 0x001157B0
+size = 147
+symbol = "?AtMatrixTranslateAfter@@YAXPAUAtMatrix@@PBVAtVector3@@@Z"
+source = "src/at/AtMatrix.cpp"
+subsystem = "at/matrix"
+evidence = "tests/oracle/oracle_matrix.cpp; slot 0x002C6184, written by 0x000EC2B0"

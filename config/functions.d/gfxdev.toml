@@ -1,0 +1,480 @@
+# The graphics device: its abstract layers (include/at/AtDisplayDevice.h, include/at/AtMaterial.h), the concrete device and its members' set-up (include/at/AtGraphicsDevice.h), and the
+# index array's constructors (include/at/AtMeshDatabase.h). Names inferred. Semantic-tested.
+
+[[function]]
+va = 0x00043480
+size = 28
+symbol = "??0AtDisplayMode@@QAE@XZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; display mode constructor, compared directly; also reached by AtDisplayDevice's constructor"
+
+[[function]]
+va = 0x000434A0
+size = 26
+symbol = "?Clear@AtDisplayMode@@QAEXXZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; compared directly on garbage"
+
+[[function]]
+va = 0x00032200
+size = 60
+symbol = "??0AtDisplayDevice@@QAE@XZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; one caller, AtMaterialOwner's constructor; installs vftable 0x00274AD4"
+
+[[function]]
+va = 0x000321A0
+size = 7
+symbol = "??1AtDisplayDevice@@QAE@XZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; puts back vftable 0x00274AD4; run directly and from AtMaterialOwner's destructor"
+
+[[function]]
+va = 0x000321B0
+size = 31
+symbol = "?Slot0@AtDisplayDevice@@UAEXXZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 0, the deleting destructor; the flag is not modelled, 1 is taken"
+
+[[function]]
+va = 0x00032240
+size = 41
+symbol = "?Slot1@AtDisplayDevice@@UAEXXZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 1, Reset, through the vftable on garbage"
+
+[[function]]
+va = 0x00026190
+size = 468
+symbol = "??0AtMaterialOwner@@QAE@XZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; one caller, 0x000F1FBF in the graphics device's constructor; installs vftable 0x00273030"
+
+[[function]]
+va = 0x000266F0
+size = 268
+symbol = "??1AtMaterialOwner@@QAE@XZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; run directly on an owner whose name space databases hold pools"
+
+[[function]]
+va = 0x00026800
+size = 30
+symbol = "?Slot0@AtMaterialOwner@@UAEXXZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 0, the deleting destructor; the flag is not modelled, 1 is taken"
+
+[[function]]
+va = 0x00026560
+size = 400
+symbol = "?Slot1@AtMaterialOwner@@UAEXXZ"
+source = "src/at/AtMaterialOwnerBase.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 1, Reset, through the vftable; the order of frees compared"
+
+[[function]]
+va = 0x00044800
+size = 22
+symbol = "??0AtGeometryArray@@QAE@XZ"
+source = "src/at/AtIndexArray.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; one caller, AtIndexArray's constructor; installs vftable 0x002762B8"
+
+[[function]]
+va = 0x00037370
+size = 26
+symbol = "??0AtIndexArray@@QAE@XZ"
+source = "src/at/AtIndexArray.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; one caller, the Xbox index array's constructor; installs vftable 0x00274D48"
+
+[[function]]
+va = 0x000F1FA0
+size = 719
+symbol = "??0AtGraphicsDeviceXbox@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; the whole 0x305C0 bytes compared; the texture work's three member classes made on both sides by the original's constructors"
+
+[[function]]
+va = 0x000F0120
+size = 454
+symbol = "?Init@AtGraphicsDeviceXbox@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; reached from the constructor; also the end of Release (0x000F2750, not recovered)"
+
+[[function]]
+va = 0x000EF060
+size = 50
+symbol = "?UnlinkContext@AtGraphicsDeviceXbox@@QAEXPAVAtGfxContext@@@Z"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; lists of five contexts in five orders, each taken out; and from the context's destructor"
+
+[[function]]
+va = 0x000EEFC0
+size = 7
+symbol = "?RenderTarget0@AtGraphicsDeviceXbox@@UAEPAXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 13"
+
+[[function]]
+va = 0x000EEFD0
+size = 7
+symbol = "?RenderTarget1@AtGraphicsDeviceXbox@@UAEPAXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 14"
+
+[[function]]
+va = 0x000EEFE0
+size = 7
+symbol = "?Context@AtGraphicsDeviceXbox@@UAEPAVAtGfxContext@@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 15"
+
+[[function]]
+va = 0x000EF2D0
+size = 7
+symbol = "?DrawLists@AtGraphicsDeviceXbox@@UAEPAVAtGfxDrawLists@@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 16"
+
+[[function]]
+va = 0x000EF2E0
+size = 7
+symbol = "?MatrixDevice@AtGraphicsDeviceXbox@@UAEPAVAtMatrixDevice@@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 17, what 0x0001A68C hands to AtCoordSysDatabase::Load; every .AKC read through it on both sides"
+
+[[function]]
+va = 0x000EF2F0
+size = 7
+symbol = "?Creator@AtGraphicsDeviceXbox@@UAEPAXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 18"
+
+[[function]]
+va = 0x000EF330
+size = 7
+symbol = "?BufferSet@AtGraphicsDeviceXbox@@UAEPAVAtGfxBufferSet@@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 21"
+
+[[function]]
+va = 0x000F02F0
+size = 20
+symbol = "?Scale@AtGraphicsDeviceXbox@@UAEXPAM@Z"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 25"
+
+[[function]]
+va = 0x00059500
+size = 36
+symbol = "??0AtGfxContextBase@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; one caller, the context's constructor; installs vftable 0x00277168"
+
+[[function]]
+va = 0x00037E90
+size = 17
+symbol = "??0Part30@AtGfxContextBase@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; reached from the context base's constructor"
+
+[[function]]
+va = 0x0005C650
+size = 88
+symbol = "??0Part48@AtGfxContextBase@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; reached from the context base's constructor"
+
+[[function]]
+va = 0x00058BD0
+size = 90
+symbol = "?ResetBase@AtGfxContextBase@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; writes the shared words 0x002C9BF8, compared"
+
+[[function]]
+va = 0x00059530
+size = 5
+symbol = "?Reset@AtGfxContextBase@@UAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; base slot 2; reached from the context's destructor"
+
+[[function]]
+va = 0x00059540
+size = 11
+symbol = "??1AtGfxContextBase@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; reached from the context's destructor"
+
+[[function]]
+va = 0x00107F50
+size = 25
+symbol = "??0AtGfxContext@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x0028A080; compared in the device and alone"
+
+[[function]]
+va = 0x00107B40
+size = 192
+symbol = "?ResetLocal@AtGfxContext@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; reached from the constructor and destructor"
+
+[[function]]
+va = 0x001099B0
+size = 107
+symbol = "??1AtGfxContext@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; on garbage, in its device's list first, in the middle, and not marked as in it"
+
+[[function]]
+va = 0x000FB8C0
+size = 12
+symbol = "??0AtGfxStateCache@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; compared alone and in the device"
+
+[[function]]
+va = 0x000FB710
+size = 119
+symbol = "?Reset@AtGfxStateCache@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; directly on garbage"
+
+[[function]]
+va = 0x000FB380
+size = 173
+symbol = "?ResetState@AtGfxStateCache@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; directly on garbage"
+
+[[function]]
+va = 0x000FBA40
+size = 30
+symbol = "??1AtGfxStateCache@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; with and without the block at +0xA58"
+
+[[function]]
+va = 0x000ED6A0
+size = 41
+symbol = "??0AtGfxDrawLists@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x00288EC0"
+
+[[function]]
+va = 0x000ED6D0
+size = 87
+symbol = "?Clear@AtGfxDrawLists@@UAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; slot 2, through the vftable, with each of the three blocks present or not"
+
+[[function]]
+va = 0x000EE210
+size = 79
+symbol = "??1AtGfxDrawLists@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; with each of the three blocks present or not"
+
+[[function]]
+va = 0x001197C0
+size = 7
+symbol = "??1AtGfxDrawListsBase@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; puts back vftable 0x00288E78; reached from the draw lists' destructor"
+
+[[function]]
+va = 0x000F8010
+size = 29
+symbol = "??0AtIndexArrayXbox@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x00289358; two in the buffer set"
+
+[[function]]
+va = 0x000F99E0
+size = 89
+symbol = "??0AtGfxBufferSet@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x002893DC"
+
+[[function]]
+va = 0x001108B0
+size = 50
+symbol = "??0AtMeshDatabaseXbox@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x0028A730"
+
+[[function]]
+va = 0x000FE520
+size = 19
+symbol = "??0AtGfxBlockList@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; compared alone"
+
+[[function]]
+va = 0x000FE540
+size = 70
+symbol = "?Clear@AtGfxBlockList@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; each of 32 masks of blocks present"
+
+[[function]]
+va = 0x000ED2C0
+size = 26
+symbol = "??0AtGfxIndexedList@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; compared alone and in the device"
+
+[[function]]
+va = 0x000ED2E0
+size = 58
+symbol = "?Clear@AtGfxIndexedList@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; each of 32 masks of blocks present"
+
+[[function]]
+va = 0x000ED470
+size = 117
+symbol = "??1AtGfxIndexedList@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; each of 32 masks of blocks present"
+
+[[function]]
+va = 0x000F56B0
+size = 63
+symbol = "?Clear@AtGfxBlockPair@@QAEXXZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; each mask of blocks present; also the destructor (folded)"
+
+[[function]]
+va = 0x0011D570
+size = 69
+symbol = "??0AtGfxResource@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; one caller; installs vftable 0x0028B3C0"
+
+[[function]]
+va = 0x001006E0
+size = 35
+symbol = "??0AtGfxResourceBlock@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; one caller; installs vftable 0x00289A6C"
+
+[[function]]
+va = 0x0011AB30
+size = 29
+symbol = "??0AtGfxResourceXbox@@QAE@XZ"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x0028AFC4; 128 in the device, by the vector constructor"
+
+[[function]]
+va = 0x000EF380
+size = 30
+symbol = "?AtGfxLessAt10@@YAHPBX0@Z"
+source = "src/at/AtGraphicsDevice.cpp"
+subsystem = "at/gfxdev"
+evidence = "tests/oracle/oracle_gfxdev.cpp; all pairs of 14 values, zeros, infinities and NaNs among them"
+
+[[vtable]]
+va = 0x00274AD4
+slots = 5
+symbol = "??_7AtDisplayDevice@@6B@"
+source = "src/at/AtMaterialOwnerBase.cpp"
+
+[[vtable]]
+va = 0x00289208
+slots = 26
+symbol = "??_7AtGraphicsDeviceXbox@@6B@"
+source = "src/at/AtGraphicsDevice.cpp"
+
+[symbols]
+"?s_shared@AtGfxContextBase@@2PAHA" = 0x002C9BF8
+"??0AtGfxBlockPair@@QAE@XZ" = 0x0017AED0  # folded with AtScenePlayback's constructor (at/asn)
+"??1AtGfxBlockPair@@QAE@XZ" = 0x000F56B0  # the same function as Clear
+"?Slot2@AtDisplayDevice@@UAEXXZ" = 0x000CBF30  # does nothing; folded
+"?Slot3@AtDisplayDevice@@UAEXXZ" = 0x000CBF30
+"?Slot4@AtDisplayDevice@@UAEXXZ" = 0x000CBF30
+"?Slot11@AtMaterialOwner@@UAEXXZ" = 0x000447F0  # does nothing; folded
+"?Slot12@AtMaterialOwner@@UAEXXZ" = 0x001CC9F0  # does nothing; folded
+"??_7AtMaterialOwner@@6B@" = 0x00273030  # slots 5-10 and 13-25 pure in the original, stopping here: not recorded as a vftable
+"??_7AtGfxContextBase@@6B@" = 0x00277168  # vftables of member classes: only the slots needed declared, so not recorded
+"??_7AtGfxContext@@6B@" = 0x0028A080
+"??_7AtGfxDrawListsBase@@6B@" = 0x00288E78
+"??_7AtGfxDrawLists@@6B@" = 0x00288EC0
+"??_7AtGeometryArray@@6B@" = 0x002762B8
+"??_7AtIndexArray@@6B@" = 0x00274D48
+"??_7AtIndexArrayXbox@@6B@" = 0x00289358
+"??_7AtGfxBufferSet@@6B@" = 0x002893DC
+"??_7AtMeshDatabaseXbox@@6B@" = 0x0028A730
+"??_7AtGfxResource@@6B@" = 0x0028B3C0
+"??_7AtGfxResourceBlock@@6B@" = 0x00289A6C
+"??_7AtGfxResourceXbox@@6B@" = 0x0028AFC4
+"?ReleaseObject@AtGraphicsDeviceXbox@@UAEXPAVAtGfxObject@@@Z" = 0x00080D90  # slot 20; folded, recorded in at/jam
+"?Width@AtGraphicsDeviceXbox@@UAEIXZ" = 0x00154540  # slot 23; folded, recorded in at/matdev
+"?Height@AtGraphicsDeviceXbox@@UAEIXZ" = 0x00079DA0  # slot 24; folded, recorded in at/controller
+"?Slot0@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F55F0  # slot 0, the deleting destructor: DRAFT, not compared (stops at slot 1)
+"??1AtGraphicsDeviceXbox@@QAE@XZ" = 0x000F5290  # DRAFT, not compared: calls slot 1 first, which is not recovered
+"?Slot1@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F2750  # slot 1, Release: NOT recovered, stops with a diagnostic
+"?Slot2@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F18B0  # NOT recovered
+"?Slot3@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000EF350  # NOT recovered
+"?Slot4@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F18C0  # NOT recovered
+"?Slot5@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F44E0  # NOT recovered
+"?Slot6@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F2270  # NOT recovered
+"?Slot7@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000EFEC0  # NOT recovered
+"?Slot8@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F0010  # NOT recovered
+"?Slot9@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F0310  # NOT recovered
+"?Slot10@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F0350  # NOT recovered
+"?Slot11@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F14C0  # NOT recovered
+"?Slot12@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F1560  # NOT recovered
+"?Slot19@AtGraphicsDeviceXbox@@UAEPAXPAX@Z" = 0x000EF300  # NOT recovered
+"?Slot22@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000EF340  # NOT recovered

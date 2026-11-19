@@ -395,7 +395,7 @@ evidence = "called for each of the array of 0x00059B30"
 [[function]]
 va = 0x0005A750
 size = 560
-symbol = "?Read@AtSceneAnimChannel@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@H@Z"
+symbol = "?Read@AtSceneAnimChannel@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@H@Z"
 source = "src/at/AtSceneAnimation.cpp"
 subsystem = "at/actor"
 evidence = "words 69 to 72, 99, 100, 124 to 126, 134"
@@ -435,7 +435,7 @@ evidence = "passed to 0x00011000 by word 109, size 0x1C"
 [[function]]
 va = 0x0005EE50
 size = 339
-symbol = "?Read@AtSceneMatChannel@@QAEXPAVAtSceneDevice@@PAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtSceneMatChannel@@QAEXPAUAtMaterialOwner@@PAVAtIoTokenizer@@@Z"
 source = "src/at/AtSceneAnimation.cpp"
 subsystem = "at/actor"
 evidence = "word 109 with words 72, 80, 110"
