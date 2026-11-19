@@ -10,6 +10,7 @@
 #pragma once
 
 #include "at/AtDataRegistry.h"
+#include "at/AtVector3.h"
 #include "gm/GmAcActor.h"
 
 class AtCoordSys;
@@ -143,10 +144,31 @@ inline GmAcSightCone::~GmAcSightCone() {}
 
 // +0x2DC: given by the player and NPC classes (0x00131F43, 0x00131F67) and a caller at 0x0009A545. Its +0x08 is told whose it is; its +0x04 is what the character's slot 59 answers. 0x0007DF00 and
 // 0x00154530, the original's two calls, are one-store and one-load bodies folded with other classes' (AtInputAxisHandler, AtAbstractController); they are written in place here.
+// 0x58 bytes, no vftable (the word at +0x00 was taken for one before; it is a plain word, set to 1 by Activate). The frame a player moves in: forward, up and right, set at once or kept pending until
+// ApplyPending. One is a member at +0x2B4 of the object with vftable 0x0027C20C (constructor 0x00099520), made with the eh vector iterator and these two. Its methods are in src/gm/GmAcPlayer.cpp.
+// Changing the frame tells the owner first, through its slot 65: the owner is a GmAcPlayer, which is what sets the flag that makes a character its own owner.
 struct GmAcCharController {
-    void* m_vftable;
-    int m_unknown04;                    // +0x04
+    GmAcCharController();               // 0x001546C0
+    ~GmAcCharController();              // 0x00154720 the same stores as the constructor
+    void Activate();                    // 0x00154520 m_unknown00 = 1
+    int Id() { return m_unknown04; }    // 0x00154530 folded (AtAbstractController::ButtonCount)
+    GmAcActor* Owner() { return m_owner; }  // 0x00154540 folded (AtAbstractController::AxisCount)
+    int HasPending();                   // 0x00154550
+    void GetFrame(AtVector3* forward, AtVector3* up, AtVector3* right);  // 0x00154560
+    // 0x001545B0. The owner's slot 65 first, if there is an owner; then now: the frame, and nothing pending; or not now: the pending frame, and pending.
+    void SetFrame(const AtVector3* forward, const AtVector3* up, const AtVector3* right, int now);
+    void ApplyPending();                // 0x00154670 nothing unless pending
+
+    int m_unknown00;                    // +0x00
+    int m_unknown04;                    // +0x04 -1 when made: a controller's index, which the players read their axes by
     GmAcActor* m_owner;                 // +0x08
+    AtVector3 m_forward;                // +0x0C (0, 1, 0) when made
+    AtVector3 m_up;                     // +0x18 (0, 0, 1)
+    AtVector3 m_right;                  // +0x24 (1, 0, 0)
+    int m_pending;                      // +0x30
+    AtVector3 m_pendingForward;         // +0x34
+    AtVector3 m_pendingUp;              // +0x40
+    AtVector3 m_pendingRight;           // +0x4C
 };
 
 // ---- GmAcCharacter: vftable 0x0028C980, 60 slots, 0x304 bytes ---------------------------------------------------------------
@@ -208,6 +230,8 @@ static_assert(offsetof(GmAcObject, m_interaction) == 0x2D8, "GmAcObject::m_inter
 static_assert(sizeof(GmAcObject) == 0x2DC, "GmAcObject");
 static_assert(offsetof(GmAcShadow, m_registration) == 0x04, "GmAcShadow::m_registration");
 static_assert(offsetof(GmAcCharController, m_owner) == 0x08, "GmAcCharController::m_owner");
+static_assert(offsetof(GmAcCharController, m_pending) == 0x30, "GmAcCharController::m_pending");
+static_assert(sizeof(GmAcCharController) == 0x58, "GmAcCharController");
 static_assert(offsetof(GmAcCharacter, m_controller) == 0x2DC, "GmAcCharacter::m_controller");
 static_assert(offsetof(GmAcCharacter, m_sightConeLength) == 0x2E8, "GmAcCharacter::m_sightConeLength");
 static_assert(offsetof(GmAcCharacter, m_sightConeBone) == 0x2F8, "GmAcCharacter::m_sightConeBone");

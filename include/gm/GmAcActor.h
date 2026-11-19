@@ -23,7 +23,9 @@ class GmAcActor;
 class GmAcNode;
 class GmAudioData;
 class GmVfxManager;
+class AtDataLink;
 struct AtMatAssignment;
+struct GmAcQuery;
 struct GmSoundNote;
 
 // ---- what an object of unknown class is, where only its virtual destructor is used -----------------------------------------
@@ -172,8 +174,9 @@ public:
     virtual void Slot19();              // slot 19, 0x0014D120 stops with a diagnostic
     virtual void Slot20(int a);         // slot 20, 0x0014E4D0 the scene node: stops with a diagnostic
     virtual void Slot21(int a);         // slot 21, 0x000CBF30 empty, folded
-    virtual void Slot22(int a, int b, int c, int d, int e);  // slot 22, 0x0014BD90 stops with a diagnostic
-    virtual void Slot23(int a, int b, int c, int d, int e);  // slot 23, 0x0014BE10 stops with a diagnostic
+    // slot 22, 0x0014BD90 stops with a diagnostic. Copies out the frame, into each pointer not null: +0x48, +0x18, +0x30, +0x24, +0x3C. GmAcPlayer's slot 20 reads them as position, forward, up and right.
+    virtual void Slot22(AtVector3* a, AtVector3* b, AtVector3* c, AtVector3* d, AtVector3* e);
+    virtual void Slot23(AtVector3* a, AtVector3* b, AtVector3* c, AtVector3* d, AtVector3* e);  // slot 23, 0x0014BE10 stops with a diagnostic. Sets the frame, as GmAcPlayer's slot 20 uses it
     virtual void Slot24(int a, int b, int c, int d, int e);  // slot 24, 0x0014BF20 stops with a diagnostic
     virtual void Slot25(int a, int b, int c, int d, int e);  // slot 25, 0x0014BFB0 stops with a diagnostic
     virtual void SetFlag10(int on);     // slot 26, 0x00147FB0 sets or clears bit 0x10 of m_flagsA4
@@ -194,7 +197,9 @@ public:
     virtual void Slot41(int a);         // slot 41, 0x000CBF30 empty, folded. The animation controller's slot 2 calls it
     virtual int Slot42();               // slot 42, 0x000AB720 returns 0, folded
     virtual void Slot43(int a, int b, int c);  // slot 43, 0x0014D600 stops with a diagnostic
-    virtual int Slot44(int a);          // slot 44, 0x0014D800 stops with a diagnostic
+    // slot 44, 0x0014D800 stops with a diagnostic. The argument was an int; GmAcPlayer's slot 44 shows it is a pointer (include/gm/GmAcPlayer.h). Doubtful as a node slot: 0x0028E6E8, where
+    // this entry is, is referenced from code (0x0014D700, 0x0014FF1F) as a vftable of its own, and 0x0014D800 is a deleting destructor of 0x44-byte elements. The node's vftable may have 44 slots.
+    virtual int Slot44(GmAcQuery* query);
 
     void Reset();                       // 0x0014BC60 all but m_flags98, which gains kNodeReset, and the controller
     void SetUnknown140(int value);      // 0x0014BA90
@@ -202,6 +207,9 @@ public:
     int SetupAndConfigure(void* a, Descriptor* descriptor);   // 0x0014BB00 keeps both, then slot 2, whose answer it returns
     // 0x0014CAA0. FindValue, then the same name under the game's default record (0x003B3524), searched without parents. An empty name finds nothing. The second argument is not read.
     void* FindValueOrDefault(const char* name, int unused);
+    // 0x0014BAC0. The record named `name` beneath this object's own, searched with parents; null for an empty name, whose whole length is measured only to test it. Neither the registry nor
+    // the record is tested. The second argument is not read. src/gm/FaAcPlayer.cpp, by its first user here.
+    AtDataLink* FindRecord(const char* name, int unused);
     void ApplyMatAssignment(int which);  // 0x0014D590 the scene: not recovered, stops with a diagnostic. 1, 2, 3 pick +0x12C, +0x130, +0x134
     int IsVisible();                    // 0x0014C1B0 the scene and the camera: not recovered, stops with a diagnostic
 
@@ -397,7 +405,7 @@ public:
     void Slot38(int a) override;        // slot 38, 0x00148CA0 to the audio component's +0x68, if both are there
     void Slot40(int a) override;        // slot 40, 0x001484B0 ANIMOVER: stops with a diagnostic
     void Slot41(int a) override;        // slot 41, 0x00147CF0 slot 40
-    int Slot44(int a) override;         // slot 44, 0x000FBA70 returns 1, folded
+    int Slot44(GmAcQuery* query) override;  // slot 44, 0x000FBA70 returns 1, folded
     virtual void StartCollision(int a, int unused);  // slot 45, 0x00147D00 "STRTCOL" to the audio component, if there is one
     virtual void EndCollision(int a);   // slot 46, 0x00147D40 "ENDCOL" likewise
     virtual void Slot47(int a, int b, int c);  // slot 47, 0x001494D0 the update, 2819 bytes: stops with a diagnostic

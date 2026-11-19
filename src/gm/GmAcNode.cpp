@@ -261,8 +261,8 @@ void GmAcNode::Slot15() { AtFatal("Gm actor: GmAcNode slot 15, 0x0014DB70, is no
 void GmAcNode::Slot17(int) { AtFatal("Gm actor: GmAcNode slot 17, 0x0014D070, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot19() { AtFatal("Gm actor: GmAcNode slot 19, 0x0014D120, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot20(int) { AtFatal("Gm actor: GmAcNode slot 20, 0x0014E4D0, is not recovered", 0, 0, 0); }
-void GmAcNode::Slot22(int, int, int, int, int) { AtFatal("Gm actor: GmAcNode slot 22, 0x0014BD90, is not recovered", 0, 0, 0); }
-void GmAcNode::Slot23(int, int, int, int, int) { AtFatal("Gm actor: GmAcNode slot 23, 0x0014BE10, is not recovered", 0, 0, 0); }
+void GmAcNode::Slot22(AtVector3*, AtVector3*, AtVector3*, AtVector3*, AtVector3*) { AtFatal("Gm actor: GmAcNode slot 22, 0x0014BD90, is not recovered", 0, 0, 0); }
+void GmAcNode::Slot23(AtVector3*, AtVector3*, AtVector3*, AtVector3*, AtVector3*) { AtFatal("Gm actor: GmAcNode slot 23, 0x0014BE10, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot24(int, int, int, int, int) { AtFatal("Gm actor: GmAcNode slot 24, 0x0014BF20, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot25(int, int, int, int, int) { AtFatal("Gm actor: GmAcNode slot 25, 0x0014BFB0, is not recovered", 0, 0, 0); }
 int GmAcNode::Slot27() { AtFatal("Gm actor: GmAcNode slot 27, 0x0014C170, is not recovered", 0, 0, 0); return 0; }
@@ -276,4 +276,4 @@ void GmAcNode::Slot34() { AtFatal("Gm actor: GmAcNode slot 34, 0x0014C730, is no
 void GmAcNode::Slot35() { AtFatal("Gm actor: GmAcNode slot 35, 0x0014C7B0, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot39() { AtFatal("Gm actor: GmAcNode slot 39, 0x0014C8A0, is not recovered", 0, 0, 0); }
 void GmAcNode::Slot43(int, int, int) { AtFatal("Gm actor: GmAcNode slot 43, 0x0014D600, is not recovered", 0, 0, 0); }
-int GmAcNode::Slot44(int) { AtFatal("Gm actor: GmAcNode slot 44, 0x0014D800, is not recovered", 0, 0, 0); return 0; }
+int GmAcNode::Slot44(GmAcQuery*) { AtFatal("Gm actor: GmAcNode slot 44, 0x0014D800, is not recovered", 0, 0, 0); return 0; }

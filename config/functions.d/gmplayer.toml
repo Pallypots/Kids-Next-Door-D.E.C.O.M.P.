@@ -1,0 +1,460 @@
+# GmAcPlayer, FaAcPlayer, what FaAcPlayer holds and the controller frame. Names other than RTTI names are inferred; see include/gm/GmAcPlayer.h.
+# Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x0014F230
+size = 36
+symbol = "?GmLoadedPlayersAdd@@YAXPAUGmLoadedPlayers@@PAVGmAcPlayer@@@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x001546C0
+size = 88
+symbol = "??0GmAcCharController@@QAE@XZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00154720
+size = 86
+symbol = "??1GmAcCharController@@QAE@XZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00154520
+size = 7
+symbol = "?Activate@GmAcCharController@@QAEXXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00154550
+size = 4
+symbol = "?HasPending@GmAcCharController@@QAEHXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00154560
+size = 66
+symbol = "?GetFrame@GmAcCharController@@QAEXPAVAtVector3@@00@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x001545B0
+size = 186
+symbol = "?SetFrame@GmAcCharController@@QAEXPBVAtVector3@@00H@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00154670
+size = 69
+symbol = "?ApplyPending@GmAcCharController@@QAEXXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131F80
+size = 94
+symbol = "??0GmAcPlayer@@QAE@XZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00132220
+size = 79
+symbol = "??1GmAcPlayer@@UAE@XZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00132270
+size = 30
+symbol = "??_GGmAcPlayer@@UAEPAXI@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00132070
+size = 81
+symbol = "?Shutdown@GmAcPlayer@@UAEXXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131910
+size = 49
+symbol = "?Slot2@GmAcPlayer@@UAEHXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x001318F0
+size = 5
+symbol = "?Slot4@GmAcPlayer@@UAEXXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131950
+size = 35
+symbol = "?Slot10@GmAcPlayer@@UAEXXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131900
+size = 11
+symbol = "?Slot11@GmAcPlayer@@UAEXXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131980
+size = 182
+symbol = "?Slot20@GmAcPlayer@@UAEXH@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131AA0
+size = 122
+symbol = "?Slot44@GmAcPlayer@@UAEHPAUGmAcQuery@@@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131FE0
+size = 29
+symbol = "?MoveFrame@GmAcPlayer@@UAEHPAVAtVector3@@00@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00132000
+size = 85
+symbol = "?Slot61@GmAcPlayer@@UAEHMM@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00132060
+size = 6
+symbol = "?Slot66@GmAcPlayer@@UAEHXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131F20
+size = 81
+symbol = "?SetPartner@GmAcPlayer@@QAEXPAVGmAcActor@@@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131A40
+size = 11
+symbol = "?ApplyPendingFrame@GmAcPlayer@@QAEXXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131A50
+size = 18
+symbol = "?SetControllerFrame@GmAcPlayer@@QAEXPBVAtVector3@@00H@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131A70
+size = 11
+symbol = "?ControllerFrame@GmAcPlayer@@QAEXPAVAtVector3@@00@Z"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00131A80
+size = 28
+symbol = "?HasPendingFrame@GmAcPlayer@@QAEHXZ"
+source = "src/gm/GmAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00014030
+size = 106
+symbol = "?AtNameLength@@YAHPBD@Z"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x0014BAC0
+size = 52
+symbol = "?FindRecord@GmAcNode@@QAEPAVAtDataLink@@PBDH@Z"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00152A80
+size = 61
+symbol = "??0GmAcSightQuery@@QAE@XZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00152AC0
+size = 61
+symbol = "??1GmAcSightQuery@@QAE@XZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x0006E1F0
+size = 50
+symbol = "??0GmAcSprite@@QAE@XZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x0006E230
+size = 36
+symbol = "??1GmAcSprite@@QAE@XZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x0006E1D0
+size = 30
+symbol = "?Clear@GmAcSprite@@QAEXXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00093FA0
+size = 126
+symbol = "??0FaAcPlayer@@QAE@XZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00094430
+size = 173
+symbol = "??1FaAcPlayer@@UAE@XZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00094A20
+size = 87
+symbol = "??_EFaAcPlayer@@UAEPAXI@Z"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00094D40
+size = 11
+symbol = "??_EFaAcPlayer@@WDCM@AEPAXI@Z"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00092E40
+size = 304
+symbol = "?Reset@FaAcPlayer@@QAEXXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00092F70
+size = 459
+symbol = "?Slot2@FaAcPlayer@@UAEHXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00094070
+size = 43
+symbol = "?Shutdown@FaAcPlayer@@UAEXXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00092BF0
+size = 5
+symbol = "?Slot4@FaAcPlayer@@UAEXXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00092C00
+size = 5
+symbol = "?Slot10@FaAcPlayer@@UAEXXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00093B50
+size = 477
+symbol = "?MoveFrame@FaAcPlayer@@UAEHPAVAtVector3@@00@Z"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00092C10
+size = 5
+symbol = "?Slot61@FaAcPlayer@@UAEHMM@Z"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00094050
+size = 20
+symbol = "?FollowMaxVerticalLook@FaAcPlayer@@UAEMXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00094030
+size = 20
+symbol = "?FollowMinVerticalLook@FaAcPlayer@@UAEMXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00093140
+size = 124
+symbol = "?ReadLook@FaAcPlayer@@UAEXXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x00092C40
+size = 7
+symbol = "?Slot66@FaAcPlayer@@UAEHXZ"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[function]]
+va = 0x000948E0
+size = 307
+symbol = "?Create@FaAcPlayer@@SAPAV1@H@Z"
+source = "src/gm/FaAcPlayer.cpp"
+subsystem = "gm/gmplayer"
+evidence = "tests/oracle/oracle_gmplayer.cpp; address noted beside the declaration in include/gm/GmAcPlayer.h or include/gm/GmAcCharacter.h"
+
+[[vtable]]
+va = 0x0028CB48
+slots = 67
+symbol = "??_7GmAcPlayer@@6B@"
+source = "src/gm/GmAcPlayer.cpp"
+
+[[vtable]]
+va = 0x0027B794
+slots = 67
+symbol = "??_7FaAcPlayer@@6BGmAcPlayer@@@"
+source = "src/gm/FaAcPlayer.cpp"
+
+[[vtable]]
+va = 0x0027B78C
+slots = 1
+symbol = "??_7FaAcPlayer@@6BGmPlug@@@"
+source = "src/gm/FaAcPlayer.cpp"
+
+[[vtable]]
+va = 0x00277A3C
+slots = 3
+symbol = "??_7GmAcSprite@@6B@"
+source = "src/gm/FaAcPlayer.cpp"
+
+[symbols]
+"?Slot27@GmAcPlayer@@UAEHXZ" = 0x001A2B40  # folded: returns 1
+"?Slot42@GmAcPlayer@@UAEHXZ" = 0x001A2B40  # folded: returns 1
+"?Slot62@GmAcPlayer@@UAEMXZ" = 0x00094020  # folded: returns 0.0
+"?FollowMaxVerticalLook@GmAcPlayer@@UAEMXZ" = 0x00094020  # folded: returns 0.0
+"?FollowMinVerticalLook@GmAcPlayer@@UAEMXZ" = 0x00094020  # folded: returns 0.0
+"?Slot2@GmAcSprite@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?s_instance@GmPlayerApp@@2PAU1@A" = 0x00304D58  # App::s_instance on integrate-batch5
+"?s_instance@GmWorldAxes@@2PAU1@A" = 0x003B34E4
+"?s_count@GmAcSightQuery@@2IA" = 0x003B3998
+"?s_query@GmAcSightQuery@@2VAtSegmentQuery@@A" = 0x003B39A0
+"??_C@_0BP@LEIDKNEA@BackwardsThresholdTurningValue@" = 0x0028CB20
+"??_C@_0BG@KLDPCCIB@MinMoveStickMagnitude@" = 0x0027B994
+"??_C@_06ELDKBGDL@BIGBOX@" = 0x0028CB40
+"??_C@_0BI@GBBLPAJC@FollowMaxHorizontalLook@" = 0x0027B698
+"??_C@_0BG@DBGLDMKL@FollowMinVerticalLook@" = 0x0027B680
+"??_C@_0BG@GAJCIHPG@FollowMaxVerticalLook@" = 0x0027B668
+"??_C@_09HJFBHBB@FPMaxZoom@" = 0x0027B65C
+"??_C@_0BK@ILPKBMML@FPHorizontalDegreesPerSec@" = 0x0027B640
+"??_C@_0BI@JJPIMEKG@FPVerticalDegreesPerSec@" = 0x0027B628
+"??_C@_0BC@OECAMONK@FPMaxVerticalLook@" = 0x0027B614
+"??_C@_0N@BLIHONLB@JumpsAllowed@" = 0x0027B604
+"??_C@_0BN@KFGOLGGL@CosOfAngleToSwitchMouthSides@" = 0x0027B5E4
+"??_C@_07COMKPHNL@PowuhUp@" = 0x0027B5DC
+"??_C@_0BD@COLKPEPO@Level2x4PickupType@" = 0x0027B5C8
+"??_C@_0BD@IFLJDEIO@Level2x4PickupName@" = 0x0027B5B4
+"??_C@_0BA@FCGMMPBK@GameAxisForward@" = 0x0027B5A4
+"??_C@_0BA@DJAJOOAH@GameAxisTurning@" = 0x0027B594
+"??_C@_0N@CJMLPBOO@PowuhUpDecay@" = 0x0027B584
+"??_C@_0O@HACCICAC@PowuhUpDeduct@" = 0x0027B574
+"__real@42700000" = 0x0027B540  # 60.0f
+"__real@c2700000" = 0x0027B534  # -60.0f
+"__real@3e4ccccd" = 0x0027B52C  # 0.2f
+"__real@3c8efa35" = 0x0027B558  # pi / 180, a float
+"__real@00000000" = 0x002725F0  # 0.0f
+"?AxisValue@GmPlayerInput@@QAEMHH@Z" = 0x0006DFE0  # seam: a method of App+0x692C (AppUnknown692C)
+"?Setup@GmAcSprite@@UAEXPAX@Z" = 0x0006E2E0
+"?SetupNamed@GmAcSprite@@UAEXPAXPBD1@Z" = 0x0006E260
+"?Slot15@FaAcPlayer@@UAEXXZ" = 0x000940A0
+"?Slot20@FaAcPlayer@@UAEXH@Z" = 0x00094A80
+"?Slot21@FaAcPlayer@@UAEXH@Z" = 0x00093450
