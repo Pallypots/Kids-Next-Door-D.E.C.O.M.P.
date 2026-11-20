@@ -110,7 +110,7 @@ evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declara
 [[function]]
 va = 0x000675B0
 size = 742
-symbol = "?Prepare@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@IIIIIIIIIIIIPAV1@@Z"
+symbol = "?Prepare@AtDataRegistry@@QAEHPAVAtDataRegistryOwner@@IIIIIIIIIIIIPAV1@@Z"
 source = "src/at/AtDataLookup.cpp"
 subsystem = "at/datalookup"
 evidence = "tests/oracle/oracle_datalookup.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"

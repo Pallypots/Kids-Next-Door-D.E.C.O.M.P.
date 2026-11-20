@@ -5,7 +5,7 @@
 [[function]]
 va = 0x001386D0
 size = 466
-symbol = "?PlayNote@GmAudioData@@QAEXPAVGmActor@@PAUGmSoundNote@@@Z"
+symbol = "?PlayNote@GmAudioData@@QAEXPAVGmAcActor@@PAUGmSoundNote@@@Z"
 source = "src/gm/GmSoundPlay.cpp"
 subsystem = "gm/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
@@ -29,7 +29,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x00138010
 size = 204
-symbol = "?PlayAtActor@GmAudioData@@QAEXPAVGmActor@@PAVAtAudioSegment@@@Z"
+symbol = "?PlayAtActor@GmAudioData@@QAEXPAVGmAcActor@@PAVAtAudioSegment@@@Z"
 source = "src/gm/GmSoundPlay.cpp"
 subsystem = "gm/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
@@ -61,7 +61,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x00138F00
 size = 103
-symbol = "?TakeDynamicNode@GmAudioData@@QAEPAUGmSoundNode@@PAVGmActor@@M@Z"
+symbol = "?TakeDynamicNode@GmAudioData@@QAEPAUGmSoundNode@@PAVGmAcActor@@M@Z"
 source = "src/gm/GmSoundPlay.cpp"
 subsystem = "gm/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmAudioData.h"
@@ -109,7 +109,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x00194BB0
 size = 54
-symbol = "?StopSegment@GmActorSoundNodes@@QAEXPAVAtAudioSegment@@H@Z"
+symbol = "?StopSegment@GmAcAudio@@QAEXPAVAtAudioSegment@@H@Z"
 source = "src/gm/GmSoundPlay.cpp"
 subsystem = "gm/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmSoundNodes.h"
@@ -117,7 +117,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x00194E40
 size = 142
-symbol = "?Play@GmActorSoundNodes@@QAEXPAVAtAudioSegment@@HPBVAtVector3@@H@Z"
+symbol = "?Play@GmAcAudio@@QAEXPAVAtAudioSegment@@HPBVAtVector3@@H@Z"
 source = "src/gm/GmSoundPlay.cpp"
 subsystem = "gm/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmSoundNodes.h"

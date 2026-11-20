@@ -59,7 +59,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x0009BD50
 size = 1109
-symbol = "?Load@AtDataLibrary@@QAEXPAUAtDataRegistryOwner@@PBDHPAVAtDataRegistry@@@Z"
+symbol = "?Load@AtDataLibrary@@QAEXPAVAtDataRegistryOwner@@PBDHPAVAtDataRegistry@@@Z"
 source = "src/at/AtDataLibrary.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; LIBRARY.ADD, the one .ADD on the disc, and written text"
@@ -107,7 +107,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000B1E30
 size = 1105
-symbol = "?Read@AtDatabaseManager@@QAEHPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@PADIH@Z"
+symbol = "?Read@AtDatabaseManager@@QAEHPAVAtDataRegistryOwner@@PAVAtIoTokenizer@@PADIH@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only: no .ADB on the disc"
@@ -131,7 +131,7 @@ evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in
 [[function]]
 va = 0x000B2330
 size = 295
-symbol = "?Load@AtDatabaseManager@@QAEHPAUAtDataRegistryOwner@@PBDHPADIH@Z"
+symbol = "?Load@AtDatabaseManager@@QAEHPAVAtDataRegistryOwner@@PBDHPADIH@Z"
 source = "src/at/AtDatabaseManager.cpp"
 subsystem = "at/add"
 evidence = "tests/oracle/oracle_add.cpp; address noted beside the declaration in include/at/AtDataLibrary.h; written text only: no .ADB on the disc"

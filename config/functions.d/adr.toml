@@ -3,7 +3,7 @@
 [[function]]
 va = 0x00068880
 size = 302
-symbol = "?Load@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@PBDHPADPAV1@@Z"
+symbol = "?Load@AtDataRegistry@@QAEHPAVAtDataRegistryOwner@@PBDHPADPAV1@@Z"
 source = "src/at/AtDataRegistry.cpp"
 subsystem = "at/adr"
 evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"
@@ -11,7 +11,7 @@ evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in
 [[function]]
 va = 0x00067D80
 size = 2290
-symbol = "?Read@AtDataRegistry@@QAEHPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@PADPAV1@@Z"
+symbol = "?Read@AtDataRegistry@@QAEHPAVAtDataRegistryOwner@@PAVAtIoTokenizer@@PADPAV1@@Z"
 source = "src/at/AtDataRegistry.cpp"
 subsystem = "at/adr"
 evidence = "tests/oracle/oracle_adr.cpp; address noted beside the declaration in include/at/AtDataRegistry.h"

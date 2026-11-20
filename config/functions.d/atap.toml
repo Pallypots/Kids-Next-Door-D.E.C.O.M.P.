@@ -125,7 +125,7 @@ evidence = "App vftable slot 15; 1, 6, 0x10, 0x40000, 0x10 and App+0x6494; tests
 [[function]]
 va = 0x0008C6B0
 size = 33
-symbol = "?GetMathConfig@App@@UAEXPAUAppMathConfig@@@Z"
+symbol = "?GetMathConfig@App@@UAEXPAUAtMathConfig@@@Z"
 source = "src/gm/GmAppLayers.cpp"
 subsystem = "gm/atap"
 evidence = "App vftable slot 19; tests/oracle/oracle_atap.cpp"
@@ -133,7 +133,7 @@ evidence = "App vftable slot 19; tests/oracle/oracle_atap.cpp"
 [[function]]
 va = 0x0008C6E0
 size = 46
-symbol = "?GetDataManagementConfig@App@@UAEXPAUAppDataManagementConfig@@@Z"
+symbol = "?GetDataManagementConfig@App@@UAEXPAUAtDataManagementConfig@@@Z"
 source = "src/gm/GmAppLayers.cpp"
 subsystem = "gm/atap"
 evidence = "App vftable slot 23; tests/oracle/oracle_atap.cpp"
@@ -141,7 +141,7 @@ evidence = "App vftable slot 23; tests/oracle/oracle_atap.cpp"
 [[function]]
 va = 0x0008C800
 size = 36
-symbol = "?GetScriptConfig@App@@UAEXPAUAppScriptConfig@@@Z"
+symbol = "?GetScriptConfig@App@@UAEXPAUAtScriptConfig@@@Z"
 source = "src/gm/GmAppLayers.cpp"
 subsystem = "gm/atap"
 evidence = "App vftable slot 27; tests/oracle/oracle_atap.cpp"
@@ -149,7 +149,7 @@ evidence = "App vftable slot 27; tests/oracle/oracle_atap.cpp"
 [[function]]
 va = 0x0008C710
 size = 33
-symbol = "?GetKinematicsConfig@App@@UAEXPAUAppKinematicsConfig@@@Z"
+symbol = "?GetKinematicsConfig@App@@UAEXPAUAtKinematicsConfig@@@Z"
 source = "src/gm/GmAppLayers.cpp"
 subsystem = "gm/atap"
 evidence = "App vftable slot 31; tests/oracle/oracle_atap.cpp"
@@ -157,7 +157,7 @@ evidence = "App vftable slot 31; tests/oracle/oracle_atap.cpp"
 [[function]]
 va = 0x0008C740
 size = 39
-symbol = "?GetGraphicsConfig@App@@UAEXPAUAppGraphicsConfig@@@Z"
+symbol = "?GetGraphicsConfig@App@@UAEXPAUAtGraphicsConfig@@@Z"
 source = "src/gm/GmAppLayers.cpp"
 subsystem = "gm/atap"
 evidence = "App vftable slot 35; tests/oracle/oracle_atap.cpp"

@@ -543,7 +543,7 @@ subsystem = "at/loader"
 
 [[vtable]]
 va = 0x0028663C
-slots = 4
+slots = 7
 symbol = "??_7AtGrD3DAnimationDevice@@6B@"
 source = "src/at/AtGrD3DAnimation.cpp"
 subsystem = "at/loader"
