@@ -9,12 +9,14 @@
 
 class AtAudioBank;
 class AtAudioBankDatabase;
+class AtAudioEmitter;  // include/at/AtAudioDatabase.h
+class AtAudioVoice;    // include/at/AtAudioDatabase.h
 
-// What a bank's load requests go to. The concrete class is not recovered; only these two slots are called here, and whether they return anything used is not: the callers ignore it.
+// What a bank's load requests go to: the sound system. Its concrete class on the Xbox is AtSoXboxSystem (include/at/AtAudioDatabase.h), vftable 0x0028A338, whose first four slots are recovered there.
 class AtAudioBankLoader {
 public:
-    virtual void Unknown0() = 0;
-    virtual void Unknown1() = 0;
+    virtual void AddEmitter(AtAudioEmitter* emitter) = 0;     // slot 0: an emitter's first voice was made
+    virtual void RemoveEmitter(AtAudioEmitter* emitter) = 0;  // slot 1: an emitter's last voice was let go
     virtual void Add(AtAudioBank* bank) = 0;     // slot 2
     virtual void Remove(AtAudioBank* bank) = 0;  // slot 3
     virtual void Unknown4();                     // slots 4 to 7 are not recovered, and stop with a diagnostic: src/at/AtAudioVoices.cpp
@@ -59,13 +61,14 @@ public:
     virtual ~AtAudioBank();                    // slot 0; 0x00031EE0 deleting, 0x00031DA0 complete
     virtual void OnInit(const AtAudioBankDesc& desc) = 0;  // slot 1
     virtual void Reset();                      // slot 2, 0x00031E20
-    virtual void Unknown3() = 0;               // slots 3 to 9: argument counts are not known, and nothing here calls them
-    virtual void Unknown4() = 0;
-    virtual void Unknown5() = 0;
-    virtual void Unknown6() = 0;
-    virtual void Unknown7() = 0;
-    virtual void Unknown8() = 0;
-    virtual void Unknown9() = 0;
+    // Slots 3 to 9 run a voice of one of this bank's segments; an emitter calls them (src/at/AtAudioEmitterPlay.cpp). Names inferred from what the Xbox bank does (src/at/AtSoXboxPlay.cpp).
+    virtual void Prepare(AtAudioVoice* voice) = 0;                      // slot 3
+    virtual void Start(AtAudioVoice* voice) = 0;                        // slot 4
+    virtual void Queue(AtAudioVoice* after, AtAudioVoice* voice) = 0;   // slot 5 `voice` starts when `after` ends
+    virtual void Pause(AtAudioVoice* voice) = 0;                        // slot 6
+    virtual void Resume(AtAudioVoice* voice) = 0;                       // slot 7
+    virtual void Stop(AtAudioVoice* voice) = 0;                         // slot 8
+    virtual void UpdateVoice(AtAudioVoice* voice, float seconds) = 0;   // slot 9
     virtual int Unload();                      // slot 10, 0x00031FC0 7 when not loaded and not in state 3. With no user it dereferences null, as the original does.
     virtual float SegmentLength(int index);    // slot 11, 0x00031E30 no data here, so zero
     virtual float Unknown12(int index);        // slot 12, 0x00031E30 folded with slot 11

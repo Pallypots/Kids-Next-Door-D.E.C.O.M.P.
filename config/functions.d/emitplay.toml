@@ -1,0 +1,445 @@
+# A sound emitter's voices (slots 8 and 12 to 25), the voice classes, the voice factory, the sound system's lists, and the Xbox bank's play slots up to XACT. Names inferred, except
+# AtSoIFactory's and AtSoXboxXactBank's, which the original's messages give; see include/at/AtAudioDatabase.h. Recorded sizes are the inventory's, or counted where it lacks the function.
+
+[[function]]
+va = 0x0011EB20
+size = 27
+symbol = "??0AtAudioVoice@@QAE@XZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EAC0
+size = 7
+symbol = "??1AtAudioVoice@@UAE@XZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EB40
+size = 31
+symbol = "??_GAtAudioVoice@@UAEPAXI@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EAD0
+size = 31
+symbol = "?Init@AtAudioVoice@@UAEXPAVAtAudioSegment@@PAVAtAudioEmitter@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EAF0
+size = 19
+symbol = "?Reset@AtAudioVoice@@UAEXXZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EB10
+size = 16
+symbol = "?Release@AtAudioVoice@@UAEXXZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EF70
+size = 22
+symbol = "?OnRelease@AtAudioEmitter@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F1E0
+size = 56
+symbol = "?UpdateVoice@AtAudioEmitter@@UAEXPAVAtAudioVoice@@M@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EB70
+size = 38
+symbol = "?Update@AtAudioEmitter@@UAEXM@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EF90
+size = 70
+symbol = "?Prepare@AtAudioEmitter@@UAEXPAVAtAudioSegment@@PAPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F010
+size = 89
+symbol = "?Play@AtAudioEmitter@@UAEXPAVAtAudioSegment@@PAPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h; not in the inventory: reached only through vftables 0x0028B460 and 0x0028A488 slot 15"
+
+[[function]]
+va = 0x0011EFE0
+size = 48
+symbol = "?Start@AtAudioEmitter@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F070
+size = 78
+symbol = "?PlayAfter@AtAudioEmitter@@UAEXPAVAtAudioVoice@@PAVAtAudioSegment@@PAPAV2@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F0C0
+size = 30
+symbol = "?PauseVoice@AtAudioEmitter@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EBC0
+size = 34
+symbol = "?PauseAll@AtAudioEmitter@@UAEXXZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F0E0
+size = 30
+symbol = "?ResumeVoice@AtAudioEmitter@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EBF0
+size = 34
+symbol = "?ResumeAll@AtAudioEmitter@@UAEXXZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F130
+size = 42
+symbol = "?StopSegment@AtAudioEmitter@@UAEXPAVAtAudioSegment@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F100
+size = 34
+symbol = "?StopVoice@AtAudioEmitter@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EC20
+size = 34
+symbol = "?StopAll@AtAudioEmitter@@UAEXXZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011F190
+size = 24
+symbol = "?SetVelocity@AtAudioEmitter@@UAEXPBVAtVector3@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EE90
+size = 88
+symbol = "?NewVoice@AtAudioEmitter@@QAEPAVAtAudioVoice@@PAVAtAudioSegment@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0011EEF0
+size = 118
+symbol = "?RemoveVoice@AtAudioEmitter@@QAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D770
+size = 54
+symbol = "?AllocatePlayState@AtSoIFactory@@QAEPAVAtAudioVoice@@XZ"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D7B0
+size = 49
+symbol = "?FreePlayState@AtSoIFactory@@QAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtAudioEmitterPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010F120
+size = 24
+symbol = "?Update@AtSoXboxEmitter@@UAEXM@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010F140
+size = 23
+symbol = "?StopAll@AtSoXboxEmitter@@UAEXXZ"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010F0C0
+size = 92
+symbol = "?UpdatePosition@AtSoXboxEmitter@@QAEXXZ"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x000EA600
+size = 49
+symbol = "?AddEmitter@AtSoXboxSystem@@UAEXPAVAtAudioEmitter@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x000EA640
+size = 76
+symbol = "?RemoveEmitter@AtSoXboxSystem@@UAEXPAVAtAudioEmitter@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x000EA6A0
+size = 61
+symbol = "?Add@AtSoXboxSystem@@UAEXPAVAtAudioBank@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x000EA6E0
+size = 106
+symbol = "?Remove@AtSoXboxSystem@@UAEXPAVAtAudioBank@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x000EAB80
+size = 107
+symbol = "?Step@AtSoXboxVoiceParameter@@QAEXM@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D950
+size = 25
+symbol = "??0AtSoXboxVoice@@QAE@XZ"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D830
+size = 11
+symbol = "??1AtSoXboxVoice@@UAE@XZ"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h; stores vftable 0x0028A31C and jumps to 0x0011EAC0"
+
+[[function]]
+va = 0x000E9CC0
+size = 87
+symbol = "??_GAtSoXboxVoice@@UAEPAXI@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h; the original's is the vector deleting destructor, for arrays too (element 0xB8 bytes)"
+
+[[function]]
+va = 0x0010D890
+size = 37
+symbol = "?Init@AtSoXboxVoice@@UAEXPAVAtAudioSegment@@PAVAtAudioEmitter@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D8C0
+size = 16
+symbol = "?Reset@AtSoXboxVoice@@UAEXXZ"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D8D0
+size = 74
+symbol = "?SetParameter@AtSoXboxVoice@@UAEXHMM@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h; not in the inventory: reached only through vftable 0x0028A31C slot 4"
+
+[[function]]
+va = 0x0010D940
+size = 14
+symbol = "?GetParameter@AtSoXboxVoice@@UAEMH@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D920
+size = 28
+symbol = "?SetParameterName@AtSoXboxVoice@@UAEXHPBD@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x0010D840
+size = 66
+symbol = "?ClearFields@AtSoXboxVoice@@QAEXXZ"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x00120150
+size = 115
+symbol = "?Prepare@AtSoXboxXactBank@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x001201D0
+size = 132
+symbol = "?Start@AtSoXboxXactBank@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x00120260
+size = 51
+symbol = "?Queue@AtSoXboxXactBank@@UAEXPAVAtAudioVoice@@0@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x001202A0
+size = 64
+symbol = "?Pause@AtSoXboxXactBank@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x001202E0
+size = 58
+symbol = "?Resume@AtSoXboxXactBank@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h; not in the inventory: reached only through vftable 0x0028B4D8 slot 7"
+
+[[function]]
+va = 0x00120590
+size = 158
+symbol = "?Stop@AtSoXboxXactBank@@UAEXPAVAtAudioVoice@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h; its jump table follows at 0x00120630"
+
+[[function]]
+va = 0x00120340
+size = 291
+symbol = "?UpdateVoice@AtSoXboxXactBank@@UAEXPAVAtAudioVoice@@M@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x00120470
+size = 118
+symbol = "?SegmentLength@AtSoXboxXactBank@@UAEMH@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x001204F0
+size = 89
+symbol = "?Unknown12@AtSoXboxXactBank@@UAEMH@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
+
+[[function]]
+va = 0x00120320
+size = 25
+symbol = "?Finish@AtSoXboxXactBank@@SAXPAVAtAudioVoice@@@Z"
+source = "src/at/AtSoXboxPlay.cpp"
+subsystem = "at/emitplay"
+evidence = "tests/oracle/oracle_emitplay.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h; not in the inventory: called only from 0x00120590"
+
+[[vtable]]
+va = 0x0028B444
+slots = 7
+symbol = "??_7AtAudioVoice@@6B@"
+source = "src/at/AtAudioEmitterPlay.cpp"
+
+[[vtable]]
+va = 0x0028A31C
+slots = 7
+symbol = "??_7AtSoXboxVoice@@6B@"
+source = "src/at/AtSoXboxPlay.cpp"
+
+[[vtable]]
+va = 0x0028B460
+slots = 26
+symbol = "??_7AtAudioEmitter@@6B@"
+source = "src/at/AtAudioDatabase.cpp"
+
+[[vtable]]
+va = 0x0028A488
+slots = 26
+symbol = "??_7AtSoXboxEmitter@@6B@"
+source = "src/at/AtSoXbox.cpp"
+
+[symbols]
+"?SetParameterName@AtAudioVoice@@UAEXHPBD@Z" = 0x000447F0  # vftable 0x0028B444 slot 6: ret 8, folded with others

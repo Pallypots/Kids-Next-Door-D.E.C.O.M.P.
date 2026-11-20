@@ -98,7 +98,7 @@ public:
     int m_updates = 0, m_stops = 0;
     void InitPlatform() override {}
     void Play(AtAudioSegment* segment, AtAudioVoice**) override { m_played.push_back(segment); }
-    void Unknown21() override { m_updates++; }
+    void ResumeAll() override { m_updates++; }
     void StopAll() override { m_stops++; }
 };
 

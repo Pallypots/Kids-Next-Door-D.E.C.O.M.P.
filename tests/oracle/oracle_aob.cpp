@@ -108,13 +108,13 @@ static void note_watch(int side) {
 class TestBank : public AtAudioBank {
 public:
     void OnInit(const AtAudioBankDesc& d) override { g_log[1].add('I', m_state); note_desc(1, d); char n[9] = {}; std::strncpy(n, m_name, 8); g_log[1].add('m', (uint32_t)n[0]); g_log[1].add('M', m_format + (m_residence << 8) + (m_blockId << 16)); }
-    void Unknown3() override { g_log[1].add('X', 3); }
-    void Unknown4() override { g_log[1].add('X', 4); }
-    void Unknown5() override { g_log[1].add('X', 5); }
-    void Unknown6() override { g_log[1].add('X', 6); }
-    void Unknown7() override { g_log[1].add('X', 7); }
-    void Unknown8() override { g_log[1].add('X', 8); }
-    void Unknown9() override { g_log[1].add('X', 9); }
+    void Prepare(AtAudioVoice*) override { g_log[1].add('X', 3); }
+    void Start(AtAudioVoice*) override { g_log[1].add('X', 4); }
+    void Queue(AtAudioVoice*, AtAudioVoice*) override { g_log[1].add('X', 5); }
+    void Pause(AtAudioVoice*) override { g_log[1].add('X', 6); }
+    void Resume(AtAudioVoice*) override { g_log[1].add('X', 7); }
+    void Stop(AtAudioVoice*) override { g_log[1].add('X', 8); }
+    void UpdateVoice(AtAudioVoice*, float) override { g_log[1].add('X', 9); }
     void Process() override { g_log[1].add('G', m_state); }
     void Reset() override { g_log[1].add('Z', m_userCount); note_watch(1); AtAudioBank::Reset(); }
 };
@@ -127,8 +127,8 @@ public:
 class TestLoader : public AtAudioBankLoader {
 public:
     int side = 0;
-    void Unknown0() override { g_log[side].add('x', 0); }
-    void Unknown1() override { g_log[side].add('x', 1); }
+    void AddEmitter(AtAudioEmitter*) override { g_log[side].add('x', 0); }
+    void RemoveEmitter(AtAudioEmitter*) override { g_log[side].add('x', 1); }
     void Add(AtAudioBank* b) override { g_log[side].add('q', (uint32_t)bank_id(side, b)); g_log[side].add('s', b->m_state); }
     void Remove(AtAudioBank* b) override { g_log[side].add('Q', (uint32_t)bank_id(side, b)); g_log[side].add('s', b->m_state); }
 };

@@ -160,8 +160,8 @@ static TestMatrixDevice g_matdev[2];
 class TestSystem : public AtSoXboxSystem {
 public:
     int side = 0;
-    void Unknown0() override { g_log[side].add('z', 0); }
-    void Unknown1() override { g_log[side].add('z', 1); }
+    void AddEmitter(AtAudioEmitter*) override { g_log[side].add('z', 0); }
+    void RemoveEmitter(AtAudioEmitter*) override { g_log[side].add('z', 1); }
     void Add(AtAudioBank*) override { g_log[side].add('z', 2); }
     void Remove(AtAudioBank*) override { g_log[side].add('z', 3); }
 };

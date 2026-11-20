@@ -345,16 +345,8 @@ int AtSoXboxXactBank::Unknown16() {
     return m_unknown1F8;
 }
 
-void AtSoXboxXactBank::Unknown3() { BankSlotNotRecovered(); }
-void AtSoXboxXactBank::Unknown4() { BankSlotNotRecovered(); }
-void AtSoXboxXactBank::Unknown5() { BankSlotNotRecovered(); }
-void AtSoXboxXactBank::Unknown6() { BankSlotNotRecovered(); }
-void AtSoXboxXactBank::Unknown7() { BankSlotNotRecovered(); }
-void AtSoXboxXactBank::Unknown8() { BankSlotNotRecovered(); }
-void AtSoXboxXactBank::Unknown9() { BankSlotNotRecovered(); }
 int AtSoXboxXactBank::Unload() { BankSlotNotRecovered(); return 3; }
-float AtSoXboxXactBank::SegmentLength(int) { BankSlotNotRecovered(); return 0.0f; }
-float AtSoXboxXactBank::Unknown12(int) { BankSlotNotRecovered(); return 0.0f; }
+// Slots 3 to 9, 11 and 12 are in src/at/AtSoXboxPlay.cpp.
 int AtSoXboxXactBank::Load() { return AtSoXboxXactBankLoad(this); }
 void AtSoXboxXactBank::Process() { AtSoXboxXactBankProcess(this); }
 void AtSoXboxXactBank::Update() { AtSoXboxXactBankUpdate(this); }

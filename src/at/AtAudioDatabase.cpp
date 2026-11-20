@@ -36,10 +36,6 @@ void FreeNames(char**& names, unsigned int count) {
     }
 }
 
-void EmitterSlotNotRecovered() {
-    AtFatal("Atlas Sound: this slot of an emitter is not recovered", 0, 0, 0);
-}
-
 }  // namespace
 
 const AtIoKeyword AtAudioDatabase::s_keywords[kKeywordCount] = {{kBankDatabase, "BankDatabase"}, {kSegmentDatabase, "SegmentDatabase"}, {kEmitterDatabase, "EmitterDatabase"}, {kDatabaseLoader, "DatabaseLoader"}};
@@ -337,18 +333,4 @@ void AtAudioEmitter::Read(AtAudioEmitterDatabase* database, AtIoTokenizer* token
     Init(desc);
 }
 
-void AtAudioEmitter::Unknown8() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown12() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown13() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown14() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Play(AtAudioSegment*, AtAudioVoice**) { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown16() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown17() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown18() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown19() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown20() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::Unknown21() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::StopSegment(AtAudioSegment*) { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::StopVoice(AtAudioVoice*) { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::StopAll() { EmitterSlotNotRecovered(); }
-void AtAudioEmitter::SetVelocity(const AtVector3*) { EmitterSlotNotRecovered(); }
+// Slots 8 and 12 to 25 are in src/at/AtAudioEmitterPlay.cpp.

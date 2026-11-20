@@ -66,7 +66,7 @@ AtAudioEmitter* GmAudioData::TakeVoiceSlot() {
         GmSoundVoiceSlot* slot = &m_voiceSlots[i];
         if (slot->m_state == GmSoundVoiceSlot::kFree && slot->m_emitter != 0 && slot->m_emitter->m_firstVoice == 0) {
             slot->m_state = GmSoundVoiceSlot::kNode;
-            slot->m_emitter->Unknown21();
+            slot->m_emitter->ResumeAll();
             m_lastVoiceSlot = i;
             return slot->m_emitter;
         }
@@ -127,7 +127,7 @@ void GmAudioData::PlayAtActor(GmActor* actor, AtAudioSegment* segment) {
         actor->GetMotion(&position, 0, 0, 0, 0);
         PlaceEmitter(slot->m_emitter, &position);
     }
-    slot->m_emitter->Unknown21();
+    slot->m_emitter->ResumeAll();
     slot->m_emitter->Play(segment, 0);
 }
 
