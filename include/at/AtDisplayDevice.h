@@ -10,6 +10,8 @@
 struct AtDisplayMode {
     AtDisplayMode();                   // 0x00043480 all zero
     void Clear();                      // 0x000434A0 all zero
+    // 0x00043420 (at/grfactory, src/at/AtGraphicsFactory.cpp): the five fields in order; the adapter's modes give the refresh rate and flags as the last two.
+    void Set(unsigned int width, unsigned int height, const AtPixelFormat* format, int unknown1C, int unknown20);
 
     unsigned int m_width;              // +0x00
     unsigned int m_height;             // +0x04

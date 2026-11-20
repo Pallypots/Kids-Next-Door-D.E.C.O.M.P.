@@ -227,10 +227,11 @@ static void test_chain() {
     AtIoSystemFactory::s_instance.m_running = 0;
     App* app = new App;
     App::s_instance = app;
-    // The real chain stops at the first layer that is not recovered.
+    // The real chain stops at the first thing that is not in this build: with nothing answering Direct3D (no platform/host_d3d.cpp here), the
+    // graphics factory's start stops at its first Direct3D call (at/grfactory).
     std::string stopped = stop_of([&] { app->StartUpUserInterface(); });
     std::printf("chain stopped: %s\n", stopped.c_str());
-    CHECK(stopped == "Graphics layer: the graphics factory's start (0x000C7C60: the render function tables and the factory at 0x003ADF64) is not recovered");
+    CHECK(stopped == "Graphics factory: Direct3DCreate8 (0x00206070, SDK) is not in this build");
     CHECK(app->m_memory.m_started == 1 && AtHeapManager::s_instance == &app->m_memory.m_manager && app->m_memory.m_region != nullptr);
     for (int i = 0; i < 4; i++) CHECK(app->m_heaps[i] != nullptr && app->m_heaps[i]->m_size == app->m_heapConfig[i].m_size);
     CHECK(app->m_events.m_below == &app->m_memory && AtEventSystem::s_heap3ADF8C == app->m_heaps[0]);

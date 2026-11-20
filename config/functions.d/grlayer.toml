@@ -74,14 +74,6 @@ subsystem = "at/grlayer"
 evidence = "stores its argument at 0x002C63E8; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
 
 [[function]]
-va = 0x00043480
-size = 28
-symbol = "??0AtDisplayMode@@QAE@XZ"
-source = "src/at/AtGraphicsLayer.cpp"
-subsystem = "at/grlayer"
-evidence = "0x00042C90 on +8, clears +0, +4, +0x1C, +0x20; from 0x000B2F80 on +0x54; tests/oracle/oracle_grlayer.cpp"
-
-[[function]]
 va = 0x00043760
 size = 10
 symbol = "?AtSetHeap2C7C38@@YAXPAX@Z"
