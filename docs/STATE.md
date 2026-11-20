@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-19, dev cycle 26 (sixth batch: Flash texts and scripts, the layer start-up chain, the matrix device, the character classes). Per-function results live in docs/PROGRESS.md (generated).
+Last updated: 2026-11-20, dev cycle 27 (seventh batch: registry lookups, Xbox textures and materials, sound playback, the level manifest base, start-up layers through graphics, the ActionScript interpreter, NPCs and players).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-19, dev cycle 26 (sixth batch: Flash texts and scripts, th
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 2167 functions and 182 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
+All source is in `src/`, types in `include/`. 2637 functions and 215 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -65,6 +65,7 @@ All source is in `src/`, types in `include/`. 2167 functions and 182 vftables ar
 * `gm/atap` and `at/atap` (72 functions): App's layer start-up chain. **A real x64 start-up now brings up the memory system and App's heaps, the event layer, the network layer and the I/O layer, then stops at the math layer** (later branches carry it further). The host's memory query is answered by port code in `platform/host_sdk.cpp` and `platform/host_io.cpp`, which never counts as recovered.
 * `at/matdev` (29 functions): the matrix device and pool. All 544 real `.AKC` files load completely through recovered code on x64; on x86 every matrix matches the original bit for bit. Its two item classes are the loader's vertex and index arrays, folded.
 * `gm/gmchar` (36 functions): the record reader, GmAcObject and GmAcCharacter. A real record read now reaches the recovered registry search.
+* Seventh batch (see `docs/worklog/2026-11-19-batch7-fold.md` and each branch worklog): `at/datalookup` (registry lookups and value reads; start-up's registry calls), `at/xdb` (Xbox texture and material databases: every real `.AGT` and `.AGM` loads through them), `gm/gmsound` and `at/gmsound` (sound note playback, the sound manager, `.GOO`), `gm/dbmanifest` (the level manifest base: all 51 real `.MNG` files parse to the end and queue their items), `at/atlayers` and `at/grlayer` (start-up's math, data, script, kinematics and graphics layers; a real x64 start-up now stops at the graphics factory), `at/asvm` (the Flash ActionScript interpreter: all 1062 real UI script blocks run identically), `gm/gmnpc` and `gm/gmplayer` (enemies and playable characters). The random generator, recovered twice, is one class.
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
