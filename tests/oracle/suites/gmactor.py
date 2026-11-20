@@ -230,7 +230,7 @@ MUTANTS = [
     ("Slot38: audio check", A, "    if (m_component != 0 && m_component->m_audio != 0) {", "    if (m_component != 0) {"),
     ("Slot38: argument", A, "        m_component->m_audio->Slot38(a);", "        m_component->m_audio->Slot38(0);"),
     ("Slot41: 40", A, "void GmAcActor::Slot41(int a) {\n    Slot40(a);", "void GmAcActor::Slot41(int a) {\n    Slot40(a + 1);"),
-    ("Slot44: 0", A, "int GmAcActor::Slot44(int) {\n    return 1;", "int GmAcActor::Slot44(int) {\n    return 0;"),
+    ("Slot44: 0", A, "int GmAcActor::Slot44(GmAcQuery*) {\n    return 1;", "int GmAcActor::Slot44(GmAcQuery*) {\n    return 0;"),
     ("Start collision: check", A, "void GmAcActor::StartCollision(int a, int) {\n    if (m_component != 0) {", "void GmAcActor::StartCollision(int a, int) {\n    if (1) {"),
     ("Start collision: name", A, "        AtCopyName8(name, \"STRTCOL\");", "        AtCopyName8(name, \"ENDCOL\");"),
     ("Start collision: argument", A, "        AtCopyName8(name, \"STRTCOL\");\n        m_component->SendEvent(a, name);", "        AtCopyName8(name, \"STRTCOL\");\n        m_component->SendEvent(0, name);"),

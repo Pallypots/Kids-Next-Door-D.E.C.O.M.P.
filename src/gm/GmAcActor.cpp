@@ -380,7 +380,7 @@ void GmAcActor::Slot41(int a) {
     Slot40(a);
 }
 
-int GmAcActor::Slot44(int) {
+int GmAcActor::Slot44(GmAcQuery*) {
     return 1;
 }
 

@@ -105,7 +105,9 @@ void test_character() {
     CHECK(c.m_controller == nullptr && c.m_shadow == nullptr && c.m_sightCone == nullptr && c.m_sightConeBone == nullptr && c.m_event[0] == 0);
     CHECK(c.Slot2() == 0);
     CHECK(c.Slot59() == 0);
-    GmAcCharController controller = {nullptr, 0x5A, nullptr};
+    GmAcCharController controller;
+    controller.m_unknown04 = 0x5A;
+    controller.m_owner = nullptr;
     c.SetController(&controller, nullptr);
     CHECK(c.Slot59() == 0x5A && controller.m_owner == nullptr);
     c.m_flags98 |= 0x100;
