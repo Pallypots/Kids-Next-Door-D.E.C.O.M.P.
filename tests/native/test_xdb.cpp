@@ -1,5 +1,5 @@
 // Host test of the Xbox texture and material databases, on any pointer size, through written .AGT and .AGM files and the real text tokenizer, and through an .AGD and the concrete loader. Not evidence of a byte
-// match. Supplies the functions of src/at/AtGrD3DTextureSeam.cpp: what the device would do is counted here, and loading marks the objects as the original's would, so that clearing has something to release.
+// match. Supplies the functions of src/at/AtGrD3DTextureSeam.cpp: textures load through the real slot 12 from written .DDS files (tests/native/texload_device.h); the rest of the device is counted here.
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -15,7 +15,7 @@ static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
 
 static std::map<unsigned int, int> g_unrecovered;
-static int g_loaded_textures, g_loaded_materials, g_stage_releases, g_before, g_releases;
+static int g_loaded_materials, g_stage_releases, g_before, g_releases;
 static int g_handle;
 
 unsigned int AtGrD3DUnrecovered(unsigned int va, void*, unsigned int, unsigned int) { g_unrecovered[va]++; return 0; }
@@ -26,14 +26,8 @@ void AtGrD3DReadIndexArray(AtGrD3DIndexArray*, char**, char**) {}
 void AtGrD3DReadVertexStream(AtGrD3DVertexStream*, AtMaterialOwner*, char**, char**) {}
 void AtGrD3DReadMesh(AtGrD3DMesh*, AtMaterialOwner*, AtGrD3DMeshDatabase*, char**, char**, char**, char**, char**, char**, char*) {}
 
-// As 0x000FCAD0 leaves a texture: loaded for the owner, with a texture and a surface for each level; a front or back buffer source has one level.
-void AtGrD3DLoadTexture2D(AtGrD3DTexture2D* texture, AtMaterialOwner* owner) {
-    g_loaded_textures++;
-    texture->m_owner = static_cast<AtGrD3DOwner*>(owner);
-    texture->m_texture = &g_handle;
-    if (texture->m_flags & (AtTextureBase::kFrontBufferSource | AtTextureBase::kBackBufferSource)) texture->m_levels = texture->m_levelsAsked = 1;
-    for (unsigned int i = 0; i < texture->m_levels; i++) texture->m_surfaces[i].m_surface = &g_handle;
-}
+// A texture loads through the real slot 12 (src/at/AtGrD3DTextureLoad.cpp), from .DDS files on the tree: tests/native/texload_device.h is the device's part, and counts what it makes.
+#include "texload_device.h"
 // As 0x0010B7F0 might leave a material: two stage states, one holding the shared tables and entries.
 void AtGrD3DLoadMaterial(AtGrD3DMaterial* material, AtMaterialOwner*) {
     g_loaded_materials++;
@@ -84,6 +78,7 @@ public:
         if (!text) return AtIoFile::kNotFound;
         m_file.m_text = text;
         m_file.m_position = 0;
+        m_file.m_size = (unsigned)text->size();
         m_file.m_flags = (flags & 0x21) ? 0x0C : 2;
         std::strcpy(m_file.m_path, m_path.m_full);
         *out = &m_file;
@@ -101,6 +96,8 @@ public:
 };
 
 struct Owner : public AtGrD3DOwner {
+    TexloadChooser m_chooserObject;
+    AtGrD3DFormatChooser* FormatChooser() override { return &m_chooserObject; }
     AtMatrixDevice* MatrixDevice() override { return nullptr; }
 };
 
@@ -127,6 +124,7 @@ int main() {
     AtTextureDatabase::s_heap = &token;
     AtMaterialDatabase::s_heap = &token;
     AtGrD3DMaterialDatabase::SetHeap(&token);
+    AtGrIPixelMap::SetHeap(&token);
 
     Owner* owner = new Owner;
     owner->m_textureSpaces.Init(8);
@@ -134,6 +132,11 @@ int main() {
     owner->m_shaderSpaces.Init(8);
     owner->m_textureDatabases = nullptr;
     owner->m_materialDatabases = nullptr;
+    TexloadLimits limits;
+    owner->m_textureLimits = &limits;
+    owner->m_noTextures = 0;
+    tree.m_files["MODEL\\ROCK.Dds"] = TexloadDds(32, 32, 3);
+    tree.m_files["MODEL\\SKY.Dds"] = TexloadDds(16, 16, 0);
 
     // Textures: three levels, one, and a back buffer source, which takes one surface whatever its levels.
     tree.m_files["MODEL\\T.AGT"] =
@@ -151,7 +154,7 @@ int main() {
     CHECK(rock->m_surfaces == &textures->m_surfaces2D[0] && sky->m_surfaces == &textures->m_surfaces2D[3] && back->m_surfaces == &textures->m_surfaces2D[4]);
     CHECK(textures->m_surfaces2DTaken == 5);
     CHECK(textures->Find("SKY") == sky && rock->m_database == textures);
-    CHECK(g_loaded_textures == 3 && rock->m_owner == owner && rock->SurfaceAt(2) == &textures->m_surfaces2D[2]);
+    CHECK(g_textures_made == 3 && rock->m_owner == owner && rock->SurfaceAt(2) == &textures->m_surfaces2D[2]);
     CHECK(textures->Surface2DAt(1) == &textures->m_surfaces2D[1]);
     CHECK(textures->m_surfaces2D[0].Palette() == nullptr);
     textures->m_surfaces2D[0].m_format.m_flags = AtPixelFormat::kIndex;
@@ -160,7 +163,7 @@ int main() {
     textures->m_surfaces2D[1].SetColorKey(key);
     CHECK(textures->m_surfaces2D[1].m_colorKey[3] == 4 && (textures->m_surfaces2D[1].m_flags & AtGrIPixelSurface::kColorKey));
     textures->m_surfaces2D[1].ClearColorKey();
-    CHECK(textures->m_surfaces2D[1].m_flags == 0);
+    CHECK(textures->m_surfaces2D[1].m_flags == AtGrD3DSurface2D::kLoaded);  // ROCK's second level, loaded
     // A chained surface, owned by the first, freed with it.
     textures->m_surfaces2D[0].m_next = new AtGrD3DSurface2D;
     textures->m_surfaces2D[0].m_next->m_surface = &g_handle;
@@ -175,9 +178,10 @@ int main() {
     CHECK(owner->m_textureDatabases == textures);
 
     // Clearing: each texture lets the four stages go, its levels' surfaces and its texture; then the surfaces themselves.
+    g_releases = 0;  // loading BACK dropped the back buffer's reference once
     textures->Clear();
     CHECK(g_stage_releases == 12 && g_before == 3);
-    CHECK(g_releases == 3 + 3 + 1 + 1 + 1);  // three textures; ROCK's three levels and the surface chained to its first, SKY's one, BACK's one. Destroying the surfaces finds nothing left to release
+    CHECK(g_releases == 3 + 3 + 1 + 1);  // three textures; ROCK's three levels and the surface chained to its first, SKY's one; BACK's surface was never given one. Destroying the surfaces finds nothing left
     CHECK(owner->m_textureDatabases == nullptr && textures->m_owner == nullptr && textures->m_surfaces2D == nullptr);
     delete textures;
 
@@ -203,11 +207,11 @@ int main() {
 
     // From an .AGD, through the concrete loader.
     tree.m_files["MODEL\\THING.AGD"] = "TextureDatabase[1]\n{\n \"T\"\n}\nMaterialDatabase[1]\n{\n \"M\"\n}\n";
-    g_loaded_textures = g_loaded_materials = 0;
+    g_textures_made = g_loaded_materials = 0;
     AtXboxFactory factory;
     AtGrD3DDatabaseLoader* loader = factory.NewDatabaseLoader();
     loader->Load(owner, "MODEL\\THING", 2, 0, 1);
-    CHECK(loader->m_textures != nullptr && loader->m_textures[0].m_texture2DCount == 3 && g_loaded_textures == 3);
+    CHECK(loader->m_textures != nullptr && loader->m_textures[0].m_texture2DCount == 3 && g_textures_made == 3);
     CHECK(loader->m_materials != nullptr && loader->m_materials[0].m_count == 2 && g_loaded_materials == 2);
     CHECK(owner->m_textureDatabases == loader->m_textures && owner->m_materialDatabases == loader->m_materials);
     loader->Unload();

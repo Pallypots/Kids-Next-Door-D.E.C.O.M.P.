@@ -23,8 +23,6 @@ void AtGrD3DPalette::Slot10() { STOP(0x000F5C60); }
 void AtGrD3DSurface2D::Slot6() { STOP(0x000FD240); }
 void AtGrD3DSurface2D::Slot7() { STOP(0x000FD9A0); }
 void AtGrD3DSurface2D::Slot8() { STOP(0x0005F2E0); }
-void AtGrD3DSurface2D::Slot9() { STOP(0x000FE260); }
-void AtGrD3DSurface2D::Slot10() { STOP(0x000FE320); }
 void AtGrD3DSurface2D::Slot11() { STOP(0x001ACD70); }
 void AtGrD3DSurface2D::Slot12() { STOP(0x000FD0C0); }
 void AtGrD3DSurface2D::Slot13() { STOP(0x000FD190); }

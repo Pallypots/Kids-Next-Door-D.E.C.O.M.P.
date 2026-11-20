@@ -2,9 +2,10 @@
 // but two: "AtGrIPixelSurface" is the original's own, from its message in 0x00060430, and "Texture database" from 0x0028A698. See docs/worklog/2026-11-08-xdb.md.
 //
 // What is recovered: both databases whole (their vftables 0x0028A6E0 and 0x00289300); the 2D texture, the 2D surface and its palette as far as reading a file, clearing and destroying need; the material and its
-// eight stage states as far as clearing and destroying need. What is not, and stops or goes to a seam: what a texture or a material does with the graphics device when it has been read (slot 12 of the texture,
-// 0x000FCAD0, which reads the image file and makes the Direct3D texture; slot 0 of the material, 0x0010B7F0, which builds its stage states); the device's own calls (src/at/AtGrD3DTextureSeam.cpp, which a test
-// supplies); 3D textures, cube maps and 3D surfaces, which no file on the disc lists (src/at/AtGrD3DUnrecovered.cpp: their constructors stop); and the surfaces' and palettes' slots that lock and copy pixels.
+// eight stage states as far as clearing and destroying need. What a 2D texture does when it loads (slot 12, 0x000FCAD0: the .DDS file, the texture made, each level copied in) is recovered as far as the device,
+// in include/at/AtGrD3DTextureLoad.h (docs/worklog/2026-11-19-texload.md). What is not, and stops or goes to a seam: what a material does with the device when it has been read (slot 0, 0x0010B7F0, which builds
+// its stage states); the device's own calls (src/at/AtGrD3DTextureSeam.cpp, which a test supplies); 3D textures, cube maps and 3D surfaces, which no file on the disc lists (src/at/AtGrD3DUnrecovered.cpp: their
+// constructors stop); and the surfaces' and palettes' slots that fill, convert and copy pixels.
 #pragma once
 
 #include "at/AtMaterialDatabase.h"
@@ -13,10 +14,11 @@
 struct AtGrD3DOwner;
 class AtGrD3DTexture2D;
 class AtGrD3DMaterial;
+class AtGrDdsPixelMap;  // include/at/AtGrD3DTextureLoad.h
 
 // ---- The seam: src/at/AtGrD3DTextureSeam.cpp, or a test's ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-void AtGrD3DLoadTexture2D(AtGrD3DTexture2D* texture, AtMaterialOwner* owner);  // 0x000FCAD0 slot 12: the image file, the Direct3D texture, its surfaces' levels
+// The device's calls a texture makes when it loads are declared in include/at/AtGrD3DTextureLoad.h, and are in the same file.
 void AtGrD3DLoadMaterial(AtGrD3DMaterial* material, AtMaterialOwner* owner);   // 0x0010B7F0 slot 0: the stage states from the material's shader and textures
 void AtGrD3DReleaseStage(void* stages, unsigned int stage);                    // 0x000FB630 the device's stage `stage` lets go of whatever texture it holds; `stages` is the owner's +0x3354
 void AtGrD3DBeforeRelease(void* resource);                                     // 0x00205E20 called on a texture just before it is released; what it does is not known
@@ -84,16 +86,18 @@ public:
 
     AtPixelFormat m_format;            // +0x04
     unsigned char m_colorKey[4];       // +0x18
-    unsigned short m_unknown1C;        // +0x1C not touched here
+    unsigned short m_unknown1C;        // +0x1C the texture's usage, as AtTextureBase::m_usage, when a 2D surface loads
     unsigned short m_flags;            // +0x1E
-    unsigned short m_unknown20;        // +0x20
-    unsigned short m_unknown22;        // +0x22
+    unsigned short m_unknown20;        // +0x20 the width, when a 2D surface loads
+    unsigned short m_unknown22;        // +0x22 the height, likewise
 };
 
-// Vftable 0x00289768. A level of a 2D texture: the texture database holds them in one array and hands each texture a run of them, one to a level. 0x50 bytes. Slots 6 to 13 lock, fill and copy pixels and are not
-// recovered: they stop.
+// Vftable 0x00289768. A level of a 2D texture: the texture database holds them in one array and hands each texture a run of them, one to a level. 0x50 bytes. Lock and Unlock (slots 9 and 10) and loading are
+// recovered in src/at/AtGrD3DTextureLoad.cpp as far as a DDS file needs; the other slots from 6 fill and copy pixels and are not recovered: they stop.
 class AtGrD3DSurface2D : public AtGrIPixelSurface {
 public:
+    // In m_flags while it is loaded.
+    enum LoadFlags { kLoaded = 0x1, kLocked = 0x4, kLockedToRead = 0x8, kLockedToWrite = 0x10, kStaged = 0x40 };
     AtGrD3DSurface2D();                // 0x000FCEE0
     ~AtGrD3DSurface2D() override;      // slot 0; 0x0010F8F0 vector deleting, 0x000FD8C0 complete
     void Reset() override;             // slot 1, 0x000FCF40 the chain after it, its blocks, its Direct3D surface and palette, then the base's
@@ -102,19 +106,30 @@ public:
     void Slot6() override;             // 0x000FD240
     virtual void Slot7();              // 0x000FD9A0
     virtual void Slot8();              // 0x0005F2E0
-    virtual void Slot9();              // 0x000FE260
-    virtual void Slot10();             // 0x000FE320
+    // Slot 9, 0x000FE260. Where its bytes are, and their pitch: its own copy in memory if it has one, the device's surface directly when the device's rows can be written as they are (a DDS
+    // texture's), otherwise a staging copy, which is not recovered. flags bit 0 is to read, bit 1 to write; neither is both.
+    virtual void Lock(void** bits, int* pitch, unsigned int flags);
+    virtual void Unlock();             // slot 10, 0x000FE320 the device's surface needs nothing; a staging copy or a copy in memory is not recovered
     virtual void Slot11();             // 0x001ACD70
     virtual void Slot12();             // 0x000FD0C0
     virtual void Slot13();             // 0x000FD190
 
     void ReleaseChain();               // 0x000FCFC0 the Direct3D surface of this one and of each after it; nothing else
 
-    unsigned int m_unknown24;          // +0x24 not set by the constructor
+    // 0x000FDF40. Level `level` (face `face`) of a texture, from a DDS file, onto the device's surface `surface`. previous is the level above, or null.
+    void LoadFromDds(AtGrD3DOwner* owner, void* surface, AtGrDdsPixelMap* map, unsigned int usage, unsigned int level, unsigned int face, AtGrD3DTexture2D* texture, AtGrD3DSurface2D* previous);
+    // 0x000FE100. A level that has no file: the device's surface, its size and format, a palette for an indexed format, and the transparent colour if there is one.
+    void Prepare(AtGrD3DOwner* owner, void* surface, unsigned int usage, AtGrD3DTexture2D* texture, AtGrD3DSurface2D* previous, const unsigned char* transparent);
+    void TakeDeviceSize(void* surface);  // 0x000FDB00 the size and format the device made it in
+    // 0x000FD2A0. A device format number as this surface's format: a compressed one is kept as the 16-bit form the owner's chooser makes of 1-5-5-5 (DXT1) or 4-4-4-4 (the others).
+    void TakeDeviceFormat(unsigned int format, AtPixelFormat* out);
+    int NeedsStaging();                // 0x000FD800 1 unless its rows can be written straight to the device's surface
+
+    AtGrD3DOwner* m_unknown24;         // +0x24 the owner, when it loads; not set by the constructor
     void* m_surface;                   // +0x28 the Direct3D surface
     AtGrD3DPalette m_palette;          // +0x2C
-    unsigned int m_unknown3C;          // +0x3C
-    unsigned int m_unknown40;          // +0x40
+    AtGrD3DTexture2D* m_unknown3C;     // +0x3C the texture, when it loads
+    AtGrD3DSurface2D* m_unknown40;     // +0x40 the level above, when it loads
     void* m_unknown44;                 // +0x44 from the heap
     void* m_unknown48;                 // +0x48 from the heap
     AtGrD3DSurface2D* m_next;          // +0x4C owned: reset and deleted with this one
@@ -134,9 +149,18 @@ public:
     void Reset() override;             // slot 4, 0x000FCC80 released, then the base's
     int Unknown8() override;           // 0x000FC620 returns the texture: stops here, see above
     int Unknown9() override;           // 0x000FC590 returns the first surface's palette: stops here, see above
-    void Slot11() override;            // 0x000FC8A0 makes the texture from a size and format (four arguments in the original): stops
-    void OnLoaded(AtMaterialOwner* owner) override;  // slot 12, 0x000FCAD0: the seam
+    // Slot 11 is 0x000FC8A0, which takes four arguments where the base declares none: its body is Make, which OnLoaded calls directly; this stops.
+    void Slot11() override;
+    // Slot 12, 0x000FCAD0. Once, unless already loaded: a front or back buffer source takes the device's buffer; a ProgSource is made to its size and format; a DDS or platform source reads the .DDS file
+    // named for the texture, through AtGrDdsPixelMap::s_map, makes the texture no deeper than the file, and copies each level in. Choosing the reader for any other source is not recovered and stops.
+    // Then marked loaded, and kTransparentColor kept only if the first level has a palette.
+    void OnLoaded(AtMaterialOwner* owner) override;
     virtual AtGrD3DSurface2D* SurfaceAt(unsigned int level);  // slot 13, 0x000FC570
+
+    // 0x000FC8A0, slot 11's body. A texture of this size and format with no file: made, each level prepared from the smallest up, then marked as OnLoaded marks it. Nothing if already loaded.
+    void Make(AtMaterialOwner* owner, unsigned int width, unsigned int height, const AtPixelFormat* format);
+    // 0x000FC720. Each level from a DDS file, from the smallest up, then the file freed.
+    void LoadLevelsFromDds(AtGrDdsPixelMap* map);
 
     // 0x000FC980. The device's four stages let go of it, if it was loaded for a device; its surfaces let go of theirs, level by level; then its own texture. The owner and the surfaces are kept.
     void Release();

@@ -502,8 +502,8 @@ subsystem = "at/xdb"
 
 [symbols]
 "??_7AtGrD3DPalette@@6B@" = 0x00289274  # not recorded as a vftable: slots 1 to 10 stop
-"??_7AtGrD3DSurface2D@@6B@" = 0x00289768  # not recorded as a vftable: slots 6 to 13 stop
-"??_7AtGrD3DTexture2D@@6B@" = 0x00289700  # not recorded as a vftable: slots 8, 9, 11 stop and 12 is the seam
+"??_7AtGrD3DSurface2D@@6B@" = 0x00289768  # not recorded as a vftable: slots 6 to 8 and 11 to 13 stop; 9 and 10 are recovered in src/at/AtGrD3DTextureLoad.cpp (texload)
+"??_7AtGrD3DTexture2D@@6B@" = 0x00289700  # not recorded as a vftable: slots 8, 9, 11 stop; 12 is recovered in src/at/AtGrD3DTextureLoad.cpp (texload)
 "??_7AtGrD3DMaterial@@6B@" = 0x0028A200  # not recorded as a vftable: slot 0 is the seam
 "??_EAtGrD3DTextureDatabase@@UAEPAXI@Z" = 0x00112240  # vector deleting destructor, compiler-made
 "??_GAtGrD3DTextureDatabase@@UAEPAXI@Z" = 0x00112240  # the scalar form the candidate's table names; the original's slot 0 is the vector form, which does both

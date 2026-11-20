@@ -14,7 +14,7 @@ static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
 
 static std::map<unsigned int, int> g_unrecovered;
-static int g_loaded_fonts, g_loaded_images, g_loaded_textures, g_releases;
+static int g_loaded_fonts, g_loaded_images, g_releases;
 static int g_handle;
 
 unsigned int AtGrD3DUnrecovered(unsigned int va, void*, unsigned int, unsigned int) { g_unrecovered[va]++; return 0; }
@@ -24,7 +24,7 @@ void AtGrD3DReadVertexArray(AtGrD3DVertexArray*, char**, char**, char**) {}
 void AtGrD3DReadIndexArray(AtGrD3DIndexArray*, char**, char**) {}
 void AtGrD3DReadVertexStream(AtGrD3DVertexStream*, AtMaterialOwner*, char**, char**) {}
 void AtGrD3DReadMesh(AtGrD3DMesh*, AtMaterialOwner*, AtGrD3DMeshDatabase*, char**, char**, char**, char**, char**, char**, char*) {}
-void AtGrD3DLoadTexture2D(AtGrD3DTexture2D*, AtMaterialOwner*) { g_loaded_textures++; }
+#include "texload_device.h"  // a texture loads through the real slot 12, from a written .DDS file
 void AtGrD3DLoadMaterial(AtGrD3DMaterial*, AtMaterialOwner*) {}
 void AtGrD3DReleaseStage(void*, unsigned int) {}
 void AtGrD3DBeforeRelease(void*) {}
@@ -79,6 +79,7 @@ public:
         if (!text) return AtIoFile::kNotFound;
         m_file.m_text = text;
         m_file.m_position = 0;
+        m_file.m_size = (unsigned)text->size();
         m_file.m_flags = (flags & 0x21) ? 0x0C : 2;
         std::strcpy(m_file.m_path, m_path.m_full);
         *out = &m_file;
@@ -96,6 +97,8 @@ public:
 };
 
 struct Owner : public AtGrD3DOwner {
+    TexloadChooser m_chooserObject;
+    AtGrD3DFormatChooser* FormatChooser() override { return &m_chooserObject; }
     AtMatrixDevice* MatrixDevice() override { return nullptr; }
 };
 
@@ -130,8 +133,13 @@ int main() {
     AtFontDatabase::SetHeap(&token);
     AtImageDatabase::SetHeap(&token);
     AtGrD3DMaterialDatabase::SetHeap(&token);
+    AtGrIPixelMap::SetHeap(&token);
 
     Owner* owner = new Owner;
+    TexloadLimits limits;
+    owner->m_textureLimits = &limits;
+    owner->m_noTextures = 0;
+    tree.m_files["MODEL\\ROCK.Dds"] = TexloadDds(16, 16, 0);
     owner->m_textureSpaces.Init(8);
     owner->m_materialSpaces.Init(8);
     owner->m_shaderSpaces.Init(8);
@@ -148,7 +156,7 @@ int main() {
     tree.m_files["MODEL\\T.AGT"] = "Surface2D[1]\nTexture[1]\nTexture2D[1]\n{\n Texture2D \"ROCK\" { DDSSource }\n}\n";
     AtGrD3DTextureDatabase* textures = new AtGrD3DTextureDatabase;
     textures->Load(owner, "MODEL\\T", 2);
-    CHECK(g_loaded_textures == 1);
+    CHECK(g_textures_made == 1);
 
     // Shaders: one with a staged component finding the texture, one empty.
     tree.m_files["MODEL\\S.AGS"] =

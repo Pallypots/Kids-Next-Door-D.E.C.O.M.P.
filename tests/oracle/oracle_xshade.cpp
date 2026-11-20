@@ -21,6 +21,7 @@
 #include <vector>
 
 #include "at/AtGrD3DDatabase.h"
+#include "at/AtGrD3DTextureLoad.h"
 #include "at/AtIoTokenizer.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
@@ -196,7 +197,12 @@ static void __fastcall o_release_stage(void*, void*, unsigned stage) { slot('G',
 
 void AtGrD3DLoadFont2D(AtGrD3DFont2D* f, AtMaterialOwner* owner) { load_font(f, owner); }
 void AtGrD3DLoadImage(AtGrD3DImage* i, AtMaterialOwner* owner) { load_image(i, owner); }
-void AtGrD3DLoadTexture2D(AtGrD3DTexture2D*, AtMaterialOwner*) { slot('?', 1); }
+// A texture's slot 12 is recovered (src/at/AtGrD3DTextureLoad.cpp); nothing here loads one, so the device's calls it makes are not expected.
+void* AtGrD3DGetBackBuffer(int) { slot('?', 3); return nullptr; }
+void* AtGrD3DCreateTexture(unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, unsigned) { slot('?', 4); return nullptr; }
+void* AtGrD3DSurfaceLevel(void*, unsigned) { slot('?', 5); return nullptr; }
+void AtGrD3DDescribe(void*, AtGrD3DSurfaceDesc*) { slot('?', 6); }
+void AtGrD3DLockRect(void*, AtGrD3DLockedRect*, const void*, unsigned) { slot('?', 7); }
 void AtGrD3DLoadMaterial(AtGrD3DMaterial*, AtMaterialOwner*) { slot('?', 2); }
 void AtGrD3DReleaseStage(void*, unsigned int stage) { slot('G', stage); }
 void AtGrD3DBeforeRelease(void* r) { o_before_release(r); }

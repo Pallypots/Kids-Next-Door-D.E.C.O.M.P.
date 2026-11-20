@@ -1,0 +1,336 @@
+# What a 2D texture does when it loads, short of the device: the DDS reader and its base, the texture's slot 12, making the texture, a surface's loading, lock and unlock. Names inferred. See
+# include/at/AtGrD3DTextureLoad.h and docs/worklog/2026-11-19-texload.md.
+
+[[function]]
+va = 0x000FCAD0
+size = 432
+symbol = "?OnLoaded@AtGrD3DTexture2D@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "slot 12 of 0x00289700: pending returns; buffers 0x00208430 then 0x00205D10; ProgSource slot 11; DDS 0x003B13E8 through 0x00065F80; others 0x000FCE80; 0x0011CDD0; 0x000FC720 or 0x000FC790; flags 0x20, 0x800"
+
+[[function]]
+va = 0x000FC720
+size = 108
+symbol = "?LoadLevelsFromDds@AtGrD3DTexture2D@@QAEXPAVAtGrDdsPixelMap@@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "levels from the last: 0x0020B220 if +0x2C, 0x000FDF40 each; the reader's slot 4"
+
+[[function]]
+va = 0x000FC8A0
+size = 209
+symbol = "?Make@AtGrD3DTexture2D@@QAEXPAUAtMaterialOwner@@IIPBVAtPixelFormat@@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "slot 11 of 0x00289700, ret 0x10: 0x0011CDD0, then 0x0020B220 and 0x000FE100 per level from the last; flags 0x20, 0x800"
+
+[[function]]
+va = 0x0011CDD0
+size = 189
+symbol = "?AtGrD3DCreateTexture2D@@YAXPAUAtMaterialOwner@@IHPAIIIPBVAtPixelFormat@@PAPAX@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "0x000423F0 copy, 0x0011C9F0, 0x0011CAF0, owner +0x34 slot 1, levels by halving, 0x00119B90, 0x0011CD60"
+
+[[function]]
+va = 0x0011C9F0
+size = 242
+symbol = "?AtGrD3DChooseFormat@@YAXPAUAtMaterialOwner@@IHPAVAtPixelFormat@@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "usage 0x10 and 0x7C0 decide swizzling (0x800); owner slot 16; 0x00042450 for a transparent colour; chooser slot 9 or 12"
+
+[[function]]
+va = 0x0011CAF0
+size = 247
+symbol = "?AtGrD3DFitSize@@YAXPAUAtMaterialOwner@@IPAI1PBVAtPixelFormat@@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "rounding loop that shifts cumulatively; square unless +0x18 bit 0x100000 (masked by +0x68); limits slots 1 to 4"
+
+[[function]]
+va = 0x00119B90
+size = 177
+symbol = "?AtGrD3DFormatToDevice@@YAIPBVAtPixelFormat@@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "tables 0x0028A930 (swizzled, exact) and 0x0028AC40 (exact, then bits); -1"
+
+[[function]]
+va = 0x0011CD60
+size = 112
+symbol = "?AtGrD3DMakeTexture@@YAXPAUAtMaterialOwner@@IIIIIPAPAX@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "0x0020B160(w, h, 1, levels, usage & 1, format, 3); failure 0x8007000E printed into 0x0028B2D0, 0x00011070"
+
+[[function]]
+va = 0x001197D0
+size = 153
+symbol = "?AtGrD3DFormatFromDevice@@YAHIPAVAtPixelFormat@@H@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "table 0x0028A930 (0x800 kept if the third argument), then 0x0028AC40, through 0x00042420; else 0x00042D60 and 0"
+
+[[function]]
+va = 0x00119A60
+size = 39
+symbol = "?AtGrD3DIsNotLinear@@YAHI@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "0 if the number is in 0x0028AC40"
+
+[[function]]
+va = 0x0011CFF0
+size = 60
+symbol = "?AtGrD3DLockSurface@@YAXPAXIPAPAXPAH@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "0x0020AAD0(surface, rect, 0, flags & 1 ? 0x80 : 0); bits and pitch out"
+
+[[function]]
+va = 0x000FDF40
+size = 438
+symbol = "?LoadFromDds@AtGrD3DSurface2D@@QAEXPAUAtGrD3DOwner@@PAXPAVAtGrDdsPixelMap@@IIIPAVAtGrD3DTexture2D@@PAV1@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "ret 0x20: fields +0x1C..+0x40, 0x0020AAB0, 0x001197D0; owner +0x30 bit 2 branch; 0x7C0 and 4 of its format; 0x0011B9C0"
+
+[[function]]
+va = 0x000FE100
+size = 110
+symbol = "?Prepare@AtGrD3DSurface2D@@QAEXPAUAtGrD3DOwner@@PAXIPAVAtGrD3DTexture2D@@PAV1@PBE@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "ret 0x18: slot 1 if loaded, slot 4 with the colour, fields, 0x000FDB00, 0x000F5D40 if indexed"
+
+[[function]]
+va = 0x000FDB00
+size = 106
+symbol = "?TakeDeviceSize@AtGrD3DSurface2D@@QAEXPAX@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "0x0020AAB0; multisample 0x11 or divided by its nibbles; 0x000FD2A0"
+
+[[function]]
+va = 0x000FD2A0
+size = 141
+symbol = "?TakeDeviceFormat@AtGrD3DSurface2D@@QAEXIPAVAtPixelFormat@@@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "0x0C, 0x0E, 0x0F: owner slot 16, 0x00042450 1-5-5-5 or 4-4-4-4, chooser slot 12; else 0x001197D0 or 0x00011070"
+
+[[function]]
+va = 0x000FE260
+size = 179
+symbol = "?Lock@AtGrD3DSurface2D@@UAEXPAPAXPAHI@Z"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "slot 9 of 0x00289768: flags +0x1E 4|8|0x10; +0x48 with its pitch; 0x000FD800 then 0x000FDB70; else 0x0011CFF0"
+
+[[function]]
+va = 0x000FE320
+size = 211
+symbol = "?Unlock@AtGrD3DSurface2D@@UAEXXZ"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "slot 10 of 0x00289768: +0x48 and staging branches; 0x001CC9F0; +0x1E low byte & 0xA3"
+
+[[function]]
+va = 0x000FD800
+size = 105
+symbol = "?NeedsStaging@AtGrD3DSurface2D@@QAEHXZ"
+source = "src/at/AtGrD3DTextureLoad.cpp"
+subsystem = "at/texload"
+evidence = "no surface 1; DDS usage without +0x1E 0x20: 0; +0x40: 1; 0x0020AAB0, compressed 1, else 0x00119A60"
+
+[[function]]
+va = 0x0011B2C0
+size = 77
+symbol = "??0AtGrDdsPixelMap@@QAE@XZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "0x00065C40, +0x540..+0x558 and +0x55C 0x80 bytes cleared, vftable 0x0028AFF0; called by 0x00201FA0 on 0x003B13E8"
+
+[[function]]
+va = 0x000EEFA0
+size = 5
+symbol = "??1AtGrDdsPixelMap@@UAE@XZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "a jump to 0x00065F10; called by 0x0011BD50 and 0x00203F00"
+
+[[function]]
+va = 0x0011BD50
+size = 30
+symbol = "??_GAtGrDdsPixelMap@@UAEPAXI@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 1 of 0x0028AFF0: 0x000EEFA0, delete if flag 1"
+
+[[function]]
+va = 0x0011B970
+size = 66
+symbol = "?ReadHeader@AtGrDdsPixelMap@@UAEXXZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 0: file size from the file's +8, 0x00018850 0x80 bytes to +0x55C, 0x00065C20, slot 3"
+
+[[function]]
+va = 0x0011B310
+size = 1535
+symbol = "?Parse@AtGrDdsPixelMap@@UAEXPBE@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 3: magic 0x20534444, size 0x7C, flags 0x1007; kind from 0x800000/0x200000 and 8/0xFC00; 0x00119A90; pitch from 0x80000 or 8"
+
+[[function]]
+va = 0x0011B910
+size = 92
+symbol = "?Free@AtGrDdsPixelMap@@UAEXXZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 4: +0x544 freed, 0x00065D80, its own fields and header cleared"
+
+[[function]]
+va = 0x0011B250
+size = 7
+symbol = "?FileSize@AtGrDdsPixelMap@@UAEIXZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 6: +0x540"
+
+[[function]]
+va = 0x0011B260
+size = 74
+symbol = "?ReadFile@AtGrDdsPixelMap@@UAEXPAX@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 7: the 0x80-byte header copied, the rest by 0x00018850, 0x00065C20"
+
+[[function]]
+va = 0x0011B2B0
+size = 6
+symbol = "?Extension@AtGrDdsPixelMap@@UAEPBDXZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 8: 0x0028AFEC \"Dds\""
+
+[[function]]
+va = 0x00119A90
+size = 250
+symbol = "?AtGrDdsFormat@@YAXPBIPAVAtPixelFormat@@@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "fourcc DXT1..DXT5 to 0x00042550..0x00042610; RGB 0x40 through 0x00042450; 0x20002 through 0x000424D0; messages 0x0028AF44, 0x0028AF18"
+
+[[function]]
+va = 0x0011B9C0
+size = 736
+symbol = "?CopyLevel@AtGrDdsPixelMap@@QAEXPAUAtMaterialOwner@@PAVAtGrD3DSurface2D@@II@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "ret 0x10: reads the file whole on first use (heap 0x002CB090, slot 7); offsets by quarters; 0x00042AC0 and sizes; slot 9, copy whole or by rows, slot 10; else 0x0028B050 and 0x0005F280"
+
+[[function]]
+va = 0x00065C40
+size = 46
+symbol = "??0AtGrIPixelMap@@QAE@XZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "vftable 0x0027748C, 0x00042C90 at +0x20, 0x00018810 at +0x34, +4 +0x14 +0x18 +0x1C +0x3C cleared"
+
+[[function]]
+va = 0x00065F10
+size = 109
+symbol = "??1AtGrIPixelMap@@UAE@XZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "vftable, 0x00042D60, 0x00018820, fields cleared, 0x00018820 again (the member's)"
+
+[[function]]
+va = 0x000660E0
+size = 30
+symbol = "??_GAtGrIPixelMap@@UAEPAXI@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 1 of 0x0027748C: 0x00065F10, delete if flag 1"
+
+[[function]]
+va = 0x00065D40
+size = 51
+symbol = "?Open@AtGrIPixelMap@@UAEHPAVAtIoFileSystem@@PBD@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 2: slot 4 if +0x20, 0x000188F0 with flags 2, slot 0 on success"
+
+[[function]]
+va = 0x00065D80
+size = 38
+symbol = "?Free@AtGrIPixelMap@@UAEXXZ"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "slot 4: 0x00042D60, 0x00018820, +4 +0x14 +0x18 +0x1C +0x3C cleared"
+
+[[function]]
+va = 0x00065B30
+size = 227
+symbol = "?Fail@AtGrIPixelMap@@QAEXPBD@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "heap 0x002CB090, name + \": \" + message, 0x00011070, delete"
+
+[[function]]
+va = 0x00065C20
+size = 28
+symbol = "?FailIo@AtGrIPixelMap@@QAEXH@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "0x000140D0 then 0x00065B30"
+
+[[function]]
+va = 0x00065C70
+size = 205
+symbol = "?TryLoad@AtGrIPixelMap@@QAEHPBD@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "0x00125F40 for '.', slot 8 appended; 0x00019300 on 0x002C6278; slot 2"
+
+[[function]]
+va = 0x00065F80
+size = 351
+symbol = "?Load@AtGrIPixelMap@@QAEXPBD@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "0x00065C70; message \": Unable to find \" + slot 8 + \" pixel map file.\" or 0x002774D8"
+
+[[function]]
+va = 0x00065B00
+size = 10
+symbol = "?SetHeap@AtGrIPixelMap@@SAXPAX@Z"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+evidence = "stores 0x002CB090"
+
+[[vtable]]
+va = 0x0027748C
+slots = 9
+symbol = "??_7AtGrIPixelMap@@6B@"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+
+[[vtable]]
+va = 0x0028AFF0
+slots = 9
+symbol = "??_7AtGrDdsPixelMap@@6B@"
+source = "src/at/AtGrIPixelMap.cpp"
+subsystem = "at/texload"
+
+[symbols]
+"?s_map@AtGrDdsPixelMap@@2V1@A" = 0x003B13E8  # constructed by 0x00201FA0 (0x0011B2C0, then atexit 0x00203F00); used at 0x000FCB7C
+"?s_heap@AtGrIPixelMap@@2PAXA" = 0x002CB090  # set by 0x00065B00
+"?g_atGrSwizzledFormats@@3QBUAtGrD3DFormatEntry@@B" = 0x0028A930  # 28 entries of 0x1C bytes
+"?g_atGrLinearFormats@@3QBUAtGrD3DFormatEntry@@B" = 0x0028AC40  # 26 entries of 0x1C bytes, to 0x0028AF18
+"?Slot5@AtGrDdsPixelMap@@UAEXIII@Z" = 0x001ACD70  # folded: ret 0xC
+"??_C@_03IBABKGEA@Dds@" = 0x0028AFEC  # the string "Dds", returned by 0x0011B2B0

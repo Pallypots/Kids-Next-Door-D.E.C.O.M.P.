@@ -22,6 +22,7 @@
 #include <vector>
 
 #include "at/AtGrD3DDatabase.h"
+#include "at/AtGrD3DTextureLoad.h"
 #include "at/AtIoTokenizer.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
@@ -184,9 +185,9 @@ static void load_texture(AtGrD3DTexture2D* t, AtMaterialOwner* owner) {
         s->m_flags = 0x7;
         s->m_unknown20 = 0x20;
         s->m_unknown22 = 0x22;
-        s->m_unknown24 = 0x24;
-        s->m_unknown3C = 0x3C;
-        s->m_unknown40 = 0x40;
+        s->m_unknown24 = (AtGrD3DOwner*)0x24;
+        s->m_unknown3C = (AtGrD3DTexture2D*)0x3C;
+        s->m_unknown40 = (AtGrD3DSurface2D*)0x40;
         s->m_palette.m_unknown06 = 6;
     }
 }
@@ -257,6 +258,17 @@ static void __stdcall o_before_release(void* r) { slot('B', (uint32_t)(uintptr_t
 static void __stdcall o_release(void* r) { slot('X', (uint32_t)(uintptr_t)r); }
 
 void AtGrD3DLoadTexture2D(AtGrD3DTexture2D* t, AtMaterialOwner* owner) { load_texture(t, owner); }
+// A texture's slot 12 is recovered (src/at/AtGrD3DTextureLoad.cpp, tested by tests/oracle/oracle_texload.cpp). Here it stays the double above on both sides: on the recovered side by a jump written at the
+// start of the compiled slot 12 (the harness's code is writable), as on the original's at 0x000FCAD0. So the device's calls it makes are not expected.
+void* AtGrD3DGetBackBuffer(int) { slot('?', 3); return nullptr; }
+void* AtGrD3DCreateTexture(unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, unsigned) { slot('?', 4); return nullptr; }
+void* AtGrD3DSurfaceLevel(void*, unsigned) { slot('?', 5); return nullptr; }
+void AtGrD3DDescribe(void*, AtGrD3DSurfaceDesc*) { slot('?', 6); }
+void AtGrD3DLockRect(void*, AtGrD3DLockedRect*, const void*, unsigned) { slot('?', 7); }
+static void redirect_recovered_slot12(const void* to) {
+    AtGrD3DTexture2D probe;
+    redirect((uint32_t)(uintptr_t)(*(void***)&probe)[12], to);
+}
 void AtGrD3DLoadMaterial(AtGrD3DMaterial* m, AtMaterialOwner* owner) { load_material(m, owner); }
 void AtGrD3DReleaseStage(void* stages, unsigned int stage) { release_stage(stages, stage); }
 void AtGrD3DBeforeRelease(void* r) { o_before_release(r); }
@@ -383,11 +395,11 @@ static void same_surface(const AtGrD3DSurface2D& a, const AtGrD3DSurface2D& b, i
     eq("surface's flags", a.m_flags, b.m_flags);
     eq("surface's +20", a.m_unknown20, b.m_unknown20);
     eq("surface's +22", a.m_unknown22, b.m_unknown22);
-    eq("surface's +24", a.m_unknown24, b.m_unknown24);
+    eq("surface's +24", (uintptr_t)a.m_unknown24, (uintptr_t)b.m_unknown24);
     eq("surface's surface", (uintptr_t)a.m_surface, (uintptr_t)b.m_surface);
     same_palette(a.m_palette, b.m_palette);
-    eq("surface's +3C", a.m_unknown3C, b.m_unknown3C);
-    eq("surface's +40", a.m_unknown40, b.m_unknown40);
+    eq("surface's +3C", (uintptr_t)a.m_unknown3C, (uintptr_t)b.m_unknown3C);
+    eq("surface's +40", (uintptr_t)a.m_unknown40, (uintptr_t)b.m_unknown40);
     eq("surface's +44", a.m_unknown44 != nullptr, b.m_unknown44 != nullptr);
     eq("surface's +48", a.m_unknown48 != nullptr, b.m_unknown48 != nullptr);
     eq("surface's next", a.m_next != nullptr, b.m_next != nullptr);
@@ -1307,6 +1319,7 @@ int main(int argc, char** argv) {
     redirect(0x00011070, (const void*)o_fatal);
     redirect(0x00011170, (const void*)o_raise);
     redirect(0x000FCAD0, (const void*)o_load_texture);
+    redirect_recovered_slot12((const void*)o_load_texture);
     redirect(0x0010B7F0, (const void*)o_load_material);
     redirect(0x000FB630, (const void*)o_release_stage);
     redirect(0x00205E20, (const void*)o_before_release);

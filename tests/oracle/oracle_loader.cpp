@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "at/AtGrD3DDatabase.h"
+#include "at/AtGrD3DTextureLoad.h"
 #include "at/AtAudioDatabase.h"
 #include "at/AtHeap.h"
 #include "at/AtIoTokenizer.h"
@@ -332,6 +333,17 @@ void AtGrD3DRelease(void*) { slot('X'); }
 void AtGrD3DLoadFont2D(AtGrD3DFont2D* f, AtMaterialOwner* owner) { slot('T', *(const uint32_t*)f->m_name); slot('l', owner == g_own_any[g_side]); }
 void AtGrD3DLoadImage(AtGrD3DImage* i, AtMaterialOwner* owner) { slot('I', *(const uint32_t*)i->m_name); slot('l', owner == g_own_any[g_side]); }
 static void __fastcall o_load_texture(AtGrD3DTexture2D* t, void*, AtMaterialOwner* owner) { AtGrD3DLoadTexture2D(t, owner); }
+// A texture's slot 12 is recovered (src/at/AtGrD3DTextureLoad.cpp, tested by tests/oracle/oracle_texload.cpp). Here it stays the double above on both sides: on the recovered side by a jump written at the
+// start of the compiled slot 12 (the harness's code is writable), as on the original's at 0x000FCAD0. So the device's calls it makes are not expected.
+void* AtGrD3DGetBackBuffer(int) { slot('?', 3); return nullptr; }
+void* AtGrD3DCreateTexture(unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, unsigned) { slot('?', 4); return nullptr; }
+void* AtGrD3DSurfaceLevel(void*, unsigned) { slot('?', 5); return nullptr; }
+void AtGrD3DDescribe(void*, AtGrD3DSurfaceDesc*) { slot('?', 6); }
+void AtGrD3DLockRect(void*, AtGrD3DLockedRect*, const void*, unsigned) { slot('?', 7); }
+static void redirect_recovered_slot12(const void* to) {
+    AtGrD3DTexture2D probe;
+    redirect((uint32_t)(uintptr_t)(*(void***)&probe)[12], to);
+}
 static void __fastcall o_load_font(AtGrD3DFont2D* f, void*, AtMaterialOwner* owner) { AtGrD3DLoadFont2D(f, owner); }
 static void __fastcall o_load_image(AtGrD3DImage* i, void*, AtMaterialOwner* owner) { AtGrD3DLoadImage(i, owner); }
 static void __fastcall o_load_material(AtGrD3DMaterial* m, void*, AtMaterialOwner* owner) { AtGrD3DLoadMaterial(m, owner); }
@@ -1350,6 +1362,7 @@ int main(int argc, char** argv) {
     // The seam classes on the original's side.
     // The texture and material databases are recovered (include/at/AtGrD3DTextures.h): the original's run on its side. What their items do with the device is the doubles above.
     redirect(0x000FCAD0, (const void*)o_load_texture);
+    redirect_recovered_slot12((const void*)o_load_texture);
     redirect(0x0010B7F0, (const void*)o_load_material);
     redirect(0x000FB630, (const void*)o_release_stage);
     redirect(0x00205E20, (const void*)o_before_release);

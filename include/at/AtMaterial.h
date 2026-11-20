@@ -45,7 +45,8 @@ struct AtMaterialOwner {
     virtual void Slot13() {}
     virtual void Slot14() {}
     virtual void Slot15() {}
-    virtual void Slot16() {}
+    // Slot 16, called at 0x0011CA33 when a texture is made: what picks the format the device makes it in. See include/at/AtGrD3DTextureLoad.h.
+    virtual class AtGrD3DFormatChooser* FormatChooser() { AtFatal("AtMaterialOwner: slot 16, the format chooser, is not recovered", 0, 0, 0); return 0; }
     virtual AtMatrixDevice* MatrixDevice() { AtFatal("AtMaterialOwner: slot 17, the matrix device, is not recovered", 0, 0, 0); return 0; }  // slot 17
     virtual class AtFlashGraphicsFactory* GraphicsFactory() { AtFatal("AtMaterialOwner: slot 18, the graphics factory, is not recovered", 0, 0, 0); return 0; }  // slot 18, called at 0x00012CC2 and 0x00013245
 
@@ -74,7 +75,8 @@ struct AtMaterialOwner {
 
     char m_unknown04[0x2C];
     signed char m_noTextures;          // +0x30 negative: a material loaded for it keeps no shader or textures
-    char m_unknown31[0x07];
+    char m_unknown31[0x03];
+    class AtGrD3DTextureLimits* m_textureLimits;  // +0x34 the sizes the device can make a texture in; read when one is made (0x0011CA30, 0x0011CAFE). See include/at/AtGrD3DTextureLoad.h
     class AtAnimationDevice* m_animationDevice;  // +0x38 include/at/AtAnimationDatabase.h
     GmNameMapGroup m_textures;         // +0x3C
     GmNameSpaceDb m_textureSpaces;     // +0x54
@@ -220,6 +222,7 @@ static_assert(offsetof(AtMaterialOwner, m_fontSpaces) == 0x270, "AtMaterialOwner
 static_assert(offsetof(AtMaterialOwner, m_images) == 0x294, "AtMaterialOwner::m_images");
 static_assert(offsetof(AtMaterialOwner, m_imageSpaces) == 0x2AC, "AtMaterialOwner::m_imageSpaces");
 static_assert(offsetof(AtMaterialOwner, m_animationDevice) == 0x38, "AtMaterialOwner::m_animationDevice");
+static_assert(offsetof(AtMaterialOwner, m_textureLimits) == 0x34, "AtMaterialOwner::m_textureLimits");
 static_assert(offsetof(AtMaterialOwner, m_meshes) == 0xF0, "AtMaterialOwner::m_meshes");
 static_assert(offsetof(AtMaterialOwner, m_meshSpaces) == 0x108, "AtMaterialOwner::m_meshSpaces");
 static_assert(offsetof(AtMaterialOwner, m_morphAnimations) == 0x21C, "AtMaterialOwner::m_morphAnimations");
