@@ -82,55 +82,55 @@ void App::StartUpGraphics() {
     }
     StartUpKinematics();
     GetGraphicsConfig(&config);
-    m_device->Init(&config, m_kinematics.m_bytes, &m_memory);
+    m_device->Init(&config, &m_kinematics, &m_memory);
     AfterGraphics();
 }
 
 void App::StartUpKinematics() {
     AppKinematicsConfig config;
     Clear(&config);
-    if (m_kinematicsRunning != 0) {
+    if (m_kinematics.m_below != 0) {
         Shutdown();
     }
     StartUpScript();
     GetKinematicsConfig(&config);
-    m_kinematics->Init(&config, m_script.m_bytes, &m_memory);
+    m_kinematics.Init(&config, &m_script, &m_memory);
     AfterKinematics();
 }
 
 void App::StartUpScript() {
     AppScriptConfig config;
     Clear(&config);
-    if (m_scriptRunning != 0) {
+    if (m_script.m_running != 0) {
         Shutdown();
     }
     StartUpDataManagement();
     GetScriptConfig(&config);
-    m_script->Init(&config, m_dataManagement.m_bytes, &m_memory);
+    m_script.Init(&config, &m_dataManagement, &m_memory);
     AfterScript();
 }
 
 void App::StartUpDataManagement() {
     AppDataManagementConfig config;
     Clear(&config);
-    if (m_dataManagementRunning != 0) {
+    if (m_dataManagement.m_below != 0) {
         Shutdown();
     }
     StartUpMath();
     GetDataManagementConfig(&config);
-    m_dataManagement->Init(&config, m_math.m_bytes, &m_memory);
+    m_dataManagement.Init(&config, &m_math, &m_memory);
     AfterDataManagement();
 }
 
 void App::StartUpMath() {
     AppMathConfig config;
     Clear(&config);
-    if (m_mathRunning != 0) {
+    if (m_math.m_below != 0) {
         Shutdown();
     }
     StartUpIo();
     GetMathConfig(&config);
-    m_math->Init(&config, &m_io, &m_memory);
+    m_math.Init(&config, &m_io, &m_memory);
     AfterMath();
 }
 
@@ -196,24 +196,24 @@ void App::GetIoConfig(AtIoConfig* config) {
 void App::GetMathConfig(AppMathConfig* config) {
     config->m_unknown00 = 0;
     config->m_heap = 0;
-    config->m_unknown08[0] = 0;
-    config->m_unknown08[1] = 0;
+    config->m_segmentHeap = 0;
+    config->m_queryHeap = 0;
     config->m_heap = m_heaps[0];
 }
 
 void App::GetDataManagementConfig(AppDataManagementConfig* config) {
     Clear(config);
-    config->m_unknown00 = 0x80;
-    config->m_unknown04 = 0x80;
+    config->m_databaseSpaces = 0x80;
+    config->m_registrySpaces = 0x80;
     config->m_heap = m_heaps[0];
 }
 
 void App::GetScriptConfig(AppScriptConfig* config) {
     config->m_unknown00 = 0;
     config->m_heap = 0;
-    config->m_unknown08[0] = 0;
-    config->m_unknown08[1] = 0;
-    config->m_unknown08[2] = 0;
+    config->m_hostHeap = 0;
+    config->m_factoryHeap = 0;
+    config->m_systemHeap = 0;
     config->m_heap = m_heaps[0];
 }
 

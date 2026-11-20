@@ -12,6 +12,7 @@
 // real build stops.
 #pragma once
 #include "at/AtApLayer.h"
+#include "at/AtApMidLayers.h"
 #include "at/AtDataLibrary.h"
 #include "at/AtDataRegistry.h"
 #include "at/AtHeap.h"
@@ -116,29 +117,10 @@ public:
 // What slot 7 fills in: the event layer's config (at/atap). Only the heap is set.
 typedef AtEventConfig AppLayerConfig07;
 
-// The objects of the AtAp layers above the I/O layer, where they are not recovered (at/atap). Each layer's start-up calls slot 1, the object's Init, with the
+// The objects of the AtAp layers above the kinematics layer, where they are not recovered (at/atap; the math, data management, script and kinematics
+// layers' are at/atlayers', include/at/AtApMidLayers.h). Each layer's start-up calls slot 1, the object's Init, with the
 // layer's config, the object of the layer below and, for most, App's memory system. Each Init stops with a diagnostic (src/gm/GmAppHost.cpp). Slot 0 is a
 // deleting destructor in each. The vftables are App's own, written over the layer's by App's constructor where it has one.
-class AppMathLayer {         // +0x0384, vftable 0x002847FC, constructor 0x000B38B0
-public:
-    virtual void Slot0();
-    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B38D0
-};
-class AppDataManagementLayer {  // +0x0390, vftable 0x002847EC, constructor 0x000B3770
-public:
-    virtual void Slot0();
-    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B3790
-};
-class AppScriptLayer {       // +0x0414, vftable 0x0027D03C, constructor 0x0009EE60
-public:
-    virtual void Slot0();
-    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x0009EE80
-};
-class AppKinematicsLayer {   // +0x5F70, vftables 0x002847DC and 0x0028DC6C, constructor 0x000B34B0
-public:
-    virtual void Slot0();
-    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B34D0
-};
 class AppControllerLayer {   // +0x6020, vftables 0x0028477C and 0x0028DC38, constructor 0x000B2DE0
 public:
     virtual void Slot0();
@@ -166,27 +148,12 @@ public:
 };
 
 // What App's config slots fill in for those layers, as far as App sets them. Sizes are those start-up clears.
-struct AppMathConfig {               // slot 19
-    int m_unknown00;
-    AtHeap* m_heap;                  // +0x04
-    int m_unknown08[2];
-};
-struct AppDataManagementConfig {     // slot 23
-    int m_unknown00;                 // 0x80
-    int m_unknown04;                 // 0x80
-    AtHeap* m_heap;                  // +0x08
-    int m_unknown0C[10];
-};
-struct AppScriptConfig {             // slot 27
-    int m_unknown00;
-    AtHeap* m_heap;                  // +0x04
-    int m_unknown08[3];
-};
-struct AppKinematicsConfig {         // slot 31
-    int m_unknown00;
-    AtHeap* m_heap;                  // +0x04
-    int m_unknown08[11];
-};
+// What App's config slots fill in for those layers, as far as App sets them. Sizes are those start-up clears. The four below the graphics layer are
+// at/atlayers' configs.
+typedef AtMathConfig AppMathConfig;                      // slot 19
+typedef AtDataManagementConfig AppDataManagementConfig;  // slot 23
+typedef AtScriptConfig AppScriptConfig;                  // slot 27
+typedef AtKinematicsConfig AppKinematicsConfig;          // slot 31
 struct AppGraphicsConfig {           // slot 35
     int m_unknown00;                 // 1
     int m_unknown04;
@@ -509,16 +476,10 @@ public:
     AtEventSystem m_events;                      // +0x0268
     AtNetworkSystem m_network;                   // +0x02F0
     AtIoSystem m_io;                             // +0x0310 its factory at +0x0318 (App is the mount manager's AtIoMountOwner), its context at +0x031C
-    AppPart<AppMathLayer, 4> m_math;             // +0x0384
-    int m_mathRunning;                           // +0x0388
-    int m_unknown038C;                           // +0x038C
-    AppPart<AppDataManagementLayer, 0x80> m_dataManagement;  // +0x0390
-    int m_dataManagementRunning;                 // +0x0410
-    AppPart<AppScriptLayer, 4> m_script;         // +0x0414
-    int m_scriptRunning;                         // +0x0418
-    char m_unknown041C[0x5B54];                  // +0x041C the rest of the script layer's object (0x000B42B0 writes its +0x5B1C); +0x0420 is handed on
-    AppPart<AppKinematicsLayer, 8> m_kinematics; // +0x5F70
-    int m_kinematicsRunning;                     // +0x5F78
+    AtMathSystem m_math;                         // +0x0384 running while m_below is set (+0x0388)
+    AtDataManagementSystem m_dataManagement;     // +0x0390 its owner at +0x0394; m_below at +0x0410
+    AtScriptSystem m_script;                     // +0x0414 m_running at +0x0418; the host at +0x0420
+    AtKinematicsSystem m_kinematics;             // +0x5F70 m_below at +0x5F78
     AppPart<AppDevice, 0x14> m_device;           // +0x5F7C the graphics layer's
     AppGraphics* m_graphics;                     // +0x5F90
     int m_unknown5F94;                           // +0x5F94
@@ -626,12 +587,12 @@ static_assert(offsetof(App, m_network) == 0x2F0, "App::m_network");
 static_assert(offsetof(App, m_io) == 0x310, "App::m_io");
 static_assert(offsetof(App, m_io.m_factory) == 0x318, "App::m_io.m_factory");
 static_assert(offsetof(App, m_io.m_context) == 0x31C, "App::m_io.m_context");
-static_assert(offsetof(App, m_mathRunning) == 0x388, "App::m_mathRunning");
+static_assert(offsetof(App, m_math.m_below) == 0x388, "App::m_math.m_below");
 static_assert(offsetof(App, m_dataManagement) == 0x390, "App::m_dataManagement");
-static_assert(offsetof(App, m_dataManagementRunning) == 0x410, "App::m_dataManagementRunning");
-static_assert(offsetof(App, m_scriptRunning) == 0x418, "App::m_scriptRunning");
+static_assert(offsetof(App, m_dataManagement.m_below) == 0x410, "App::m_dataManagement.m_below");
+static_assert(offsetof(App, m_script.m_running) == 0x418, "App::m_script.m_running");
 static_assert(offsetof(App, m_kinematics) == 0x5F70, "App::m_kinematics");
-static_assert(offsetof(App, m_kinematicsRunning) == 0x5F78, "App::m_kinematicsRunning");
+static_assert(offsetof(App, m_kinematics.m_below) == 0x5F78, "App::m_kinematics.m_below");
 static_assert(offsetof(App, m_controller) == 0x6020, "App::m_controller");
 static_assert(offsetof(App, m_controllerRunning) == 0x60A4, "App::m_controllerRunning");
 static_assert(offsetof(App, m_soundFlags) == 0x60B4, "App::m_soundFlags");
@@ -639,8 +600,6 @@ static_assert(offsetof(App, m_videoRunning) == 0x60D0, "App::m_videoRunning");
 static_assert(offsetof(App, m_scene) == 0x60DC, "App::m_scene");
 static_assert(offsetof(App, m_sceneRunning) == 0x60E0, "App::m_sceneRunning");
 static_assert(offsetof(App, m_userInterfaceRunning) == 0x644C, "App::m_userInterfaceRunning");
-static_assert(sizeof(AppDataManagementConfig) == 0x34, "AppDataManagementConfig");
-static_assert(sizeof(AppKinematicsConfig) == 0x34, "AppKinematicsConfig");
 static_assert(sizeof(AppGraphicsConfig) == 0xF0, "AppGraphicsConfig");
 static_assert(sizeof(AppControllerConfig) == 0x30, "AppControllerConfig");
 static_assert(sizeof(AppSoundConfig) == 0x30, "AppSoundConfig");

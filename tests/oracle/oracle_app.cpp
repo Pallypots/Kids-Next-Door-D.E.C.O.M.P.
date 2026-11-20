@@ -384,7 +384,7 @@ void AppDevice::Slot0() { L('BAD', 9100); }
 void AppDevice::Init(const void*, void*, void*) { L('BAD', 9101); }
 #define LAYER3(C, n) void C::Slot0() { L('BAD', n); } void C::Init(const void*, void*, void*) { L('BAD', n + 1); }
 #define LAYER2(C, n) void C::Slot0() { L('BAD', n); } void C::Init(const void*, void*) { L('BAD', n + 1); }
-LAYER3(AppMathLayer, 9700) LAYER3(AppDataManagementLayer, 9702) LAYER3(AppScriptLayer, 9704) LAYER3(AppKinematicsLayer, 9706) LAYER3(AppControllerLayer, 9708)
+LAYER3(AppControllerLayer, 9708)
 LAYER2(AppSoundLayer, 9710) LAYER3(AppVideoLayer, 9712) LAYER3(AppSceneLayer, 9714) LAYER2(AppUserInterfaceLayer, 9716)
 #undef LAYER3
 #undef LAYER2
