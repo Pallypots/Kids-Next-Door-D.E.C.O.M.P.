@@ -2,6 +2,8 @@
 // Every function of src/gm/GmLevelManifestHost.cpp and src/gm/GmDatabaseManifestHost.cpp is this file's, and writes what it was asked into a log, which is checked. The sound and graphics
 // items load through the real AtAudioDatabase and AtDatabaseLoader into this file's databases, the bounding geometry and the registry through the real classes, from written files. No game data.
 #include <cstdio>
+#include <cstdlib>
+#include <new>
 #include <cstring>
 #include <string>
 
@@ -69,7 +71,7 @@ void GmMusicManager::Stop(GmMusicChain*) {}
 void GmMusicManager::Free(GmMusicChain*) {}
 
 // ---- the seams of src/gm/GmDatabaseManifestHost.cpp -----------------------------------------------------------------------
-void AtSceneDatabaseLoader::Load(AtNameTableOwner*, const char* name, int mode) { note("scene", name); CHECK(mode == 0); }
+// AtSceneDatabaseLoader::Load is at/asd's, real here: it opens each .ASD (empty from this file system) and loads nothing.
 void AtCinemaDatabase::Load(GmCinemaOwner*, const char* name, int) { note("cinema", name); }
 void AtEventDatabase::Load(GmEventOwner*, const char* name, int) { note("event", name); }
 void GmRegistryNames::Add(AtDataRegistry* registry) { note("add-registry", registry->m_loaded ? "loaded" : "not"); }
@@ -161,7 +163,7 @@ public:
     void Slot26() override {}
     void Slot27() override {}
     void Slot28() override {}
-    AtDatabaseLoader* NewLoader() override { note("new-loader"); return &loaders[made++ % 2]; }
+    AtDatabaseLoader* DatabaseLoader() override { note("new-loader"); return &loaders[made++ % 2]; }
     void DeleteLoader(AtDatabaseLoader*) override { note("delete-loader"); }
 };
 
@@ -280,7 +282,8 @@ int main() {
     GmAudioDatabaseMaker::s_instance = &soundMaker;
     g_audioLanguage = "EnglishXYZ";  // only eight characters are copied
     static Graphics graphics;
-    App* app = new App;
+    App* app = (App*)std::calloc(1, sizeof(App));  // only the members the base's words read; App's constructor is not run
+    new (app->m_sceneOwner.m_bytes) AtNameTableOwner;
     app->m_graphics = &graphics;
     AtMaterialOwner materialOwner;
     app->m_materialOwner = &materialOwner;
@@ -289,11 +292,11 @@ int main() {
     GmHistoryLogs::s_instance = &logs;
     GmEventHome eventHome = {};
     GmEventHome::s_instance = &eventHome;
-    static GmDataOwners dataOwners;
-    dataOwners.m_registryOwner.m_spaces.Init(4);
-    static GmDynamicNodeState nodeState;
-    nodeState.m_dataOwners = &dataOwners;
-    GmDynamicNodeState::s_instance = &nodeState;
+    static GmDataRoot nodeState;
+    nodeState.m_app = (App*)std::calloc(1, sizeof(App));  // the App the data root points to: only its registry owner is read
+    AtDataRegistryOwner* registryOwner = new (nodeState.Owner()) AtDataRegistryOwner;
+    registryOwner->m_spaces.Init(4);
+    GmDataRoot::s_instance = &nodeState;
     int registryNames;
     GmRegistryNames::s_instance = (GmRegistryNames*)&registryNames;
     static char levelManagerSpace[sizeof(GmLevelManager)];
@@ -332,22 +335,22 @@ int main() {
         CHECK(gfx[0].m_maker == &graphics && gfx[0].m_owner == &materialOwner && gfx[0].m_loader == 0 && std::strcmp(gfx[0].m_extension, "AGD") == 0);
         GmSceneDatabaseItem* scene = static_cast<GmSceneDatabaseItem*>(manifest.m_sceneDatabases);
         CHECK(scene[0].m_inSpaceGraph == 1 && scene[1].m_inSpaceGraph == 0 && scene[2].m_inSpaceGraph == 1);
-        CHECK(scene[1].m_owner == &app->m_sceneOwner && std::strcmp(scene[2].m_path, "Art\\S3") == 0 && std::strcmp(scene[2].m_extension, "ASD") == 0);
+        CHECK(scene[1].m_owner == app->m_sceneOwner.Get() && std::strcmp(scene[2].m_path, "Art\\S3") == 0 && std::strcmp(scene[2].m_extension, "ASD") == 0);
         GmCinemaDatabaseItem* cinema = static_cast<GmCinemaDatabaseItem*>(manifest.m_cinemaDatabases);
-        CHECK(cinema[0].m_owner == &app->m_cinemaOwner && std::strcmp(cinema[0].m_extension, "ACD") == 0);
+        CHECK(cinema[0].m_owner == app->CinemaOwner() && std::strcmp(cinema[0].m_extension, "ACD") == 0);
         GmBoundingGeometryItem* geometry = static_cast<GmBoundingGeometryItem*>(manifest.m_boundingGeometry);
-        CHECK(geometry[0].m_owner == &app->m_sceneOwner && std::strcmp(geometry[0].m_extension, "ASB") == 0);
+        CHECK(geometry[0].m_owner == app->m_sceneOwner.Get() && std::strcmp(geometry[0].m_extension, "ASB") == 0);
         GmEventDatabaseItem* events = static_cast<GmEventDatabaseItem*>(manifest.m_events);
         CHECK(events[0].m_owner == &eventHome.m_owner && std::strcmp(events[0].m_path, "Ev\\E") == 0 && std::strcmp(events[0].m_extension, "AEE") == 0);
         GmRegistryItem* registry = static_cast<GmRegistryItem*>(manifest.m_registries);
-        CHECK(registry[0].m_manager == GmRegistryNames::s_instance && registry[0].m_parent == &nodeState.m_registry && registry[0].m_owner == &dataOwners.m_registryOwner);
+        CHECK(registry[0].m_manager == GmRegistryNames::s_instance && registry[0].m_parent == &nodeState.m_registry && registry[0].m_owner == registryOwner);
         CHECK(std::strcmp(registry[0].m_extension, "ADR") == 0);
 
         manifest.AfterParse();
         while (manifest.m_head != 0) manifest.RunNext();
         // The base's arrays first, in the order of AfterParse; the sound databases do not run twice; then the level's; then Finished, with no space graph to find.
-        CHECK(g_log == "event(Ev\\E) add-registry(loaded) new-loader scene(Art\\S1) scene(Art\\S2) scene(Art\\S3) cinema(Cin\\C) vfx(Art\\v.VFX) ");
-        CHECK(fs.opened == "Reg\\R.ADR Art\\G.AGD Geo\\B.ASB ");
+        CHECK(g_log == "event(Ev\\E) add-registry(loaded) new-loader cinema(Cin\\C) vfx(Art\\v.VFX) ");
+        CHECK(fs.opened == "Reg\\R.ADR Art\\G.AGD Geo\\B.ASB Art\\S1.ASD Art\\S2.ASD Art\\S3.ASD ");
         if (g_fail) std::printf("[%s] [%s]\n", g_log.c_str(), fs.opened.c_str());
         g_log.clear();
         CHECK(gfx[0].m_loader == &graphics.loaders[0] && graphics.loaders[0].m_owner == &materialOwner);

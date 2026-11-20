@@ -1,6 +1,6 @@
 # App: the game's main, start-up and main loop. See include/gm/GmApp.h. GmAppHost.cpp holds the seams that stop with a diagnostic. GmMain.cpp holds main and
 # the App object, so only programs link it, never the library.
-target_sources(knd_gm PRIVATE ${KND_GM_SRC}/GmApp.cpp ${KND_GM_SRC}/GmAppIo.cpp ${KND_GM_SRC}/GmAppHost.cpp)
+target_sources(knd_gm PRIVATE ${KND_GM_SRC}/GmApp.cpp ${KND_GM_SRC}/GmAppIo.cpp ${KND_GM_SRC}/GmAppHost.cpp ${KND_GM_SRC}/GmDataRoot.cpp ${KND_GM_SRC}/GmRegistryNamesHost.cpp)
 # Not knd_native_test: the test supplies platform/fatal.cpp's functions itself, so that a stop can be caught.
 add_executable(test_app tests/native/test_app.cpp ${KND_GM_SRC}/GmMain.cpp platform/host_file_system.cpp)
 target_include_directories(test_app PRIVATE platform)

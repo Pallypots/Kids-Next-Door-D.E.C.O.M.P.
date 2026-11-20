@@ -30,7 +30,7 @@ struct GmDesignDefaults {
     static GmDesignDefaults* s_instance;  // 0x003B3524
 };
 
-// The object at GmDynamicNodeState::s_instance (0x003B357C)'s +0x04, of which only the scene device is known; its +0x5F98. Read only by the node's slot 2, for material assignments.
+// The object at GmDataRoot::s_instance (0x003B357C)'s +0x04 (App), of which only the scene device is known; its +0x5F98 (App's m_materialOwner: whether the two classes are one is open). Read only by the node's slot 2, for material assignments.
 struct GmSceneDeviceHolder {
     char m_unknown00[0x5F98];
     AtSceneDevice* m_device;            // +0x5F98

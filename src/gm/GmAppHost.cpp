@@ -31,6 +31,7 @@ void AppDevice::Slot5() { StopHere("App device: slot 5 is not recovered"); }
 int AppDevice::RunFrame() { StopHere("App device: a frame (slot 6) is not recovered"); return 0; }
 
 void AppGraphics::Slot0() { StopHere("App graphics: not recovered"); }
+void AppGraphics::DeleteLoader(AtDatabaseLoader*) { StopHere("App graphics: slot 30 is not recovered"); }
 void AppGraphics::Slot1() { StopHere("App graphics: not recovered"); }
 void AppGraphics::Slot2() { StopHere("App graphics: not recovered"); }
 void AppGraphics::Slot3() { StopHere("App graphics: not recovered"); }
@@ -129,10 +130,7 @@ void AppUnknown692C::Init() { StopHere("App+0x692C: 0x00090210 is not recovered"
 void AppUnknown692C::Update(int) { StopHere("App+0x692C: 0x0006DEA0 is not recovered"); }
 
 // The neighbours of the registry members start-up calls (those are at/datalookup's, src/at/AtDataLookup.cpp).
-GmDataRoot* GmDataRoot::s_instance;
 GmRegistryUser* GmRegistryUser::s_instance;
-GmRegistryNames* GmRegistryNames::s_instance;
-void GmRegistryNames::Add(AtDataRegistry*) { StopHere("Registry names: 0x00071F20 is not recovered"); }
 
 // Save data, sound, and the rest.
 char* g_unknown30567C;

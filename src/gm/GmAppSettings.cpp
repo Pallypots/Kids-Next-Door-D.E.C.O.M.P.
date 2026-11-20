@@ -16,7 +16,7 @@ unsigned int GmAppSettings::s_argc;
 char** GmAppSettings::s_argv;
 unsigned int GmAppSettings::s_levelUppercaseCount;
 unsigned short g_debugChannels = 3;
-int g_usePlatformBinary = 1;
+// g_usePlatformBinary is defined in src/gm/GmAppStatics.cpp: the level manifest reads it too.
 int g_backgroundMusic = 1;
 int g_consoleMemStats = 1;
 int g_skipProfileLoad;

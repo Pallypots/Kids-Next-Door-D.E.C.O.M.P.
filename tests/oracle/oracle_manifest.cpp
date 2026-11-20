@@ -112,7 +112,7 @@ static void log_ptr(uint32_t a, const void* p) { note(a, (uint32_t)ident(p)); }
 // Owners and managers: the same fake addresses on both sides; never dereferenced by a double.
 static GmBehaviorSystem g_behavior;
 static GmSpaceGraphOwner g_graph_owner;
-static GmDynamicNodeState g_node_state;
+static GmDataRoot g_node_state;
 #define OWNER(n) ((void*)(uintptr_t)(0x00005123 + (n) * 0x100))
 
 // The current manifest of each side, so that a double can say which item it was given.
@@ -273,7 +273,7 @@ static void set_globals(void* heap) {
     *(void**)(uintptr_t)0x003B3604 = &g_graph_owner;
     GmSpaceGraphOwner::s_instance = &g_graph_owner;
     *(void**)(uintptr_t)0x003B357C = &g_node_state;
-    GmDynamicNodeState::s_instance = &g_node_state;
+    GmDataRoot::s_instance = &g_node_state;
     *(void**)(uintptr_t)0x003B3568 = OWNER(6);
     GmMusicManager::s_instance = (GmMusicManager*)OWNER(6);
     *(void**)(uintptr_t)0x002CD138 = OWNER(7);

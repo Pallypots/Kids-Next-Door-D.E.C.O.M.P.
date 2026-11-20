@@ -94,7 +94,7 @@ MUTANTS = [
     ("Free ASL: release", L, "                GmBehaviorSystem::s_instance->m_scripts->Release(m_scripts[i].m_script);\n", ""),
     ("Free VFX: delete", L, "                GmVfxManager::s_instance->Delete(m_vfx[i].m_database);\n", ""),
     ("Free DAC: remove", L, "            m_dynamicNodes[i].m_scene.RemoveFrom(GmSpaceGraphOwner::s_instance->m_graph);\n", ""),
-    ("Free DAC: flag", L, "GmDynamicNodeState::s_instance->m_unknown24 != 0 || GmDynamicNodeState::s_instance->m_unknown28 != 0", "GmDynamicNodeState::s_instance->m_unknown24 != 0 && GmDynamicNodeState::s_instance->m_unknown28 != 0"),
+    ("Free DAC: flag", L, "GmDataRoot::s_instance->m_unknown24 != 0 || GmDataRoot::s_instance->m_unknown28 != 0", "GmDataRoot::s_instance->m_unknown24 != 0 && GmDataRoot::s_instance->m_unknown28 != 0"),
     ("Free GOO: slot 0", L, "            m_soundNodes[i].Unknown0();\n", ""),
     ("Free GOC: slot 0", L, "            m_collisionSounds[i].Unknown0();\n", ""),
     ("Free GOI: slot 0", L, "            m_instanceSounds[i].Unknown0();\n", ""),

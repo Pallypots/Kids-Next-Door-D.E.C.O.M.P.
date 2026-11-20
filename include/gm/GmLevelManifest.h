@@ -14,6 +14,7 @@
 #include "at/AtIoTokenizer.h"
 #include "at/AtDataRegistry.h"
 #include "at/AtScene.h"
+#include "gm/GmDataRoot.h"
 #include "gm/GmManifestLoader.h"
 #include "gm/GmSoundNotes.h"
 
@@ -101,18 +102,7 @@ struct GmSpaceGraphOwner {
     static GmSpaceGraphOwner* s_instance;    // 0x003B3604
 };
 
-// 0x003B357C: two words that decide the flag GmDynamicNodeLoader::Unload is given, and what InstanceRegistries hands its items (gm/dbmanifest).
-struct GmDataOwners;
-struct GmDynamicNodeState {
-    int m_unknown00;
-    GmDataOwners* m_dataOwners;              // +0x04 its +0x394 is the registry owner (include/gm/GmDatabaseManifestItems.h)
-    char m_unknown08[0x1C];
-    int m_unknown24;                         // +0x24
-    int m_unknown28;                         // +0x28
-    AtDataRegistry m_registry;               // +0x2C each instance registry's parent
-
-    static GmDynamicNodeState* s_instance;   // 0x003B357C
-};
+// 0x003B357C: two words that decide the flag GmDynamicNodeLoader::Unload is given, and what InstanceRegistries hands its items: GmDataRoot, include/gm/GmDataRoot.h.
 
 // The sound manager's work on the sound items: members of GmAudioData (0x003B354C) that neither this work nor gm/gon recovered or declared, so
 // left as free functions, seams in src/gm/GmLevelManifestHost.cpp. Each takes the manager from its static, as the original does at each call. Bank and data types are not recovered.
@@ -422,8 +412,7 @@ static_assert(sizeof(GmMusicChainItem) == 0x90, "GmMusicChainItem");
 static_assert(sizeof(GmInstanceSoundItem) == 0x94, "GmInstanceSoundItem");
 static_assert(sizeof(GmCollisionSoundItem) == 0x94, "GmCollisionSoundItem");
 static_assert(offsetof(GmBehaviorSystem, m_scripts) == 0x18, "GmBehaviorSystem::m_scripts");
-static_assert(offsetof(GmDynamicNodeState, m_unknown24) == 0x24, "GmDynamicNodeState::m_unknown24");
-static_assert(offsetof(GmDynamicNodeState, m_registry) == 0x2C, "GmDynamicNodeState::m_registry");
+static_assert(offsetof(GmDataRoot, m_unknown24) == 0x24, "GmDataRoot::m_unknown24");
 static_assert(offsetof(GmDatabaseManifest, m_unknown098) == 0x98, "GmDatabaseManifest::m_unknown098");
 static_assert(offsetof(GmDatabaseManifest, m_registryCount) == 0xD0, "GmDatabaseManifest::m_registryCount");
 static_assert(offsetof(GmLevelManifest, m_animationLists) == 0xDC, "GmLevelManifest::m_animationLists");

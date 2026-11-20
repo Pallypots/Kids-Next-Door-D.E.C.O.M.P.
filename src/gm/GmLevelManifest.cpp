@@ -70,7 +70,6 @@ GmBehaviorSystem* GmBehaviorSystem::s_instance;
 GmVfxManager* GmVfxManager::s_instance;
 GmDynamicNodeLoader* GmDynamicNodeLoader::s_instance;
 GmSpaceGraphOwner* GmSpaceGraphOwner::s_instance;
-GmDynamicNodeState* GmDynamicNodeState::s_instance;
 GmMusicManager* GmMusicManager::s_instance;
 
 const AtIoKeyword GmDatabaseManifest::s_keywords[kKeywordCount] = {
@@ -553,7 +552,7 @@ void GmLevelManifest::Free() {
     if (m_dynamicNodes != 0) {
         for (unsigned int i = 0; i < m_dynamicNodeCount; i++) {
             m_dynamicNodes[i].m_scene.RemoveFrom(GmSpaceGraphOwner::s_instance->m_graph);
-            const int flag = GmDynamicNodeState::s_instance->m_unknown24 != 0 || GmDynamicNodeState::s_instance->m_unknown28 != 0;
+            const int flag = GmDataRoot::s_instance->m_unknown24 != 0 || GmDataRoot::s_instance->m_unknown28 != 0;
             GmDynamicNodeLoader::s_instance->Unload(&m_dynamicNodes[i].m_scene, flag);
         }
         if (m_dynamicNodes != 0) {

@@ -271,12 +271,26 @@ void GmRegistryNames::Add(AtDataRegistry* registry) { note('+', (uint32_t)(uintp
 static void __fastcall o_set_graph(GmSpaceGraphOwner* owner, void*, AtSpaceGraph* graph) { log_ptr('$', owner); log_ptr('$', graph); owner->m_graph = graph; }
 void GmSpaceGraphOwner::SetGraph(AtSpaceGraph* graph) { log_ptr('$', this); log_ptr('$', graph); m_graph = graph; }
 
-// An array a database's Clear deletes through its first element's slot 0: a count ahead, and a table whose slot 0 logs and frees the block.
+// An array a database's Clear deletes: a count ahead, and a table whose slot 0 stands for the vector deleting destructor. The original's Clear deletes an array through its
+// first element's slot 0 with flags 3 (each element, last first, then the block); at/asd's recovered Clear (master's, src/at/AtSceneDatabaseLoader.cpp, compared against the
+// original's in the asd suite) destroys each element, last first, through the same slot with flags 0, then frees the block itself. Both log each element destroyed, by id, and
+// the block freed ('D', as operator delete logs it on the recovered side), so that the two protocols of the same deletion compare alike. Each block's element size is kept here.
+static std::vector<std::pair<void*, unsigned int>> g_entry_sizes;
+static unsigned int entry_size(void* first) {
+    for (size_t i = g_entry_sizes.size(); i > 0; i--) if (g_entry_sizes[i - 1].first == first) return g_entry_sizes[i - 1].second;  // the newest: blocks are freed and handed out again
+    return 0;
+}
 static void* __fastcall fe_delete(void* self, void*, unsigned int flags) {
-    note('X', flags);
+    if ((flags & 2) == 0) {
+        note('x', ((Fake*)self)->id);
+        return self;
+    }
     uint32_t* block = (uint32_t*)self - 1;
-    note('x', *block);
-    note('x', ((Fake*)self)->id);
+    const unsigned int size = entry_size(self);
+    for (uint32_t i = *block; i > 0; i--) {
+        note('x', ((Fake*)((char*)self + (i - 1) * size))->id);
+    }
+    if (g_recording) g_log[g_side].add('D');
     std::free(block);
     return block;
 }
@@ -293,6 +307,7 @@ static void* make_entries(unsigned int count, unsigned int size) {
         f->id = ++g_entry_ids[g_side];
     }
     g_blocks[g_side].push_back({(char*)(block + 1), (count ? count : 1) * size});
+    g_entry_sizes.push_back({block + 1, size});
     g_recording = was;
     return block + 1;
 }
@@ -308,14 +323,15 @@ static void scene_load(AtSceneDatabaseLoader* db, AtNameTableOwner* owner, const
     db->m_owner = owner;
     db->m_nodes = (AtScene*)make_entries((unsigned)n, sizeof(AtScene));
     db->m_nodeCount = (unsigned short)n;
-    db->m_modifiers = (AtSceneDatabaseEntry*)make_entries((unsigned)(2 - n), 0x10);
+    db->m_modifiers = (AtModifierDatabase*)make_entries((unsigned)(2 - n), sizeof(AtModifierDatabase));
     db->m_modifierCount = (unsigned short)(2 - n);
     if (n == 1) {
-        db->m_textDraws = (AtSceneDatabaseEntry*)make_entries(0, 0x10);
+        db->m_textDraws = (AtTextDrawDatabase*)make_entries(0, sizeof(AtTextDrawDatabase));
     }
 }
 static void __fastcall o_scene_load(AtSceneDatabaseLoader* db, void*, AtNameTableOwner* owner, const char* name, int mode) { scene_load(db, owner, name, mode); }
-void AtSceneDatabaseLoader::Load(AtNameTableOwner* owner, const char* name, int mode) { scene_load(this, owner, name, mode); }
+// The recovered side's AtSceneDatabaseLoader::Load is at/asd's real one: main redirects it to this double too, by its address.
+template <class M> static void* member_address(M m) { void* p; std::memcpy(&p, &m, sizeof p); return p; }
 
 static void cinema_load(AtCinemaDatabase* db, GmCinemaOwner* owner, const char* name, int unused) {
     note('k', (uint32_t)ident(db));
@@ -463,7 +479,7 @@ public:
     void Slot26() override {}
     void Slot27() override {}
     void Slot28() override {}
-    AtDatabaseLoader* NewLoader() override {
+    AtDatabaseLoader* DatabaseLoader() override {
         log_ptr('L', this);
         const int s = g_side;
         Loader* l = g_loaders[s][g_loader_used[s]++ % 256];
@@ -484,8 +500,8 @@ struct World {
     App* app;
     GmHistoryLogs logs;
     EventHome events;
-    GmDataOwners* data;
-    GmDynamicNodeState* state;
+    App* data;  // what the data root's +0x04 points to: only its registry owner at +0x394 is read
+    GmDataRoot* state;
     AtNameTableOwner* soundOwner;
     MaterialOwner material;
     SoundMaker maker;
@@ -507,27 +523,30 @@ static void make_worlds() {
     for (int s = 0; s < 2; s++) {
         World& w = g_world[s];
         // Aligned, so that a request's context with its low byte cleared by a path of 128 characters lands at the same offset on both sides.
-        w.app = new (_aligned_malloc(sizeof(App), 256)) App;
+        w.app = (App*)_aligned_malloc(sizeof(App), 256);  // App's constructor is not run: only the members the base's words read are set
+        std::memset(w.app, 0, sizeof(App));
+        new (w.app->m_sceneOwner.m_bytes) AtNameTableOwner;
         w.app->m_graphics = &w.graphics;
         w.app->m_materialOwner = &w.material;
-        w.app->m_sceneOwner.m_geometrySpaces.Init(8);
+        w.app->m_sceneOwner->m_geometrySpaces.Init(8);
         w.logs.m_app = w.app;
         w.soundOwner = new AtNameTableOwner;
-        w.data = (GmDataOwners*)std::calloc(1, sizeof(GmDataOwners));
-        char* state = (char*)std::calloc(1, sizeof(GmDynamicNodeState));
+        w.data = (App*)std::calloc(1, sizeof(App));
+        char* state = (char*)std::calloc(1, sizeof(GmDataRoot));
+        ((GmDataRoot*)state)->m_app = w.data;
+        AtDataRegistryOwner* owner = ((GmDataRoot*)state)->Owner();
         if (s == 0) {
-            at<FnCtor>(0x000603A0)(&w.data->m_registryOwner.m_plain, nullptr);
-            at<FnCtor>(0x0005FFF0)(&w.data->m_registryOwner.m_spaces, nullptr);
-            at<FnI>(0x00060010)(&w.data->m_registryOwner.m_spaces, nullptr, 8);
-            at<FnCtor>(0x000674E0)(state + offsetof(GmDynamicNodeState, m_registry), nullptr);
+            at<FnCtor>(0x000603A0)(&owner->m_plain, nullptr);
+            at<FnCtor>(0x0005FFF0)(&owner->m_spaces, nullptr);
+            at<FnI>(0x00060010)(&owner->m_spaces, nullptr, 8);
+            at<FnCtor>(0x000674E0)(state + offsetof(GmDataRoot, m_registry), nullptr);
         } else {
-            new (&w.data->m_registryOwner.m_plain) AtDataRegistryGroup;
-            new (&w.data->m_registryOwner.m_spaces) AtDataRegistryNameSpaces;
-            w.data->m_registryOwner.m_spaces.Init(8);
-            new (state + offsetof(GmDynamicNodeState, m_registry)) AtDataRegistry;
+            new (&owner->m_plain) AtDataRegistryGroup;
+            new (&owner->m_spaces) AtDataRegistryNameSpaces;
+            owner->m_spaces.Init(8);
+            new (state + offsetof(GmDataRoot, m_registry)) AtDataRegistry;
         }
-        w.state = (GmDynamicNodeState*)state;
-        w.state->m_dataOwners = w.data;
+        w.state = (GmDataRoot*)state;
         w.graph.m_graph = (AtSpaceGraph*)(uintptr_t)0x6B6B;
         for (int i = 0; i < 256; i++) g_loaders[s][i] = new Loader;
         g_mesh[s] = new Mesh;
@@ -535,8 +554,8 @@ static void make_worlds() {
     const uint32_t kTags[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
     g_ranges.push_back({{g_world[0].app, g_world[1].app}, sizeof(App), kTags[0]});
     g_ranges.push_back({{&g_world[0].events, &g_world[1].events}, sizeof(EventHome), kTags[1]});
-    g_ranges.push_back({{g_world[0].data, g_world[1].data}, sizeof(GmDataOwners), kTags[2]});
-    g_ranges.push_back({{g_world[0].state, g_world[1].state}, sizeof(GmDynamicNodeState), kTags[3]});
+    g_ranges.push_back({{g_world[0].data, g_world[1].data}, sizeof(App), kTags[2]});
+    g_ranges.push_back({{g_world[0].state, g_world[1].state}, sizeof(GmDataRoot), kTags[3]});
     g_ranges.push_back({{g_world[0].soundOwner, g_world[1].soundOwner}, sizeof(AtNameTableOwner), kTags[4]});
     g_ranges.push_back({{&g_world[0].material, &g_world[1].material}, sizeof(MaterialOwner), kTags[5]});
     g_ranges.push_back({{&g_world[0].maker, &g_world[1].maker}, sizeof(SoundMaker), kTags[6]});
@@ -558,7 +577,7 @@ static void set_globals(void* heap) {
     *(void**)(uintptr_t)0x003B3604 = &g_world[0].graph;
     GmSpaceGraphOwner::s_instance = &g_world[1].graph;
     *(void**)(uintptr_t)0x003B357C = g_world[0].state;
-    GmDynamicNodeState::s_instance = g_world[1].state;
+    GmDataRoot::s_instance = g_world[1].state;
     *(void**)(uintptr_t)0x003B3568 = OWNER(6);
     GmMusicManager::s_instance = (GmMusicManager*)OWNER(6);
     *(void**)(uintptr_t)0x002CD138 = OWNER(7);
@@ -1219,11 +1238,11 @@ static void request_for(int side, int kind, int round, GmRegistryItemRequest* re
     switch (kind) {
     case kSnd: req->m_context = &w.maker; req->m_context2 = w.soundOwner; break;
     case kGfx: req->m_context = &w.material; req->m_context2 = &w.graphics; break;
-    case kScn: req->m_context = &w.app->m_sceneOwner; req->m_context2 = (void*)(uintptr_t)(round ? 1 : 0); break;
-    case kCin: req->m_context = &w.app->m_cinemaOwner; break;
-    case kBnd: req->m_context = &w.app->m_sceneOwner; break;
+    case kScn: req->m_context = w.app->m_sceneOwner.Get(); req->m_context2 = (void*)(uintptr_t)(round ? 1 : 0); break;
+    case kCin: req->m_context = w.app->CinemaOwner(); break;
+    case kBnd: req->m_context = w.app->m_sceneOwner.Get(); break;
     case kEv: req->m_context = &w.events.m_owner; break;
-    default: req->m_context = OWNER(7 + round); req->m_context2 = &w.state->m_registry; req->m_context3 = &w.data->m_registryOwner; break;
+    default: req->m_context = OWNER(7 + round); req->m_context2 = &w.state->m_registry; req->m_context3 = w.state->Owner(); break;
     }
 }
 
@@ -1501,6 +1520,7 @@ int main(int argc, char** argv) {
     redirect(0x00071F20, (const void*)o_registry_add);
     redirect(0x00140E40, (const void*)o_set_graph);
     redirect(0x0002F7F0, (const void*)o_scene_load);
+    redirect((uint32_t)(uintptr_t)member_address(&AtSceneDatabaseLoader::Load), (const void*)o_scene_load);
     redirect(0x000C5B30, (const void*)o_cinema_load);
     redirect(0x000C9A00, (const void*)o_event_load);
     // The level's, as in oracle_manifest.cpp.

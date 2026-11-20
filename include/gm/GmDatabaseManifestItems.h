@@ -9,7 +9,9 @@
 #include "at/AtDataRegistry.h"
 #include "at/AtDatabaseLoader.h"
 #include "at/AtNameTableOwner.h"
+#include "at/AtSceneDatabaseLoader.h"
 #include "at/AtSpaceGraph.h"
+#include "gm/GmApp.h"
 #include "gm/GmLevelManifest.h"
 
 // ---- What the items' contexts come from: start-up's objects, not recovered beyond what is named here ---------------------------------------------------------------------------------------
@@ -29,59 +31,9 @@ public:
     static GmAudioDatabaseMaker* s_instance;  // 0x003B3550
 };
 
-// What App+0x5F90 points to: makes and frees the concrete database loader (vftable 0x0028A7D0 of the graphics layer, another branch's) an .AGD file is read into. STANDS FOR the
-// start-up branch's AppGraphics (include/gm/GmApp.h on the branch integrate-batch5), which declares slots 0 to 17; slots 29 and 30 are what this adds. Slots 0 to 28 are not known here.
-class AppGraphics {
-public:
-    virtual void Slot0() = 0;
-    virtual void Slot1() = 0;
-    virtual void Slot2() = 0;
-    virtual void Slot3() = 0;
-    virtual void Slot4() = 0;
-    virtual void Slot5() = 0;
-    virtual void Slot6() = 0;
-    virtual void Slot7() = 0;
-    virtual void Slot8() = 0;
-    virtual void Slot9() = 0;
-    virtual void Slot10() = 0;
-    virtual void Slot11() = 0;
-    virtual void Slot12() = 0;
-    virtual void Slot13() = 0;
-    virtual void Slot14() = 0;
-    virtual void Slot15() = 0;
-    virtual void Slot16() = 0;
-    virtual void Slot17() = 0;
-    virtual void Slot18() = 0;
-    virtual void Slot19() = 0;
-    virtual void Slot20() = 0;
-    virtual void Slot21() = 0;
-    virtual void Slot22() = 0;
-    virtual void Slot23() = 0;
-    virtual void Slot24() = 0;
-    virtual void Slot25() = 0;
-    virtual void Slot26() = 0;
-    virtual void Slot27() = 0;
-    virtual void Slot28() = 0;
-    virtual AtDatabaseLoader* NewLoader() = 0;               // slot 29
-    virtual void DeleteLoader(AtDatabaseLoader* loader) = 0; // slot 30
-};
-
 // What CinemaDatabaseLoaders hands its items. Only its address is taken here.
 struct GmCinemaOwner {
     int m_unknown00;
-};
-
-// The App, at +0x0C of GmHistoryLogs (0x002CB0A8): only the owners the base's words hand their items are known here. STANDS FOR the start-up branch's App (include/gm/GmApp.h on
-// the branch integrate-batch5), with its names: m_graphics, m_unknown5F94 and m_materialOwner are its own; it has +0x60E8 inside m_unknown5F9C and +0x635C at +4 of m_userInterface.
-struct App {
-    char m_unknown0000[0x5F90];
-    AppGraphics* m_graphics;                   // +0x5F90 GraphicsDatabasesLoaders
-    int m_unknown5F94;                         // +0x5F94
-    AtMaterialOwner* m_materialOwner;          // +0x5F98 GraphicsDatabasesLoaders
-    char m_unknown5F9C[0x60E8 - 0x5F9C];
-    AtNameTableOwner m_sceneOwner;             // +0x60E8 SceneDatabasesLoaders and BoundingGeometryDatabase
-    char m_unknown6354[8];
-    GmCinemaOwner m_cinemaOwner;               // +0x635C CinemaDatabaseLoaders
 };
 
 // What EventDatabases hands its items. Only its address is taken here.
@@ -98,76 +50,12 @@ struct GmEventHome {
     static GmEventHome* s_instance;            // 0x003B358C
 };
 
-// The object at +0x04 of GmDynamicNodeState (0x003B357C): only the registry owner at +0x394 is known, the one start-up hands the .ADD library.
-struct GmDataOwners {
-    char m_unknown000[0x394];
-    AtDataRegistryOwner m_registryOwner;       // +0x394
-};
-
-// The name map at 0x002CD138, which is told of each registry InstanceRegistries loads. STANDS FOR the start-up branch's GmRegistryNames (include/gm/GmApp.h on the branch
-// integrate-batch5), where it is not recovered either. NOT recovered: stops with a diagnostic in src/gm/GmDatabaseManifestHost.cpp. Its Release is GmRegistryRelease, in
-// include/gm/GmLevelManifest.h.
-struct GmRegistryNames {
-    void Add(AtDataRegistry* registry);        // 0x00071F20 under the name of its file
-
-    static GmRegistryNames* s_instance;        // 0x002CD138
-};
-
 class AtSceneDatabaseLoader;
 
 // The language's directory, what a SoundDatabaseLoaders path's %s becomes. 0x003B3BE4; set by start-up, not recovered.
 extern const char* g_audioLanguage;
 
 // ---- What the scene, cinema and event items hold in place. Only their life cycle and the scene's walks are recovered; their loads are not. -----------------------------------------------
-
-// .ASD, the scene's database loader. Vftable 0x002749C4, 0x78 bytes. STANDS FOR at/asd's AtSceneDatabaseLoader (include/at/AtSceneDatabaseLoader.h on the branch integrate-batch5, not on
-// master), with its names: its constructor, destructor, Clear, SpaceGraphAt and LoaderAt are that branch's, and are written here only so that this branch's items can be made and freed; they
-// are in src/gm/GmDatabaseManifestAsd.cpp, recorded nowhere, and its Load stops with a diagnostic. When that branch is merged, delete this declaration and that file, and move InsertInto and
-// RemoveFrom (recovered here, not there) into its class. The arrays' classes are that branch's too; here they are opaque, each deleted through its slot 0.
-class AtSceneDatabaseEntry {
-public:
-    virtual ~AtSceneDatabaseEntry();           // slot 0, the vector deleting destructor of the array's class
-};
-
-class AtSceneDatabaseLoader {
-public:
-    AtSceneDatabaseLoader();                   // 0x0002EE30 (at/asd's)
-    virtual ~AtSceneDatabaseLoader();          // slot 0; 0x0002F790 vector deleting, 0x0002F660 complete: clears only when it has an owner (at/asd's)
-    virtual void Clear();                      // slot 1, 0x0002F470 (at/asd's) the space graphs go through their destructor, a count of 0 not being tested
-
-    void Load(AtNameTableOwner* owner, const char* name, int mode);  // 0x0002F7F0 (at/asd's) here a seam that stops with a diagnostic
-    AtSpaceGraph* SpaceGraphAt(unsigned int index);          // 0x0002ED40 (at/asd's)
-    AtSceneDatabaseLoader* LoaderAt(unsigned int index);     // 0x0002ED60 (at/asd's)
-    void InsertInto(AtSpaceGraph* graph);      // 0x0002ED70 recovered here: its nodes, then its nested loaders
-    void RemoveFrom(AtSpaceGraph* graph);      // 0x0002EDD0 recovered here: its nested loaders, then its nodes
-
-    AtNameTableOwner* m_owner;                 // +0x04
-    AtScene* m_nodes;                          // +0x08
-    AtSceneDatabaseEntry* m_modifiers;         // +0x0C
-    AtSceneDatabaseEntry* m_emitters;          // +0x10
-    AtSceneDatabaseEntry* m_lensFlares;        // +0x14
-    AtSpaceGraph* m_spaceGraphs;               // +0x18 0x60 bytes each
-    AtSceneDatabaseEntry* m_geometry;          // +0x1C
-    AtSceneDatabaseEntry* m_cellGraphs;        // +0x20
-    AtSceneDatabaseEntry* m_strings;           // +0x24
-    AtSceneDatabaseEntry* m_imageDraws;        // +0x28
-    AtSceneDatabaseEntry* m_textDraws;         // +0x2C
-    AtSceneDatabaseLoader* m_loaders;          // +0x30
-    GmNameMap m_nodesByName;                   // +0x34
-    GmNameMap m_spaceGraphsByName;             // +0x48
-    unsigned short m_nodeCount;                // +0x5C
-    unsigned short m_modifierCount;            // +0x5E
-    unsigned short m_emitterCount;             // +0x60
-    unsigned short m_lensFlareCount;           // +0x62
-    unsigned short m_cellGraphCount;           // +0x64
-    unsigned short m_spaceGraphCount;          // +0x66
-    unsigned short m_geometryCount;            // +0x68
-    unsigned short m_stringCount;              // +0x6A
-    unsigned short m_imageDrawCount;           // +0x6C
-    unsigned short m_textDrawCount;            // +0x6E
-    unsigned short m_loaderCount;              // +0x70
-    char** m_loaderNames;                      // +0x74
-};
 
 // What a cinema database's five arrays hold: classes not recovered, each deleted through its slot 0.
 class AtCinemaDatabaseEntry {
@@ -342,17 +230,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(App, m_graphics) == 0x5F90, "App::m_graphics");
-static_assert(offsetof(App, m_materialOwner) == 0x5F98, "App::m_materialOwner");
-static_assert(offsetof(App, m_sceneOwner) == 0x60E8, "App::m_sceneOwner");
-static_assert(offsetof(App, m_cinemaOwner) == 0x635C, "App::m_cinemaOwner");
-static_assert(offsetof(GmDataOwners, m_registryOwner) == 0x394, "GmDataOwners::m_registryOwner");
-static_assert(offsetof(AtSceneDatabaseLoader, m_spaceGraphs) == 0x18, "AtSceneDatabaseLoader::m_spaceGraphs");
-static_assert(offsetof(AtSceneDatabaseLoader, m_nodesByName) == 0x34, "AtSceneDatabaseLoader::m_nodesByName");
-static_assert(offsetof(AtSceneDatabaseLoader, m_nodeCount) == 0x5C, "AtSceneDatabaseLoader::m_nodeCount");
-static_assert(offsetof(AtSceneDatabaseLoader, m_spaceGraphCount) == 0x66, "AtSceneDatabaseLoader::m_spaceGraphCount");
-static_assert(offsetof(AtSceneDatabaseLoader, m_loaderCount) == 0x70, "AtSceneDatabaseLoader::m_loaderCount");
-static_assert(sizeof(AtSceneDatabaseLoader) == 0x78, "AtSceneDatabaseLoader");
 static_assert(sizeof(AtCinemaDatabase) == 0x28, "AtCinemaDatabase");
 static_assert(sizeof(AtEventList) == 0x0C, "AtEventList");
 static_assert(offsetof(AtEventDatabase, m_list) == 0x14, "AtEventDatabase::m_list");

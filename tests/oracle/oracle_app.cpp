@@ -403,6 +403,7 @@ int AppDevice::RunFrame() { L('BAD', 9106); return 0; }
 GSLOT(0) GSLOT(1) GSLOT(2) GSLOT(3) GSLOT(4) GSLOT(5) GSLOT(6) GSLOT(7) GSLOT(8) GSLOT(9) GSLOT(10) GSLOT(11) GSLOT(12) GSLOT(13) GSLOT(14) GSLOT(15) GSLOT(16) GSLOT(17)
 GSLOT(18) GSLOT(19) GSLOT(20) GSLOT(21) GSLOT(22) GSLOT(23) GSLOT(24) GSLOT(25) GSLOT(26) GSLOT(27) GSLOT(28)
 AtDatabaseLoader* AppGraphics::DatabaseLoader() { L('BAD', 9229); return 0; }
+void AppGraphics::DeleteLoader(AtDatabaseLoader*) { L('BAD', 9230); }
 void AppAtlasLayer::Slot0() { L('BAD', 9300); }
 void AppAtlasLayer::Init(const AppAtlasConfig*, void*, void*) { L('BAD', 9301); }
 void AppViewport::SetScreenSize(int w, int h) { d_viewport(this, nullptr, w, h); }
@@ -1356,7 +1357,7 @@ int main(int argc, char** argv) {
     GmRegistryNames::s_instance = (GmRegistryNames*)TOKEN(12);
     // The data root: an owner at +0x394 of what +4 points to (token 10), and a registry at +0x2C.
     GmDataRoot* root = (GmDataRoot*)std::calloc(1, sizeof(GmDataRoot));
-    root->m_ownerBase = (char*)TOKEN(10) - 0x394;
+    root->m_app = (App*)((char*)TOKEN(10) - 0x394);
     orig_u32(0x003B357C) = (uint32_t)(uintptr_t)root;
     GmDataRoot::s_instance = root;
     // Heaps the original's helpers check.

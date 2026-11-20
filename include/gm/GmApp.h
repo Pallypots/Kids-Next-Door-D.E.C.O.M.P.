@@ -17,7 +17,9 @@
 #include "at/AtHeap.h"
 #include "at/AtIoMountManager.h"
 #include "at/AtMemory.h"
+#include "at/AtNameTableOwner.h"
 #include "gm/GmAppSettings.h"
+#include "gm/GmDataRoot.h"
 #include "gm/GmSocket.h"
 
 class App;
@@ -94,7 +96,8 @@ public:
     virtual void Slot26();
     virtual void Slot27();
     virtual void Slot28();
-    virtual AtDatabaseLoader* DatabaseLoader();  // slot 29
+    virtual AtDatabaseLoader* DatabaseLoader();  // slot 29 makes a concrete database loader (the level manifest's GraphicsDatabasesLoaders too)
+    virtual void DeleteLoader(AtDatabaseLoader* loader);  // slot 30 frees what slot 29 made (gm/dbmanifest)
 };
 
 // The layer objects that GmApp's start-up initialises, one for each AtAp layer. Only the first two are reached here: the atlas layer's at +0x6450, which is a
@@ -311,15 +314,7 @@ public:
     void Update(int time);           // 0x0006DEA0
 };
 
-// The registry at +0x2C of the object at 0x003B357C, and the members of AtDataRegistry the start-up calls that are not recovered (they belong to the .ADR work).
-struct GmDataRoot {
-    void* m_unknown00;
-    char* m_ownerBase;               // +0x04 the registries' owner lies at +0x394 of what this points to
-    char m_unknown08[0x24];
-    AtDataRegistry m_registry;       // +0x2C
-    AtDataRegistryOwner* Owner() { return (AtDataRegistryOwner*)(m_ownerBase + 0x394); }
-    static GmDataRoot* s_instance;   // 0x003B357C
-};
+// The object at 0x003B357C, whose registry at +0x2C start-up hangs every registry under: GmDataRoot, include/gm/GmDataRoot.h.
 // AtDataRegistry's AttachUnder, Prepare, SetFileName and FindPath, which start-up calls, are declared with the class (include/at/AtDataRegistry.h) and recovered by at/datalookup.
 // The object at 0x003B3524 keeps the library's registry and its root node; the name map at 0x002CD138 is told of the registry. Neither is recovered.
 struct GmRegistryUser {
@@ -390,6 +385,8 @@ template <class T, unsigned int N> struct AppPart {
     T* Get() { return reinterpret_cast<T*>(m_bytes); }
     T* operator->() { return Get(); }
 };
+
+struct GmCinemaOwner;  // include/gm/GmDatabaseManifestItems.h
 
 // ---- App ------------------------------------------------------------------------------------------------------------
 
@@ -538,7 +535,9 @@ public:
     char m_unknown60D4[8];                       // +0x60D4
     AppPart<AppSceneLayer, 4> m_scene;           // +0x60DC
     int m_sceneRunning;                          // +0x60E0
-    char m_unknown60E4[0x274];                   // +0x60E4 +0x60E8 is handed on
+    char m_unknown60E4[4];                       // +0x60E4
+    AppPart<AtNameTableOwner, 0x26C> m_sceneOwner;  // +0x60E8 the scene layer's owner: handed on, and the level manifest's SceneDatabasesLoaders and BoundingGeometryDatabase items get it
+    char m_unknown6354[4];                       // +0x6354
     AppPart<AppUserInterfaceLayer, 0xF4> m_userInterface;  // +0x6358
     int m_userInterfaceRunning;                  // +0x644C
     AppPart<AppAtlasLayer, 4> m_atlas;           // +0x6450
@@ -595,7 +594,12 @@ public:
     static unsigned int s_memoryTotal;           // 0x003B3BE0
     static unsigned int s_memoryOverhead;        // 0x003B3BDC
     static FaAcPlayerGameStateData* s_gameState; // 0x003B3530
+
+    // The level manifest's CinemaDatabaseLoaders items get +0x635C, at +4 of the user interface layer's object (gm/dbmanifest); only its address is taken.
+    GmCinemaOwner* CinemaOwner() { return reinterpret_cast<GmCinemaOwner*>(m_userInterface.m_bytes + 4); }
 };
+
+inline AtDataRegistryOwner* GmDataRoot::Owner() { return reinterpret_cast<AtDataRegistryOwner*>(m_app->m_dataManagement.m_bytes + 4); }
 
 // The game's main, 0x00011030. The C library calls it as main with (0, 0, 0); the third argument is not read. Returns 1. In src/gm/GmMain.cpp, which only a
 // program links, since a library cannot hold a main.

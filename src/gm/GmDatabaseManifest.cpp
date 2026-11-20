@@ -78,7 +78,6 @@ template <class T> T* As(GmManifestItem* first) {
 
 GmAudioDatabaseMaker* GmAudioDatabaseMaker::s_instance;
 GmEventHome* GmEventHome::s_instance;
-GmRegistryNames* GmRegistryNames::s_instance;
 const char* g_audioLanguage;
 
 // ---- GmDatabaseManifest -----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -126,7 +125,7 @@ void GmDatabaseManifest::OnToken(int token, AtIoTokenizer* tokenizer) {
         request.m_context2 = 0;
         m_sceneDatabaseCount = tokenizer->ExpectCount();
         m_sceneDatabases = ReadItemArray<GmSceneDatabaseItem>(m_sceneDatabaseCount);
-        request.m_context = &GmHistoryLogs::s_instance->m_app->m_sceneOwner;
+        request.m_context = GmHistoryLogs::s_instance->m_app->m_sceneOwner.Get();
         // After each path, InSpaceGraph or NotInSpaceGraph, which is read whatever it is, then InsertInSnoopie, which is read only if it is there, and means nothing here.
         for (unsigned int i = 0; i < m_sceneDatabaseCount; i++) {
             strcpy(request.m_path, tokenizer->ExpectString(0x7F));
@@ -143,7 +142,7 @@ void GmDatabaseManifest::OnToken(int token, AtIoTokenizer* tokenizer) {
         request.m_context = 0;
         m_cinemaDatabaseCount = tokenizer->ExpectCount();
         m_cinemaDatabases = ReadItemArray<GmCinemaDatabaseItem>(m_cinemaDatabaseCount);
-        request.m_context = &GmHistoryLogs::s_instance->m_app->m_cinemaOwner;
+        request.m_context = GmHistoryLogs::s_instance->m_app->CinemaOwner();
         for (unsigned int i = 0; i < m_cinemaDatabaseCount; i++) {
             strcpy(request.m_path, tokenizer->ExpectString(0x7F));
             As<GmCinemaDatabaseItem>(m_cinemaDatabases)[i].Configure(&request);
@@ -155,7 +154,7 @@ void GmDatabaseManifest::OnToken(int token, AtIoTokenizer* tokenizer) {
         request.m_context = 0;
         m_boundingGeometryCount = tokenizer->ExpectCount();
         m_boundingGeometry = ReadItemArray<GmBoundingGeometryItem>(m_boundingGeometryCount);
-        request.m_context = &GmHistoryLogs::s_instance->m_app->m_sceneOwner;
+        request.m_context = GmHistoryLogs::s_instance->m_app->m_sceneOwner.Get();
         for (unsigned int i = 0; i < m_boundingGeometryCount; i++) {
             strcpy(request.m_path, tokenizer->ExpectString(0x7F));
             As<GmBoundingGeometryItem>(m_boundingGeometry)[i].Configure(&request);
@@ -181,8 +180,8 @@ void GmDatabaseManifest::OnToken(int token, AtIoTokenizer* tokenizer) {
         registry.m_context3 = 0;
         m_registryCount = tokenizer->ExpectCount();
         m_registries = ReadItemArray<GmRegistryItem>(m_registryCount);
-        registry.m_context2 = &GmDynamicNodeState::s_instance->m_registry;
-        registry.m_context3 = &GmDynamicNodeState::s_instance->m_dataOwners->m_registryOwner;
+        registry.m_context2 = &GmDataRoot::s_instance->m_registry;
+        registry.m_context3 = GmDataRoot::s_instance->Owner();
         registry.m_context = GmRegistryNames::s_instance;
         for (unsigned int i = 0; i < m_registryCount; i++) {
             strcpy(registry.m_path, tokenizer->ExpectString(0x7F));
@@ -351,7 +350,7 @@ void GmGraphicsDatabaseItem::Unknown0() {
 
 void GmGraphicsDatabaseItem::Run() {
     const int mode = g_usePlatformBinary != 0 ? 2 : 0;
-    m_loader = m_maker->NewLoader();
+    m_loader = m_maker->DatabaseLoader();
     char unused[0x200];
     AtFormat(unused, "%3s][%s", m_extension, m_path);
     m_loader->Load(m_owner, m_path, mode, 0, 1);

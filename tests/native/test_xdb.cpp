@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "at/AtAudioBank.h"
 #include "at/AtGrD3DDatabase.h"
 #include "at/AtHeap.h"
 #include "at/AtIoTokenizer.h"
@@ -115,7 +116,7 @@ int main() {
     context.m_stackSize = 4;
     context.m_stack = stack;
     AtIoFileRef::s_context = &context;
-    AtIoBinaryFile::s_context = &context;
+    AtAudioBankFile::s_context = &context;  // loader's AtIoBinaryFile, folded into afd's AtAudioBankFile in batch 5
 
     static int token;
     AtIoTokenFile::s_heap = &token;

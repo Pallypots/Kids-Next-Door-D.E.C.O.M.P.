@@ -11,8 +11,6 @@ void StopHere(const char* what) {
 }
 }
 
-void AtSceneDatabaseLoader::Load(AtNameTableOwner*, const char*, int) { StopHere("Scene database loader (0x0002F7F0) is at/asd's, not on this branch"); }
 void AtCinemaDatabase::Load(GmCinemaOwner*, const char*, int) { StopHere("Cinema databases (0x000C5B30) are not recovered"); }
 void AtEventDatabase::Load(GmEventOwner*, const char*, int) { StopHere("Event databases (0x000C9A00) are not recovered"); }
-void GmRegistryNames::Add(AtDataRegistry*) { StopHere("Registry names: 0x00071F20 is not recovered"); }
 void GmSpaceGraphOwner::SetGraph(AtSpaceGraph*) { StopHere("Space graph owner: 0x00140E40 is not recovered"); }

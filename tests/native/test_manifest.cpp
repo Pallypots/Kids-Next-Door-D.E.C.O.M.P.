@@ -172,9 +172,9 @@ int main() {
     GmDynamicNodeLoader::s_instance = (GmDynamicNodeLoader*)&nodeLoader;
     GmSpaceGraphOwner graphOwner = {};
     GmSpaceGraphOwner::s_instance = &graphOwner;
-    GmDynamicNodeState nodeState = {};
+    GmDataRoot nodeState = {};
     nodeState.m_unknown28 = 1;
-    GmDynamicNodeState::s_instance = &nodeState;
+    GmDataRoot::s_instance = &nodeState;
     int music;
     GmMusicManager::s_instance = (GmMusicManager*)&music;
     static Fs fs;

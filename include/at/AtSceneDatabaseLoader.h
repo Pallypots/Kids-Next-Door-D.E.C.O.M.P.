@@ -5,7 +5,7 @@
 //
 //   NodeDatabase[n] { "name" ... }   and likewise ModifierDatabase, SpaceGraph, BoundingGeometryDatabase, DatabaseLoader, EmitterDatabase, LensFlareDatabase, CellGraphDatabase, StringDatabase, ImageDrawDatabase, TextDrawDatabase
 //
-// The 409 real files use only NodeDatabase, BoundingGeometryDatabase, EmitterDatabase, ModifierDatabase, SpaceGraph and CellGraphDatabase. Walking the nodes for two things the game calls after loading, 0x0002ED70 and 0x0002EDD0, is not recovered.
+// The 409 real files use only NodeDatabase, BoundingGeometryDatabase, EmitterDatabase, ModifierDatabase, SpaceGraph and CellGraphDatabase. Walking the nodes into and out of a space graph after loading, 0x0002ED70 and 0x0002EDD0, is gm/dbmanifest's (src/gm/GmDatabaseManifest.cpp).
 #pragma once
 
 #include "at/AtBoundingGeometry.h"
@@ -37,6 +37,8 @@ public:
     AtScene* NodeDatabaseAt(unsigned int index);          // 0x0002ED20
     AtSpaceGraph* SpaceGraphAt(unsigned int index);       // 0x0002ED40
     AtSceneDatabaseLoader* LoaderAt(unsigned int index);  // 0x0002ED60
+    void InsertInto(AtSpaceGraph* graph);     // 0x0002ED70 its nodes, then its nested loaders. src/gm/GmDatabaseManifest.cpp (gm/dbmanifest)
+    void RemoveFrom(AtSpaceGraph* graph);     // 0x0002EDD0 its nested loaders, then its nodes. src/gm/GmDatabaseManifest.cpp (gm/dbmanifest)
 
     static void SetHeap(void* heap);          // 0x0002E200
 

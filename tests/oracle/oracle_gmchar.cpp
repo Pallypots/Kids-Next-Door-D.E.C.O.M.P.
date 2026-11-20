@@ -1014,7 +1014,7 @@ int main(int argc, char** argv) {
     *(void**)(state + 4) = holder;
     holder->m_device = (AtSceneDevice*)device;
     *(void**)(uintptr_t)0x003B357C = state;
-    GmDynamicNodeState::s_instance = (GmDynamicNodeState*)state;
+    GmDataRoot::s_instance = (GmDataRoot*)state;
     {
         GmNameMapGroup* plain = new (device + 0x1A4, Placement()) GmNameMapGroup;
         GmNameSpaceDb* spaces = new (device + 0x1BC, Placement()) GmNameSpaceDb;

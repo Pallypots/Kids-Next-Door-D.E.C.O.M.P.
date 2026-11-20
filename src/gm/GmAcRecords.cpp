@@ -21,7 +21,7 @@ void* FindMatAssignment(AtSceneDevice* device, const char* name, const char* ns)
 }
 
 AtSceneDevice* SceneDevice() {
-    return (*(GmSceneDeviceHolder**)((char*)GmDynamicNodeState::s_instance + 4))->m_device;
+    return ((GmSceneDeviceHolder*)GmDataRoot::s_instance->m_app)->m_device;
 }
 
 }  // namespace
