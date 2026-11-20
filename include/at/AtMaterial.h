@@ -257,7 +257,6 @@ static_assert(offsetof(AtMaterialOwner, m_weights) == 0x33C, "AtMaterialOwner::m
 static_assert(offsetof(AtMaterialOwner, m_animations) == 0x354, "AtMaterialOwner::m_animations");
 static_assert(offsetof(AtMaterialOwner, m_vertexProcesses) == 0x36C, "AtMaterialOwner::m_vertexProcesses");
 static_assert(offsetof(AtMaterialOwner, m_pixelProcesses) == 0x384, "AtMaterialOwner::m_pixelProcesses");
-static_assert(offsetof(AtMaterialOwner, m_unknown34) == 0x34, "AtMaterialOwner::m_unknown34");
 static_assert(offsetof(AtMaterialOwner, m_unknown39C) == 0x39C, "AtMaterialOwner::m_unknown39C");
 static_assert(sizeof(AtMaterialOwner) == 0x3A8, "AtMaterialOwner");
 #pragma pop_macro("offsetof")

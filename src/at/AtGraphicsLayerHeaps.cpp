@@ -1,0 +1,39 @@
+// The graphics layer's heap words (at/grlayer), each written by one of the setters in src/at/AtGraphicsLayer.cpp and read where its class allocates.
+// In a file of their own so that code allocating from one (the graphics factory's adapter list, at/grfactory) does not link the layer itself.
+#include "at/AtGraphicsLayer.h"
+
+void* g_heap3B23DC;
+void* g_heap2C7C38;
+void* g_heap3B23D8;
+void* g_heap2C7FF0;
+void* g_heap2C635C;
+void* g_heap2C63E8;
+void* g_heap3B23D4;
+void* g_heap3B1FC4;
+void* g_heap2C6358;
+void* g_heap2CB08C;
+void* g_heap2C9C08;
+void* g_heap3B13D4;
+void* g_heap2C637C;
+void* g_heap3B1F50;
+void* g_heap3B23D0;
+void* g_heap3B1FA0;
+void* g_heap3B1F9C;
+void* g_heap2C6384;
+void* g_heap2C6388;
+void* g_heap3B1FC0;
+void* g_heap3B1FBC;
+void* g_heap3B1FB8;
+void* g_heap3B1FB4;
+void* g_heap3B1FB0;
+void* g_heap3B1FAC;
+void* g_heap3B1FA8;
+void* g_heap3B1FA4;
+void* g_heap3B13CC;
+void* g_heap3B1F98;
+void* g_heap3B1F70;
+void* g_heap3B1F54;
+void* g_heap3B13E0;
+void* g_heap3B13DC;
+void* g_heap3B13D8;
+void* g_heap3B13D0;

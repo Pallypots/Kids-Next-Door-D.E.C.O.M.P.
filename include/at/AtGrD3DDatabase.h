@@ -449,7 +449,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(sizeof(AtMaterialOwner) == 0x39C, "AtMaterialOwner");
 static_assert(offsetof(AtGrD3DOwner, m_textureDatabases) == 0x3338, "AtGrD3DOwner::m_textureDatabases");
 static_assert(offsetof(AtGrD3DOwner, m_meshDatabases) == 0x3340, "AtGrD3DOwner::m_meshDatabases");
 static_assert(offsetof(AtGrD3DOwner, m_fontDatabases) == 0x3344, "AtGrD3DOwner::m_fontDatabases");
