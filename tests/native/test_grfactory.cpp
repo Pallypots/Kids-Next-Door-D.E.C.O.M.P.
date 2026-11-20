@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "at/AtCoordSys.h"
+#include "at/AtGrD3DTextureLoad.h"
 #include "at/AtGraphicsDevice.h"
 #include "at/AtGraphicsFactory.h"
 #include "at/AtGraphicsLayer.h"
@@ -18,15 +19,7 @@ static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
 
 // ---- stand-ins for src/at/AtGraphicsDeviceHost.cpp ------------------------------------------------------------------------
-void AtGfxConstructTextureA(void* at) { std::memset(at, 0, 0x50); }
-void AtGfxDestroyTextureA(void*) {}
-void AtGfxConstructTexture2D(void* at) { std::memset(at, 0, 0x34); }
-void AtGfxDestroyTexture2D(void*) {}
-void AtGfxConstructTextureDatabase(void* at) { std::memset(at, 0, 0x58); }
-void AtGfxDestroyTextureDatabase(void*) {}
-AtIndexArrayXbox::~AtIndexArrayXbox() {}
 AtGfxBufferSet::~AtGfxBufferSet() {}
-AtMeshDatabaseXbox::~AtMeshDatabaseXbox() {}
 AtGfxResourceXbox::~AtGfxResourceXbox() {}
 
 // ---- Direct3D doubles -----------------------------------------------------------------------------------------------------
@@ -84,15 +77,15 @@ bool wide_is(const unsigned short* w, const char* s) {
 
 void test_formats() {
     AtPixelFormat f;
-    CHECK(AtD3DFormatToPixelFormat(0x06, &f, 1) == 1);  // A8R8G8B8, swizzled
+    CHECK(AtGrD3DFormatFromDevice(0x06, &f, 1) == 1);  // A8R8G8B8, swizzled
     CHECK(f.m_flags == (AtPixelFormat::kRgba | AtPixelFormat::kSwizz) && f.m_bits == 32);
-    CHECK(AtD3DFormatToPixelFormat(0x06, &f, 0) == 1);
+    CHECK(AtGrD3DFormatFromDevice(0x06, &f, 0) == 1);
     CHECK(f.m_flags == AtPixelFormat::kRgba);
-    CHECK(AtD3DFormatToPixelFormat(0x12, &f, 0) == 1);  // LIN_A8R8G8B8
+    CHECK(AtGrD3DFormatFromDevice(0x12, &f, 0) == 1);  // LIN_A8R8G8B8
     CHECK(f.m_flags == AtPixelFormat::kRgba && f.m_bits == 32);
-    CHECK(AtD3DFormatToPixelFormat(0x0C, &f, 1) == 1);  // DXT1
+    CHECK(AtGrD3DFormatFromDevice(0x0C, &f, 1) == 1);  // DXT1
     CHECK(f.m_flags == AtPixelFormat::kDxt1 && f.m_bits == 4);
-    CHECK(AtD3DFormatToPixelFormat(0x99, &f, 1) == 0);
+    CHECK(AtGrD3DFormatFromDevice(0x99, &f, 1) == 0);
     CHECK(f.m_flags == 0 && f.m_bits == 0);
 }
 

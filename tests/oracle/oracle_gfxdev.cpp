@@ -133,15 +133,7 @@ static void compare_logs(const char* what) {
 
 // ---- the seams of src/at/AtGraphicsDeviceHost.cpp: the original's own code for the texture work's classes ----------------
 typedef void(__fastcall* Ctor)(void* self, void* unused);
-void AtGfxConstructTextureA(void* p) { at<Ctor>(0x000FCEE0)(p, nullptr); }
-void AtGfxDestroyTextureA(void* p) { at<Ctor>(0x000FD8C0)(p, nullptr); }
-void AtGfxConstructTexture2D(void* p) { at<Ctor>(0x000FC630)(p, nullptr); }
-void AtGfxDestroyTexture2D(void* p) { at<Ctor>(0x000FCCC0)(p, nullptr); }
-void AtGfxConstructTextureDatabase(void* p) { at<Ctor>(0x0010FFC0)(p, nullptr); }
-void AtGfxDestroyTextureDatabase(void* p) { at<Ctor>(0x001101D0)(p, nullptr); }
-AtIndexArrayXbox::~AtIndexArrayXbox() { if (g_recording) g_log[g_side].add('X', 1); }
 AtGfxBufferSet::~AtGfxBufferSet() { if (g_recording) g_log[g_side].add('X', 2); }
-AtMeshDatabaseXbox::~AtMeshDatabaseXbox() { if (g_recording) g_log[g_side].add('X', 3); }
 AtGfxResourceXbox::~AtGfxResourceXbox() { if (g_recording) g_log[g_side].add('X', 4); }
 
 // ---- comparing blocks -----------------------------------------------------------------------------------------------------
@@ -272,7 +264,7 @@ static void test_layers() {
             uint32_t seed = 99;
             for (GmNameMapGroup* g : groups) garble((char*)g - 4, 4 + sizeof(GmNameMapGroup), seed++);
             garble(o, 0x34, 5);  // the base's words
-            o->m_unknown34 = 0x34;
+            o->m_textureLimits = (AtGrD3DTextureLimits*)0x34;
             o->m_unknown39C = 0x39C;
             o->m_unknown3A0 = 0x3A0;
             o->m_unknown3A4 = 0x3A4;
@@ -627,9 +619,13 @@ static void build_maps() {
     g_vtables[vtable_of<AtGfxDrawListsBase>()] = 0x00288E78;
     g_vtables[vtable_of<AtGfxDrawLists>()] = 0x00288EC0;
     g_vtables[vtable_of<AtGeometryArray>()] = 0x002762B8;
-    g_vtables[vtable_of<AtIndexArrayXbox>()] = 0x00289358;
+    g_vtables[vtable_of<AtGrD3DIndexArray>()] = 0x00289358;
     g_vtables[vtable_of<AtGfxBufferSet>()] = 0x002893DC;
-    g_vtables[vtable_of<AtMeshDatabaseXbox>()] = 0x0028A730;
+    g_vtables[vtable_of<AtGrD3DMeshDatabase>()] = 0x0028A730;
+    g_vtables[vtable_of<AtGrD3DSurface2D>()] = 0x00289768;
+    g_vtables[vtable_of<AtGrD3DPalette>()] = 0x00289274;
+    g_vtables[vtable_of<AtGrD3DTexture2D>()] = 0x00289700;
+    g_vtables[vtable_of<AtGrD3DTextureDatabase>()] = 0x0028A6E0;
     g_vtables[vtable_of<AtGfxResource>()] = 0x0028B3C0;
     g_vtables[vtable_of<AtGfxResourceBlock>()] = 0x00289A6C;
     g_vtables[vtable_of<AtGfxResourceXbox>()] = 0x0028AFC4;

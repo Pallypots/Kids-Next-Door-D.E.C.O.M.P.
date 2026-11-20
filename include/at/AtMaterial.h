@@ -54,7 +54,8 @@ struct AtMaterialOwner : AtDisplayDevice {
     virtual void* RenderTarget0();     // slot 13, pure. The concrete device's member at +0x3B0
     virtual void* RenderTarget1();     // slot 14, pure. The concrete device's member at +0x400
     virtual AtGfxContext* Context();   // slot 15, pure
-    virtual AtGfxDrawLists* DrawLists();  // slot 16, pure
+    // Slot 16, pure: the concrete device's draw lists (+0x3E14), which also choose the format a texture is made in (called at 0x0011CA33; at/texload knew them as AtGrD3DFormatChooser).
+    virtual AtGfxDrawLists* DrawLists();
     virtual AtMatrixDevice* MatrixDevice();  // slot 17, pure. 0x0001A68C hands what it returns to AtCoordSysDatabase::Load. Stops with a diagnostic here; the concrete device's returns its member.
     // Slot 18, pure: the object whose slot made the concrete device, the graphics factory (at/grfactory's AtGraphicsFactory, slot 3), called at 0x00012CC2 and 0x00013245. The
     // Flash code knows that factory as AtFlashGraphicsFactory (include/at/AtFlashShape.h): the same table, not yet folded into one class.
@@ -92,7 +93,8 @@ struct AtMaterialOwner : AtDisplayDevice {
     void* FindFont(const char* name, const char* ns);       // 0x00049290 ns may be empty or null. src/at/AtDrawItem.cpp
     void* FindImage(const char* name, const char* ns);      // 0x00048E50 likewise
 
-    int m_unknown34;                   // +0x34 cleared by the constructor and Reset
+    // +0x34 cleared by the constructor and Reset: the sizes the device can make a texture in, read when one is made (0x0011CA30, 0x0011CAFE). See include/at/AtGrD3DTextureLoad.h
+    class AtGrD3DTextureLimits* m_textureLimits;
     class AtAnimationDevice* m_animationDevice;  // +0x38 include/at/AtAnimationDatabase.h; the constructor leaves it
     GmNameMapGroup m_textures;         // +0x3C
     GmNameSpaceDb m_textureSpaces;     // +0x54
@@ -242,6 +244,7 @@ static_assert(offsetof(AtMaterialOwner, m_fontSpaces) == 0x270, "AtMaterialOwner
 static_assert(offsetof(AtMaterialOwner, m_images) == 0x294, "AtMaterialOwner::m_images");
 static_assert(offsetof(AtMaterialOwner, m_imageSpaces) == 0x2AC, "AtMaterialOwner::m_imageSpaces");
 static_assert(offsetof(AtMaterialOwner, m_animationDevice) == 0x38, "AtMaterialOwner::m_animationDevice");
+static_assert(offsetof(AtMaterialOwner, m_textureLimits) == 0x34, "AtMaterialOwner::m_textureLimits");
 static_assert(offsetof(AtMaterialOwner, m_meshes) == 0xF0, "AtMaterialOwner::m_meshes");
 static_assert(offsetof(AtMaterialOwner, m_meshSpaces) == 0x108, "AtMaterialOwner::m_meshSpaces");
 static_assert(offsetof(AtMaterialOwner, m_morphAnimations) == 0x21C, "AtMaterialOwner::m_morphAnimations");

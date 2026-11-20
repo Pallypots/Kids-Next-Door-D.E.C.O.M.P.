@@ -102,7 +102,6 @@ public:
 class TestLight : public AtLight {
 public:
     int side, index;
-    void Slot0() override {}
     void Reset() override { g_log[side].add('x', index); }
 };
 

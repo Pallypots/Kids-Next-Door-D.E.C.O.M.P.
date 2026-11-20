@@ -245,7 +245,7 @@ int main() {
         CHECK(meshHeap.m_allocShift == 2);
         CHECK(owner->m_meshDatabases == db && db->m_owner == owner);
         CHECK(db->m_vertexArrays[1].m_owner == owner && db->m_indexArrays[0].m_owner == owner);
-        CHECK(g_unrecovered[0x00122460] == 2 && g_unrecovered[0x000EC890] == 2 && g_unrecovered[0x000F8010] == 1 && g_unrecovered[0x000EECA0] == 1);
+        CHECK(g_unrecovered[0x00122460] == 2 && g_unrecovered[0x000EC890] == 2 && g_unrecovered[0x000F8010] == 0 && g_unrecovered[0x000EECA0] == 1);  // the index array's constructor is recovered (at/gfxdev)
         db->Slot8();
         AtGrD3DMeshDatabase* more = static_cast<AtGrD3DMeshDatabase*>(db->m_more);
         CHECK(more != nullptr && more->m_meshCount == 2 && more->m_owner == owner);

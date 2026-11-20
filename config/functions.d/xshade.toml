@@ -1,0 +1,394 @@
+# The Xbox shader, light, font and image databases, and the items they hold as far as loading, emptying, clearing and destroying need. Names inferred. See include/at/AtGrD3DItems.h and docs/worklog/2026-11-19-xshade.md.
+
+[[function]]
+va = 0x00110230
+size = 18
+symbol = "??0AtGrD3DShader@@QAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "0x00037560, then vftable 0x0028A718; made by 0x001102D0 through the vector constructor"
+
+[[function]]
+va = 0x00110250
+size = 5
+symbol = "??1AtGrD3DShader@@UAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "a jump to 0x00037730; called per element by 0x00110390"
+
+[[function]]
+va = 0x00110260
+size = 25
+symbol = "??0AtGrD3DShaderDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "0x0002B1C0, vftable 0x0028A720, +0x18 cleared; made by 0x001123D0"
+
+[[function]]
+va = 0x001103F0
+size = 122
+symbol = "??1AtGrD3DShaderDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "vftable, the array through its slot 0, 0x0002B380, +0x18 cleared, 0x0002B3A0"
+
+[[function]]
+va = 0x00110280
+size = 67
+symbol = "?Clear@AtGrD3DShaderDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "slot 1: +0x18 through its slot 0 (count 0: freed bare), 0x0002B380, +0x18 cleared"
+
+[[function]]
+va = 0x001102D0
+size = 184
+symbol = "?OnReady@AtGrD3DShaderDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "slot 2: heap 0x002C6380, count +0x14, 0x38 each, ctor 0x00110230, to +0x18; raises -2 and -4"
+
+[[function]]
+va = 0x00110220
+size = 15
+symbol = "?ShaderAt@AtGrD3DShaderDatabase@@UAEPAVAtShader@@I@Z"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "slot 3: +0x18 + i*0x38"
+
+[[function]]
+va = 0x0002AAF0
+size = 10
+symbol = "?SetHeap@AtLightDatabase@@SAXPAX@Z"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "stores 0x002C6378; called at 0x000C7F98 and 0x000C841A"
+
+[[function]]
+va = 0x00036870
+size = 77
+symbol = "??0AtLight@@QAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "vftable 0x00274C78, +4 cleared, +8..+0x3C 1.0, +0x40 1000.0, +0x44 1.0, +0x48 +0x4C 0; called by 0x000EB7D0 and 0x000EBF80"
+
+[[function]]
+va = 0x000369F0
+size = 75
+symbol = "??1AtLight@@UAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "vftable 0x00274C78, then the constructor's values; reached from 0x000EBFD0"
+
+[[function]]
+va = 0x000369A0
+size = 69
+symbol = "?Reset@AtLight@@UAEXXZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "slot 1 of 0x00274C78 and 0x00288B88: the constructor's values; not in the inventory"
+
+[[function]]
+va = 0x000EB7D0
+size = 18
+symbol = "??0AtGrD3DLight@@QAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "0x00036870, vftable 0x00288B88; made by 0x00111210 through the vector constructor"
+
+[[function]]
+va = 0x000EBFD0
+size = 5
+symbol = "??1AtGrD3DLight@@UAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "a jump to 0x000369F0; called per element by 0x001112F0"
+
+[[function]]
+va = 0x001111B0
+size = 26
+symbol = "??0AtGrD3DLightDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "0x0002AB00, +0x18 +0x1C cleared, vftable 0x0028A764; made by 0x00112630"
+
+[[function]]
+va = 0x00111350
+size = 129
+symbol = "??1AtGrD3DLightDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "vftable, the array through its slot 0, +0x18 +0x1C cleared, 0x0002ACB0, 0x0002ACD0"
+
+[[function]]
+va = 0x001111D0
+size = 59
+symbol = "?Clear@AtGrD3DLightDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "slot 1: +0x18 through its slot 0, +0x18 +0x1C cleared, jumps to 0x0002ACB0"
+
+[[function]]
+va = 0x00111210
+size = 219
+symbol = "?MakeLights@AtGrD3DLightDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "slot 2: heap 0x002C6378, count +0x14, 0x50 each, ctor 0x000EB7D0, to +0x18; owner to +0x1C on both paths"
+
+[[function]]
+va = 0x00111190
+size = 18
+symbol = "?LightAt@AtGrD3DLightDatabase@@UAEPAVAtLight@@I@Z"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+evidence = "slot 3: +0x18 + i*0x50"
+
+[[function]]
+va = 0x000EF190
+size = 22
+symbol = "?AddFontDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DFontDatabase@@@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "owner +0x3344, link +0x38; jumped to from 0x00111400"
+
+[[function]]
+va = 0x000EF1B0
+size = 44
+symbol = "?RemoveFontDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DFontDatabase@@@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "owner +0x3344, link +0x38; called by 0x001115D0"
+
+[[function]]
+va = 0x000EF1E0
+size = 22
+symbol = "?AddImageDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DImageDatabase@@@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "owner +0x3348, link +0x30; jumped to from 0x00111A20"
+
+[[function]]
+va = 0x000EF200
+size = 44
+symbol = "?RemoveImageDatabase@AtGrD3DOwner@@QAEXPAVAtGrD3DImageDatabase@@@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "owner +0x3348, link +0x30; called by 0x00111BE0"
+
+[[function]]
+va = 0x001236B0
+size = 90
+symbol = "??0AtGrD3DFont2D@@QAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "0x000FEA00, vftable 0x0028B970, 0x0010FFC0 at +0x64, 0x000FCEE0 at +0xBC; made by 0x00111420"
+
+[[function]]
+va = 0x00123770
+size = 152
+symbol = "??1AtGrD3DFont2D@@UAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "vftable, +0xBC slot 1, +0x64 slot 1, +0x5C cleared if flag 0x200, 0x000FEA50, 0x000FD8C0, 0x001101D0, 0x000FFF60"
+
+[[function]]
+va = 0x00123710
+size = 50
+symbol = "?Free@AtGrD3DFont2D@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 8: +0xBC slot 1, +0x64 slot 1, +0x5C cleared if flag 0x200, jumps to 0x000FEA50"
+
+[[function]]
+va = 0x001238A0
+size = 43
+symbol = "?FreeData@AtGrD3DFont2D@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 10: if flag 0x10, +0xBC slot 1, +0x64 slot 1, jumps to 0x000FEA30"
+
+[[function]]
+va = 0x001115A0
+size = 35
+symbol = "??0AtGrD3DFontDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "0x0002A020, +0x28 +0x2C +0x38 +0x30 +0x34 cleared, vftable 0x0028A774; made by 0x00112760"
+
+[[function]]
+va = 0x001119B0
+size = 79
+symbol = "??1AtGrD3DFontDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "vftable, 0x001115D0, 0x0002A470"
+
+[[function]]
+va = 0x001115D0
+size = 94
+symbol = "?Clear@AtGrD3DFontDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 1: +0x30 freed, 0x000EF1B0 if +0x28, +0x2C through its slot 5, five fields cleared, jumps to 0x0002A410"
+
+[[function]]
+va = 0x00111400
+size = 18
+symbol = "?OnReady@AtGrD3DFontDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 2: owner to +0x28, jumps to 0x000EF190"
+
+[[function]]
+va = 0x00111420
+size = 190
+symbol = "?MakeFonts2D@AtGrD3DFontDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 3: heap 0x002C6370, count +0x1C, 0x10C each, ctor 0x001236B0, to +0x2C; raises -2 and -4"
+
+[[function]]
+va = 0x001113E0
+size = 18
+symbol = "?Font2DAt@AtGrD3DFontDatabase@@UAEPAVAtGrI2DFont@@I@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 6: +0x2C + i*0x10C"
+
+[[function]]
+va = 0x00124580
+size = 90
+symbol = "??0AtGrD3DImage@@QAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "0x00057E30, vftable 0x0028B9B8, 0x0010FFC0 at +0x48, 0x000FCEE0 at +0xA0; made by 0x00111A40"
+
+[[function]]
+va = 0x00124660
+size = 137
+symbol = "??1AtGrD3DImage@@UAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "vftable, +0xA0 slot 1, +0x48 slot 1, 0x00057F00, 0x000FD8C0, 0x001101D0, 0x00058650"
+
+[[function]]
+va = 0x001245E0
+size = 35
+symbol = "?Free@AtGrD3DImage@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 9: +0xA0 slot 1, +0x48 slot 1, jumps to 0x00057F00"
+
+[[function]]
+va = 0x00124730
+size = 43
+symbol = "?FreeData@AtGrD3DImage@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 11: if flag 0x10, +0x48 slot 1, +0xA0 slot 1, jumps to 0x00057ED0"
+
+[[function]]
+va = 0x00111BC0
+size = 29
+symbol = "??0AtGrD3DImageDatabase@@QAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "0x00029BA0, +0x28 +0x2C +0x30 cleared, vftable 0x0028A794; made by 0x00112890"
+
+[[function]]
+va = 0x00111C60
+size = 79
+symbol = "??1AtGrD3DImageDatabase@@UAE@XZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "vftable, 0x00111BE0, 0x00029F60"
+
+[[function]]
+va = 0x00111BE0
+size = 80
+symbol = "?Clear@AtGrD3DImageDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 1: +0x2C through its slot 6, 0x000EF200 if +0x28, three fields cleared, jumps to 0x00029F00"
+
+[[function]]
+va = 0x00111A40
+size = 190
+symbol = "?MakeItems@AtGrD3DImageDatabase@@UAEXXZ"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 2: heap 0x002C6364, count +0x1C, 0xF0 each, ctor 0x00124580, to +0x2C; raises -2 and -4"
+
+[[function]]
+va = 0x00111A20
+size = 18
+symbol = "?OnReady@AtGrD3DImageDatabase@@UAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 3: owner to +0x28, jumps to 0x000EF1E0"
+
+[[function]]
+va = 0x00111A00
+size = 18
+symbol = "?ImageAt@AtGrD3DImageDatabase@@UAEPAVAtImage@@I@Z"
+source = "src/at/AtGrD3DFontImage.cpp"
+subsystem = "at/xshade"
+evidence = "slot 4: +0x2C + i*0xF0"
+
+[[vtable]]
+va = 0x0028A718
+slots = 2
+symbol = "??_7AtGrD3DShader@@6B@"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+
+[[vtable]]
+va = 0x0028A720
+slots = 4
+symbol = "??_7AtGrD3DShaderDatabase@@6B@"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+
+[[vtable]]
+va = 0x00274C78
+slots = 2
+symbol = "??_7AtLight@@6B@"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+
+[[vtable]]
+va = 0x00288B88
+slots = 2
+symbol = "??_7AtGrD3DLight@@6B@"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+
+[[vtable]]
+va = 0x0028A764
+slots = 4
+symbol = "??_7AtGrD3DLightDatabase@@6B@"
+source = "src/at/AtGrD3DShaderDatabase.cpp"
+subsystem = "at/xshade"
+
+[symbols]
+"??_EAtGrD3DShader@@UAEPAXI@Z" = 0x00110390  # vector deleting destructor, compiler-made
+"??_EAtGrD3DShaderDatabase@@UAEPAXI@Z" = 0x001124A0  # vector deleting destructor, compiler-made
+"??_GAtGrD3DShaderDatabase@@UAEPAXI@Z" = 0x001124A0  # the scalar form the candidate's table names; the original's slot 0 is the vector form, which does both
+"??_EAtLight@@UAEPAXI@Z" = 0x00036A40  # deleting destructor of the base light, compiler-made
+"??_GAtLight@@UAEPAXI@Z" = 0x00036A40  # as above
+"??_EAtGrD3DLight@@UAEPAXI@Z" = 0x001112F0  # vector deleting destructor, compiler-made
+"??_EAtGrD3DLightDatabase@@UAEPAXI@Z" = 0x00112700  # vector deleting destructor, compiler-made
+"??_GAtGrD3DLightDatabase@@UAEPAXI@Z" = 0x00112700  # as above
+"?s_heap@AtLightDatabase@@2PAXA" = 0x002C6378
+"??_7AtGrD3DFontDatabase@@6B@" = 0x0028A774  # not recorded as a vftable: slots 5 and 7 stop
+"??_EAtGrD3DFontDatabase@@UAEPAXI@Z" = 0x00112830  # vector deleting destructor, compiler-made
+"??_GAtGrD3DFontDatabase@@UAEPAXI@Z" = 0x00112830  # as above
+"?Slot4@AtGrD3DFontDatabase@@UAEHXZ" = 0x001A2B40  # vftable 0x0028A774 slot 4: returns 1, folded
+"??_7AtGrD3DFont2D@@6B@" = 0x0028B970  # not recorded as a vftable: slots 4, 11, 12 and 13 stop and 9 is the seam
+"??_EAtGrD3DFont2D@@UAEPAXI@Z" = 0x001114E0  # vector deleting destructor, compiler-made
+"??_7AtGrD3DImageDatabase@@6B@" = 0x0028A794  # not recorded as a vftable: slot 5 stops
+"??_EAtGrD3DImageDatabase@@UAEPAXI@Z" = 0x00112960  # vector deleting destructor, compiler-made
+"??_GAtGrD3DImageDatabase@@UAEPAXI@Z" = 0x00112960  # as above
+"??_7AtGrD3DImage@@6B@" = 0x0028B9B8  # not recorded as a vftable: slots 0 to 3, 5 and 14 stop and 10 is the seam
+"??_EAtGrD3DImage@@UAEPAXI@Z" = 0x00111B00  # vector deleting destructor, compiler-made

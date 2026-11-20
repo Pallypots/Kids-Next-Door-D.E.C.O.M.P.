@@ -4,7 +4,9 @@
 #include "at/AtGraphicsLayer.h"
 
 #include "at/AtDatabaseLoader.h"
+#include "at/AtGrD3DTextureLoad.h"
 #include "at/AtGrD3DTextures.h"
+#include "at/AtLight.h"
 #include "at/AtImage.h"
 #include "at/AtMatrixDevice.h"
 #include "at/AtImageDatabase.h"
@@ -28,10 +30,8 @@ void* g_heap3B23D4;
 void* g_heap3B1FC4;
 void* g_heap2C6358;
 void* g_heap2CB08C;
-void* g_heap2CB090;
 void* g_heap2C9C08;
 void* g_heap3B13D4;
-void* g_heap2C6378;
 void* g_heap2C637C;
 void* g_heap3B1F50;
 void* g_heap3B23D0;
@@ -135,10 +135,8 @@ void AtSetHeap3B23D4(void* heap) { g_heap3B23D4 = heap; }
 void AtSetHeap3B1FC4(void* heap) { g_heap3B1FC4 = heap; }
 void AtSetHeap2C6358(void* heap) { g_heap2C6358 = heap; }
 void AtSetHeap2CB08C(void* heap) { g_heap2CB08C = heap; }
-void AtSetHeap2CB090(void* heap) { g_heap2CB090 = heap; }
 void AtSetHeap2C9C08(void* heap) { g_heap2C9C08 = heap; }
 void AtSetHeap3B13D4(void* heap) { g_heap3B13D4 = heap; }
-void AtSetHeap2C6378(void* heap) { g_heap2C6378 = heap; }
 void AtSetHeap2C637C(void* heap) { g_heap2C637C = heap; }
 void AtSetHeap3B1F50(void* heap) { g_heap3B1F50 = heap; }
 void AtSetHeap3B23D0(void* heap) { g_heap3B23D0 = heap; }
@@ -227,11 +225,11 @@ void AtGraphicsSystemBase::SetHeaps(const AtGraphicsConfig* config) {
     AtSetHeap3B1FC4(Or(config->m_heap64, config));
     AtSetHeap2C6358(Or(config->m_heap78, config));
     AtSetHeap2CB08C(Or(config->m_heap80, config));
-    AtSetHeap2CB090(Or(config->m_heap84, config));
+    AtGrIPixelMap::SetHeap(Or(config->m_heap84, config));
     AtTextureDatabase::SetHeap(Or(config->m_textureHeap, config));
     AtSetHeap2C9C08(Or(config->m_heapB8, config));
     AtSetHeap3B13D4(Or(config->m_heapBC, config));
-    AtSetHeap2C6378(Or(config->m_heap4C, config));
+    AtLightDatabase::SetHeap(Or(config->m_heap4C, config));
     AtSetHeap2C637C(Or(config->m_heap74, config));
     AtImageDatabase::SetHeap(Or(config->m_imageHeap, config));
     AtSetHeap3B1F50(Or(config->m_heap94, config));
@@ -281,7 +279,7 @@ void AtGraphicsSetHeaps(const AtGraphicsConfig* config) {
     AtSetHeap3B1FC4(Or(config->m_heap64, config));
     AtSetHeap2C6358(Or(config->m_heap78, config));
     AtSetHeap2CB08C(Or(config->m_heap80, config));
-    AtSetHeap2CB090(Or(config->m_heap84, config));
+    AtGrIPixelMap::SetHeap(Or(config->m_heap84, config));
     if (GmNameMap::s_heap == 0) {
         GmNameMap::SetHeap(Or(config->m_nameMapHeap, config));
     }
@@ -305,7 +303,7 @@ void AtGraphicsSetHeaps(const AtGraphicsConfig* config) {
     AtProgShaderComponent::SetHeap(Or(config->m_progShaderHeap, config));
     AtSetHeap2C6388(Or(config->m_heapC8, config));
     AtSetHeap3B1F98(Or(config->m_heap44, config));
-    AtSetHeap2C6378(Or(config->m_heap4C, config));
+    AtLightDatabase::SetHeap(Or(config->m_heap4C, config));
     AtMatAssignment::SetHeap(Or(config->m_matAssignmentHeap, config));  // ORIGINAL: a second time
     AtMatrixDeviceXbox::SetHeap(Or(config->m_heap68, config));
     AtGrD3DMaterialDatabase::SetHeap(Or(config->m_materialHeap, config));

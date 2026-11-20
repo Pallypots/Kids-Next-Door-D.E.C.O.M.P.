@@ -7,11 +7,12 @@
 
 class AtLightDatabase;
 
-// A light's fields, as far as reading goes. Its other slots and its base class's constructor are not recovered.
+// A light's fields, as far as reading goes. Vftable 0x00274C78. The concrete light of the graphics layer, AtGrD3DLight in include/at/AtGrD3DItems.h, adds nothing but its table.
 class AtLight {
 public:
-    virtual void Slot0() = 0;
-    virtual void Reset() = 0;   // slot 1
+    AtLight();                  // 0x00036870 white, a range of 1000, attenuation 1, 0, 0; no owner. Defined in src/at/AtGrD3DShaderDatabase.cpp
+    virtual ~AtLight();         // slot 0; 0x00036A40 deleting, 0x000369F0 complete: the same values again
+    virtual void Reset();       // slot 1, 0x000369A0 the same values again
 
     // 0x000368C0. Its body, a left curly through its right curly. Any word not in order is reported, and reading goes on. Text that ends inside the body never leaves the loop, unless the report stops.
     void Read(AtMaterialOwner* owner, AtLightDatabase* database, AtIoTokenizer* tokenizer);
@@ -42,7 +43,11 @@ public:
     void Load(AtMaterialOwner* owner, const char* name, int unused);  // 0x0002AC10 name + ".AGL"
     void Read(AtMaterialOwner* owner, AtIoTokenizer* tokenizer);      // 0x0002AB20
 
+    static void SetHeap(void* heap);         // 0x0002AAF0 only the graphics layer reads it; defined in src/at/AtGrD3DShaderDatabase.cpp
+
     unsigned int m_count;                    // +0x14
+
+    static void* s_heap;                     // 0x002C6378
 };
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))

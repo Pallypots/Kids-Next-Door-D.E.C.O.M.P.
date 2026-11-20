@@ -87,7 +87,7 @@ struct AtGraphicsConfig {
     void* m_imageHeap;               // +0x40 AtImageDatabase's
     void* m_heap44;                  // +0x44 0x000F7ED0 (0x003B1F98)
     void* m_heap48;                  // +0x48 0x00028CD0 (0x002C635C)
-    void* m_heap4C;                  // +0x4C 0x0002AAF0 (0x002C6378)
+    void* m_heap4C;                  // +0x4C AtLightDatabase::SetHeap 0x0002AAF0 (0x002C6378, xshade)
     void* m_matAnimationHeap;        // +0x50 AtMatAnimationDatabase's
     void* m_matAssignmentHeap;       // +0x54 AtMatAssignment's
     void* m_matAssignmentDbHeap;     // +0x58 AtMatAssignmentDatabase's
@@ -101,7 +101,7 @@ struct AtGraphicsConfig {
     void* m_heap78;                  // +0x78 0x000283E0 (0x002C6358)
     void* m_heap7C;                  // +0x7C 0x000F58D0 (0x003B1F54)
     void* m_heap80;                  // +0x80 0x00060590 (0x002CB08C)
-    void* m_heap84;                  // +0x84 0x00065B00 (0x002CB090)
+    void* m_heap84;                  // +0x84 AtGrIPixelMap::SetHeap 0x00065B00 (0x002CB090, texload)
     void* m_heap88;                  // +0x88 0x000F93C0 (0x003B1FA0)
     void* m_heap8C;                  // +0x8C 0x0002B420 (0x002C6384)
     void* m_progShaderHeap;          // +0x90 AtProgShaderComponent's
@@ -139,10 +139,8 @@ void AtSetHeap3B23D4(void* heap);    // 0x00100350
 void AtSetHeap3B1FC4(void* heap);    // 0x000FE500
 void AtSetHeap2C6358(void* heap);    // 0x000283E0
 void AtSetHeap2CB08C(void* heap);    // 0x00060590
-void AtSetHeap2CB090(void* heap);    // 0x00065B00
 void AtSetHeap2C9C08(void* heap);    // 0x00059580
 void AtSetHeap3B13D4(void* heap);    // 0x000ED2B0
-void AtSetHeap2C6378(void* heap);    // 0x0002AAF0
 void AtSetHeap2C637C(void* heap);    // 0x0002AD50
 void AtSetHeap3B1F50(void* heap);    // 0x000F5610
 void AtSetHeap3B23D0(void* heap);    // 0x00100340
@@ -177,10 +175,8 @@ extern void* g_heap3B23D4;           // 0x003B23D4
 extern void* g_heap3B1FC4;           // 0x003B1FC4
 extern void* g_heap2C6358;           // 0x002C6358
 extern void* g_heap2CB08C;           // 0x002CB08C
-extern void* g_heap2CB090;           // 0x002CB090
 extern void* g_heap2C9C08;           // 0x002C9C08
 extern void* g_heap3B13D4;           // 0x003B13D4
-extern void* g_heap2C6378;           // 0x002C6378
 extern void* g_heap2C637C;           // 0x002C637C
 extern void* g_heap3B1F50;           // 0x003B1F50
 extern void* g_heap3B23D0;           // 0x003B23D0

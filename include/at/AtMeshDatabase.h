@@ -81,8 +81,8 @@ public:
     unsigned char m_unknown0B; // +0x0B
 };
 
-// An index array: vftable 0x00274D48, nine slots, 0x18 bytes. Its base's reader is recovered; where the indices live is the graphics layer's: the concrete Xbox index array is AtIndexArrayXbox,
-// include/at/AtGraphicsDevice.h, which the matrix device's slot 3 makes (its AtMatrixDeviceItemB, the same class).
+// An index array: vftable 0x00274D48, nine slots, 0x18 bytes. Its base's reader is recovered; where the indices live is the graphics layer's: the concrete Xbox index array is AtGrD3DIndexArray (include/at/AtGrD3DDatabase.h),
+// which the matrix device's slot 3 makes (its AtMatrixDeviceItemB, the same class).
 class AtIndexArray : public AtGeometryArray {
 public:
     enum Flags { kFrequentModify = 1, kInfrequentModify = 2, kFixedSysMem = 4, kFixedSysMemOnly = 8, kIndex8Bit = 0x10, kIndex32Bit = 0x20 };

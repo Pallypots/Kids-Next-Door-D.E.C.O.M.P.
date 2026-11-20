@@ -7,14 +7,15 @@
 //
 // The seams. What is not recovered is behind src/at/AtGrD3DUnrecovered.cpp, whose bodies all go to a handful of functions in src/at/AtGrD3DSeam.cpp. Those stop with a diagnostic; a test supplies them instead:
 //   * The items a mesh database makes (meshes, vertex arrays, index arrays, vertex streams): constructors, destructors, and their binary readers. They hold Direct3D resources.
-//   * The six other kinds of database the loader makes (shaders, lights, fonts, images, vertex and pixel processes; textures and materials are in include/at/AtGrD3DTextures.h): the classes exist, with their sizes and the slots their bases require, and every
-//     body stops, the constructor first. Their items are textures, surfaces and the like.
+//   * The two other kinds of database the loader makes (vertex and pixel processes; textures and materials are in include/at/AtGrD3DTextures.h, shaders, lights, fonts and images in include/at/AtGrD3DItems.h):
+//     the classes exist, with their sizes and the slots their bases require, and every body stops, the constructor first.
 //   * Memory for the graphics processor (0x00205EA0, 0x00205EE0), which a mesh's third block lives in.
 //   * The keys' own slots other than 1, 3, 6 and 14 to 18: allocating, interpolating, and reading text keys. So animations load and cannot yet be sampled.
 #pragma once
 
 #include "at/AtAudioBank.h"
 #include "at/AtDatabaseLoader.h"
+#include "at/AtGrD3DItems.h"
 #include "at/AtGrD3DTextures.h"
 
 class AtSoXboxDatabase;
@@ -61,7 +62,15 @@ struct AtGrD3DOwner : public AtMaterialOwner {
     AtGrD3DTextureDatabase* m_textureDatabases;  // +0x3338 linked through m_next
     AtGrD3DMaterialDatabase* m_materialDatabases;  // +0x333C linked through m_next
     AtGrD3DMeshDatabase* m_meshDatabases;        // +0x3340 linked through m_next
-    char m_unknown3344[0x10];
+    void AddFontDatabase(AtGrD3DFontDatabase* database);      // 0x000EF190 at the head; src/at/AtGrD3DFontImage.cpp
+    void RemoveFontDatabase(AtGrD3DFontDatabase* database);   // 0x000EF1B0 if it is there
+    void AddImageDatabase(AtGrD3DImageDatabase* database);    // 0x000EF1E0 at the head
+    void RemoveImageDatabase(AtGrD3DImageDatabase* database); // 0x000EF200 if it is there
+
+    AtGrD3DFontDatabase* m_fontDatabases;        // +0x3344 linked through m_next
+    AtGrD3DImageDatabase* m_imageDatabases;      // +0x3348 linked through m_next
+    void* m_vertexProcessDatabases;              // +0x334C linked through +0x20, by 0x000EF230 and 0x000EF250; not recovered
+    void* m_pixelProcessDatabases;               // +0x3350 linked through +0x20, by 0x000EF280 and 0x000EF2A0; not recovered
     char m_stageCache[4];                        // +0x3354 the device's texture stages, as a 2D texture's Release sees them; how far it goes is not known
 };
 
@@ -265,7 +274,7 @@ public:
 // Vftable 0x00289358.
 class AtGrD3DIndexArray : public AtIndexArray {
 public:
-    AtGrD3DIndexArray();               // 0x000F8010
+    AtGrD3DIndexArray();               // 0x000F8010 the base, then +0x18 to +0x20 cleared (recovered by at/gfxdev as AtIndexArrayXbox; src/at/AtGraphicsDevice.cpp)
     virtual ~AtGrD3DIndexArray();      // 0x000F84B0
     void ReadBinary(char** records, char** kept);  // 0x000F7EE0
 
@@ -276,8 +285,9 @@ public:
     void Unlock() override;
     void Finish() override;
 
-    AtGrD3DOwner* m_owner;             // +0x18 set by the database as it makes them
-    char m_unknown1C[0x08];
+    AtGrD3DOwner* m_owner;             // +0x18 set by the database as it makes them; the destructor reaches the device's state cache through it
+    void* m_resource;                  // +0x1C
+    void* m_memory;                    // +0x20
 };
 
 // Vftable 0x00288F08, by way of a class whose constructor is 0x0011A0D0. What it is, beyond a block of vertices of some stride, is not known.
@@ -353,56 +363,7 @@ public:
 
 // The texture and material databases: include/at/AtGrD3DTextures.h.
 
-// Vftable 0x0028A720, 0x1C bytes.
-class AtGrD3DShaderDatabase : public AtShaderDatabase {
-public:
-    AtGrD3DShaderDatabase();                  // 0x00110260
-    ~AtGrD3DShaderDatabase() override;        // 0x001103F0
-    void Clear() override;                    // 0x00110280
-    void OnReady() override;                  // 0x001102D0
-    AtShader* ShaderAt(unsigned int index) override;  // 0x00110220
-
-    void* m_shaders;                          // +0x18
-};
-
-// Vftable 0x0028A764, 0x20 bytes.
-class AtGrD3DLightDatabase : public AtLightDatabase {
-public:
-    AtGrD3DLightDatabase();                   // 0x001111B0
-    ~AtGrD3DLightDatabase() override;         // 0x00111350
-    void Clear() override;                    // 0x001111D0
-    void MakeLights(AtMaterialOwner* owner) override;  // 0x00111210
-    AtLight* LightAt(unsigned int index) override;     // 0x00111190
-
-    void* m_lights;                           // +0x18
-    AtMaterialOwner* m_owner;                 // +0x1C
-};
-
-// Vftable 0x0028A774, 0x3C bytes. Its slots 4 and 5 are a binary form, 0x001A2B40 and 0x00111630, which AtFontDatabase::Load never asks for; this class does not override them.
-class AtGrD3DFontDatabase : public AtFontDatabase {
-public:
-    AtGrD3DFontDatabase();                    // 0x001115A0
-    ~AtGrD3DFontDatabase() override;          // 0x001119B0
-    void Clear() override;                    // 0x001115D0
-    void OnReady(AtMaterialOwner* owner) override;  // 0x00111400
-    void MakeFonts2D() override;              // 0x00111420
-    AtGrI2DFont* Font2DAt(unsigned int index) override;  // 0x001113E0
-
-    char m_unknown28[0x14];
-};
-
-// Vftable 0x0028A794, 0x34 bytes.
-class AtGrD3DImageDatabase : public AtImageDatabase {
-public:
-    AtGrD3DImageDatabase();                   // 0x00111BC0
-    ~AtGrD3DImageDatabase() override;         // 0x00111C60
-    void Clear() override;                    // 0x00111BE0
-    void MakeItems() override;                // 0x00111A40
-    void OnReady(AtMaterialOwner* owner) override;  // 0x00111A20
-    AtImage* ImageAt(unsigned int index) override;  // 0x00111A00
-
-    char m_unknown28[0x0C];
-};
+// The shader, light, font and image databases: include/at/AtGrD3DItems.h.
 
 // Vftable 0x0028A7AC, 0x24 bytes.
 class AtGrD3DVertexProcessDatabase : public AtVertexProcessDatabase {
@@ -491,6 +452,8 @@ public:
 static_assert(sizeof(AtMaterialOwner) == 0x39C, "AtMaterialOwner");
 static_assert(offsetof(AtGrD3DOwner, m_textureDatabases) == 0x3338, "AtGrD3DOwner::m_textureDatabases");
 static_assert(offsetof(AtGrD3DOwner, m_meshDatabases) == 0x3340, "AtGrD3DOwner::m_meshDatabases");
+static_assert(offsetof(AtGrD3DOwner, m_fontDatabases) == 0x3344, "AtGrD3DOwner::m_fontDatabases");
+static_assert(offsetof(AtGrD3DOwner, m_pixelProcessDatabases) == 0x3350, "AtGrD3DOwner::m_pixelProcessDatabases");
 static_assert(offsetof(AtGrD3DOwner, m_stageCache) == 0x3354, "AtGrD3DOwner::m_stageCache");
 static_assert(sizeof(AtXkaHeader) == 0x78, "AtXkaHeader");
 static_assert(sizeof(AtXkaAnimation) == 0x60, "AtXkaAnimation");
@@ -507,10 +470,6 @@ static_assert(sizeof(AtGrD3DMesh) == 0x50, "AtGrD3DMesh");
 static_assert(offsetof(AtGrD3DMeshDatabase, m_owner) == 0x24, "AtGrD3DMeshDatabase::m_owner");
 static_assert(offsetof(AtGrD3DMeshDatabase, m_next) == 0x4C, "AtGrD3DMeshDatabase::m_next");
 static_assert(sizeof(AtGrD3DMeshDatabase) == 0x50, "AtGrD3DMeshDatabase");
-static_assert(sizeof(AtGrD3DShaderDatabase) == 0x1C, "AtGrD3DShaderDatabase");
-static_assert(sizeof(AtGrD3DLightDatabase) == 0x20, "AtGrD3DLightDatabase");
-static_assert(sizeof(AtGrD3DFontDatabase) == 0x3C, "AtGrD3DFontDatabase");
-static_assert(sizeof(AtGrD3DImageDatabase) == 0x34, "AtGrD3DImageDatabase");
 static_assert(sizeof(AtGrD3DVertexProcessDatabase) == 0x24, "AtGrD3DVertexProcessDatabase");
 static_assert(sizeof(AtGrD3DPixelProcessDatabase) == 0x24, "AtGrD3DPixelProcessDatabase");
 static_assert(offsetof(AtGrD3DDatabaseLoader, m_textures) == 0xB0, "AtGrD3DDatabaseLoader::m_textures");

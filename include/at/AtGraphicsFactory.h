@@ -78,7 +78,7 @@ int AtD3DCheckDeviceType(unsigned int adapter, unsigned int deviceType, unsigned
 // A Direct3D format as a pixel format, from two tables of the original: 0x0028A930, 28 swizzled formats, each with AtPixelFormat::kSwizz, and
 // 0x0028AC40, 26 linear and compressed ones. Not found: the format cleared and 0. swizzled 0 takes kSwizz out of what the first table gives; the
 // modes are looked up with 1. The format codes are the Xbox's D3DFORMAT values.
-int AtD3DFormatToPixelFormat(unsigned int format, AtPixelFormat* out, int swizzled);             // 0x001197D0
+// AtD3DFormatToPixelFormat (0x001197D0) is at/texload's AtGrD3DFormatFromDevice, include/at/AtGrD3DTextureLoad.h.
 
 // ---- the render function tables ------------------------------------------------------------------------------------------------
 

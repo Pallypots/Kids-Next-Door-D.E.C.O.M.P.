@@ -36,7 +36,7 @@ MUTANTS = [
     ("display device reset: +0x2F kept", B, "    m_unknown2C[3] = 0x80;\n", ""),
 
     # The owner.
-    ("owner constructor: +0x34 left", B, "AtMaterialOwner::AtMaterialOwner() {\n    m_unknown34 = 0;\n", "AtMaterialOwner::AtMaterialOwner() {\n"),
+    ("owner constructor: +0x34 left", B, "AtMaterialOwner::AtMaterialOwner() {\n    m_textureLimits = 0;\n", "AtMaterialOwner::AtMaterialOwner() {\n"),
     ("owner constructor: +0x3A4 left", B, "    m_unknown3A4 = 0;\n}\n\nAtMaterialOwner::~AtMaterialOwner()", "}\n\nAtMaterialOwner::~AtMaterialOwner()"),
     ("owner destructor: no reset", B, "AtMaterialOwner::~AtMaterialOwner() {\n    AtMaterialOwner::Slot1();\n}", "AtMaterialOwner::~AtMaterialOwner() {\n}"),
     ("owner deleting destructor: not freed", B, "    this->~AtMaterialOwner();\n    operator delete(this);\n", "    this->~AtMaterialOwner();\n"),
@@ -47,9 +47,9 @@ MUTANTS = [
     ("owner reset: light animation spaces kept", B, "    ClearThroughTable(&m_lightAnimationSpaces);\n", ""),
     ("owner reset: pixel processes kept", B, "    m_pixelProcesses.Reset();\n", ""),
     ("owner reset: mirrors kept", B, "    m_mirrors.Reset();\n", ""),
-    ("owner reset: textures kept", B, "    m_textures.Reset();\n    m_unknown34 = 0;\n", "    m_unknown34 = 0;\n"),
+    ("owner reset: textures kept", B, "    m_textures.Reset();\n    m_textureLimits = 0;\n", "    m_textureLimits = 0;\n"),
     ("owner reset: texture spaces kept", B, "    ClearThroughTable(&m_textureSpaces);\n", ""),
-    ("owner reset: +0x34 kept", B, "    m_textures.Reset();\n    m_unknown34 = 0;\n", "    m_textures.Reset();\n"),
+    ("owner reset: +0x34 kept", B, "    m_textures.Reset();\n    m_textureLimits = 0;\n", "    m_textures.Reset();\n"),
     ("owner reset: +0x3A0 kept", B, "    m_unknown3A0 = 0;\n    m_unknown3A4 = 0;\n    AtDisplayDevice::Slot1();\n", "    m_unknown3A4 = 0;\n    AtDisplayDevice::Slot1();\n"),
     ("owner reset: base not reset", B, "    m_unknown3A4 = 0;\n    AtDisplayDevice::Slot1();\n}", "    m_unknown3A4 = 0;\n}"),
 
@@ -124,15 +124,15 @@ MUTANTS = [
     ("draw lists clear: +0x1C kept", G, _DL_WORDS, _DL_WORDS.replace("    m_unknown1C = 0;\n", "")),
 
     # The index array, the buffer set, the mesh database.
-    ("index array: resource left", G, "    m_resource = 0;\n    m_memory = 0;\n    m_device = 0;\n", "    m_memory = 0;\n    m_device = 0;\n"),
-    ("index array: memory left", G, "    m_resource = 0;\n    m_memory = 0;\n    m_device = 0;\n", "    m_resource = 0;\n    m_device = 0;\n"),
-    ("index array: device left", G, "    m_resource = 0;\n    m_memory = 0;\n    m_device = 0;\n", "    m_resource = 0;\n    m_memory = 0;\n"),
+    ("index array: resource left", G, "    m_resource = 0;\n    m_memory = 0;\n    m_owner = 0;\n", "    m_memory = 0;\n    m_owner = 0;\n"),
+    ("index array: memory left", G, "    m_resource = 0;\n    m_memory = 0;\n    m_owner = 0;\n", "    m_resource = 0;\n    m_owner = 0;\n"),
+    ("index array: owner left", G, "    m_resource = 0;\n    m_memory = 0;\n    m_owner = 0;\n", "    m_resource = 0;\n    m_memory = 0;\n"),
     ("buffer set: +0x04 left", G, "AtGfxBufferSet::AtGfxBufferSet() {\n    m_unknown04 = 0;\n", "AtGfxBufferSet::AtGfxBufferSet() {\n"),
     ("buffer set: +0x2C left", G, "    m_unknown2C = 0;\n    m_unknown78", "    m_unknown78"),
     ("buffer set: +0x88 left", G, "    m_unknown88 = 0;\n", ""),
-    ("mesh database: meshes left", G, "    m_meshes = 0;\n    m_device = 0;\n", "    m_device = 0;\n"),
-    ("mesh database: next left", G, "    m_next = 0;\n}\n\nvoid AtMeshDatabaseXbox::Clear()", "}\n\nvoid AtMeshDatabaseXbox::Clear()"),
-    ("mesh database: resource left", G, "    m_resource = 0;\n    m_unknown48 = 0;\n", "    m_unknown48 = 0;\n"),
+    ("mesh database: meshes left", "AtGrD3DMeshDatabase.cpp", "m_owner(0), m_meshes(0), m_vertexArrays(0)", "m_owner(0), m_vertexArrays(0)"),
+    ("mesh database: next left", "AtGrD3DMeshDatabase.cpp", "m_contiguousSize(0), m_next(0) {", "m_contiguousSize(0) {"),
+    ("mesh database: contiguous block left", "AtGrD3DMeshDatabase.cpp", "m_keptSize(0), m_contiguous(0), m_contiguousSize(0)", "m_keptSize(0), m_contiguousSize(0)"),
 
     # The lists of blocks.
     ("block list constructor: +0x10 left", G, "    m_block10 = 0;\n}\n\nvoid AtGfxBlockList::Clear()", "}\n\nvoid AtGfxBlockList::Clear()"),

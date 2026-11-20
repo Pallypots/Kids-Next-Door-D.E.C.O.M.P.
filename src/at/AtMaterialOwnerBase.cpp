@@ -48,7 +48,7 @@ void AtDisplayDevice::Slot1() {
 
 // ---- the owner of the name tables -----------------------------------------------------------------------------------------
 AtMaterialOwner::AtMaterialOwner() {
-    m_unknown34 = 0;
+    m_textureLimits = 0;
     m_unknown39C = 0;
     m_unknown3A0 = 0;
     m_unknown3A4 = 0;
@@ -105,7 +105,7 @@ void AtMaterialOwner::Slot1() {
     m_materials.Reset();
     ClearThroughTable(&m_textureSpaces);
     m_textures.Reset();
-    m_unknown34 = 0;
+    m_textureLimits = 0;
     m_unknown39C = 0;
     m_unknown3A0 = 0;
     m_unknown3A4 = 0;

@@ -259,10 +259,6 @@ void AtGrD3DTexture2D::Reset() {
     m_owner = 0;
 }
 
-void AtGrD3DTexture2D::OnLoaded(AtMaterialOwner* owner) {
-    AtGrD3DLoadTexture2D(this, owner);
-}
-
 AtGrD3DSurface2D* AtGrD3DTexture2D::SurfaceAt(unsigned int level) {
     return &m_surfaces[level];
 }

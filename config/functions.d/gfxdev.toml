@@ -324,7 +324,7 @@ evidence = "tests/oracle/oracle_gfxdev.cpp; puts back vftable 0x00288E78; reache
 [[function]]
 va = 0x000F8010
 size = 29
-symbol = "??0AtIndexArrayXbox@@QAE@XZ"
+symbol = "??0AtGrD3DIndexArray@@QAE@XZ"
 source = "src/at/AtGraphicsDevice.cpp"
 subsystem = "at/gfxdev"
 evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x00289358; two in the buffer set"
@@ -336,14 +336,6 @@ symbol = "??0AtGfxBufferSet@@QAE@XZ"
 source = "src/at/AtGraphicsDevice.cpp"
 subsystem = "at/gfxdev"
 evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x002893DC"
-
-[[function]]
-va = 0x001108B0
-size = 50
-symbol = "??0AtMeshDatabaseXbox@@QAE@XZ"
-source = "src/at/AtGraphicsDevice.cpp"
-subsystem = "at/gfxdev"
-evidence = "tests/oracle/oracle_gfxdev.cpp; installs vftable 0x0028A730"
 
 [[function]]
 va = 0x000FE520
@@ -453,9 +445,8 @@ source = "src/at/AtGraphicsDevice.cpp"
 "??_7AtGfxDrawLists@@6B@" = 0x00288EC0
 "??_7AtGeometryArray@@6B@" = 0x002762B8
 "??_7AtIndexArray@@6B@" = 0x00274D48
-"??_7AtIndexArrayXbox@@6B@" = 0x00289358
+"??_7AtGrD3DIndexArray@@6B@" = 0x00289358
 "??_7AtGfxBufferSet@@6B@" = 0x002893DC
-"??_7AtMeshDatabaseXbox@@6B@" = 0x0028A730
 "??_7AtGfxResource@@6B@" = 0x0028B3C0
 "??_7AtGfxResourceBlock@@6B@" = 0x00289A6C
 "??_7AtGfxResourceXbox@@6B@" = 0x0028AFC4

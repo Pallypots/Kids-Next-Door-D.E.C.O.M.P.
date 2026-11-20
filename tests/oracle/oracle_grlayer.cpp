@@ -23,6 +23,8 @@
 #include <vector>
 
 #include "at/AtDatabaseLoader.h"
+#include "at/AtGrD3DTextureLoad.h"
+#include "at/AtLight.h"
 #include "at/AtGraphicsLayer.h"
 #include "at/AtGrD3DTextures.h"
 #include "at/AtImage.h"
@@ -176,8 +178,8 @@ static Global g_globals[] = {
     {"0x003B23DC", 0x003B23DC, &g_heap3B23DC}, {"0x002C7C38", 0x002C7C38, &g_heap2C7C38}, {"0x003B23D8", 0x003B23D8, &g_heap3B23D8},
     {"0x002C7FF0", 0x002C7FF0, &g_heap2C7FF0}, {"0x002C635C", 0x002C635C, &g_heap2C635C}, {"0x002C63E8", 0x002C63E8, &g_heap2C63E8},
     {"0x003B23D4", 0x003B23D4, &g_heap3B23D4}, {"0x003B1FC4", 0x003B1FC4, &g_heap3B1FC4}, {"0x002C6358", 0x002C6358, &g_heap2C6358},
-    {"0x002CB08C", 0x002CB08C, &g_heap2CB08C}, {"0x002CB090", 0x002CB090, &g_heap2CB090}, {"0x002C9C08", 0x002C9C08, &g_heap2C9C08},
-    {"0x003B13D4", 0x003B13D4, &g_heap3B13D4}, {"0x002C6378", 0x002C6378, &g_heap2C6378}, {"0x002C637C", 0x002C637C, &g_heap2C637C},
+    {"0x002CB08C", 0x002CB08C, &g_heap2CB08C}, {"0x002CB090", 0x002CB090, &AtGrIPixelMap::s_heap}, {"0x002C9C08", 0x002C9C08, &g_heap2C9C08},
+    {"0x003B13D4", 0x003B13D4, &g_heap3B13D4}, {"0x002C6378", 0x002C6378, &AtLightDatabase::s_heap}, {"0x002C637C", 0x002C637C, &g_heap2C637C},
     {"0x003B1F50", 0x003B1F50, &g_heap3B1F50}, {"0x003B23D0", 0x003B23D0, &g_heap3B23D0}, {"0x003B1FA0", 0x003B1FA0, &g_heap3B1FA0},
     {"0x003B1F9C", 0x003B1F9C, &g_heap3B1F9C}, {"0x002C6384", 0x002C6384, &g_heap2C6384}, {"0x002C6388", 0x002C6388, &g_heap2C6388},
     {"0x003B1FC0", 0x003B1FC0, &g_heap3B1FC0}, {"0x003B1FBC", 0x003B1FBC, &g_heap3B1FBC}, {"0x003B1FB8", 0x003B1FB8, &g_heap3B1FB8},
@@ -306,8 +308,8 @@ static void run_setters() {
     static const S setters[] = {
         {0x00100DB0, AtSetHeap3B23DC}, {0x00043760, AtSetHeap2C7C38}, {0x00100CF0, AtSetHeap3B23D8}, {0x00057DB0, AtSetHeap2C7FF0},
         {0x00028CD0, AtSetHeap2C635C}, {0x00036AB0, AtSetHeap2C63E8}, {0x00100350, AtSetHeap3B23D4}, {0x000FE500, AtSetHeap3B1FC4},
-        {0x000283E0, AtSetHeap2C6358}, {0x00060590, AtSetHeap2CB08C}, {0x00065B00, AtSetHeap2CB090}, {0x00059580, AtSetHeap2C9C08},
-        {0x000ED2B0, AtSetHeap3B13D4}, {0x0002AAF0, AtSetHeap2C6378}, {0x0002AD50, AtSetHeap2C637C}, {0x000F5610, AtSetHeap3B1F50},
+        {0x000283E0, AtSetHeap2C6358}, {0x00060590, AtSetHeap2CB08C}, {0x00065B00, AtGrIPixelMap::SetHeap}, {0x00059580, AtSetHeap2C9C08},
+        {0x000ED2B0, AtSetHeap3B13D4}, {0x0002AAF0, AtLightDatabase::SetHeap}, {0x0002AD50, AtSetHeap2C637C}, {0x000F5610, AtSetHeap3B1F50},
         {0x00100340, AtSetHeap3B23D0}, {0x000F93C0, AtSetHeap3B1FA0}, {0x000F8500, AtSetHeap3B1F9C}, {0x0002B420, AtSetHeap2C6384},
         {0x0002B680, AtSetHeap2C6388}, {0x000FCE60, AtSetHeap3B1FC0}, {0x000FCD20, AtSetHeap3B1FBC}, {0x000FC550, AtSetHeap3B1FB8},
         {0x000FBA60, AtSetHeap3B1FB4}, {0x000FAD30, AtSetHeap3B1FB0}, {0x000FA930, AtSetHeap3B1FAC}, {0x000FA4F0, AtSetHeap3B1FA8},

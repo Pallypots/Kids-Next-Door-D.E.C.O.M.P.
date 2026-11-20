@@ -337,14 +337,6 @@ subsystem = "at/grfactory"
 evidence = "slot 4: +0xC8; tests/oracle/oracle_grfactory.cpp"
 
 [[function]]
-va = 0x001197D0
-size = 153
-symbol = "?AtD3DFormatToPixelFormat@@YAHIPAVAtPixelFormat@@H@Z"
-source = "src/at/AtGraphicsFactory.cpp"
-subsystem = "at/grfactory"
-evidence = "tables 0x0028A930 (28) and 0x0028AC40 (26), 0x00042420, 0x00042D60; tests/oracle/oracle_grfactory.cpp"
-
-[[function]]
 va = 0x00043420
 size = 47
 symbol = "?Set@AtDisplayMode@@QAEXIIPBVAtPixelFormat@@HH@Z"

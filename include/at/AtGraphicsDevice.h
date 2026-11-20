@@ -11,35 +11,16 @@
 // deleting the wrappers and that file.
 #pragma once
 
+#include "at/AtGfxDrawLists.h"
+#include "at/AtGrD3DDatabase.h"
 #include "at/AtMaterial.h"
 #include "at/AtMatrixDevice.h"
 #include "at/AtMeshDatabase.h"
 
 class AtGraphicsDeviceXbox;
 
-// ---- seams for the texture work's classes ---------------------------------------------------------------------------------
-void AtGfxConstructTextureA(void* at);         // 0x000FCEE0 vftable 0x00289768, 0x50 bytes; the texture database's slot 3 makes arrays of them
-void AtGfxDestroyTextureA(void* at);           // 0x000FD8C0
-void AtGfxConstructTexture2D(void* at);        // 0x000FC630 vftable 0x00289700, 0x34 bytes: include/at/AtTextureItem.h names it the concrete 2D texture; the database's slot 5 makes them
-void AtGfxDestroyTexture2D(void* at);          // 0x000FCCC0
-void AtGfxConstructTextureDatabase(void* at);  // 0x0010FFC0 vftable 0x0028A6E0, 0x58 bytes, on AtTextureDatabase's constructor 0x0001BFA0
-void AtGfxDestroyTextureDatabase(void* at);    // 0x001101D0
-
-struct AtGfxTextureASlot {
-    AtGfxTextureASlot() { AtGfxConstructTextureA(this); }
-    ~AtGfxTextureASlot() { AtGfxDestroyTextureA(this); }
-    unsigned int m_storage[0x50 / 4];
-};
-struct AtGfxTexture2DSlot {
-    AtGfxTexture2DSlot() { AtGfxConstructTexture2D(this); }
-    ~AtGfxTexture2DSlot() { AtGfxDestroyTexture2D(this); }
-    unsigned int m_storage[0x34 / 4];
-};
-struct AtGfxTextureDatabaseSlot {
-    AtGfxTextureDatabaseSlot() { AtGfxConstructTextureDatabase(this); }
-    ~AtGfxTextureDatabaseSlot() { AtGfxDestroyTextureDatabase(this); }
-    unsigned int m_storage[0x58 / 4];
-};
+// ---- the texture work's classes: the device's texture members are xdb's AtGrD3DSurface2D (vftable 0x00289768, 0x000FCEE0), AtGrD3DTexture2D (0x00289700,
+// 0x000FC630) and AtGrD3DTextureDatabase (0x0028A6E0, 0x0010FFC0), include/at/AtGrD3DTextures.h; at/gfxdev stood in for them with storage and six seams.
 
 // What slot 20 is given: it calls the object's slot 1. 0x00080D90, folded with a function of the jam work.
 class AtGfxObject {
@@ -179,55 +160,11 @@ public:
     int m_unknownAA0;                  // +0xAA0
 };
 
-// ---- the draw lists, +0x3E14 ----------------------------------------------------------------------------------------------
-// Vftable 0x00288E78, twelve slots: slot 0 (0x000ED5F0, deleting) not recovered, the rest pure. No constructor of its own survives: it is inlined into the derived one, whose vftable overwrites it.
-class AtGfxDrawListsBase {
-public:
-    ~AtGfxDrawListsBase() {}           // 0x001197C0 this vftable put back
-    virtual void Slot0();
-    virtual void Slot1();
-    virtual void Clear();              // slot 2
-};
-
-// Vftable 0x00288EC0, 27 slots, 0x2C bytes: three arrays, each a count, a second word and a block.
-class AtGfxDrawLists : public AtGfxDrawListsBase {
-public:
-    AtGfxDrawLists();                  // 0x000ED6A0 all zero
-    ~AtGfxDrawLists();                 // 0x000EE210 Clear, then the base's
-    void Slot0() override;
-    void Slot1() override;
-    void Clear() override;             // slot 2, 0x000ED6D0 the blocks at +0x24, +0x18 and +0x0C freed in that order, then every word cleared
-
-    int m_unknown04;                   // +0x04
-    int m_unknown08;                   // +0x08
-    void* m_block0C;                   // +0x0C
-    int m_unknown10;                   // +0x10
-    int m_unknown14;                   // +0x14
-    void* m_block18;                   // +0x18
-    int m_unknown1C;                   // +0x1C
-    int m_unknown20;                   // +0x20
-    void* m_block24;                   // +0x24
-    int m_unknown28;                   // +0x28
-};
+// ---- the draw lists, +0x3E14: include/at/AtGfxDrawLists.h ------------------------------------------------------------
 
 // ---- the concrete index array, and the buffer set holding two, +0x3E48 ---------------------------------------------------
-// Vftable 0x00289358, nine slots, 0x24 bytes; constructor 0x000F8010. The matrix device's slot 3 makes these; include/at/AtMatrixDevice.h knows the same class as AtMatrixDeviceItemB, which should
-// be folded into this one. Only the constructor is recovered: the destructor (0x000F84B0) releases a graphics resource and stops here.
-class AtIndexArrayXbox : public AtIndexArray {
-public:
-    AtIndexArrayXbox();                // 0x000F8010 the base, then +0x18 to +0x20 cleared
-    ~AtIndexArrayXbox();               // 0x000F84B0, not recovered: src/at/AtGraphicsDeviceHost.cpp
-    void Allocate(unsigned int count, unsigned int flags) override;  // slot 0, 0x000F8330
-    void Destroy(unsigned int flags) override;  // slot 1, 0x00110620 the vector deleting destructor
-    void Slot2() override;             // slot 2, 0x000F8410
-    void Lock(void** out, int mode) override;  // slot 3, 0x000F8030
-    void Unlock() override;            // slot 4, 0x000F8470
-    void Finish() override;            // slot 5, 0x000F8190
-
-    AtGraphicsDeviceXbox* m_device;    // +0x18 the destructor reaches the device's state cache through it
-    void* m_resource;                  // +0x1C
-    void* m_memory;                    // +0x20
-};
+// The concrete index array (vftable 0x00289358, 0x24 bytes) is loader's AtGrD3DIndexArray (include/at/AtGrD3DDatabase.h), whose constructor 0x000F8010 at/gfxdev
+// recovered (as AtIndexArrayXbox): src/at/AtGraphicsDevice.cpp. The matrix device's slot 3 makes these.
 
 // Vftable 0x002893DC, 33 slots, 0x8C bytes; constructor 0x000F99E0. Only the constructor is recovered; the destructor (0x000FA490) stops here.
 class AtGfxBufferSet {
@@ -247,7 +184,7 @@ public:
     int m_unknown24;                   // +0x24 left
     int m_unknown28;                   // +0x28 left
     int m_unknown2C;                   // +0x2C
-    AtIndexArrayXbox m_indexArrays[2]; // +0x30
+    AtGrD3DIndexArray m_indexArrays[2];  // +0x30
     int m_unknown78;                   // +0x78
     int m_unknown7C;                   // +0x7C
     int m_unknown80;                   // +0x80
@@ -255,35 +192,8 @@ public:
     int m_unknown88;                   // +0x88
 };
 
-// ---- the concrete mesh database, +0x3ED4 ----------------------------------------------------------------------------------
-// Vftable 0x0028A730, twelve slots, 0x50 bytes; constructor 0x001108B0 (callers 0x000EB787 and the device's). Only the constructor is recovered. Its slot 7 is the way to the disc's .XGG meshes.
-class AtMeshDatabaseXbox : public AtMeshDatabase {
-public:
-    AtMeshDatabaseXbox();              // 0x001108B0 the base, then the words cleared; +0x38 left
-    ~AtMeshDatabaseXbox() override;    // slot 0; 0x00111140 complete, not recovered: src/at/AtGraphicsDeviceHost.cpp
-    void Clear() override;             // slot 1, 0x001108F0
-    void MakeMeshes(AtMaterialOwner* owner) override;        // slot 2, 0x00110490
-    void MakeVertexArrays(AtMaterialOwner* owner) override;  // slot 4, 0x00110E90
-    void MakeIndexArrays(AtMaterialOwner* owner) override;   // slot 5, 0x00110F70
-    int HasBinaryForm() override;      // slot 6, 0x001A2B40
-    void LoadBinaryForm(AtMaterialOwner* owner, const char* name) override;  // slot 7, 0x001109E0
-    void Slot8() override;             // slot 8, 0x00111050
-    AtMesh* MeshAt(unsigned int index) override;             // slot 9, 0x00110470
-    AtVertexArray* VertexArrayAt(unsigned int index) override;  // slot 10, 0x00110880
-    AtIndexArray* IndexArrayAt(unsigned int index) override;    // slot 11, 0x00110890
-
-    AtGraphicsDeviceXbox* m_device;    // +0x24 the list at the device's +0x3340 the destructor leaves
-    void* m_meshes;                    // +0x28
-    void* m_vertexArrays;              // +0x2C
-    void* m_indexArrays;               // +0x30
-    void* m_unknown34;                 // +0x34
-    int m_unknown38;                   // +0x38 left
-    void* m_block3C;                   // +0x3C
-    int m_unknown40;                   // +0x40
-    void* m_resource;                  // +0x44
-    int m_unknown48;                   // +0x48
-    AtMeshDatabaseXbox* m_next;        // +0x4C in the device's list
-};
+// ---- the concrete mesh database, +0x3ED4: loader's AtGrD3DMeshDatabase (vftable 0x0028A730, constructor 0x001108B0), include/at/AtGrD3DDatabase.h. at/gfxdev
+// recovered its constructor again as AtMeshDatabaseXbox; folded.
 
 // ---- two lists of blocks, +0x1314C and +0x13170 ---------------------------------------------------------------------------
 // No vftables. Each Clear frees what it holds and clears every word, and is also the destructor.
@@ -405,33 +315,33 @@ public:
 
     void* m_creator;                   // +0x3A8
     int m_unknown3AC;                  // +0x3AC
-    AtGfxTextureASlot m_target0;       // +0x3B0
-    AtGfxTextureASlot m_target1;       // +0x400
+    AtGrD3DSurface2D m_target0;      // +0x3B0
+    AtGrD3DSurface2D m_target1;      // +0x400
     AtGfxContext m_context;            // +0x450
-    AtGfxTextureASlot m_textureA2ED0;  // +0x2ED0
-    AtGfxTexture2DSlot m_texture2F20;  // +0x2F20
-    AtGfxTexture2DSlot m_texture2F54;  // +0x2F54
-    AtGfxTextureASlot m_textureA2F88;  // +0x2F88
-    AtGfxTexture2DSlot m_texture2FD8;  // +0x2FD8
-    AtGfxTextureASlot m_textureA300C;  // +0x300C
-    AtGfxTexture2DSlot m_texture305C;  // +0x305C
-    AtGfxTextureASlot m_textureA3090;  // +0x3090
-    AtGfxTexture2DSlot m_texture30E0;  // +0x30E0
-    AtGfxTextureASlot m_textureA3114;  // +0x3114
-    AtGfxTexture2DSlot m_texture3164;  // +0x3164
-    AtGfxTextureASlot m_textureA3198;  // +0x3198
-    AtGfxTexture2DSlot m_texture31E8;  // +0x31E8
-    AtGfxTextureASlot m_textureA321C;  // +0x321C
-    AtGfxTexture2DSlot m_texture326C;  // +0x326C
-    AtGfxTextureASlot m_textureA32A0;  // +0x32A0
-    AtGfxTexture2DSlot m_texture32F0;  // +0x32F0
+    AtGrD3DSurface2D m_textureA2ED0; // +0x2ED0
+    AtGrD3DTexture2D m_texture2F20; // +0x2F20
+    AtGrD3DTexture2D m_texture2F54; // +0x2F54
+    AtGrD3DSurface2D m_textureA2F88; // +0x2F88
+    AtGrD3DTexture2D m_texture2FD8; // +0x2FD8
+    AtGrD3DSurface2D m_textureA300C; // +0x300C
+    AtGrD3DTexture2D m_texture305C; // +0x305C
+    AtGrD3DSurface2D m_textureA3090; // +0x3090
+    AtGrD3DTexture2D m_texture30E0; // +0x30E0
+    AtGrD3DSurface2D m_textureA3114; // +0x3114
+    AtGrD3DTexture2D m_texture3164; // +0x3164
+    AtGrD3DSurface2D m_textureA3198; // +0x3198
+    AtGrD3DTexture2D m_texture31E8; // +0x31E8
+    AtGrD3DSurface2D m_textureA321C; // +0x321C
+    AtGrD3DTexture2D m_texture326C; // +0x326C
+    AtGrD3DSurface2D m_textureA32A0; // +0x32A0
+    AtGrD3DTexture2D m_texture32F0; // +0x32F0
     unsigned char m_unknown3324[8];    // +0x3324 left
     int m_unknown332C;                 // +0x332C slots 9 and 12 test it, as a sign the display is open
     int m_unknown3330;                 // +0x3330
     AtGfxContext* m_contexts;          // +0x3334 a list by each context's m_next
     int m_unknown3338;                 // +0x3338
     int m_unknown333C;                 // +0x333C
-    AtMeshDatabaseXbox* m_meshDatabases;  // +0x3340 a list by each database's m_next
+    AtGrD3DMeshDatabase* m_meshDatabases;  // +0x3340 a list by each database's m_next
     int m_unknown3344;                 // +0x3344
     int m_unknown3348;                 // +0x3348
     int m_unknown334C;                 // +0x334C
@@ -447,8 +357,8 @@ public:
     AtGfxDrawLists m_drawLists;        // +0x3E14
     AtMatrixDeviceXbox m_matrixDevice; // +0x3E40 what 0x0001A68C hands to AtCoordSysDatabase::Load
     AtGfxBufferSet m_bufferSet;        // +0x3E48
-    AtMeshDatabaseXbox m_meshDatabase; // +0x3ED4
-    AtGfxTextureDatabaseSlot m_textureDatabase;  // +0x3F24
+    AtGrD3DMeshDatabase m_meshDatabase;  // +0x3ED4
+    AtGrD3DTextureDatabase m_textureDatabase;  // +0x3F24
     void* m_unknown3F7C[10];           // +0x3F7C Release frees 0, 1, 2, 4, 6, 8 and 3, in that order
     int* m_unknown3FA4;                // +0x3FA4 &m_table3FA8
     int m_table3FA8[0x100];            // +0x3FA8
@@ -508,11 +418,8 @@ static_assert(offsetof(AtGfxStateCache, m_cachedA04) == 0xA04, "AtGfxStateCache:
 static_assert(offsetof(AtGfxStateCache, m_blockA58) == 0xA58, "AtGfxStateCache::m_blockA58");
 static_assert(sizeof(AtGfxStateCache) == 0xAA4, "AtGfxStateCache");
 static_assert(sizeof(AtGfxDrawLists) == 0x2C, "AtGfxDrawLists");
-static_assert(sizeof(AtIndexArrayXbox) == 0x24, "AtIndexArrayXbox");
 static_assert(offsetof(AtGfxBufferSet, m_indexArrays) == 0x30, "AtGfxBufferSet::m_indexArrays");
 static_assert(sizeof(AtGfxBufferSet) == 0x8C, "AtGfxBufferSet");
-static_assert(offsetof(AtMeshDatabaseXbox, m_next) == 0x4C, "AtMeshDatabaseXbox::m_next");
-static_assert(sizeof(AtMeshDatabaseXbox) == 0x50, "AtMeshDatabaseXbox");
 static_assert(sizeof(AtGfxIndexedList) == 0x24, "AtGfxIndexedList");
 static_assert(offsetof(AtGfxResource, m_unknown30) == 0x30, "AtGfxResource::m_unknown30");
 static_assert(sizeof(AtGfxResourceXbox) == 0x50, "AtGfxResourceXbox");

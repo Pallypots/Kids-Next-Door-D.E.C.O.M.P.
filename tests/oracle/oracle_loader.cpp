@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "at/AtGrD3DDatabase.h"
+#include "at/AtGrD3DTextureLoad.h"
 #include "at/AtAudioDatabase.h"
 #include "at/AtHeap.h"
 #include "at/AtIoTokenizer.h"
@@ -237,7 +238,7 @@ static uint32_t object_index(void* object) {
 }
 
 static bool is_constructor(unsigned int va) {
-    for (unsigned int c : {0x00110260u, 0x001111B0u, 0x001115A0u, 0x00111BC0u, 0x00111E50u, 0x001120B0u, 0x000EC890u, 0x000F8010u, 0x000EECA0u, 0x00122460u}) if (c == va) return true;
+    for (unsigned int c : {0x00111E50u, 0x001120B0u, 0x000EC890u, 0x000F8010u, 0x000EECA0u, 0x00122460u}) if (c == va) return true;
     return false;
 }
 
@@ -323,13 +324,28 @@ static void __fastcall o_read_mesh(AtGrD3DMesh* self, void*, AtMaterialOwner* o,
 static void* __stdcall o_contiguous(unsigned size, unsigned alignment) { return AtGrD3DAllocateContiguous(size, alignment); }
 static void __stdcall o_free_contiguous(void* p) { AtGrD3DFreeContiguous(p); }
 
-// What a texture or a material does with the device, and the device's calls: they log, the same on both sides. tests/oracle/oracle_xdb.cpp tests them.
+// What a texture, a material, a font or an image does with the device, and the device's calls: they log, the same on both sides. tests/oracle/oracle_xdb.cpp and oracle_xshade.cpp test them.
 void AtGrD3DLoadTexture2D(AtGrD3DTexture2D* t, AtMaterialOwner* owner) { slot('L', *(const uint32_t*)t->m_name); slot('l', owner == g_own_any[g_side]); }
 void AtGrD3DLoadMaterial(AtGrD3DMaterial* m, AtMaterialOwner* owner) { slot('M', m->m_flags); slot('m', owner == g_own_any[g_side]); }
 void AtGrD3DReleaseStage(void*, unsigned int stage) { slot('G', stage); }
 void AtGrD3DBeforeRelease(void*) { slot('B'); }
 void AtGrD3DRelease(void*) { slot('X'); }
+void AtGrD3DLoadFont2D(AtGrD3DFont2D* f, AtMaterialOwner* owner) { slot('T', *(const uint32_t*)f->m_name); slot('l', owner == g_own_any[g_side]); }
+void AtGrD3DLoadImage(AtGrD3DImage* i, AtMaterialOwner* owner) { slot('I', *(const uint32_t*)i->m_name); slot('l', owner == g_own_any[g_side]); }
 static void __fastcall o_load_texture(AtGrD3DTexture2D* t, void*, AtMaterialOwner* owner) { AtGrD3DLoadTexture2D(t, owner); }
+// A texture's slot 12 is recovered (src/at/AtGrD3DTextureLoad.cpp, tested by tests/oracle/oracle_texload.cpp). Here it stays the double above on both sides: on the recovered side by a jump written at the
+// start of the compiled slot 12 (the harness's code is writable), as on the original's at 0x000FCAD0. So the device's calls it makes are not expected.
+void* AtGrD3DGetBackBuffer(int) { slot('?', 3); return nullptr; }
+void* AtGrD3DCreateTexture(unsigned, unsigned, unsigned, unsigned, unsigned, unsigned, unsigned) { slot('?', 4); return nullptr; }
+void* AtGrD3DSurfaceLevel(void*, unsigned) { slot('?', 5); return nullptr; }
+void AtGrD3DDescribe(void*, AtGrD3DSurfaceDesc*) { slot('?', 6); }
+void AtGrD3DLockRect(void*, AtGrD3DLockedRect*, const void*, unsigned) { slot('?', 7); }
+static void redirect_recovered_slot12(const void* to) {
+    AtGrD3DTexture2D probe;
+    redirect((uint32_t)(uintptr_t)(*(void***)&probe)[12], to);
+}
+static void __fastcall o_load_font(AtGrD3DFont2D* f, void*, AtMaterialOwner* owner) { AtGrD3DLoadFont2D(f, owner); }
+static void __fastcall o_load_image(AtGrD3DImage* i, void*, AtMaterialOwner* owner) { AtGrD3DLoadImage(i, owner); }
 static void __fastcall o_load_material(AtGrD3DMaterial* m, void*, AtMaterialOwner* owner) { AtGrD3DLoadMaterial(m, owner); }
 static void __fastcall o_release_stage(void* stages, void*, unsigned stage) { AtGrD3DReleaseStage(stages, stage); }
 static void __stdcall o_before_release(void* r) { AtGrD3DBeforeRelease(r); }
@@ -888,6 +904,14 @@ static void set_heaps(void* h) {
     AtMaterialDatabase::s_heap = h;
     AtTextureDatabase::s_heap = h;
     *(void**)(uintptr_t)0x003B1F90 = AtGrD3DMaterialDatabase::s_heap = h;  // the concrete material database's own
+    // The shader, light, font and image databases' arrays, and what their items read onto.
+    *(void**)(uintptr_t)0x002C6380 = AtShaderDatabase::s_heap = h;
+    *(void**)(uintptr_t)0x002C6378 = AtLightDatabase::s_heap = h;
+    *(void**)(uintptr_t)0x002C6370 = AtFontDatabase::s_heap = h;
+    *(void**)(uintptr_t)0x002C6364 = AtImageDatabase::s_heap = h;
+    *(void**)(uintptr_t)0x002C63EC = AtShader::s_heap = h;
+    *(void**)(uintptr_t)0x002C63E0 = AtMatAssignment::s_heap = h;
+    *(void**)(uintptr_t)0x003B1FCC = AtGrI2DFont::s_heap = h;
     AtGrD3DMeshDatabase::s_heap = &g_mesh_heap;
     // This work's own heaps, each its own token on both sides.
     *(void**)(uintptr_t)0x002C60B0 = AtIoTokenFile::s_heap = &g_heap_own[0];
@@ -1338,14 +1362,14 @@ int main(int argc, char** argv) {
     // The seam classes on the original's side.
     // The texture and material databases are recovered (include/at/AtGrD3DTextures.h): the original's run on its side. What their items do with the device is the doubles above.
     redirect(0x000FCAD0, (const void*)o_load_texture);
+    redirect_recovered_slot12((const void*)o_load_texture);
     redirect(0x0010B7F0, (const void*)o_load_material);
     redirect(0x000FB630, (const void*)o_release_stage);
     redirect(0x00205E20, (const void*)o_before_release);
     redirect(0x00205D10, (const void*)o_release);
-    redirect(0x00110260, (const void*)&Thin<AtGrD3DShaderDatabase, 0x0002B1C0, 0x0002B3A0, 0x00110260, 0x001103F0, 0x0028A720, 4>::Construct);
-    redirect(0x001111B0, (const void*)&Thin<AtGrD3DLightDatabase, 0x0002AB00, 0x0002ACD0, 0x001111B0, 0x00111350, 0x0028A764, 4>::Construct);
-    redirect(0x001115A0, (const void*)&Thin<AtGrD3DFontDatabase, 0x0002A020, 0x0002A470, 0x001115A0, 0x001119B0, 0x0028A774, 8>::Construct);
-    redirect(0x00111BC0, (const void*)&Thin<AtGrD3DImageDatabase, 0x00029BA0, 0x00029F60, 0x00111BC0, 0x00111C60, 0x0028A794, 6>::Construct);
+    // The shader, light, font and image databases are recovered (include/at/AtGrD3DItems.h): the original's run on its side. What a font or an image does with the device is the doubles above.
+    redirect(0x00123850, (const void*)o_load_font);
+    redirect(0x00124CD0, (const void*)o_load_image);
     redirect(0x00111E50, (const void*)&Thin<AtGrD3DVertexProcessDatabase, 0x0002B690, 0x0002B870, 0x00111E50, 0x00111EC0, 0x0028A7AC, 4>::Construct);
     redirect(0x001120B0, (const void*)&Thin<AtGrD3DPixelProcessDatabase, 0x0002B430, 0x0002B610, 0x001120B0, 0x00112120, 0x0028A7BC, 5>::Construct);
     redirect(0x000EC890, (const void*)&Side0<AtGrD3DVertexArray, 2>::Construct);

@@ -1,5 +1,5 @@
-// Not recovered code. The bodies of what include/at/AtGrD3DDatabase.h and include/at/AtGrD3DTextures.h declare and is not recovered: the six kinds of database other than meshes, animations, textures and materials,
-// the items a mesh database makes, what a texture database holds that loading does not need, and the keys' own slots. Each goes to AtGrD3DUnrecovered, or for an item's reader to a function of its own, in src/at/AtGrD3DSeam.cpp, which stops with a diagnostic; a test supplies those instead. Each body names the
+// Not recovered code. The bodies of what include/at/AtGrD3DDatabase.h, include/at/AtGrD3DTextures.h and include/at/AtGrD3DItems.h declare and is not recovered: vertex and pixel processes, the slots of
+// the shader, font and image databases and their items that loading does not need, the items a mesh database makes, what a texture database holds that loading does not need, and the keys' own slots. Each goes to AtGrD3DUnrecovered, or for an item's reader to a function of its own, in src/at/AtGrD3DSeam.cpp, which stops with a diagnostic; a test supplies those instead. Each body names the
 // original's function, or for a slot whose function is not known, the address of its entry in the vftable.
 #include "at/AtGrD3DDatabase.h"
 
@@ -23,8 +23,6 @@ void AtGrD3DPalette::Slot10() { STOP(0x000F5C60); }
 void AtGrD3DSurface2D::Slot6() { STOP(0x000FD240); }
 void AtGrD3DSurface2D::Slot7() { STOP(0x000FD9A0); }
 void AtGrD3DSurface2D::Slot8() { STOP(0x0005F2E0); }
-void AtGrD3DSurface2D::Slot9() { STOP(0x000FE260); }
-void AtGrD3DSurface2D::Slot10() { STOP(0x000FE320); }
 void AtGrD3DSurface2D::Slot11() { STOP(0x001ACD70); }
 void AtGrD3DSurface2D::Slot12() { STOP(0x000FD0C0); }
 void AtGrD3DSurface2D::Slot13() { STOP(0x000FD190); }
@@ -48,35 +46,27 @@ AtGrD3DSurface3D::AtGrD3DSurface3D() { STOP(0x000FCD50); }
 AtGrD3DSurface3D::~AtGrD3DSurface3D() { STOP(0x000FCDF0); }
 int AtGrD3DSurface3D::Slot3() { return (int)STOP(0x00289744); }
 
-// ---- Shaders, lights ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// ---- What the shader, font and image databases hold and do not recover: include/at/AtGrD3DItems.h -----------------------------------------------------------------------------------------------------------------
 
-AtGrD3DShaderDatabase::AtGrD3DShaderDatabase() { STOP(0x00110260); }
-AtGrD3DShaderDatabase::~AtGrD3DShaderDatabase() { STOP(0x001103F0); }
-void AtGrD3DShaderDatabase::Clear() { STOP(0x00110280); }
-void AtGrD3DShaderDatabase::OnReady() { STOP(0x001102D0); }
-AtShader* AtGrD3DShaderDatabase::ShaderAt(unsigned int index) { return POINTER(AtShader, 0x00110220, index); }
+// Slot 5 of the font database is its binary form, which nothing asks for. Slot 7 of the font database and slot 5 of the image database return pointers, the first font with no characters and the
+// first image not read, which the bases' type, an int, cannot hold on a 64-bit host.
+void AtGrD3DFontDatabase::Slot5(int a, int) { STOP1(0x00111630, a); }
+int AtGrD3DFontDatabase::Slot7() { return (int)STOP(0x00111980); }
+int AtGrD3DImageDatabase::Slot5() { return (int)STOP(0x00111C30); }
 
-AtGrD3DLightDatabase::AtGrD3DLightDatabase() { STOP(0x001111B0); }
-AtGrD3DLightDatabase::~AtGrD3DLightDatabase() { STOP(0x00111350); }
-void AtGrD3DLightDatabase::Clear() { STOP(0x001111D0); }
-void AtGrD3DLightDatabase::MakeLights(AtMaterialOwner* owner) { STOP1(0x00111210, owner != 0); }
-AtLight* AtGrD3DLightDatabase::LightAt(unsigned int index) { return POINTER(AtLight, 0x00111190, index); }
+void AtGrD3DFont2D::Slot4() { STOP(0x00124340); }
+void AtGrD3DFont2D::Slot11() { STOP(0x00123750); }
+void AtGrD3DFont2D::Slot12() { STOP(0x00123C40); }
+int AtGrD3DFont2D::PassName(AtGrDevice*, const AtGrI2DFont* font, int value) { return (int)AtGrD3DUnrecovered(0x001238D0, this, font != 0, (unsigned int)value); }
 
-// ---- Fonts, images, processes ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+void AtGrD3DImage::Slot0() { STOP(0x001247D0); }
+void AtGrD3DImage::Slot1() { STOP(0x00124EB0); }
+void AtGrD3DImage::Slot2() { STOP(0x00124630); }
+void AtGrD3DImage::Slot3() { STOP(0x00124800); }
+int AtGrD3DImage::PassName(AtGrDevice*, const AtImage* image, int value) { return (int)AtGrD3DUnrecovered(0x001246F0, this, image != 0, (unsigned int)value); }
+void AtGrD3DImage::Slot14() { STOP(0x00124610); }
 
-AtGrD3DFontDatabase::AtGrD3DFontDatabase() { STOP(0x001115A0); }
-AtGrD3DFontDatabase::~AtGrD3DFontDatabase() { STOP(0x001119B0); }
-void AtGrD3DFontDatabase::Clear() { STOP(0x001115D0); }
-void AtGrD3DFontDatabase::OnReady(AtMaterialOwner* owner) { STOP1(0x00111400, owner != 0); }
-void AtGrD3DFontDatabase::MakeFonts2D() { STOP(0x00111420); }
-AtGrI2DFont* AtGrD3DFontDatabase::Font2DAt(unsigned int index) { return POINTER(AtGrI2DFont, 0x001113E0, index); }
-
-AtGrD3DImageDatabase::AtGrD3DImageDatabase() { STOP(0x00111BC0); }
-AtGrD3DImageDatabase::~AtGrD3DImageDatabase() { STOP(0x00111C60); }
-void AtGrD3DImageDatabase::Clear() { STOP(0x00111BE0); }
-void AtGrD3DImageDatabase::MakeItems() { STOP(0x00111A40); }
-void AtGrD3DImageDatabase::OnReady(AtMaterialOwner* owner) { STOP1(0x00111A20, owner != 0); }
-AtImage* AtGrD3DImageDatabase::ImageAt(unsigned int index) { return POINTER(AtImage, 0x00111A00, index); }
+// ---- Processes ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 AtGrD3DVertexProcessDatabase::AtGrD3DVertexProcessDatabase() { STOP(0x00111E50); }
 AtGrD3DVertexProcessDatabase::~AtGrD3DVertexProcessDatabase() { STOP(0x00111EC0); }
@@ -118,7 +108,6 @@ void AtGrD3DVertexArray::Slot19() { STOP(0x00288D44); }
 void AtGrD3DVertexArray::Slot20() { STOP(0x00288D48); }
 void AtGrD3DVertexArray::Read(AtMaterialOwner*, AtIoTokenizer*, unsigned int index) { STOP1(0x00288D4C, index); }
 
-AtGrD3DIndexArray::AtGrD3DIndexArray() { STOP(0x000F8010); }
 AtGrD3DIndexArray::~AtGrD3DIndexArray() { STOP(0x000F84B0); }
 void AtGrD3DIndexArray::ReadBinary(char** records, char** kept) { AtGrD3DReadIndexArray(this, records, kept); }
 void AtGrD3DIndexArray::Allocate(unsigned int count, unsigned int) { STOP1(0x00289358, count); }

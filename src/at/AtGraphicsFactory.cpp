@@ -1,6 +1,7 @@
 // The graphics factory, its adapter list, the adapters and what Direct3D reports of each. Subsystem at/grfactory; see
 // include/at/AtGraphicsFactory.h. Names are inferred. Verification status per function: config/functions.d/grfactory.toml.
 #include "at/AtGraphicsFactory.h"
+#include "at/AtGrD3DTextureLoad.h"
 
 #include "at/AtCoordSys.h"
 #include "at/AtGraphicsDevice.h"
@@ -327,7 +328,7 @@ void AtGfxDeviceInfo::Enumerate(AtGfxAdapter* adapter, unsigned int deviceType) 
         if (AtD3DCheckDeviceType(ordinal, m_deviceType, mode.m_format, mode.m_format, 0) != 0) {
             continue;
         }
-        if (AtD3DFormatToPixelFormat(mode.m_format, &format, 1) == 0) {
+        if (AtGrD3DFormatFromDevice(mode.m_format, &format, 1) == 0) {
             continue;
         }
         const unsigned char d3dFlags = (unsigned char)mode.m_flags;
@@ -477,69 +478,9 @@ void AtGfxDeviceInfo::ReadCaps() {
 // ---- formats and modes -----------------------------------------------------------------------------------------------------
 
 namespace {
-struct FormatEntry {
-    unsigned int format;
-    unsigned int flags;
-    unsigned int bits;
-    unsigned int masks[4];
-};
-// 0x0028A930: 28 entries.
-// The Xbox's swizzled formats, each with AtPixelFormat::kSwizz.
-const FormatEntry kSwizzledTable[28] = {
-    {0x06, 0x801, 32, {0xFF0000, 0xFF00, 0xFF, 0xFF000000}}, {0x07, 0x801, 32, {0xFF0000, 0xFF00, 0xFF, 0}},
-    {0x05, 0x801, 16, {0xF800, 0x7E0, 0x1F, 0}},            {0x27, 0x801, 16, {0xFC00, 0x3E0, 0x1F, 0}},
-    {0x03, 0x801, 16, {0x7C00, 0x3E0, 0x1F, 0}},            {0x02, 0x801, 16, {0x7C00, 0x3E0, 0x1F, 0x8000}},
-    {0x04, 0x801, 16, {0xF00, 0xF0, 0xF, 0xF000}},          {0x19, 0x802, 8, {0, 0, 0, 0xFF}},
-    {0x3A, 0x801, 32, {0xFF, 0xFF00, 0xFF0000, 0xFF000000}}, {0x3B, 0x801, 32, {0xFF00, 0xFF0000, 0xFF000000, 0xFF}},
-    {0x39, 0x801, 16, {0xF000, 0xF00, 0xF0, 0xF}},          {0x38, 0x801, 16, {0xF800, 0x7C0, 0x3E, 0x1}},
-    {0x3C, 0x801, 32, {0xFF000000, 0xFF0000, 0xFF00, 0xFF}}, {0x29, 0x801, 16, {0xFF00, 0xFF, 0, 0}},
-    {0x28, 0x801, 16, {0, 0xFF, 0xFF00, 0}},                {0x0B, 0x804, 8, {0xFF, 0, 0, 0}},
-    {0x00, 0x802, 8, {0xFF, 0, 0, 0}},                      {0x1A, 0x802, 16, {0xFF, 0, 0, 0xFF00}},
-    {0x01, 0x802, 8, {0, 0, 0, 0xFF}},                      {0x32, 0x802, 16, {0xFFFF, 0, 0, 0}},
-    {0x28, 0x808, 16, {0, 0xFF, 0xFF00, 0}},                {0x27, 0x808, 16, {0xFC00, 0x1F, 0x3E0, 0}},
-    {0x07, 0x808, 32, {0xFF0000, 0xFF, 0xFF00, 0}},         {0x3A, 0x808, 32, {0xFF0000, 0xFF, 0xFF00, 0xFF000000}},
-    {0x33, 0x808, 32, {0, 0xFFFF, 0xFFFF0000, 0}},          {0x2A, 0x810, 32, {0xFFFFFF00, 0xFF, 0, 0}},
-    {0x2C, 0x810, 16, {0xFFFF, 0, 0, 0}},                   {0x2C, 0x810, 16, {0xFFFF, 0, 0, 0}},
-};
-// 0x0028AC40: 26 entries.
-// The linear (D3DFMT_LIN_) and compressed formats.
-const FormatEntry kLinearTable[26] = {
-    {0x0C, 0x40, 4, {0, 0, 0, 0}},                          {0x0E, 0x100, 8, {0, 0, 0, 0}},
-    {0x0E, 0x80, 8, {0, 0, 0, 0}},                          {0x0F, 0x200, 8, {0, 0, 0, 0}},
-    {0x0F, 0x400, 8, {0, 0, 0, 0}},                         {0x10, 0x1, 16, {0x7C00, 0x3E0, 0x1F, 0x8000}},
-    {0x1D, 0x1, 16, {0xF00, 0xF0, 0xF, 0xF000}},            {0x1F, 0x2, 8, {0, 0, 0, 0xFF}},
-    {0x3F, 0x1, 32, {0xFF, 0xFF00, 0xFF0000, 0xFF000000}},  {0x12, 0x1, 32, {0xFF0000, 0xFF00, 0xFF, 0xFF000000}},
-    {0x40, 0x1, 32, {0xFF00, 0xFF0000, 0xFF000000, 0xFF}},  {0x17, 0x1, 16, {0, 0xFF, 0xFF00, 0}},
-    {0x3E, 0x1, 16, {0xF000, 0xF00, 0xF0, 0xF}},            {0x3D, 0x1, 16, {0xF800, 0x7C0, 0x3E, 0x1}},
-    {0x11, 0x1, 16, {0xF800, 0x7E0, 0x1F, 0}},              {0x37, 0x1, 16, {0xFC00, 0x3E0, 0x1F, 0}},
-    {0x16, 0x1, 16, {0xFF00, 0xFF, 0, 0}},                  {0x41, 0x1, 32, {0xFF000000, 0xFF0000, 0xFF00, 0xFF}},
-    {0x1C, 0x1, 16, {0x7C00, 0x3E0, 0x1F, 0}},              {0x1E, 0x1, 32, {0xFF0000, 0xFF00, 0xFF, 0}},
-    {0x20, 0x2, 16, {0xFF, 0, 0, 0xFF00}},                  {0x1B, 0x1, 8, {0, 0, 0, 0xFF}},
-    {0x35, 0x2, 16, {0xFFFF, 0, 0, 0}},                     {0x13, 0x4, 8, {0xFF, 0, 0, 0}},
-    {0x2E, 0x10, 32, {0xFFFFFF00, 0xFF, 0, 0}},             {0x30, 0x10, 16, {0xFFFF, 0, 0, 0}},
-};
+// The format tables (0x0028A930, 0x0028AC40) and AtD3DFormatToPixelFormat 0x001197D0 are at/texload's g_atGrSwizzledFormats, g_atGrLinearFormats and
+// AtGrD3DFormatFromDevice (src/at/AtGrD3DTextureLoad.cpp): at/grfactory recovered them again; folded in batch 8.
 }  // namespace
-
-int AtD3DFormatToPixelFormat(unsigned int format, AtPixelFormat* out, int swizzled) {
-    for (const FormatEntry& e : kSwizzledTable) {
-        if (e.format == format) {
-            unsigned int flags = e.flags;
-            if (swizzled == 0) {
-                flags &= ~(unsigned int)AtPixelFormat::kSwizz;
-            }
-            out->Set((unsigned short)flags, (unsigned short)e.bits, e.masks[0], e.masks[1], e.masks[2], e.masks[3]);
-            return 1;
-        }
-    }
-    for (const FormatEntry& e : kLinearTable) {
-        if (e.format == format) {
-            out->Set((unsigned short)e.flags, (unsigned short)e.bits, e.masks[0], e.masks[1], e.masks[2], e.masks[3]);
-            return 1;
-        }
-    }
-    out->Clear();
-    return 0;
-}
 
 void AtDisplayMode::Set(unsigned int width, unsigned int height, const AtPixelFormat* format, int unknown1C, int unknown20) {
     m_width = width;

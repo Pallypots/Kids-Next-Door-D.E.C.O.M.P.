@@ -21,16 +21,7 @@ static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
 
 // ---- stand-ins for src/at/AtGraphicsDeviceHost.cpp ------------------------------------------------------------------------
-static std::vector<std::pair<char, const void*>> g_made;
-void AtGfxConstructTextureA(void* at) { g_made.push_back({'A', at}); std::memset(at, 0, 0x50); }
-void AtGfxDestroyTextureA(void* at) { g_made.push_back({'a', at}); }
-void AtGfxConstructTexture2D(void* at) { g_made.push_back({'T', at}); std::memset(at, 0, 0x34); }
-void AtGfxDestroyTexture2D(void* at) { g_made.push_back({'t', at}); }
-void AtGfxConstructTextureDatabase(void* at) { g_made.push_back({'D', at}); std::memset(at, 0, 0x58); }
-void AtGfxDestroyTextureDatabase(void* at) { g_made.push_back({'d', at}); }
-AtIndexArrayXbox::~AtIndexArrayXbox() {}
 AtGfxBufferSet::~AtGfxBufferSet() {}
-AtMeshDatabaseXbox::~AtMeshDatabaseXbox() {}
 AtGfxResourceXbox::~AtGfxResourceXbox() {}
 
 namespace {
@@ -63,13 +54,20 @@ public:
 
 void TestDevice(AtGraphicsDeviceXbox* d) {
     AtMaterialOwner* owner = d;
-    // The texture work's members, in the original's order: two of A, then A and 2D alternating as at 0x000F1FD8-0x000F210C, then the database.
-    const char* order = "AAATTATATATATATATAT";
-    CHECK(g_made.size() == std::strlen(order) + 1);
-    for (size_t i = 0; i < g_made.size() && i < std::strlen(order); i++) CHECK(g_made[i].first == order[i]);
-    if (g_made.size() == std::strlen(order) + 1) {
-        CHECK(g_made.back().first == 'D' && g_made.back().second == &d->m_textureDatabase);
-        CHECK(g_made[0].second == &d->m_target0 && g_made[1].second == &d->m_target1 && g_made[2].second == &d->m_textureA2ED0 && g_made[18].second == &d->m_texture32F0);
+    // The texture work's members are xdb's classes, each constructed in place: the same vftable as one made alone (the order, 0x000F1FD8-0x000F210C, is the
+    // members' order; the gfxdev oracle compares the whole device against the original's).
+    {
+        AtGrD3DSurface2D surface;
+        AtGrD3DTexture2D texture;
+        auto vptr = [](const void* p) { return *(void* const*)p; };
+        const AtGrD3DSurface2D* surfaces[] = {&d->m_target0, &d->m_target1, &d->m_textureA2ED0, &d->m_textureA2F88, &d->m_textureA300C, &d->m_textureA3090,
+                                              &d->m_textureA3114, &d->m_textureA3198, &d->m_textureA321C, &d->m_textureA32A0};
+        const AtGrD3DTexture2D* textures[] = {&d->m_texture2F20, &d->m_texture2F54, &d->m_texture2FD8, &d->m_texture305C, &d->m_texture30E0, &d->m_texture3164,
+                                              &d->m_texture31E8, &d->m_texture326C, &d->m_texture32F0};
+        for (const AtGrD3DSurface2D* s : surfaces) CHECK(vptr(s) == vptr(&surface) && s->m_next == nullptr);
+        for (const AtGrD3DTexture2D* t : textures) CHECK(vptr(t) == vptr(&texture));
+        AtGrD3DTextureDatabase database;
+        CHECK(vptr(&d->m_textureDatabase) == vptr(&database));
     }
 
     // The slots that hand back members, through the base, as the game's code calls them.
@@ -96,7 +94,7 @@ void TestDevice(AtGraphicsDeviceXbox* d) {
 
     // The bases.
     CHECK(d->m_unknown04 == 0 && d->m_noTextures == 0 && d->m_unknown2C[0] == 0x80 && d->m_unknown2C[3] == 0x80);
-    CHECK(d->m_unknown34 == 0 && d->m_unknown39C == 0 && d->m_unknown3A4 == 0);
+    CHECK(d->m_textureLimits == nullptr && d->m_unknown39C == 0 && d->m_unknown3A4 == 0);
     CHECK(d->m_textures.m_first == nullptr && d->m_textureSpaces.m_pool == nullptr && d->m_unknown12CSpaces.m_size == 0);
     // Init.
     CHECK(d->m_unknown3E10 == 0x901 && d->m_unknown3E00 == 1 && d->m_unknown30598 == 2 && d->m_unknown3DF8 == 0);
@@ -187,11 +185,11 @@ void TestFreeing() {
         AtMaterialOwner* owner = new AtMaterialOwner;
         owner->m_textureSpaces.Init(3);
         owner->m_unknown12CSpaces.Init(2);
-        owner->m_unknown34 = 9;
+        owner->m_textureLimits = (AtGrD3DTextureLimits*)9;
         owner->m_noTextures = -1;
         owner->m_mode.m_width = 5;
         owner->Slot1();
-        CHECK(owner->m_textureSpaces.m_pool == nullptr && owner->m_unknown12CSpaces.m_pool == nullptr && owner->m_unknown34 == 0 && owner->m_noTextures == 0 && owner->m_mode.m_width == 0);
+        CHECK(owner->m_textureSpaces.m_pool == nullptr && owner->m_unknown12CSpaces.m_pool == nullptr && owner->m_textureLimits == nullptr && owner->m_noTextures == 0 && owner->m_mode.m_width == 0);
         owner->m_shaderSpaces.Init(2);
         owner->Slot0();  // the deleting destructor
     }

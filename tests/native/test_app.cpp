@@ -206,8 +206,9 @@ static void test_main(const char* directory) {
     // base (at/atap): memory and the heaps, events, the network (off), I/O; the math layer's object is the first that is not recovered. No disc file is
     // read before it.
     // Then graphics: the factory's start (at/grfactory) runs on the host's answer to Direct3D (platform/host_d3d.cpp: one adapter, no device
-    // capabilities), and the layer's Init makes the real graphics device (at/gfxdev), whose first texture member is the texture work's.
-    CHECK(stopped == "Atlas Graphics: the texture at vftable 0x00289768 (0x000FCEE0) is the texture work's, not recovered here");
+    // capabilities), and the layer's Init makes the real graphics device (at/gfxdev), with its texture members (xdb's classes, folded in batch 8). The next
+    // layer, the controllers', is the first that is not recovered.
+    CHECK(stopped == "App start-up: the controller layer's Init (0x000B2E00) is not recovered");
     CHECK(g_atGraphicsFactory.m_adapters.Count() == 1 && g_atGraphicsFactory.m_adapters.At(0)->m_info[0].m_modes == nullptr);
     CHECK(g_atMatrix.Copy == AtMatrixCopy && g_atRender.m_matrix.Copy == AtMatrixCopy);
     CHECK(App::s_memoryTotal != 0);

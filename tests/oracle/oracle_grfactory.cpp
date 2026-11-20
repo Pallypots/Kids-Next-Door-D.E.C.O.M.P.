@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "at/AtDatabaseLoader.h"
+#include "at/AtGrD3DTextureLoad.h"
 #include "at/AtGraphicsDevice.h"
 #include "at/AtGraphicsFactory.h"
 #include "at/AtGraphicsLayer.h"
@@ -73,15 +74,7 @@ AtHeap* AtCurrentHeap() { return nullptr; }
 
 // The device's texture members, by the original's constructors on the recovered side too (as oracle_gfxdev); its freeing members never run here.
 typedef void(__fastcall* Ctor)(void*, void*);
-void AtGfxConstructTextureA(void* p) { at<Ctor>(0x000FCEE0)(p, nullptr); }
-void AtGfxDestroyTextureA(void*) { L('BAD', 9810); }
-void AtGfxConstructTexture2D(void* p) { at<Ctor>(0x000FC630)(p, nullptr); }
-void AtGfxDestroyTexture2D(void*) { L('BAD', 9811); }
-void AtGfxConstructTextureDatabase(void* p) { at<Ctor>(0x0010FFC0)(p, nullptr); }
-void AtGfxDestroyTextureDatabase(void*) { L('BAD', 9812); }
-AtIndexArrayXbox::~AtIndexArrayXbox() { L('BAD', 9813); }
 AtGfxBufferSet::~AtGfxBufferSet() { L('BAD', 9814); }
-AtMeshDatabaseXbox::~AtMeshDatabaseXbox() { L('BAD', 9815); }
 AtGfxResourceXbox::~AtGfxResourceXbox() { L('BAD', 9816); }
 
 // The render table's functions and the adapter list's two slots not recovered (src/at/AtGraphicsFactorySeams.cpp is not linked): only their addresses
@@ -338,7 +331,7 @@ static void run_formats() {
             std::memset(out, 0x77, sizeof out);
             int got[2];
             run_pair("AtD3DFormatToPixelFormat", [&] { got[0] = at<int(__cdecl*)(uint32_t, void*, int)>(0x001197D0)(f, out[0], swizzled == 2 ? 5 : swizzled); },
-                     [&] { got[1] = AtD3DFormatToPixelFormat(f, (AtPixelFormat*)out[1], swizzled == 2 ? 5 : swizzled); });
+                     [&] { got[1] = AtGrD3DFormatFromDevice(f, (AtPixelFormat*)out[1], swizzled == 2 ? 5 : swizzled); });
             eq("format found", got[0], got[1]);
             for (int k = 0; k < 0x20; k += 4) eq("pixel format", word(out[0], k), word(out[1], k));
         }

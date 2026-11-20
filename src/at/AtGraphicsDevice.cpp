@@ -189,6 +189,11 @@ void AtGfxStateCache::ResetState() {
 void AtGfxDrawListsBase::Slot0() { NotRecovered("AtGfxDrawListsBase: slot 0, 0x000ED5F0, is not recovered"); }
 void AtGfxDrawListsBase::Slot1() { NotRecovered("AtGfxDrawListsBase: slot 1 is pure"); }
 void AtGfxDrawListsBase::Clear() { NotRecovered("AtGfxDrawListsBase: slot 2 is pure"); }
+#define PURE_SLOT(n) void AtGfxDrawListsBase::Slot##n() { NotRecovered("AtGfxDrawListsBase: slot " #n " is pure"); }
+PURE_SLOT(3) PURE_SLOT(4) PURE_SLOT(5) PURE_SLOT(6) PURE_SLOT(7) PURE_SLOT(8) PURE_SLOT(10) PURE_SLOT(11)
+#undef PURE_SLOT
+void AtGfxDrawListsBase::ChooseRenderTarget(const AtPixelFormat*, AtPixelFormat*) { NotRecovered("AtGfxDrawLists: slot 9, 0x000EDB50, is not recovered"); }
+void AtGfxDrawLists::ChooseTexture(const AtPixelFormat*, AtPixelFormat*) { NotRecovered("AtGfxDrawLists: slot 12, 0x000EDC90, is not recovered"); }
 
 AtGfxDrawLists::AtGfxDrawLists() {
     m_unknown04 = 0;
@@ -233,18 +238,13 @@ void AtGfxDrawLists::Clear() {
 }
 
 // ---- the concrete index array and the buffer set --------------------------------------------------------------------------
-AtIndexArrayXbox::AtIndexArrayXbox() {
+AtGrD3DIndexArray::AtGrD3DIndexArray() {
     m_resource = 0;
     m_memory = 0;
-    m_device = 0;
+    m_owner = 0;
 }
 
-void AtIndexArrayXbox::Allocate(unsigned int, unsigned int) { NotRecovered("AtIndexArrayXbox: slot 0, 0x000F8330, is not recovered"); }
-void AtIndexArrayXbox::Destroy(unsigned int) { NotRecovered("AtIndexArrayXbox: slot 1, 0x00110620, is not recovered"); }
-void AtIndexArrayXbox::Slot2() { NotRecovered("AtIndexArrayXbox: slot 2, 0x000F8410, is not recovered"); }
-void AtIndexArrayXbox::Lock(void**, int) { NotRecovered("AtIndexArrayXbox: slot 3, 0x000F8030, is not recovered"); }
-void AtIndexArrayXbox::Unlock() { NotRecovered("AtIndexArrayXbox: slot 4, 0x000F8470, is not recovered"); }
-void AtIndexArrayXbox::Finish() { NotRecovered("AtIndexArrayXbox: slot 5, 0x000F8190, is not recovered"); }
+// Its slots and destructor are loader's (src/at/AtGrD3DUnrecovered.cpp; the reader src/at/AtGrD3DSeam.cpp).
 
 AtGfxBufferSet::AtGfxBufferSet() {
     m_unknown04 = 0;
@@ -265,30 +265,7 @@ AtGfxBufferSet::AtGfxBufferSet() {
 
 void AtGfxBufferSet::Slot0() { NotRecovered("AtGfxBufferSet: slot 0, 0x000FA1F0, is not recovered"); }
 
-// ---- the concrete mesh database -------------------------------------------------------------------------------------------
-AtMeshDatabaseXbox::AtMeshDatabaseXbox() {
-    m_meshes = 0;
-    m_device = 0;
-    m_vertexArrays = 0;
-    m_indexArrays = 0;
-    m_unknown34 = 0;
-    m_block3C = 0;
-    m_unknown40 = 0;
-    m_resource = 0;
-    m_unknown48 = 0;
-    m_next = 0;
-}
-
-void AtMeshDatabaseXbox::Clear() { NotRecovered("AtMeshDatabaseXbox: slot 1, 0x001108F0, is not recovered"); }
-void AtMeshDatabaseXbox::MakeMeshes(AtMaterialOwner*) { NotRecovered("AtMeshDatabaseXbox: slot 2, 0x00110490, is not recovered"); }
-void AtMeshDatabaseXbox::MakeVertexArrays(AtMaterialOwner*) { NotRecovered("AtMeshDatabaseXbox: slot 4, 0x00110E90, is not recovered"); }
-void AtMeshDatabaseXbox::MakeIndexArrays(AtMaterialOwner*) { NotRecovered("AtMeshDatabaseXbox: slot 5, 0x00110F70, is not recovered"); }
-int AtMeshDatabaseXbox::HasBinaryForm() { NotRecovered("AtMeshDatabaseXbox: slot 6, 0x001A2B40, is not recovered"); return 0; }
-void AtMeshDatabaseXbox::LoadBinaryForm(AtMaterialOwner*, const char*) { NotRecovered("AtMeshDatabaseXbox: slot 7, 0x001109E0, the .XGG reader, is not recovered"); }
-void AtMeshDatabaseXbox::Slot8() { NotRecovered("AtMeshDatabaseXbox: slot 8, 0x00111050, is not recovered"); }
-AtMesh* AtMeshDatabaseXbox::MeshAt(unsigned int) { NotRecovered("AtMeshDatabaseXbox: slot 9, 0x00110470, is not recovered"); return 0; }
-AtVertexArray* AtMeshDatabaseXbox::VertexArrayAt(unsigned int) { NotRecovered("AtMeshDatabaseXbox: slot 10, 0x00110880, is not recovered"); return 0; }
-AtIndexArray* AtMeshDatabaseXbox::IndexArrayAt(unsigned int) { NotRecovered("AtMeshDatabaseXbox: slot 11, 0x00110890, is not recovered"); return 0; }
+// ---- the concrete mesh database: loader's, src/at/AtGrD3DMeshDatabase.cpp ----------------------------------------------
 
 // ---- the lists of blocks --------------------------------------------------------------------------------------------------
 AtGfxBlockList::AtGfxBlockList() {

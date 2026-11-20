@@ -75,8 +75,8 @@ MUTANTS = [
     ("clear pending: base kept", T, "        AtTextureBase::ClearPending();\n", ""),
     ("reset: not released", T, "void AtGrD3DTexture2D::Reset() {\n    Release();\n", "void AtGrD3DTexture2D::Reset() {\n"),
     ("reset: base kept", T, "void AtGrD3DTexture2D::Reset() {\n    Release();\n    AtTextureBase::Reset();\n", "void AtGrD3DTexture2D::Reset() {\n    Release();\n"),
-    ("reset: owner kept", T, "    m_surfaces = 0;\n    m_owner = 0;\n}\n\nvoid AtGrD3DTexture2D::OnLoaded", "    m_surfaces = 0;\n}\n\nvoid AtGrD3DTexture2D::OnLoaded"),
-    ("loaded: not the seam", T, "    AtGrD3DLoadTexture2D(this, owner);\n", ""),
+    ("reset: owner kept", T, "    m_surfaces = 0;\n    m_owner = 0;\n}\n\nAtGrD3DSurface2D* AtGrD3DTexture2D::SurfaceAt", "    m_surfaces = 0;\n}\n\nAtGrD3DSurface2D* AtGrD3DTexture2D::SurfaceAt"),
+    # "loaded: not the seam" moved: slot 12 is recovered in AtGrD3DTextureLoad.cpp, and its mutants are the texload suite's.
     ("surface at: next", T, "    return &m_surfaces[level];", "    return &m_surfaces[level + 1];"),
     # The texture database.
     ("db ctor: next", T, "AtGrD3DTextureDatabase::AtGrD3DTextureDatabase() {\n    m_next = 0;\n", "AtGrD3DTextureDatabase::AtGrD3DTextureDatabase() {\n"),
