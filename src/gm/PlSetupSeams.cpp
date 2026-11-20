@@ -4,4 +4,4 @@
 
 void AtFatal(const char* message, int file, int line, int unused);
 
-void FaCmCombat::Update(int) { AtFatal("Gm combat: FaCmCombat slot 6, 0x000A4BB0, the update, is not recovered", 0, 0, 0); }
+// The combat update, 0x000A4BB0, was a seam here; it is recovered in src/gm/FaCmCombatUpdate.cpp (gm/combat).

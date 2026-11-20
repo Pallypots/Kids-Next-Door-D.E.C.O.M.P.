@@ -432,7 +432,10 @@ public:
     void AllocateRecords();             // 0x0014A7D0 once, when ConserveVfx says so: VfxWaitingListSize records, or 3; none for a size of 0. src/gm/GmAcRecords.cpp
     void ResetActor();                  // 0x001481A0 every word of the actor's own but the members with classes, and m_flags98 gains kActorReset
     void SpawnEffect(const char* name, int b, const char* c, int d, int e, int f);  // 0x0014A260 not recovered: stops with a diagnostic
-    void GetNoteBank(char* out);        // 0x000A1E10 not recovered: stops with a diagnostic
+    void GetNoteBank(char* out);        // 0x000A1E10 m_noteBank as an eight-byte name. In FaCmCombat's range; src/gm/CombatNames.cpp (gm/combat)
+    // 0x000A1E30. Whether the actor's type is `type`, ignoring case, over eight characters: its own name at +0x264 when that is not empty, else the record's TYPE; 0 with neither. In FaCmCombat's
+    // range; src/gm/FaCmCombatUpdate.cpp. Quirk kept: the own name is measured twice.
+    int IsOfType(const char* type);
     void SceneSetFlag10(int on);        // 0x0014A8D0 the scene: not recovered, stops with a diagnostic
 
     // 0x0014B7A0 and 0x0014B950, the same code twice: registered as the "Rotator" and the "Node" of package "GmAcNode" (0x00201620, 0x00202360). One from the heap below, or for more than one an array

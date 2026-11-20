@@ -36,6 +36,8 @@ public:
     virtual int FindAxis(const char* name) = 0;  // slot 0: an axis's id by its name ("GameAxisForward"). The class is not recovered; its vftable is not known.
     // 0x0006DFE0 not recovered: stops with a diagnostic. The value of one axis of one controller; a controller of -1 is 0. Reads a table at +0x108 by controller and calls an axis object's slot 10.
     float AxisValue(int controller, int axis);
+    // 0x0008F5D0 not recovered (gm/combat's seam): a button of one controller by its name ("GameButtonLockOn"), returned by value. include/gm/FaCmCombat.h.
+    struct GmButtonState FindButton(int controller, const char* name);
 };
 
 // 0x000678A0, AtDataRegistry's search by a whole name: `under` (the root when null), then everything beneath it, then its later siblings and everything beneath them, depth first. `exact`

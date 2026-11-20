@@ -312,7 +312,6 @@ source = "src/gm/GmCmCombat.cpp"
 "?Slot3@GmCmCombat@@UAEXXZ" = 0x001CC9F0  # folded: empty
 "?Update@GmCmCombat@@UAEXH@Z" = 0x000CBF30  # folded: empty
 "?Slot7@GmCmCombat@@UAEHXZ" = 0x001A2B40  # folded: returns 1
-"?Update@FaCmCombat@@UAEXH@Z" = 0x000A4BB0  # not recovered: a seam in src/gm/PlSetupSeams.cpp
 "?s_heap@FaCmCombat@@2PAXA" = 0x003B3C5C
 "?s_instance@GmSavedGame@@2PAU1@A" = 0x00305A48
 "?g_playerHeadJoint@@3PBDB" = 0x002B422C  # points to "HEADR" at 0x0027B550
