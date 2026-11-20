@@ -520,27 +520,5 @@ symbol = "??_7AtFpActionScriptLocalValue@@6B@"
 source = "src/at/AtFlashScriptVM.cpp"
 
 [symbols]
-"?GetCurrentFrame@AtFpDisplayManager@@QAEHXZ" = 0x0002BF50  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?GotoFrame@AtFpDisplayManager@@QAEXH@Z" = 0x0002B970  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?SetPlaying@AtFpDisplayManager@@QAEXH@Z" = 0x0002BFC0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?StopSounds@AtFpDisplayManager@@QAEXXZ" = 0x0002BF20  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?GotoFrameByLabel@AtFpDisplayManager@@QAEXPBD@Z" = 0x0002BF80  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?GotoFrameByExpression@AtFpDisplayManager@@QAEXPBD@Z" = 0x0002CB70  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?SetTarget@AtFpDisplayManager@@QAEXPBD@Z" = 0x0002C3B0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?LoadMovie@AtFpDisplayManager@@QAEXPBD0@Z" = 0x0002CFD0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?ResolveTarget@AtFpDisplayManager@@QAEPAVAtFpRfcArgs@@PBD@Z" = 0x0002CC90  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?GetVariable@AtFpDisplayManager@@QAEHPBDPAVAtFpActionScriptValue@@@Z" = 0x0002C9C0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?SetVariable@AtFpDisplayManager@@QAEHPBDPAVAtFpActionScriptValue@@@Z" = 0x0002CAA0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?GetProperty@AtFpDisplayManager@@QAEXPBDHPAVAtFpActionScriptValue@@@Z" = 0x0002C320  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?SetProperty@AtFpDisplayManager@@QAEXPBDHPAVAtFpActionScriptValue@@@Z" = 0x0002C360  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?ExecuteScripts@AtFpDisplayManager@@QAEHH@Z" = 0x0002C150  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?ExecuteScripts@AtFpDisplayManager@@QAEHPBD@Z" = 0x0002C1C0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?SetTarget@AtFpDisplayMgrContextStack@@QAEXPAX@Z" = 0x00016130  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?Call@AtFpRfcTable@@QAEXPBDPAVAtFpRfcArgs@@@Z" = 0x0002D9E0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?Construct@AtFpRfcArgs@@QAEXXZ" = 0x00021620  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?Destruct@AtFpRfcArgs@@QAEXXZ" = 0x00021AD0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?Init@AtFpRfcArgs@@QAEXXZ" = 0x000216E0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?Add@AtFpRfcArgs@@QAEXPBDPAVAtFpActionScriptValue@@@Z" = 0x00021DD0  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
-"?Clear@AtFpRfcArgs@@QAEXXZ" = 0x00021680  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
 "?AtPlatformMilliseconds@@YAIXZ" = 0x00020640  # the clock, from the performance counter
 "?AtFormatGeneral@@YAXPADN@Z" = 0x00125559  # stands in for the C library's sprintf with "%g"

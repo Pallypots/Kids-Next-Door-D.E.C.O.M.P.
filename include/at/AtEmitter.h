@@ -12,6 +12,8 @@
 // Two floats. Other callers of 0x00021EC0 are not recovered, so it may be more than this.
 struct AtVector2 {
     void Normalize();          // 0x00021EC0 no longer than 5e-6: becomes (1, 0)
+    void SetNormalized(const AtVector2& from);  // 0x00021F10 the same, of another. src/at/AtFpDisplay.cpp
+    float NormalizeLength();   // 0x00021F60 the same; returns the length, or 0 when it was that short
 
     float x;   // +0x00
     float y;   // +0x04

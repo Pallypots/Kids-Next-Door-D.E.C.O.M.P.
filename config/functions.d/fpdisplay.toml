@@ -1,0 +1,546 @@
+# The Flash player's display manager (at/fpdisplay): the manager's methods the action script machine calls and ResolvePath, its stack of contexts, the queue of actions, sprite nodes' frames, labels, paths, properties and
+# display lists, the nodes' constructors, sprites' variables and the remote function calls. Names inferred but for those the original's messages give. Sizes are the inventory's. See include/at/AtFpDisplay.h.
+
+[[function]]
+va = 0x0002BF50
+size = 36
+symbol = "?GetCurrentFrame@AtFpDisplayManager@@QAEHXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002B970
+size = 38
+symbol = "?GotoFrame@AtFpDisplayManager@@QAEXH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002BFC0
+size = 41
+symbol = "?SetPlaying@AtFpDisplayManager@@QAEXH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002BF20
+size = 35
+symbol = "?StopSounds@AtFpDisplayManager@@QAEXXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002BF80
+size = 59
+symbol = "?GotoFrameByLabel@AtFpDisplayManager@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002CB70
+size = 280
+symbol = "?GotoFrameByExpression@AtFpDisplayManager@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002C3B0
+size = 126
+symbol = "?SetTarget@AtFpDisplayManager@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002CFD0
+size = 148
+symbol = "?LoadMovie@AtFpDisplayManager@@QAEXPBD0@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002CC90
+size = 18
+symbol = "?ResolveTarget@AtFpDisplayManager@@QAEPAVAtFpRfcArgs@@PBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002C9C0
+size = 222
+symbol = "?GetVariable@AtFpDisplayManager@@QAEHPBDPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002CAA0
+size = 206
+symbol = "?SetVariable@AtFpDisplayManager@@QAEHPBDPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002C320
+size = 56
+symbol = "?GetProperty@AtFpDisplayManager@@QAEXPBDHPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002C360
+size = 42
+symbol = "?SetProperty@AtFpDisplayManager@@QAEXPBDHPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002C150
+size = 102
+symbol = "?ExecuteScripts@AtFpDisplayManager@@QAEHH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002C1C0
+size = 345
+symbol = "?ExecuteScripts@AtFpDisplayManager@@QAEHPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002BFF0
+size = 339
+symbol = "?ResolvePath@AtFpDisplayManager@@QAEPAVAtFpSpriteCharacterNode@@PBDH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016080
+size = 64
+symbol = "?Push@AtFpDisplayMgrContextStack@@QAEXPAX0@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000160E0
+size = 69
+symbol = "?GetCurrentContext@AtFpDisplayMgrContextStack@@QAEXPAUEntry@1@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016130
+size = 71
+symbol = "?SetTarget@AtFpDisplayMgrContextStack@@QAEXPAX@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016180
+size = 42
+symbol = "?GetContext@AtFpDisplayMgrContextStack@@QAEPAVAtFpSpriteCharacterNode@@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000161B0
+size = 41
+symbol = "?GetTarget@AtFpDisplayMgrContextStack@@QAEPAVAtFpSpriteCharacterNode@@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000162C0
+size = 177
+symbol = "?Push@AtFpActionQueue@@QAEXHPAVAtFpSpriteCharacterNode@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012720
+size = 45
+symbol = "?Append@AtFlashList@@QAEXPAUAtFlashLink@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00012750
+size = 63
+symbol = "?Remove@AtFlashList@@QAEXPAUAtFlashLink@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002D9E0
+size = 368
+symbol = "?Call@AtFpRfcTable@@QAEXPBDPAVAtFpRfcArgs@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021620
+size = 85
+symbol = "?Construct@AtFpRfcArgs@@QAEXXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021AD0
+size = 74
+symbol = "?Destruct@AtFpRfcArgs@@QAEXXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000216E0
+size = 197
+symbol = "?Init@AtFpRfcArgs@@QAEXXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021DD0
+size = 152
+symbol = "?Add@AtFpRfcArgs@@QAEXPBDPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021680
+size = 87
+symbol = "?Clear@AtFpRfcArgs@@QAEXXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021820
+size = 63
+symbol = "?Get@AtFpRfcArgs@@QAEHPBDPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000217B0
+size = 97
+symbol = "?Find@AtFpRfcArgs@@QAEPAVAtFpActionScriptValue@@PBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021860
+size = 623
+symbol = "?Insert@AtFpRfcArgs@@QAEXPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020B60
+size = 151
+symbol = "?SetName@AtFpActionScriptValue@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020D20
+size = 12
+symbol = "?SetUndefinedNamed@AtFpActionScriptValue@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016A60
+size = 58
+symbol = "?Frame@AtFpSprite@@QAEPAVAtFlashFrame@@I@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00016AA0
+size = 53
+symbol = "?FrameName@AtFpSprite@@QAEPBDI@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00013380
+size = 34
+symbol = "?RunScript@AtFlashScriptTable@@QAEXI@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021F10
+size = 77
+symbol = "?SetNormalized@AtVector2@@QAEXABU1@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021F60
+size = 77
+symbol = "?NormalizeLength@AtVector2@@QAEMXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020F70
+size = 85
+symbol = "??0AtFpCharacterNode@@QAE@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000210B0
+size = 29
+symbol = "??0AtFpBaseBranchCharacterNode@@QAE@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014300
+size = 99
+symbol = "??0AtFpSpriteCharacterNode@@QAE@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021FE0
+size = 29
+symbol = "??0AtFpShapeCharacterNode@@QAE@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00030570
+size = 26
+symbol = "??0AtFpTextCharacterNode@@QAE@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020E10
+size = 141
+symbol = "?SetName@AtFpCharacterNode@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00020D70
+size = 10
+symbol = "?Root@AtFpCharacterNode@@QAEPAVAtFpSpriteCharacterNode@@XZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021210
+size = 45
+symbol = "?ChildAtDepth@AtFpBaseBranchCharacterNode@@QAEPAVAtFpCharacterNode@@I@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021130
+size = 215
+symbol = "?AddChild@AtFpBaseBranchCharacterNode@@QAEXPAVAtFpCharacterNode@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000213D0
+size = 72
+symbol = "?Kill@AtFpBaseBranchCharacterNode@@QAEXPAVAtFpCharacterNode@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000214A0
+size = 156
+symbol = "?RemoveAllChildren@AtFpBaseBranchCharacterNode@@QAEXXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021560
+size = 168
+symbol = "?RemoveChild@AtFpBaseBranchCharacterNode@@QAEXPAVAtFpCharacterNode@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00015130
+size = 420
+symbol = "?GotoFrame@AtFpSpriteCharacterNode@@QAEXH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014480
+size = 73
+symbol = "?FindLabel@AtFpSpriteCharacterNode@@QAEHPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000145B0
+size = 70
+symbol = "?ExecuteFrame@AtFpSpriteCharacterNode@@QAEXH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002B9A0
+size = 25
+symbol = "?GotoLabel@AtFpSpriteCharacterNode@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x0002B9C0
+size = 25
+symbol = "?ExecuteLabel@AtFpSpriteCharacterNode@@QAEXPBD@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x000144D0
+size = 223
+symbol = "?FindChild@AtFpSpriteCharacterNode@@QAEPAV1@PBDHPAH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014250
+size = 166
+symbol = "?TargetPath@AtFpSpriteCharacterNode@@QAEXPADIPAI@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014600
+size = 725
+symbol = "?GetProperty@AtFpSpriteCharacterNode@@QAEXHPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014910
+size = 768
+symbol = "?SetProperty@AtFpSpriteCharacterNode@@QAEXHPAVAtFpActionScriptValue@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014CA0
+size = 82
+symbol = "?RemoveChildrenAfter@AtFpSpriteCharacterNode@@QAEXH@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014D00
+size = 95
+symbol = "?FlushPending@AtFpSpriteCharacterNode@@QAEXXZ"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014D60
+size = 43
+symbol = "?FindPending@AtFpSpriteCharacterNode@@QAEPAVAtFpCharacterNode@@I@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00014F00
+size = 560
+symbol = "?ExecutePlace@AtFpSpriteCharacterNode@@QAEXPAVAtFpPlaceObject2Tag@@@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[[function]]
+va = 0x00021240
+size = 394
+symbol = "?MakeNode@AtFpSpriteCharacterNode@@QAEPAVAtFpCharacterNode@@HI@Z"
+source = "src/at/AtFpDisplay.cpp"
+subsystem = "at/fpdisplay"
+evidence = "tests/oracle/oracle_fpdisplay.cpp; address noted beside the declaration in the header"
+
+[symbols]
+"?UnloadLevel@AtFpDisplayManager@@QAEXH@Z" = 0x0002C570  # not recovered; a seam in src/at/AtFpDisplaySeams.cpp
+"?FindLoadedLevel@AtFpDisplayManager@@QAEPAVAtFlashLevel@@PBD@Z" = 0x0002C5D0  # not recovered; a seam
+"?NewLevel@AtFpDisplayManager@@QAEPAVAtFlashLevel@@PBDH@Z" = 0x0002CCB0  # not recovered; a seam
+"?AttachLevel@AtFpDisplayManager@@QAEXPAVAtFlashLevel@@H@Z" = 0x0002C430  # not recovered; a seam
+"?StopAll@AtFlashSoundTable@@QAEXXZ" = 0x00012AA0  # not recovered; a seam
+"?Play@AtFlashSoundTable@@QAEXH@Z" = 0x00012790  # not recovered; a seam
+"?SetMatrix@AtFpCharacterNode@@QAEXPBM@Z" = 0x00020EA0  # not recovered; a seam
+"?s_heap@AtFpRfcArgs@@2PAXA" = 0x002C6320
+"?s_heap@AtFpActionQueue@@2PAXA" = 0x002C6268
+"?s_heap@AtFpCharacterNode@@2PAXA" = 0x002C631C
+"?s_heap@AtFpRfcTable@@2PAXA" = 0x002C6394
+"?s_count@AtFpRfcTable@@2IA" = 0x002B1370
+"??_C@_0ED@PPIIFNIJ@AtFpDisplayMgrContextStack?3?3vGe@" = 0x00271E48  # "AtFpDisplayMgrContextStack::vGetCurrentContext Invalid stack depth"
+"??_C@_0ED@EDKGOJEL@AtFpDisplayMgrContextStack?3?3poG@" = 0x00271EC8  # "AtFpDisplayMgrContextStack::poGetCurrentTarget Invalid stack depth"

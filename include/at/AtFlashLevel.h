@@ -19,9 +19,11 @@ public:
 
     void Reset();                      // 0x000113B0 the destructor's end, and the constructor's
 
-    char m_unknown000[8];
+    union { char m_unknown000[8]; AtFlashLink m_link; };  // +0x000 in the display manager's lists of levels
     int m_unknown008;                  // +0x008
-    char m_player[0xC4 - 0x0C];        // +0x00C vftable 0x00271994, constructor 0x00014300; not recovered
+    // +0x00C the level's root, an AtFpSpriteCharacterNode (vftable 0x00271994, constructor 0x00014300, include/at/AtFpDisplay.h), constructed by the level's constructor, which is not recovered. Raw storage, sized by the
+    // node: 0xB8 bytes on x86, more where pointers are wider.
+    alignas(void*) char m_player[sizeof(AtFpSpriteCharacterNode)];
     AtFlashScriptTable m_scripts;      // +0x0C4
     AtFlashShapeTable m_shapes;        // +0x154
     char m_sounds[0x4C];               // +0x190 vftable 0x002710E0, constructor 0x000128E0; not recovered. The file's word Sound does not reach it.
@@ -30,14 +32,14 @@ public:
     AtFlashTextTable m_texts;          // +0x248
     int m_unknown31C;                  // +0x31C
     AtFlashEnvironment* m_environment; // +0x320
-    int m_unknown324;                  // +0x324
-    int m_read;                        // +0x328 set by the word Level
+    union { int m_unknown324; AtFpSpriteCharacterNode* m_root; };  // +0x324 &m_player once initialised
+    int m_read;                        // +0x328 set by the word Level; the player also counts the instances it names "instance%d" here (0x00014F00)
     unsigned int m_heapSize;           // +0x32C always 0 after Load
     int m_unknown330;                  // +0x330 20000; nothing here reads it
     int m_maxVariableValueLength;      // +0x334 1000 by default
     int m_maxVariables;                // +0x338 10000 by default
     int m_fontSourceLevel;             // +0x33C -1 by default and for the word Self, -2 for All
-    int m_unknown340;                  // +0x340
+    union { int m_unknown340; int m_number; };  // +0x340 N of "_levelN"
     char m_name[8];                    // +0x344
     void* m_heapInUse;                 // +0x34C
     void* m_block;                     // +0x350 what was taken for the heap of its own, from the heap it fell back on

@@ -36,6 +36,8 @@ public:
     AtFpActionScriptValue* CopyFrom(const AtFpActionScriptValue* from);  // 0x0002D200 the text only if from has one
     void SetText(AtText* text);        // 0x00020C00 a null is undefined
     void SetText(const char* text);    // 0x00020C60 a null is undefined
+    void SetName(const char* name);    // 0x00020B60 a copy from m_heap or s_heap; null leaves none. src/at/AtFpDisplay.cpp
+    void SetUndefinedNamed(const char* name);  // 0x00020D20 undefined, keeping its text, and named
 
     // Inline in the original wherever a handler wants one form.
     float Real() { return m_type == kTypeReal ? m_real : ToReal(); }
@@ -51,7 +53,7 @@ public:
     union { int m_unknown18; int m_haveTextInt; };    // +0x18
     union { int m_unknown1C; int m_haveTextReal; };   // +0x1C
     union { int m_unknown20; int m_haveIntReal; };    // +0x20
-    void* m_unknown24;                 // +0x24 freed by Reset
+    union { void* m_unknown24; char* m_name; };  // +0x24 freed by Reset: the name it has in a table of variables
     void* m_heap;                      // +0x28 null means s_heap
 
     static void* s_heap;               // 0x002C6318
@@ -189,6 +191,7 @@ public:
     void ClearScripts();               // 0x00013420 nothing unless loaded; the base is not cleared
     // 0x000134A0. The strings first, then the scripts. The words are taken as they come, not checked: only NameSpace is expected.
     void Load(const char* name, int mode, AtFlashApplication* application);
+    void RunScript(unsigned int id);   // 0x00013380 by the low 16 bits, not checked against the count; nothing for a null. src/at/AtFpDisplay.cpp
 
     int m_loaded;                      // +0x28
     AtFlashApplication* m_application; // +0x2C
