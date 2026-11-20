@@ -71,7 +71,7 @@ void GmMusicManager::Free(GmMusicChain*) {}
 // ---- the seams of src/gm/GmDatabaseManifestHost.cpp -----------------------------------------------------------------------
 void AtSceneDatabaseLoader::Load(AtNameTableOwner*, const char* name, int mode) { note("scene", name); CHECK(mode == 0); }
 void AtCinemaDatabase::Load(GmCinemaOwner*, const char* name, int) { note("cinema", name); }
-void AtEventDatabase::Load(GmEventOwner*, const char* name, int) { note("event", name); }
+void AtEventDatabase::Load(AtDataRegistryOwner*, const char* name, int) { note("event", name); }
 void GmRegistryNames::Add(AtDataRegistry* registry) { note("add-registry", registry->m_loaded ? "loaded" : "not"); }
 void GmSpaceGraphOwner::SetGraph(AtSpaceGraph* graph) { note("set-graph"); m_graph = graph; }
 

@@ -334,20 +334,20 @@ static void __fastcall o_cinema_load(AtCinemaDatabase* db, void*, GmCinemaOwner*
 void AtCinemaDatabase::Load(GmCinemaOwner* owner, const char* name, int unused) { cinema_load(this, owner, name, unused); }
 
 // The event database's: every third leaves the list empty, which Clear then passes over entirely.
-static void event_load(AtEventDatabase* db, GmEventOwner* owner, const char* name, int unused) {
+static void event_load(AtEventDatabase* db, AtDataRegistryOwner* owner, const char* name, int unused) {
     note('e', (uint32_t)ident(db));
     log_ptr('e', owner);
     note('h', hash(name));
     note('e', (uint32_t)unused);
     const int n = g_loads[g_side]++ % 3;
     if (n == 0) return;
-    db->m_list.m_entries = (AtEventEntry*)make_entries((unsigned)(n - 1), 0x10);
+    db->m_list.m_entries = (AtEvent*)make_entries((unsigned)(n - 1), 0x10);
     db->m_list.m_count = (unsigned)(n - 1);
-    db->m_block = std::malloc(16);
-    db->m_unknown24 = 0x24;
+    db->m_subscriptions = (AtEventSubscription*)std::malloc(16);
+    db->m_subscriptionCount = 0x24;
 }
-static void __fastcall o_event_load(AtEventDatabase* db, void*, GmEventOwner* owner, const char* name, int unused) { event_load(db, owner, name, unused); }
-void AtEventDatabase::Load(GmEventOwner* owner, const char* name, int unused) { event_load(this, owner, name, unused); }
+static void __fastcall o_event_load(AtEventDatabase* db, void*, AtDataRegistryOwner* owner, const char* name, int unused) { event_load(db, owner, name, unused); }
+void AtEventDatabase::Load(AtDataRegistryOwner* owner, const char* name, int unused) { event_load(this, owner, name, unused); }
 
 // ---- the makers: one of each to a side, used through their slots on both ----------------------------------------------------------------------------------------------------------------
 class SoundDb : public AtAudioDatabase {
@@ -790,8 +790,8 @@ static void same_base_item(const char* what, int kind, const GmManifestItem* a, 
         eq(what, ident(x->m_owner), ident(y->m_owner));
         eq(what, ident(x->m_database.m_list.m_entries), ident(y->m_database.m_list.m_entries));
         eq(what, x->m_database.m_list.m_count, y->m_database.m_list.m_count);
-        eq(what, x->m_database.m_block != nullptr, y->m_database.m_block != nullptr);
-        eq(what, x->m_database.m_unknown24, y->m_database.m_unknown24);
+        eq(what, x->m_database.m_subscriptions != nullptr, y->m_database.m_subscriptions != nullptr);
+        eq(what, x->m_database.m_subscriptionCount, y->m_database.m_subscriptionCount);
         eq(what, x->m_database.m_size, y->m_database.m_size);
         break;
     }
@@ -1379,13 +1379,13 @@ static void run_event_clear() {
             if (s == 0) at<Fn0>(0x000C9660)(d[s], nullptr);
             else new (d[s]) AtEventDatabase;
             if (variant == 0) {
-                d[s]->m_block = std::malloc(16);
-                g_blocks[s].push_back({(char*)d[s]->m_block, 16});
-                d[s]->m_unknown24 = 5;
+                d[s]->m_subscriptions = (AtEventSubscription*)std::malloc(16);
+                g_blocks[s].push_back({(char*)d[s]->m_subscriptions, 16});
+                d[s]->m_subscriptionCount = 5;
             } else {
-                d[s]->m_list.m_entries = (AtEventEntry*)make_entries(1, 0x10);
+                d[s]->m_list.m_entries = (AtEvent*)make_entries(1, 0x10);
                 d[s]->m_list.m_count = 1;
-                d[s]->m_block = std::malloc(16);
+                d[s]->m_subscriptions = (AtEventSubscription*)std::malloc(16);
                 if (s == 0) at<FnI>(0x00024DA0)(d[s], nullptr, 3);
                 else d[s]->Init(3);
             }
@@ -1394,8 +1394,8 @@ static void run_event_clear() {
         { On on(0); (*(Fn0*)(*(void***)d[0] + 1))(d[0], nullptr); }
         { On on(1); d[1]->Clear(); }
         compare_logs("event cleared");
-        eq("event block", ident(d[0]->m_block), ident(d[1]->m_block));
-        eq("event 24", d[0]->m_unknown24, d[1]->m_unknown24);
+        eq("event block", ident(d[0]->m_subscriptions), ident(d[1]->m_subscriptions));
+        eq("event 24", d[0]->m_subscriptionCount, d[1]->m_subscriptionCount);
         eq("event map size", d[0]->m_size, d[1]->m_size);
         eq("event map entries", d[0]->m_entries != nullptr, d[1]->m_entries != nullptr);
         eq("event list", ident(d[0]->m_list.m_entries), ident(d[1]->m_list.m_entries));
@@ -1425,7 +1425,7 @@ static void run_small_classes() {
                 g_side = s;
                 AtEventList* l = s ? r : o;
                 if (n) {
-                    l->m_entries = (AtEventEntry*)make_entries((unsigned)(n - 1), 0x10);
+                    l->m_entries = (AtEvent*)make_entries((unsigned)(n - 1), 0x10);
                     l->m_count = 7;
                 }
             }
@@ -1439,7 +1439,7 @@ static void run_small_classes() {
                 g_side = s;
                 AtEventList* l = s ? r : o;
                 if (n) {
-                    l->m_entries = (AtEventEntry*)make_entries((unsigned)(n - 1), 0x10);
+                    l->m_entries = (AtEvent*)make_entries((unsigned)(n - 1), 0x10);
                     l->m_count = 7;
                 }
             }

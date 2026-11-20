@@ -1,0 +1,186 @@
+# Events by name, .AEE files: the reader, an event's subscriptions and its publishing. Names inferred; see include/at/AtEvent.h.
+# Sizes up to the return. The event list's and the database's constructors, destructors and Clear were gm/dbmanifest's, moved here with their records.
+
+[[function]]
+va = 0x000C9A00
+size = 154
+symbol = "?Load@AtEventDatabase@@QAEXPAUAtDataRegistryOwner@@PBDH@Z"
+source = "src/at/AtEventLoad.cpp"
+subsystem = "at/aee"
+evidence = "from 0x001B4870 (GmEventDatabaseItem::Run); \"AEE\" at 0x00286690; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9750
+size = 525
+symbol = "?Read@AtEventDatabase@@QAEXPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000C9A68; keyword table 0x002B6848; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9720
+size = 40
+symbol = "?FindFreeSubscription@AtEventDatabase@@QAEPAUAtEventSubscription@@XZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000DF5E6 (AtEvent::Subscribe); tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9650
+size = 10
+symbol = "?SetHeap@AtEventDatabase@@SAXPAX@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "writes 0x003ADF9C; from 0x000B3CA0; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9520
+size = 213
+symbol = "?Allocate@AtEventList@@QAEXI@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000C9863; vector constructor of 0x000DF5C0, unwound by 0x000DF700; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9460
+size = 10
+symbol = "?SetHeap@AtEventList@@SAXPAX@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "writes 0x003ADF98; from 0x000B3CCC; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000DF5C0
+size = 17
+symbol = "??0AtEvent@@QAE@XZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "vector constructor argument at 0x000C958B; writes vftable 0x00287FD8; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000DF700
+size = 30
+symbol = "??1AtEvent@@UAE@XZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000C943A and the vector destructor at 0x000C9411; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9400
+size = 84
+symbol = "??_EAtEvent@@UAEPAXI@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "vftable 0x00287FD8 slot 0, vector deleting, compiler-made; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000DF5E0
+size = 100
+symbol = "?Subscribe@AtEvent@@QAEXPAXP6AX0PAUAtEventMessage@@@ZI@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "calls 0x000C9720 on +0x0C; from 0x000BF703, 0x000E0F28, 0x00196E98 and three more; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000DF650
+size = 94
+symbol = "?Unsubscribe@AtEvent@@QAEXPAXP6AX0PAUAtEventMessage@@@ZI@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000BF730, 0x000E0FC5, 0x0015EB67 and three more; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000DF6B0
+size = 66
+symbol = "?Publish@AtEvent@@QAEXPAUAtEventMessage@@@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000C0322, 0x000C6E7D, 0x0015127C and four more; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9660
+size = 104
+symbol = "??0AtEventDatabase@@QAE@XZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x001B4914; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C96D0
+size = 65
+symbol = "?Clear@AtEventDatabase@@UAEXXZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "vftable 0x00286688 slot 1; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9960
+size = 146
+symbol = "??1AtEventDatabase@@UAE@XZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x001B498C; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C5720
+size = 84
+symbol = "??_GAtEventDatabase@@UAEPAXI@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "vftable 0x00286688 slot 0, compiler-made, called directly in tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C94B0
+size = 17
+symbol = "??0AtEventList@@QAE@XZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000C9696; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C94D0
+size = 73
+symbol = "??1AtEventList@@UAE@XZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000C99CE; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9470
+size = 56
+symbol = "?Free@AtEventList@@QAEXXZ"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "from 0x000C96E0 and 0x000C9998; tests/oracle/oracle_aee.cpp"
+
+[[function]]
+va = 0x000C9600
+size = 79
+symbol = "??_GAtEventList@@UAEPAXI@Z"
+source = "src/at/AtEvent.cpp"
+subsystem = "at/aee"
+evidence = "vftable 0x00286674 slot 0, scalar deleting, compiler-made, called directly in tests/oracle/oracle_aee.cpp"
+
+[[vtable]]
+va = 0x00286688
+slots = 2
+symbol = "??_7AtEventDatabase@@6B@"
+source = "src/at/AtEvent.cpp"
+
+[[vtable]]
+va = 0x00286674
+slots = 1
+symbol = "??_7AtEventList@@6B@"
+source = "src/at/AtEvent.cpp"
+
+[[vtable]]
+va = 0x00287FD8
+slots = 1
+symbol = "??_7AtEvent@@6B@"
+source = "src/at/AtEvent.cpp"
+
+[symbols]
+"?Reset@AtEventList@@QAEXXZ" = 0x000E7880  # folded with AtDataComponent::Reset (at/adr) and others
+"?s_heap@AtEventList@@2PAXA" = 0x003ADF98
+"?s_heap@AtEventDatabase@@2PAXA" = 0x003ADF9C
+"?s_keywords@AtEventDatabase@@2QBUAtIoKeyword@@B" = 0x002B6848
