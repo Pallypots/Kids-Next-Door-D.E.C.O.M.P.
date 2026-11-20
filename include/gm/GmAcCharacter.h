@@ -55,7 +55,9 @@ public:
 struct GmAcStat {
     void* m_unknown00;
     char m_name[8];                     // +0x04
-    char m_unknown0C[0x10];
+    float m_min;                        // +0x0C the bounds a health range's fractions are of: GmStatInRange 0x001524C0, include/gm/GmAcNPC.h
+    float m_max;                        // +0x10
+    char m_unknown14[8];
     float m_value;                      // +0x1C
 };
 
