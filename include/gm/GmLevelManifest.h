@@ -30,11 +30,20 @@ public:
     void Release(GmBehaviorList* list);                 // 0x00198E70
 };
 
-class GmScript;
+// The scripts the manifest's SmallCScripts items load: at/smallvm's script object (include/at/AtSmallVm.h).
+struct AtSmallCScript;
+class AtSmallCSystem;
+typedef AtSmallCScript GmScript;
+// What starts and stops scripts by path, over the script system. Recovered by at/smallvm (src/at/AtSmallCScripts.cpp); its other members are not known.
 class GmScriptOwner {
 public:
-    GmScript* Load(const char* path);        // 0x00070310
-    void Release(GmScript* script);          // 0x00070150
+    GmScript* Load(const char* path);        // 0x00070310 the directory is pushed onto every file system's path while the script starts
+    void Release(GmScript* script);          // 0x00070150 stops the script by its own name
+    GmScript* Start(const char* directory, const char* file);  // 0x00070220 the directory first
+    int CallPublic(GmScript* script, int index);                // 0x00070190 on a copy of the machine
+
+    void* m_unknown00;                       // +0x00
+    AtSmallCSystem* m_system;                // +0x04
 };
 
 // The object at 0x003B35D4: only its three owners are known.

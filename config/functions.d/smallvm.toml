@@ -1,0 +1,330 @@
+# The behaviour scripts' abstract machine (Small/AMX), the script objects and the script system's loading and running (at/smallvm). Names inferred;
+# see include/at/AtSmallVm.h. Sizes run to the padding after each function's last instruction.
+
+[[function]]
+va = 0x0007A7D0
+size = 56
+symbol = "?AtAmxCallback@@YAHPAUAtAmx@@HPAH1@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "the default callback Init installs (0x0007ABDC); natives stub at header +0x28 times 0x1C, calls address(context, amx, params), returns +0x5C; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007A810
+size = 42
+symbol = "?AtAmxHostVarGet@@YAHPAUAtAmx@@HPAH1@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "called by opcode 131 (0x0007C29C); stub from header +0x3A by params[1], *result = *address; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007A840
+size = 51
+symbol = "?AtAmxHostVarSet@@YAHPAUAtAmx@@HPAH1@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "called by opcode 132 (0x0007C2DB); *address = params[2], *result = 0; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007A880
+size = 6
+symbol = "?AtAmxDebugNone@@YAHPAUAtAmx@@@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "mov eax, 0x15; installed by Init (0x0007ABEA); tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007A890
+size = 410
+symbol = "?AtAmxRelocate@@YAHPAUAtAmx@@@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "amx in edi; called by Init; byte map 0x0007AA4C and table 0x0007AA2C over opcodes 1-0x85; flags 0x4000/0x4002, then |0x8000; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007AAE0
+size = 95
+symbol = "?AtAmxExpand@@YAXPAEHH@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "eax size, ecx memsize, edi code; called by Init when header flag 4; 7-bit groups read backwards; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007AB40
+size = 218
+symbol = "?AtAmxInit@@YAHPAUAtAmx@@PAX@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "checks word +4 == 0xF1E0, word +0xA == 0x1C, byte +7 <= 3, stp, flag 1; called by LoadProgram 0x00075A25; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007AC20
+size = 204
+symbol = "?AtAmxFindPublic@@YAHPAUAtAmx@@PBDPAH@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "binary search of publics (+0x20/+0x22); 0x7FFFFFFF and 0x13 when absent; called by StartScript and funcidx; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007ACF0
+size = 111
+symbol = "?AtAmxFindNativeFunction@@YAP6AHPAXPAUAtAmx@@PAH@ZPBDPBUAtSmallCNativeEntry@@H@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "count in edx; returns +0x14 of a 0x1C entry; called by Register; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007AD60
+size = 111
+symbol = "?AtAmxFindNativeContext@@YAPAXPBDPBUAtSmallCNativeEntry@@H@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "as 0x0007ACF0 returning +0x18; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007ADD0
+size = 309
+symbol = "?AtAmxRegister@@YAHPAUAtAmx@@PBUAtSmallCNativeEntry@@H@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "string 0x002793A0 \"WARNING: Amx function %s not found.\"; fills stub +0 context and +4 function; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007AF10
+size = 166
+symbol = "?Instance@AtSmallCSystem@@SAPAV1@XZ"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "s_instance 0x002CF174, new 0x5B48 on 0x002CF170, constructor 0x000756C0; called by LINE 0x0007C33A; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007AFC0
+size = 14
+symbol = "?AtAmxRaiseError@@YAHPAUAtAmx@@H@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "stores +0x5C, returns 0; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007AFD0
+size = 47
+symbol = "?AtAmxGetAddr@@YAHPAUAtAmx@@HPAPAH@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "hea/stk/stp at +0x14/+0x18/+0x1C; 5 when outside; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007B000
+size = 114
+symbol = "?AtAmxStrLen@@YAHPBHPAH@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "packed when the first cell > 0xFF; global 0x00301B34; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007B080
+size = 101
+symbol = "?AtAmxGetString@@YAHPADPBH@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "packed: bytes from the top by sar; unpacked: low bytes; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007B0F0
+size = 106
+symbol = "?AtAmxFindHostVar@@YAPAXPBDPBUAtSmallCHostVar@@H@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "count in edx; entries 0x18, address at +0x14; called by 0x0007B160; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007B160
+size = 95
+symbol = "?AtAmxRegisterHostVars@@YAHPAUAtAmx@@PBUAtSmallCHostVar@@H@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "header +0x38/+0x3A, stub +4; called by StartScript and CallPublic with system +0x3800; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0007B1C0
+size = 5107
+symbol = "?AtAmxExec@@YAHPAUAtSmallCScript@@PAHHHPBH@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "opcode table 0x0007C5B4 (0x85 entries), LCTRL 0x0007C7C8, SCTRL 0x0007C7E4; state in script +0x84..+0xA4; called by Run 0x00075890; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00013F00
+size = 68
+symbol = "?AtCompareNames8@@YAHPBD0@Z"
+source = "src/at/AtSmallVm.cpp"
+subsystem = "at/smallvm"
+evidence = "at most 8 bytes, movsx difference, null is 0x00270F0B; called by FindScriptIndex 0x0007561B; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075350
+size = 61
+symbol = "??0AtSmallCScript@@QAE@XZ"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "clears +0x6C..+0xA8, +0x78 = 4, +0x7C = -1; called by Create and CallPublic; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075340
+size = 8
+symbol = "?SetValid@AtSmallCScript@@QAEXXZ"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "+0x74 = 1; called by CallPublic 0x00075B63; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075390
+size = 89
+symbol = "?Reset@AtSmallCScript@@QAEXXZ"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "frees +0x6C unless +0x80; called by Release and CallPublic; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x000753F0
+size = 5
+symbol = "??1AtSmallCScript@@QAE@XZ"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "jmp 0x00075390; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0006F5A0
+size = 155
+symbol = "?Create@AtSmallCScriptFactory@@QAEPAUAtSmallCScript@@XZ"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "new 0xAC on 0x002CD0E8; called by StartScript 0x00075D23; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x0006F640
+size = 36
+symbol = "?Release@AtSmallCScriptFactory@@QAEXPAX@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "Reset, then destructor and delete when not null; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075530
+size = 96
+symbol = "?FindNative@AtSmallCSystem@@QAEHPBD@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "linear over 0x200 entries of 0x1C; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075760
+size = 54
+symbol = "?Unregister@AtSmallCSystem@@QAEHPBD@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "clears the entry, --+0x5B00; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x000758B0
+size = 470
+symbol = "?LoadProgram@AtSmallCSystem@@QAEPAEPAUAtAmx@@PBDH@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "string 0x00278410 \".ASL\"; 0x40-byte header read, stp bytes on 0x002CF170, 0x0007AB40; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075860
+size = 79
+symbol = "?Run@AtSmallCSystem@@SAHPAV1@PAUAtSmallCScript@@HPBH@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "flags +0x70, Exec with +0xA8, +0x7C; cdecl; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075B20
+size = 320
+symbol = "?CallPublic@AtSmallCSystem@@QAEHPAUAtSmallCScript@@HH@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "local script copy with Register and 0x0007B160; called by 0x00070190; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075CB0
+size = 763
+symbol = "?StartScript@AtSmallCSystem@@QAEHPBUAtSmallCScriptDesc@@@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "2000 slots at +0x3BC0, name map +0x5B1C, count +0x5B08; called by 0x0007027B; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075600
+size = 68
+symbol = "?FindScriptIndex@AtSmallCSystem@@QAEHPBD@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "0x00013F00 against each script +0x64; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075650
+size = 11
+symbol = "?FindScript@AtSmallCSystem@@QAEPAUAtSmallCScript@@PBD@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "add ecx, 0x5B1C; jmp 0x00025150; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075660
+size = 96
+symbol = "?StopScript@AtSmallCSystem@@QAEHPBD@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "FindScriptIndex, Remove, Release, --count; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075A90
+size = 65
+symbol = "?Activate@AtSmallCSystem@@QAEHPBD@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "5 absent, 7 in a call, else flags & ~0x1A | 4; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00075AE0
+size = 62
+symbol = "?Cancel@AtSmallCSystem@@QAEHPBD@Z"
+source = "src/at/AtSmallCScripts.cpp"
+subsystem = "at/smallvm"
+evidence = "5 absent, 8 not in a call, else flags & ~0xE; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00070310
+size = 130
+symbol = "?Load@GmScriptOwner@@QAEPAUAtSmallCScript@@PBD@Z"
+source = "src/at/AtSmallCScriptOwner.cpp"
+subsystem = "at/smallvm"
+evidence = "strrchr 0x00125F40 for a backslash, 0x00013ED0, 0x00070220; called by GmScriptItem::Run 0x001B2DFB and 0x0019BEF5; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00070220
+size = 165
+symbol = "?Start@GmScriptOwner@@QAEPAUAtSmallCScript@@PBD0@Z"
+source = "src/at/AtSmallCScriptOwner.cpp"
+subsystem = "at/smallvm"
+evidence = "PushPath 0x00019370 on 0x002E26E0 +0x14, StartScript, PopPath, FindScript; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00070150
+size = 51
+symbol = "?Release@GmScriptOwner@@QAEXPAUAtSmallCScript@@@Z"
+source = "src/at/AtSmallCScriptOwner.cpp"
+subsystem = "at/smallvm"
+evidence = "name from +0x64, StopScript; tests/oracle/oracle_smallvm.cpp"
+
+[[function]]
+va = 0x00070190
+size = 23
+symbol = "?CallPublic@GmScriptOwner@@QAEHPAUAtSmallCScript@@H@Z"
+source = "src/at/AtSmallCScriptOwner.cpp"
+subsystem = "at/smallvm"
+evidence = "system CallPublic with copy 1; called by 0x00165498; tests/oracle/oracle_smallvm.cpp"

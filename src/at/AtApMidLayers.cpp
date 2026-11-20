@@ -146,12 +146,12 @@ void AtSmallCSystem::Clear() {
     m_unknown5B30 = 0;
     m_factory = 0;
     m_nativeCount = 0;
-    m_unknown5B08 = 0;
-    m_unknown5B0C = 0;
-    m_unknown5B38 = 0;
+    m_scriptCount = 0;
+    m_lastStarted = 0;
+    m_stepMode = 0;
     m_unknown5B3C = 4;
     m_unknown5B18 = 0;
-    m_unknown5B34 = 0;
+    m_programFs = 0;
     unsigned int* natives = (unsigned int*)m_natives;
     for (unsigned int i = 0; i < sizeof(m_natives) / sizeof(unsigned int); i++) {
         natives[i] = 0;
