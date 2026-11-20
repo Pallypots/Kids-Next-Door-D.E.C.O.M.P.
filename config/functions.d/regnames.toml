@@ -1,0 +1,76 @@
+# The registry names: loaded design data registries by the name of their file, the name map at 0x002CD138. Names inferred; see include/gm/GmRegistryNames.h.
+# Sizes up to the return.
+
+[[function]]
+va = 0x00071DF0
+size = 24
+symbol = "??0GmRegistryNames@@QAE@XZ"
+source = "src/gm/GmRegistryNames.cpp"
+subsystem = "gm/regnames"
+evidence = "base 0x00024C60; stores vftable 0x00277B60 and writes 0x002CD138; from 0x0006C513 (start-up); tests/oracle/oracle_regnames.cpp"
+
+[[function]]
+va = 0x00071F50
+size = 82
+symbol = "??1GmRegistryNames@@UAE@XZ"
+source = "src/gm/GmRegistryNames.cpp"
+subsystem = "gm/regnames"
+evidence = "clears 0x002CD138, then 0x00024EA0 and the base's 0x00025260; from 0x00071FB3; tests/oracle/oracle_regnames.cpp"
+
+[[function]]
+va = 0x00071FB0
+size = 30
+symbol = "??_GGmRegistryNames@@UAEPAXI@Z"
+source = "src/gm/GmRegistryNames.cpp"
+subsystem = "gm/regnames"
+evidence = "slot 0 of vftable 0x00277B60; 0x00071F50 then 0x00011210; tests/oracle/oracle_regnames.cpp"
+
+[[function]]
+va = 0x00071E10
+size = 5
+symbol = "?Clear@GmRegistryNames@@UAEXXZ"
+source = "src/gm/GmRegistryNames.cpp"
+subsystem = "gm/regnames"
+evidence = "slot 1 of vftable 0x00277B60, a jump to 0x00024EA0; folded: also in vftables 0x00293250, 0x0029344C, 0x00293488, 0x002934C4 and called from 0x0019C0CE; tests/oracle/oracle_regnames.cpp"
+
+[[function]]
+va = 0x00071E20
+size = 33
+symbol = "?Init@GmRegistryNames@@QAEHI@Z"
+source = "src/gm/GmRegistryNames.cpp"
+subsystem = "gm/regnames"
+evidence = "slot 1 then 0x00024DA0; from 0x0006C544 with 0x14; tests/oracle/oracle_regnames.cpp"
+
+[[function]]
+va = 0x00071E50
+size = 204
+symbol = "?KeyFor@GmRegistryNames@@QAEXPADPBVAtDataRegistry@@@Z"
+source = "src/gm/GmRegistryNamesAdd.cpp"
+subsystem = "gm/regnames"
+evidence = "reads +0x1E8 (AtDataRegistry::m_fileName); \".a\" \".A\" \".b\" \".B\" at 0x00277B74-0x00277B68 through 0x001269D0; 0x5C through 0x00125F40; 0x00013ED0; from 0x00071F31; tests/oracle/oracle_regnames.cpp"
+
+[[function]]
+va = 0x00071F20
+size = 43
+symbol = "?Add@GmRegistryNames@@QAEXPAVAtDataRegistry@@@Z"
+source = "src/gm/GmRegistryNamesAdd.cpp"
+subsystem = "gm/regnames"
+evidence = "0x00071E50 then 0x00024EE0; from 0x001B49FC (GmRegistryItem::Run) and eight others; tests/oracle/oracle_regnames.cpp"
+
+[[function]]
+va = 0x00071DC0
+size = 42
+symbol = "?Release@GmRegistryNames@@QAEXPAVAtDataRegistry@@@Z"
+source = "src/gm/GmRegistryNamesAdd.cpp"
+subsystem = "gm/regnames"
+evidence = "0x00024BB0 then 0x000250C0; from 0x0015CFA4 (GmDatabaseManifest::Free) and ten others; tests/oracle/oracle_regnames.cpp"
+
+[[vtable]]
+va = 0x00277B60
+slots = 2
+symbol = "??_7GmRegistryNames@@6B@"
+source = "src/gm/GmRegistryNames.cpp"
+
+[symbols]
+"?s_instance@GmRegistryNames@@2PAV1@A" = 0x002CD138
+"_strstr" = 0x001269D0  # the C library's; finds the extension at 0x00071E83

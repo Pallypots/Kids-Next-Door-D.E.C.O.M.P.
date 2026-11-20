@@ -78,7 +78,6 @@ template <class T> T* As(GmManifestItem* first) {
 
 GmAudioDatabaseMaker* GmAudioDatabaseMaker::s_instance;
 GmEventHome* GmEventHome::s_instance;
-GmRegistryNames* GmRegistryNames::s_instance;
 const char* g_audioLanguage;
 
 // ---- GmDatabaseManifest -----------------------------------------------------------------------------------------------------------------------------------------------------------------

@@ -19,6 +19,7 @@
 
 #include "gm/GmAudioData.h"
 #include "gm/GmLevelManifest.h"
+#include "gm/GmRegistryNames.h"
 #include "oracle_image.h"
 
 static bool g_mutate;
@@ -164,7 +165,7 @@ void GmSceneItemLeave(void* part, AtSpaceGraph* graph) { note('l', (uint32_t)(ui
 static void __fastcall o_audio_free_db(void*, void*, void* db) { note('a', (uint32_t)(uintptr_t)db); }
 void GmAudioFreeDatabase(void* db) { note('a', (uint32_t)(uintptr_t)db); }
 static void __fastcall o_registry(void*, void*, void* part) { note('g', ((uint32_t*)part)[0]); }
-void GmRegistryRelease(void* part) { note('g', ((uint32_t*)part)[0]); }
+void GmRegistryNames::Release(AtDataRegistry* part) { note('g', ((uint32_t*)part)[0]); }
 
 static void __fastcall o_prepare(void* list, void*) { log_ptr('P', list); }
 void GmBehaviorList::Prepare() { log_ptr('P', this); }

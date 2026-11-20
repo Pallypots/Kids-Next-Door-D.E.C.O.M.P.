@@ -215,7 +215,7 @@ void GmDatabaseManifest::Free() {
     }
     if (m_registries != 0) {
         for (unsigned int i = 0; i < m_registryCount; i++) {
-            GmRegistryRelease(&static_cast<GmRegistryItem*>(m_registries)[i].m_registry);
+            GmRegistryNames::s_instance->Release(&static_cast<GmRegistryItem*>(m_registries)[i].m_registry);
         }
         if (m_registries != 0) {
             GmDatabaseItemsDelete(kRegistryItems, m_registries);

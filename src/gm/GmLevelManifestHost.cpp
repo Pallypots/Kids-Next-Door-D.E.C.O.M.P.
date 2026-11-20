@@ -12,7 +12,6 @@ void StopHere(const char* what) {
 }
 
 void GmAudioFreeDatabase(void*) { StopHere("Level manifest: 0x00139F90 is not recovered"); }
-void GmRegistryRelease(void*) { StopHere("Level manifest: 0x00071DC0 is not recovered"); }
 
 void GmBehaviorList::Prepare() { StopHere("Behaviour lists (0x00198C90) are not recovered"); }
 GmBehaviorList* GmBehaviorListOwner::LoadAnimations(const char*) { StopHere("Behaviour lists (0x0019C5E0) are not recovered"); return 0; }

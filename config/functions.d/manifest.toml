@@ -792,7 +792,6 @@ source = "src/gm/GmLevelManifestItems.cpp"
 "?GmAudioFreeCollisionSounds@@YAXPAX@Z" = 0x00139B50  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp; the free functions stand for thiscall members
 "?GmAudioFreeDatabase@@YAXPAX@Z" = 0x00139F90  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp; the free functions stand for thiscall members
 "?GmSceneItemLeave@@YAXPAXPAVAtSpaceGraph@@@Z" = 0x0002EDD0  # forwards to AtSceneDatabaseLoader::RemoveFrom, recovered under gm/dbmanifest (src/gm/GmDatabaseManifest.cpp)
-"?GmRegistryRelease@@YAXPAX@Z" = 0x00071DC0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp; the free functions stand for thiscall members
 "?Load@GmMusicChain@@QAEXPBDH@Z" = 0x0013D2A0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp; the free functions stand for thiscall members
 "?Clear@GmMusicChain@@QAEXXZ" = 0x0013CFF0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp; the free functions stand for thiscall members
 "?Allocate@GmMusicManager@@QAEPAVGmMusicChain@@XZ" = 0x0013D0C0  # NOT recovered here: a seam, src/gm/GmLevelManifestHost.cpp; the free functions stand for thiscall members

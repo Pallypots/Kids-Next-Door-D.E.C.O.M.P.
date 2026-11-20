@@ -308,7 +308,6 @@ enum {
 void GmDatabaseItemsDelete(int kind, GmManifestItem* first);   // the original's delete[] through the first item's slot 2, with flags 3; by kind in src/gm/GmDatabaseManifest.cpp
 void GmAudioFreeDatabase(void* database);                       // GmAudioData 0x00139F90, on a SoundDatabaseLoaders item's +0x90. NOT recovered: a seam
 void GmSceneItemLeave(void* part, AtSpaceGraph* graph);         // AtSceneDatabase::RemoveFrom 0x0002EDD0 on a SceneDatabasesLoaders item's +0x8C, when its +0x108 is set
-void GmRegistryRelease(void* registryPart);                     // 0x00071DC0 on the object at 0x002CD138, given an InstanceRegistries item's +0x90
 
 // ---- The loaders ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

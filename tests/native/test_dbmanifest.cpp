@@ -29,7 +29,7 @@ static void note(const char* what, const char* arg = "") {
 // ---- the seams of src/gm/GmLevelManifestHost.cpp --------------------------------------------------------------------------
 static int g_object;
 void GmAudioFreeDatabase(void*) { note("free-sound-db"); }
-void GmRegistryRelease(void*) { note("release-registry"); }
+void GmRegistryNames::Release(AtDataRegistry*) { note("release-registry"); }
 void GmBehaviorList::Prepare() {}
 GmBehaviorList* GmBehaviorListOwner::LoadAnimations(const char*) { return 0; }
 GmBehaviorList* GmBehaviorListOwner::LoadSounds(const char*) { return 0; }

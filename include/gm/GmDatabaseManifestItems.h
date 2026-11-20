@@ -12,6 +12,7 @@
 #include "at/AtNameTableOwner.h"
 #include "at/AtSpaceGraph.h"
 #include "gm/GmLevelManifest.h"
+#include "gm/GmRegistryNames.h"
 
 // ---- What the items' contexts come from: start-up's objects, not recovered beyond what is named here ---------------------------------------------------------------------------------------
 
@@ -100,14 +101,7 @@ struct GmDataOwners {
     AtDataRegistryOwner m_registryOwner;       // +0x394
 };
 
-// The name map at 0x002CD138, which is told of each registry InstanceRegistries loads. STANDS FOR the start-up branch's GmRegistryNames (include/gm/GmApp.h on the branch
-// integrate-batch5), where it is not recovered either. NOT recovered: stops with a diagnostic in src/gm/GmDatabaseManifestHost.cpp. Its Release is GmRegistryRelease, in
-// include/gm/GmLevelManifest.h.
-struct GmRegistryNames {
-    void Add(AtDataRegistry* registry);        // 0x00071F20 under the name of its file
-
-    static GmRegistryNames* s_instance;        // 0x002CD138
-};
+// The name map at 0x002CD138, which is told of each registry InstanceRegistries loads, is GmRegistryNames (gm/regnames, include/gm/GmRegistryNames.h).
 
 class AtSceneDatabaseLoader;
 

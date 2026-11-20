@@ -265,7 +265,7 @@ void GmMusicManager::Free(GmMusicChain* chain) { note('F', (uint32_t)(uintptr_t)
 static void __fastcall o_audio_free_db(void*, void*, void* db) { log_ptr('a', db); }
 void GmAudioFreeDatabase(void* db) { log_ptr('a', db); }
 static void __fastcall o_registry_release(void* names, void*, void* registry) { note('g', (uint32_t)(uintptr_t)names); log_ptr('g', registry); }
-void GmRegistryRelease(void* registry) { note('g', (uint32_t)(uintptr_t)GmRegistryNames::s_instance); log_ptr('g', registry); }
+void GmRegistryNames::Release(AtDataRegistry* registry) { note('g', (uint32_t)(uintptr_t)this); log_ptr('g', registry); }
 static void __fastcall o_registry_add(void* names, void*, AtDataRegistry* registry) { note('+', (uint32_t)(uintptr_t)names); log_ptr('+', registry); note('+', (uint32_t)registry->m_loaded); }
 void GmRegistryNames::Add(AtDataRegistry* registry) { note('+', (uint32_t)(uintptr_t)this); log_ptr('+', registry); note('+', (uint32_t)registry->m_loaded); }
 static void __fastcall o_set_graph(GmSpaceGraphOwner* owner, void*, AtSpaceGraph* graph) { log_ptr('$', owner); log_ptr('$', graph); owner->m_graph = graph; }
