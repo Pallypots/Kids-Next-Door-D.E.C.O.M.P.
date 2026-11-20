@@ -134,11 +134,11 @@ class Graphics : public AppGraphics {
 public:
     Loader loaders[2];
     int made = 0;
-    void Slot0() override {}
+    void* Slot0() override { return nullptr; }
     void Slot1() override {}
     void Slot2() override {}
-    void Slot3() override {}
-    void Slot4() override {}
+    AtMaterialOwner* CreateDevice() override { return nullptr; }
+    void Destroy(void*) override {}
     void Slot5() override {}
     void Slot6() override {}
     void Slot7() override {}
@@ -284,9 +284,9 @@ int main() {
     static Graphics graphics;
     App* app = (App*)std::calloc(1, sizeof(App));  // only the members the base's words read; App's constructor is not run
     new (app->m_sceneOwner.m_bytes) AtNameTableOwner;
-    app->m_graphics = &graphics;
+    app->m_device->m_factory = &graphics;
     AtMaterialOwner materialOwner;
-    app->m_materialOwner = &materialOwner;
+    app->m_device->m_materialOwner = &materialOwner;
     GmHistoryLogs logs = {};
     logs.m_app = app;
     GmHistoryLogs::s_instance = &logs;

@@ -276,7 +276,7 @@ evidence = "slot 3: 0x000C8660, then 0x000C87D0 with +0x18 or +4; tests/oracle/o
 [[function]]
 va = 0x000C87D0
 size = 10
-symbol = "?SetHeap@AtKinematicsFactory@@SAXPAX@Z"
+symbol = "?SetHeap@AtGrD3DAnimationDevice@@SAXPAX@Z"
 source = "src/at/AtApMidLayers.cpp"
 subsystem = "at/atlayers"
 evidence = "stores 0x003ADF7C, read by 0x000C87E0 (slot 0 of 0x0028663C); tests/oracle/oracle_atlayers.cpp"
@@ -329,22 +329,6 @@ source = "src/at/AtApMidLayers.cpp"
 subsystem = "at/atlayers"
 evidence = "stores 0x003B23E0; tests/oracle/oracle_atlayers.cpp"
 
-[[function]]
-va = 0x000C8920
-size = 9
-symbol = "??0AtKinematicsFactory@@QAE@XZ"
-source = "src/at/AtApMidLayers.cpp"
-subsystem = "at/atlayers"
-evidence = "stores vftable 0x0028663C; tests/oracle/oracle_atlayers.cpp"
-
-[[function]]
-va = 0x000C8930
-size = 7
-symbol = "??1AtKinematicsFactory@@QAE@XZ"
-source = "src/at/AtApMidLayers.cpp"
-subsystem = "at/atlayers"
-evidence = "stores vftable 0x0028663C; called by 0x000B35B0; tests/oracle/oracle_atlayers.cpp"
-
 [symbols]
 "?Shutdown@AtMathSystem@@UAEXXZ" = 0x000E7880  # folded with AtDataComponent::Reset (at/adr)
 "?g_smallCCoreNatives@@3QBUAtSmallCNativeEntry@@B" = 0x002B3488  # data: ten entries of 0x1C bytes, then a null function
@@ -353,7 +337,6 @@ evidence = "stores vftable 0x0028663C; called by 0x000B35B0; tests/oracle/oracle
 "?s_instance@AtSmallCSystem@@2PAV1@A" = 0x002CF174
 "?s_heap@AtSmallCScriptFactory@@2PAXA" = 0x002CD0E8
 "?s_heap@AtScriptHost@@2PAXA" = 0x003ADE54
-"?s_heap@AtKinematicsFactory@@2PAXA" = 0x003ADF7C
 "?g_heap3ADF80@@3PAXA" = 0x003ADF80
 "?g_heap2C6348@@3PAXA" = 0x002C6348
 "?g_heap3B23E8@@3PAXA" = 0x003B23E8
@@ -367,5 +350,4 @@ evidence = "stores vftable 0x0028663C; called by 0x000B35B0; tests/oracle/oracle
 "??_7AtScriptSystem@@6B@" = 0x0027D03C  # mapped, not claimed: slot 0 is a seam
 "??_7AtKinematicsSystemBase@@6B@" = 0x0028662C  # mapped, not claimed: slot 0 is a seam
 "??_7AtKinematicsSystem@@6B@" = 0x002847DC  # mapped, not claimed: slot 0 is a seam
-"??_7AtKinematicsFactory@@6B@" = 0x0028663C  # mapped, not claimed: every slot is a seam
 "__ehhandler$??0AtDataRegistryOwner@@QAE@XZ" = 0x001F7DDB  # the handler 0x0005EFD0 registers; compiler-made

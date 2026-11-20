@@ -10,6 +10,9 @@
 
 #include "at/AtDatabaseLoader.h"
 #include "at/AtGraphicsLayer.h"
+#include "at/AtGrD3DTextures.h"
+#include "at/AtImage.h"
+#include "at/AtMatrixDevice.h"
 #include "at/AtImageDatabase.h"
 #include "at/AtMatAnimation.h"
 #include "at/AtMatAssignment.h"
@@ -41,6 +44,7 @@ void* AtGraphicsFactory::Slot0() { g_log.push_back("factory slot 0"); return &g_
 AtMaterialOwner* AtGraphicsFactory::CreateDevice() { g_log.push_back("factory slot 3"); return &g_owner; }
 void AtGraphicsFactory::Destroy(void* object) { g_log.push_back("factory slot 4"); g_destroyed = object; }
 AtDatabaseLoader* AtGraphicsFactory::DatabaseLoader() { g_log.push_back("BAD"); return nullptr; }
+void AtGraphicsFactory::DeleteLoader(AtDatabaseLoader*) { g_log.push_back("BAD"); }
 #define SLOT(n) \
     void AtGraphicsFactory::Slot##n() { g_log.push_back("BAD"); }
 SLOT(1) SLOT(2) SLOT(5) SLOT(6) SLOT(7) SLOT(8) SLOT(9) SLOT(10) SLOT(11) SLOT(12) SLOT(13) SLOT(14) SLOT(15) SLOT(16) SLOT(17) SLOT(18) SLOT(19)
@@ -119,7 +123,7 @@ static void test_layer() {
     CHECK(g_log.size() == 3 && g_log[0] == "start" && g_log[1] == "factory slot 0" && g_log[2] == "factory slot 3");
     CHECK(g_savedSeen != nullptr);
     CHECK(AtDatabaseLoader::s_heap == HEAP(1) && g_heap3B23DC == HEAP(2) && g_heap3B13CC == HEAP(2));
-    CHECK(g_heap3B1FCC == HEAP(3) && g_heap3B23D8 == HEAP(3) && AtMaterialDatabase::s_heap == HEAP(4) && g_heap3B1F90 == HEAP(4));
+    CHECK(AtGrI2DFont::s_heap == HEAP(3) && g_heap3B23D8 == HEAP(3) && AtMaterialDatabase::s_heap == HEAP(4) && AtGrD3DMaterialDatabase::s_heap == HEAP(4));
     CHECK(GmNameMap::s_heap == HEAP(5) && GmNameSpaceDb::s_heap == HEAP(0));
     CHECK(AtTextureDatabase::s_heap == HEAP(0) && AtShader::s_heap == HEAP(0) && g_heap3B13D0 == HEAP(0) && g_heap2C7C38 == HEAP(0));
 
@@ -162,7 +166,7 @@ static void test_set_heaps() {
     GmNameSpaceDb::s_heap = nullptr;
     g.SetHeaps(&c);
     CHECK(g_heap3B1FC0 == HEAP(0) && g_heap3B13CC == HEAP(0) && AtShaderDatabase::s_heap == HEAP(0) && GmNameMap::s_heap == HEAP(0));
-    CHECK(AtProgShaderComponent::s_heap == HEAP(0) && AtMatAssignmentDatabase::s_heap == HEAP(0) && g_heap3B1F58 == HEAP(0) && g_heap3B1F94 == HEAP(0));
+    CHECK(AtProgShaderComponent::s_heap == HEAP(0) && AtMatAssignmentDatabase::s_heap == HEAP(0) && (void*)AtMatrixPoolXbox::s_heap == HEAP(0) && AtMatrixDeviceXbox::s_heap == HEAP(0));
 }
 
 int main() {

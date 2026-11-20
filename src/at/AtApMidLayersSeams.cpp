@@ -1,6 +1,7 @@
 // What the math, data management, script and kinematics layers reach and is not recovered (at/atlayers). Each stops with a diagnostic; none is
 // recorded or counted. In a file of its own, so that a harness can supply them instead. See include/at/AtApMidLayers.h.
 #include "at/AtApMidLayers.h"
+#include "at/AtGrD3DDatabase.h"
 
 void AtFatal(const char* message, int file, int line, int unused);  // 0x00011070
 
@@ -19,13 +20,9 @@ void AtKinematicsSystem::DeletingDestructor(unsigned int) { StopHere("Kinematics
 
 void AtSmallCScriptFactory::Release(void*) { StopHere("Small-C scripts: the factory's Release (0x0006F640) is not recovered"); }
 
-void AtKinematicsFactory::Slot0() { StopHere("Kinematics factory: slot 0 (0x000C87E0) is not recovered"); }
-void AtKinematicsFactory::Slot1() { StopHere("Kinematics factory: slot 1 (0x000C8940) is not recovered"); }
-void AtKinematicsFactory::Slot2() { StopHere("Kinematics factory: slot 2 (0x000C8880) is not recovered"); }
-void AtKinematicsFactory::Slot3() { StopHere("Kinematics factory: slot 3 (0x000EB9D0) is not recovered here"); }
-void AtKinematicsFactory::Slot4() { StopHere("Kinematics factory: slot 4 (0x000C8F50) is not recovered"); }
-void AtKinematicsFactory::Slot5() { StopHere("Kinematics factory: slot 5 (0x000C91E0) is not recovered"); }
-void AtKinematicsFactory::Slot6() { StopHere("Kinematics factory: slot 6 (0x000C8FF0) is not recovered"); }
+void AtGrD3DAnimationDevice::Slot4() { StopHere("Kinematics factory: slot 4 (0x000C8F50) is not recovered"); }
+void AtGrD3DAnimationDevice::Slot5() { StopHere("Kinematics factory: slot 5 (0x000C91E0) is not recovered"); }
+void AtGrD3DAnimationDevice::Slot6() { StopHere("Kinematics factory: slot 6 (0x000C8FF0) is not recovered"); }
 
 // The built-ins of the Small language's core and float modules, which start-up only registers.
 #define NATIVE(Name, Va) \

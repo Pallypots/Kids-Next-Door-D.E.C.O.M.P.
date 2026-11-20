@@ -7,6 +7,7 @@
 #include "at/AtAnimationDatabase.h"
 #include "at/AtCoordSys.h"
 #include "at/AtDataLibrary.h"
+#include "at/AtGrD3DDatabase.h"
 #include "at/AtMatAnimation.h"
 #include "at/AtSceneActor.h"
 #include "at/AtSegmentQuery.h"
@@ -32,7 +33,6 @@ void* AtSmallCScriptFactory::s_heap;
 void* AtSmallCSystem::s_heap;
 AtSmallCSystem* AtSmallCSystem::s_instance;
 void* AtScriptHost::s_heap;
-void* AtKinematicsFactory::s_heap;
 
 // ---- the math layer ---------------------------------------------------------------------------------------------------
 
@@ -253,13 +253,7 @@ void AtSetHeap3B23E4(void* heap) { g_heap3B23E4 = heap; }
 void AtSetHeap2C63DC(void* heap) { g_heap2C63DC = heap; }
 void AtSetHeap2C634C(void* heap) { g_heap2C634C = heap; }
 void AtSetHeap3B23E0(void* heap) { g_heap3B23E0 = heap; }
-void AtKinematicsFactory::SetHeap(void* heap) { s_heap = heap; }
-
-AtKinematicsFactory::AtKinematicsFactory() {
-}
-
-AtKinematicsFactory::~AtKinematicsFactory() {
-}
+void AtGrD3DAnimationDevice::SetHeap(void* heap) { s_heap = heap; }
 
 AtKinematicsSystemBase::AtKinematicsSystemBase() {
     m_below = 0;
@@ -297,8 +291,8 @@ void AtKinematicsSystem::Init(const AtKinematicsConfig* config, void* below, voi
     AtKinematicsSystemBase::Init(config, below, memory);
     SetHeaps(config);  // ORIGINAL: a second time, after the base's Init has set them
     AtPushHeap(config->m_heap);
-    void* block = operator new(sizeof(AtKinematicsFactory));
-    AtKinematicsFactory* factory = block != 0 ? new (block, Placement()) AtKinematicsFactory() : 0;
+    void* block = operator new(sizeof(AtGrD3DAnimationDevice));
+    AtGrD3DAnimationDevice* factory = block != 0 ? new (block, Placement()) AtGrD3DAnimationDevice() : 0;
     AtPopHeap();
     if (factory == 0) {
         AtRaise(-4, 0, 0, 0);
@@ -308,10 +302,10 @@ void AtKinematicsSystem::Init(const AtKinematicsConfig* config, void* below, voi
 }
 
 void AtKinematicsSystem::Shutdown() {
-    AtKinematicsFactory* factory = m_factory;
+    AtGrD3DAnimationDevice* factory = m_factory;
     if (factory != 0) {
         factory->Shutdown();
-        factory->~AtKinematicsFactory();
+        factory->~AtGrD3DAnimationDevice();
         operator delete(factory);
         m_factory = 0;
     }
@@ -320,5 +314,5 @@ void AtKinematicsSystem::Shutdown() {
 
 void AtKinematicsSystem::SetHeaps(const AtKinematicsConfig* config) {
     AtKinematicsSystemBase::SetHeaps(config);
-    AtKinematicsFactory::SetHeap(config->m_factoryHeap != 0 ? config->m_factoryHeap : config->m_heap);
+    AtGrD3DAnimationDevice::SetHeap(config->m_factoryHeap != 0 ? config->m_factoryHeap : config->m_heap);
 }

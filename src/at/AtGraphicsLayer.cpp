@@ -4,6 +4,9 @@
 #include "at/AtGraphicsLayer.h"
 
 #include "at/AtDatabaseLoader.h"
+#include "at/AtGrD3DTextures.h"
+#include "at/AtImage.h"
+#include "at/AtMatrixDevice.h"
 #include "at/AtImageDatabase.h"
 #include "at/AtMatAnimation.h"
 #include "at/AtMatAssignment.h"
@@ -46,7 +49,6 @@ void* g_heap3B1FA8;
 void* g_heap3B1FA4;
 void* g_heap3B13CC;
 void* g_heap3B1F98;
-void* g_heap3B1F90;
 void* g_heap3B1F70;
 void* g_heap3B1F54;
 void* g_heap3B13E0;
@@ -154,7 +156,6 @@ void AtSetHeap3B1FA8(void* heap) { g_heap3B1FA8 = heap; }
 void AtSetHeap3B1FA4(void* heap) { g_heap3B1FA4 = heap; }
 void AtSetHeap3B13CC(void* heap) { g_heap3B13CC = heap; }
 void AtSetHeap3B1F98(void* heap) { g_heap3B1F98 = heap; }
-void AtSetHeap3B1F90(void* heap) { g_heap3B1F90 = heap; }
 void AtSetHeap3B1F70(void* heap) { g_heap3B1F70 = heap; }
 void AtSetHeap3B1F54(void* heap) { g_heap3B1F54 = heap; }
 void AtSetHeap3B13E0(void* heap) { g_heap3B13E0 = heap; }
@@ -212,7 +213,7 @@ void AtGraphicsSystemBase::SetHeaps(const AtGraphicsConfig* config) {
     AtSetHeap3B23DC(Or(config->m_heap30, config));
     AtSetHeap2C7C38(Or(config->m_displayModeHeap, config));
     AtDatabaseLoader::SetHeap(Or(config->m_loaderHeap, config));
-    AtSetHeap3B1FCC(Or(config->m_heap34, config));
+    AtGrI2DFont::SetHeap(Or(config->m_heap34, config));
     AtSetHeap3B23D8(Or(config->m_heap34, config));
     AtSetHeap2C7FF0(Or(config->m_heap3C, config));
     AtSetHeap2C635C(Or(config->m_heap48, config));
@@ -276,7 +277,7 @@ AtGraphicsSystem::AtGraphicsSystem() {
 void AtGraphicsSetHeaps(const AtGraphicsConfig* config) {
     AtSetHeap2C7C38(Or(config->m_displayModeHeap, config));
     AtDatabaseLoader::SetHeap(Or(config->m_loaderHeap, config));
-    AtSetHeap3B1FCC(Or(config->m_heap34, config));
+    AtGrI2DFont::SetHeap(Or(config->m_heap34, config));
     AtSetHeap2C7FF0(Or(config->m_heap3C, config));
     AtMaterialDatabase::SetHeap(Or(config->m_materialHeap, config));
     AtSetHeap2C63E8(Or(config->m_heap70, config));
@@ -313,10 +314,10 @@ void AtGraphicsSetHeaps(const AtGraphicsConfig* config) {
     AtSetHeap3B1F98(Or(config->m_heap44, config));
     AtSetHeap2C6378(Or(config->m_heap4C, config));
     AtMatAssignment::SetHeap(Or(config->m_matAssignmentHeap, config));  // ORIGINAL: a second time
-    AtSetHeap3B1F94(Or(config->m_heap68, config));
-    AtSetHeap3B1F90(Or(config->m_materialHeap, config));
+    AtMatrixDeviceXbox::SetHeap(Or(config->m_heap68, config));
+    AtGrD3DMaterialDatabase::SetHeap(Or(config->m_materialHeap, config));
     AtSetHeap3B1F70(Or(config->m_heap60, config));
-    AtSetHeap3B1F58(Or(config->m_heap6C, config));
+    AtMatrixPoolXbox::SetHeap((AtHeap*)Or(config->m_heap6C, config));
     AtSetHeap2C637C(Or(config->m_heap74, config));
     AtSetHeap3B1F54(Or(config->m_heap7C, config));
     AtSetHeap3B1F50(Or(config->m_heap94, config));

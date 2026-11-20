@@ -450,11 +450,11 @@ static Loader* g_loaders[2][256];
 static int g_loader_used[2];
 class alignas(256) Graphics : public AppGraphics {
 public:
-    void Slot0() override {}
+    void* Slot0() override { return nullptr; }
     void Slot1() override {}
     void Slot2() override {}
-    void Slot3() override {}
-    void Slot4() override {}
+    AtMaterialOwner* CreateDevice() override { return nullptr; }
+    void Destroy(void*) override {}
     void Slot5() override {}
     void Slot6() override {}
     void Slot7() override {}
@@ -526,8 +526,8 @@ static void make_worlds() {
         w.app = (App*)_aligned_malloc(sizeof(App), 256);  // App's constructor is not run: only the members the base's words read are set
         std::memset(w.app, 0, sizeof(App));
         new (w.app->m_sceneOwner.m_bytes) AtNameTableOwner;
-        w.app->m_graphics = &w.graphics;
-        w.app->m_materialOwner = &w.material;
+        w.app->m_device->m_factory = &w.graphics;
+        w.app->m_device->m_materialOwner = &w.material;
         w.app->m_sceneOwner->m_geometrySpaces.Init(8);
         w.logs.m_app = w.app;
         w.soundOwner = new AtNameTableOwner;

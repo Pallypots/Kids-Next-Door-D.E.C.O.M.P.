@@ -111,8 +111,8 @@ void GmDatabaseManifest::OnToken(int token, AtIoTokenizer* tokenizer) {
         request.m_context = 0;
         m_graphicsDatabaseCount = tokenizer->ExpectCount();
         m_graphicsDatabases = ReadItemArray<GmGraphicsDatabaseItem>(m_graphicsDatabaseCount);
-        request.m_context2 = GmHistoryLogs::s_instance->m_app->m_graphics;
-        request.m_context = GmHistoryLogs::s_instance->m_app->m_materialOwner;
+        request.m_context2 = GmHistoryLogs::s_instance->m_app->m_device->m_factory;
+        request.m_context = GmHistoryLogs::s_instance->m_app->m_device->m_materialOwner;
         for (unsigned int i = 0; i < m_graphicsDatabaseCount; i++) {
             strcpy(request.m_path, tokenizer->ExpectString(0x7F));
             As<GmGraphicsDatabaseItem>(m_graphicsDatabases)[i].Configure(&request);

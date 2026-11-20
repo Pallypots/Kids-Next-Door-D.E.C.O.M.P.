@@ -505,7 +505,7 @@ public:
     GmCinemaOwner* CinemaOwner() { return reinterpret_cast<GmCinemaOwner*>(m_userInterface.m_bytes + 4); }
 };
 
-inline AtDataRegistryOwner* GmDataRoot::Owner() { return reinterpret_cast<AtDataRegistryOwner*>(m_app->m_dataManagement.m_bytes + 4); }
+inline AtDataRegistryOwner* GmDataRoot::Owner() { return &m_app->m_dataManagement.m_owner; }
 
 // The game's main, 0x00011030. The C library calls it as main with (0, 0, 0); the third argument is not read. Returns 1. In src/gm/GmMain.cpp, which only a
 // program links, since a library cannot hold a main.

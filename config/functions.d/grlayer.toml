@@ -314,14 +314,6 @@ subsystem = "at/grlayer"
 evidence = "stores its argument at 0x003B1F70; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
 
 [[function]]
-va = 0x000F7780
-size = 10
-symbol = "?AtSetHeap3B1F90@@YAXPAX@Z"
-source = "src/at/AtGraphicsLayer.cpp"
-subsystem = "at/grlayer"
-evidence = "stores its argument at 0x003B1F90; called only from the graphics layer's SetHeaps (0x000C8240, 0x000C7CA0); tests/oracle/oracle_grlayer.cpp"
-
-[[function]]
 va = 0x000F7ED0
 size = 10
 symbol = "?AtSetHeap3B1F98@@YAXPAX@Z"
@@ -558,7 +550,6 @@ evidence = "0x000C9230, then 0x000140A0(+0x14); tests/oracle/oracle_grlayer.cpp"
 "?g_heap3B1FA4@@3PAXA" = 0x003B1FA4
 "?g_heap3B13CC@@3PAXA" = 0x003B13CC
 "?g_heap3B1F98@@3PAXA" = 0x003B1F98
-"?g_heap3B1F90@@3PAXA" = 0x003B1F90
 "?g_heap3B1F70@@3PAXA" = 0x003B1F70
 "?g_heap3B1F54@@3PAXA" = 0x003B1F54
 "?g_heap3B13E0@@3PAXA" = 0x003B13E0

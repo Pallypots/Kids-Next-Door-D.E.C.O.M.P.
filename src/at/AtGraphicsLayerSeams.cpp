@@ -31,6 +31,7 @@ void* AtGraphicsFactory::Slot0() { StopHere("Graphics factory: slot 0 (0x000EB54
 AtMaterialOwner* AtGraphicsFactory::CreateDevice() { StopHere("Graphics factory: making the device (slot 3, 0x000EBE90) is not recovered"); return 0; }
 void AtGraphicsFactory::Destroy(void*) { StopHere("Graphics factory: slot 4 (0x000EB9D0) is not recovered"); }
 AtDatabaseLoader* AtGraphicsFactory::DatabaseLoader() { StopHere("Graphics factory: the database loader (slot 29, 0x000EBB50) is not recovered"); return 0; }
+void AtGraphicsFactory::DeleteLoader(AtDatabaseLoader*) { StopHere("Graphics factory: freeing a database loader (slot 30, 0x000EBBF0) is not recovered"); }
 #define SLOT(n) \
     void AtGraphicsFactory::Slot##n() { StopHere("Graphics factory: slot " #n " is not recovered"); }
 SLOT(1) SLOT(2) SLOT(5) SLOT(6) SLOT(7) SLOT(8) SLOT(9) SLOT(10) SLOT(11) SLOT(12) SLOT(13) SLOT(14) SLOT(15) SLOT(16) SLOT(17) SLOT(18) SLOT(19)

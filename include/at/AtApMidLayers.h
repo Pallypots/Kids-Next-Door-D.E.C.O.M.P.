@@ -201,7 +201,7 @@ struct AtKinematicsConfig {
     void* m_animationHeap;           // +0x0C AtAnimationDatabase's
     void* m_coordSysHeap;            // +0x10 AtCoordSysDatabase's
     void* m_heap14;                  // +0x14 for 0x002C6348, by 0x000272D0
-    void* m_factoryHeap;             // +0x18 AtKinematicsFactory's, for what it makes; by the derived class alone
+    void* m_factoryHeap;             // +0x18 AtGrD3DAnimationDevice's, for what it makes; by the derived class alone
     void* m_frameNumberHeap;         // +0x1C AtGrFrameNumberSet's
     void* m_heap20;                  // +0x20 for 0x003B23E8, by 0x001015B0
     void* m_heap24;                  // +0x24 for 0x003B23E4, by 0x00101390
@@ -222,25 +222,10 @@ extern void* g_heap2C63DC;           // 0x002C63DC
 extern void* g_heap2C634C;           // 0x002C634C
 extern void* g_heap3B23E0;           // 0x003B23E0
 
-// What the kinematics layer makes on its heap (vftable 0x0028663C, 4 bytes). Slot 0 makes a 0x48-byte object (0x00101F60) from s_heap; slot 3 is
-// AtIoDeleteObject. None of its slots is recovered: each stops with a diagnostic.
-class AtKinematicsFactory {
-public:
-    AtKinematicsFactory();           // 0x000C8920
-    ~AtKinematicsFactory();          // 0x000C8930 puts its vftable back: nothing else
-    virtual void Slot0();            // 0x000C87E0
-    virtual void Slot1();            // 0x000C8940
-    virtual void Slot2();            // 0x000C8880
-    virtual void Slot3();            // 0x000EB9D0
-    virtual void Slot4();            // 0x000C8F50
-    virtual void Slot5();            // 0x000C91E0
-    virtual void Slot6();            // 0x000C8FF0
-    void Init() {}                   // 0x001CC9F0 empty (folded)
-    void Shutdown() {}               // 0x001CC9F0 empty (folded)
-
-    static void SetHeap(void* heap); // 0x000C87D0
-    static void* s_heap;             // 0x003ADF7C
-};
+// What the kinematics layer makes on its heap (vftable 0x0028663C, 4 bytes) is the Xbox animation device, at/loader's AtGrD3DAnimationDevice
+// (include/at/AtGrD3DDatabase.h): the same vftable, constructor 0x000C8920, destructor 0x000C8930 and heap 0x003ADF7C. at/atlayers called it
+// AtGrD3DAnimationDevice; folded on integrate-batch7. Its slots 4 to 6 and SetHeap 0x000C8F50 are declared there.
+class AtGrD3DAnimationDevice;
 
 // vftable 0x0028662C (0x0C bytes).
 class AtKinematicsSystemBase {
@@ -251,7 +236,7 @@ public:
     virtual void Shutdown();                              // slot 2, 0x000C8780
     virtual void SetHeaps(const AtKinematicsConfig* config);  // slot 3, 0x000C8660
 
-    AtKinematicsFactory* m_factory;  // +0x04 the derived class's; the base leaves it
+    AtGrD3DAnimationDevice* m_factory;  // +0x04 the derived class's; the base leaves it
     void* m_below;                   // +0x08 set while running
 };
 
@@ -286,7 +271,6 @@ static_assert(offsetof(AtScriptHost, m_system) == 0x08, "AtScriptHost::m_system"
 static_assert(offsetof(AtScriptSystem, m_host) == 0x0C, "AtScriptSystem::m_host");
 static_assert(sizeof(AtScriptSystem) == 0x5B5C, "AtScriptSystem");
 static_assert(sizeof(AtKinematicsConfig) == 0x34, "AtKinematicsConfig");
-static_assert(sizeof(AtKinematicsFactory) == 4, "AtKinematicsFactory");
 static_assert(sizeof(AtKinematicsSystem) == 0x0C, "AtKinematicsSystem");
 #pragma pop_macro("offsetof")
 #endif

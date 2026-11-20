@@ -24,6 +24,9 @@
 
 #include "at/AtDatabaseLoader.h"
 #include "at/AtGraphicsLayer.h"
+#include "at/AtGrD3DTextures.h"
+#include "at/AtImage.h"
+#include "at/AtMatrixDevice.h"
 #include "at/AtImageDatabase.h"
 #include "at/AtIoJam.h"
 #include "at/AtMatAnimation.h"
@@ -136,6 +139,7 @@ void* AtGraphicsFactory::Slot0() { L('BAD', 9100); return nullptr; }
 AtMaterialOwner* AtGraphicsFactory::CreateDevice() { L('BAD', 9103); return nullptr; }
 void AtGraphicsFactory::Destroy(void*) { L('BAD', 9104); }
 AtDatabaseLoader* AtGraphicsFactory::DatabaseLoader() { L('BAD', 9129); return nullptr; }
+void AtGraphicsFactory::DeleteLoader(AtDatabaseLoader*) { L('BAD', 9130); }
 #define SLOT(n) \
     void AtGraphicsFactory::Slot##n() { L('BAD', 9100 + n); }
 SLOT(1) SLOT(2) SLOT(5) SLOT(6) SLOT(7) SLOT(8) SLOT(9) SLOT(10) SLOT(11) SLOT(12) SLOT(13) SLOT(14) SLOT(15) SLOT(16) SLOT(17) SLOT(18) SLOT(19)
@@ -179,11 +183,11 @@ static Global g_globals[] = {
     {"0x003B1FC0", 0x003B1FC0, &g_heap3B1FC0}, {"0x003B1FBC", 0x003B1FBC, &g_heap3B1FBC}, {"0x003B1FB8", 0x003B1FB8, &g_heap3B1FB8},
     {"0x003B1FB4", 0x003B1FB4, &g_heap3B1FB4}, {"0x003B1FB0", 0x003B1FB0, &g_heap3B1FB0}, {"0x003B1FAC", 0x003B1FAC, &g_heap3B1FAC},
     {"0x003B1FA8", 0x003B1FA8, &g_heap3B1FA8}, {"0x003B1FA4", 0x003B1FA4, &g_heap3B1FA4}, {"0x003B13CC", 0x003B13CC, &g_heap3B13CC},
-    {"0x003B1F98", 0x003B1F98, &g_heap3B1F98}, {"0x003B1F90", 0x003B1F90, &g_heap3B1F90}, {"0x003B1F70", 0x003B1F70, &g_heap3B1F70},
+    {"0x003B1F98", 0x003B1F98, &g_heap3B1F98}, {"0x003B1F90", 0x003B1F90, &AtGrD3DMaterialDatabase::s_heap}, {"0x003B1F70", 0x003B1F70, &g_heap3B1F70},
     {"0x003B1F54", 0x003B1F54, &g_heap3B1F54}, {"0x003B13E0", 0x003B13E0, &g_heap3B13E0}, {"0x003B13DC", 0x003B13DC, &g_heap3B13DC},
     {"0x003B13D8", 0x003B13D8, &g_heap3B13D8}, {"0x003B13D0", 0x003B13D0, &g_heap3B13D0},
-    // The three stand-ins for setters recovered elsewhere.
-    {"0x003B1FCC", 0x003B1FCC, &g_heap3B1FCC}, {"0x003B1F94", 0x003B1F94, &g_heap3B1F94}, {"0x003B1F58", 0x003B1F58, &g_heap3B1F58},
+    // The three setters of other subsystems (at/imgfont, at/matdev) the layer calls.
+    {"0x003B1FCC", 0x003B1FCC, &AtGrI2DFont::s_heap}, {"0x003B1F94", 0x003B1F94, &AtMatrixDeviceXbox::s_heap}, {"0x003B1F58", 0x003B1F58, (void**)&AtMatrixPoolXbox::s_heap},
     // The classes of other subsystems.
     {"AtDatabaseLoader heap", 0x002C62DC, &AtDatabaseLoader::s_heap},
     {"AtMaterialDatabase heap", 0x002C63F0, &AtMaterialDatabase::s_heap},
@@ -307,10 +311,10 @@ static void run_setters() {
         {0x00100340, AtSetHeap3B23D0}, {0x000F93C0, AtSetHeap3B1FA0}, {0x000F8500, AtSetHeap3B1F9C}, {0x0002B420, AtSetHeap2C6384},
         {0x0002B680, AtSetHeap2C6388}, {0x000FCE60, AtSetHeap3B1FC0}, {0x000FCD20, AtSetHeap3B1FBC}, {0x000FC550, AtSetHeap3B1FB8},
         {0x000FBA60, AtSetHeap3B1FB4}, {0x000FAD30, AtSetHeap3B1FB0}, {0x000FA930, AtSetHeap3B1FAC}, {0x000FA4F0, AtSetHeap3B1FA8},
-        {0x000F98E0, AtSetHeap3B1FA4}, {0x000EB510, AtSetHeap3B13CC}, {0x000F7ED0, AtSetHeap3B1F98}, {0x000F7780, AtSetHeap3B1F90},
+        {0x000F98E0, AtSetHeap3B1FA4}, {0x000EB510, AtSetHeap3B13CC}, {0x000F7ED0, AtSetHeap3B1F98}, {0x000F7780, AtGrD3DMaterialDatabase::SetHeap},
         {0x000F61C0, AtSetHeap3B1F70}, {0x000F58D0, AtSetHeap3B1F54}, {0x000EEF90, AtSetHeap3B13E0}, {0x000EE550, AtSetHeap3B13DC},
         {0x000ED5E0, AtSetHeap3B13D8}, {0x000EC6D0, AtSetHeap3B13D0},
-        {0x000FE870, AtSetHeap3B1FCC}, {0x000F7BD0, AtSetHeap3B1F94}, {0x000F5FC0, AtSetHeap3B1F58},
+        {0x000FE870, AtGrI2DFont::SetHeap}, {0x000F7BD0, AtMatrixDeviceXbox::SetHeap}, {0x000F5FC0, (void (*)(void*))AtMatrixPoolXbox::SetHeap},
     };
     for (const S& s : setters) {
         set_globals(1);

@@ -24,6 +24,7 @@
 
 #include "at/AtAnimationDatabase.h"
 #include "at/AtApMidLayers.h"
+#include "at/AtGrD3DDatabase.h"
 #include "at/AtCoordSys.h"
 #include "at/AtDataLibrary.h"
 #include "at/AtIoJam.h"
@@ -101,13 +102,9 @@ void AtDataRegistryOwner::DeletingDestructor(unsigned int) { L('BAD', 9003); }
 void AtScriptSystem::DeletingDestructor(unsigned int) { L('BAD', 9004); }
 void AtKinematicsSystemBase::DeletingDestructor(unsigned int) { L('BAD', 9005); }
 void AtKinematicsSystem::DeletingDestructor(unsigned int) { L('BAD', 9006); }
-void AtKinematicsFactory::Slot0() { L('BAD', 9010); }
-void AtKinematicsFactory::Slot1() { L('BAD', 9011); }
-void AtKinematicsFactory::Slot2() { L('BAD', 9012); }
-void AtKinematicsFactory::Slot3() { L('BAD', 9013); }
-void AtKinematicsFactory::Slot4() { L('BAD', 9014); }
-void AtKinematicsFactory::Slot5() { L('BAD', 9015); }
-void AtKinematicsFactory::Slot6() { L('BAD', 9016); }
+void AtGrD3DAnimationDevice::Slot4() { L('BAD', 9014); }
+void AtGrD3DAnimationDevice::Slot5() { L('BAD', 9015); }
+void AtGrD3DAnimationDevice::Slot6() { L('BAD', 9016); }
 // The factory's Release: the original's is redirected to the same log.
 void AtSmallCScriptFactory::Release(void* script) { L('rel', rel(this)); L('rels', rel(script)); }
 static void __fastcall o_release(void* self, void*, void* script) { L('rel', rel(self)); L('rels', rel(script)); }
@@ -245,7 +242,7 @@ static Global g_globals[] = {
     {"0x002C63DC", 0x002C63DC, &g_heap2C63DC},
     {"0x002C634C", 0x002C634C, &g_heap2C634C},
     {"0x003B23E0", 0x003B23E0, &g_heap3B23E0},
-    {"AtKinematicsFactory heap", 0x003ADF7C, &AtKinematicsFactory::s_heap},
+    {"AtGrD3DAnimationDevice heap", 0x003ADF7C, &AtGrD3DAnimationDevice::s_heap},
 };
 static void set_globals(uint32_t seed) {
     for (Global& g : g_globals) {
@@ -333,7 +330,7 @@ static void run_setters() {
     static const S setters[] = {
         {0x000C8960, AtSetHeap3ADF80}, {0x000B4250, AtScriptHost::SetHeap}, {0x0006F590, AtSmallCScriptFactory::SetHeap},
         {0x00075400, AtSmallCSystem::SetHeap}, {0x000272D0, AtSetHeap2C6348}, {0x001015B0, AtSetHeap3B23E8}, {0x00101390, AtSetHeap3B23E4},
-        {0x00034500, AtSetHeap2C63DC}, {0x00027850, AtSetHeap2C634C}, {0x00100FB0, AtSetHeap3B23E0}, {0x000C87D0, AtKinematicsFactory::SetHeap},
+        {0x00034500, AtSetHeap2C63DC}, {0x00027850, AtSetHeap2C634C}, {0x00100FB0, AtSetHeap3B23E0}, {0x000C87D0, AtGrD3DAnimationDevice::SetHeap},
     };
     for (const S& s : setters) {
         set_globals(1);
@@ -607,7 +604,7 @@ static void compare_kin(const char* what) {
 }
 static void run_kinematics() {
     {
-        AtKinematicsFactory f;
+        AtGrD3DAnimationDevice f;
         g_rec_factory_vftable = *(const void* const*)&f;
     }
     for (int pass = 0; pass < 16; pass++) {
@@ -628,8 +625,8 @@ static void run_kinematics() {
                 if (pass & 1) {  // with a factory to free: each side's own, made by its own constructor
                     void* block = std::calloc(1, 8);
                     if (side == 0) at<Fn0>(0x000C8920)(block, nullptr);
-                    else new (block) AtKinematicsFactory();
-                    k->m_factory = (AtKinematicsFactory*)block;
+                    else new (block) AtGrD3DAnimationDevice();
+                    k->m_factory = (AtGrD3DAnimationDevice*)block;
                 }
             }
         }
@@ -660,11 +657,11 @@ static void run_kinematics() {
     // The factory's constructor and destructor alone.
     static unsigned char f[2][8];
     std::memset(f, 0x44, sizeof f);
-    run_pair("AtKinematicsFactory()", [&] { at<Fn0>(0x000C8920)(f[0], nullptr); }, [&] { new (f[1]) AtKinematicsFactory(); });
+    run_pair("AtGrD3DAnimationDevice()", [&] { at<Fn0>(0x000C8920)(f[0], nullptr); }, [&] { new (f[1]) AtGrD3DAnimationDevice(); });
     eq("factory constructed", *(uint32_t*)f[0] == 0x0028663C, *(const void**)f[1] == g_rec_factory_vftable);
     eq("factory +4", *(uint32_t*)(f[0] + 4), *(uint32_t*)(f[1] + 4));
     std::memset(f, 0x45, sizeof f);
-    run_pair("~AtKinematicsFactory", [&] { at<Fn0>(0x000C8930)(f[0], nullptr); }, [&] { ((AtKinematicsFactory*)f[1])->~AtKinematicsFactory(); });
+    run_pair("~AtGrD3DAnimationDevice", [&] { at<Fn0>(0x000C8930)(f[0], nullptr); }, [&] { ((AtGrD3DAnimationDevice*)f[1])->~AtGrD3DAnimationDevice(); });
     eq("factory destroyed", *(uint32_t*)f[0] == 0x0028663C, *(const void**)f[1] == g_rec_factory_vftable);
 }
 

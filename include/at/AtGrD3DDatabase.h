@@ -186,7 +186,14 @@ public:
     void FreeKeys(AtAnimationKeys* keys) override;                  // slot 1, 0x000C8940
     AtAnimationDatabase* NewDatabase() override;                    // slot 2, 0x000C8880 null is raised
     void FreeDatabase(AtAnimationDatabase* database) override;      // slot 3, 0x000EB9D0 through its virtual destructor; folded with other factories' frees
+    // Slots 4 to 6, not recovered: each stops with a diagnostic (src/at/AtApMidLayersSeams.cpp). The kinematics layer makes this device (at/atlayers, which called it AtKinematicsFactory).
+    virtual void Slot4();                     // 0x000C8F50
+    virtual void Slot5();                     // 0x000C91E0
+    virtual void Slot6();                     // 0x000C8FF0
+    void Init() {}                            // 0x001CC9F0 empty (folded): the kinematics layer's Init calls it
+    void Shutdown() {}                        // 0x001CC9F0 empty (folded)
 
+    static void SetHeap(void* heap);          // 0x000C87D0 (at/atlayers, src/at/AtApMidLayers.cpp)
     static void* s_heap;                      // 0x003ADF7C
 };
 

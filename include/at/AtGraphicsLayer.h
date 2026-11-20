@@ -158,7 +158,7 @@ void AtSetHeap3B1FA8(void* heap);    // 0x000FA4F0
 void AtSetHeap3B1FA4(void* heap);    // 0x000F98E0
 void AtSetHeap3B13CC(void* heap);    // 0x000EB510 the graphics factory's
 void AtSetHeap3B1F98(void* heap);    // 0x000F7ED0
-void AtSetHeap3B1F90(void* heap);    // 0x000F7780
+// 0x000F7780 (0x003B1F90) is AtGrD3DMaterialDatabase::SetHeap (at/xdb, include/at/AtGrD3DTextures.h).
 void AtSetHeap3B1F70(void* heap);    // 0x000F61C0
 void AtSetHeap3B1F54(void* heap);    // 0x000F58D0
 void AtSetHeap3B13E0(void* heap);    // 0x000EEF90
@@ -196,7 +196,6 @@ extern void* g_heap3B1FA8;           // 0x003B1FA8
 extern void* g_heap3B1FA4;           // 0x003B1FA4
 extern void* g_heap3B13CC;           // 0x003B13CC
 extern void* g_heap3B1F98;           // 0x003B1F98
-extern void* g_heap3B1F90;           // 0x003B1F90
 extern void* g_heap3B1F70;           // 0x003B1F70
 extern void* g_heap3B1F54;           // 0x003B1F54
 extern void* g_heap3B13E0;           // 0x003B13E0
@@ -207,12 +206,7 @@ extern void* g_heap3B13D0;           // 0x003B13D0
 // Three setters the layer calls are recovered on another branch (integrate-batch6: AtGrI2DFont::SetHeap 0x000FE870, AtMatrixDeviceXbox::SetHeap
 // 0x000F7BD0, AtMatrixPoolXbox::SetHeap 0x000F5FC0). Here they are stand-ins with the same effect, not recorded and not counted
 // (src/at/AtGraphicsLayerStandIns.cpp): at integration, call those and delete the stand-ins.
-void AtSetHeap3B1FCC(void* heap);    // 0x000FE870
-void AtSetHeap3B1F94(void* heap);    // 0x000F7BD0
-void AtSetHeap3B1F58(void* heap);    // 0x000F5FC0
-extern void* g_heap3B1FCC;           // 0x003B1FCC
-extern void* g_heap3B1F94;           // 0x003B1F94
-extern void* g_heap3B1F58;           // 0x003B1F58
+// 0x000FE870, 0x000F7BD0 and 0x000F5FC0 are AtGrI2DFont::SetHeap, AtMatrixDeviceXbox::SetHeap and AtMatrixPoolXbox::SetHeap (at/imgfont, at/matdev).
 
 // The layer's own heaps beyond those its base sets: 0x000C7CA0, a free function (cdecl), the second half of the layer's SetHeaps.
 void AtGraphicsSetHeaps(const AtGraphicsConfig* config);  // 0x000C7CA0
@@ -253,6 +247,7 @@ public:
     virtual void Slot27();
     virtual void Slot28();
     virtual AtDatabaseLoader* DatabaseLoader();  // slot 29, 0x000EBB50
+    virtual void DeleteLoader(AtDatabaseLoader* loader);  // slot 30, 0x000EBBF0 frees what slot 29 made (the level manifest's graphics items, gm/dbmanifest)
 };
 
 // Not recovered (hardware); each stops with a diagnostic (src/at/AtGraphicsLayerSeams.cpp). Start: restores the saved globals (so the render table's

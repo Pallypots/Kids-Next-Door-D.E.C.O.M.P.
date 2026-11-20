@@ -5,6 +5,7 @@
 
 #include "at/AtAnimationDatabase.h"
 #include "at/AtApMidLayers.h"
+#include "at/AtGrD3DDatabase.h"
 #include "at/AtCoordSys.h"
 #include "at/AtDataLibrary.h"
 #include "at/AtMatAnimation.h"
@@ -100,7 +101,7 @@ static void test_kinematics() {
     CHECK(k.m_below == HEAP(9) && k.m_factory != nullptr);
     CHECK(AtSceneAnimBlend::s_heap == HEAP(0) && AtAnimationDatabase::s_heap == HEAP(0) && AtCoordSysDatabase::s_heap == HEAP(1));
     CHECK(g_heap2C6348 == HEAP(0) && AtGrFrameNumberSet::s_heap == HEAP(0) && g_heap3B23E8 == HEAP(0) && g_heap3B23E4 == HEAP(0));
-    CHECK(g_heap2C63DC == HEAP(0) && g_heap2C634C == HEAP(0) && g_heap3B23E0 == HEAP(3) && AtKinematicsFactory::s_heap == HEAP(2));
+    CHECK(g_heap2C63DC == HEAP(0) && g_heap2C634C == HEAP(0) && g_heap3B23E0 == HEAP(3) && AtGrD3DAnimationDevice::s_heap == HEAP(2));
     k.Init(&c, HEAP(8), nullptr);  // running: shuts down first, which frees the factory
     CHECK(k.m_below == HEAP(8) && k.m_factory != nullptr);
     k.Shutdown();

@@ -129,7 +129,7 @@ KIN = [
     ("setter 2C63DC", M, "{ g_heap2C63DC = heap; }", "{ g_heap2C63DC = 0; }"),
     ("setter 2C634C", M, "{ g_heap2C634C = heap; }", "{ g_heap2C634C = 0; }"),
     ("setter 3B23E0", M, "{ g_heap3B23E0 = heap; }", "{ g_heap3B23E0 = 0; }"),
-    ("factory setter", M, "void AtKinematicsFactory::SetHeap(void* heap) { s_heap = heap; }", "void AtKinematicsFactory::SetHeap(void* heap) { s_heap = 0; }"),
+    ("factory setter", M, "void AtGrD3DAnimationDevice::SetHeap(void* heap) { s_heap = heap; }", "void AtGrD3DAnimationDevice::SetHeap(void* heap) { s_heap = 0; }"),
     ("base ctor", M, "AtKinematicsSystemBase::AtKinematicsSystemBase() {\n    m_below = 0;", "AtKinematicsSystemBase::AtKinematicsSystemBase() {\n"),
     ("base Init: running", M, "void AtKinematicsSystemBase::Init(const AtKinematicsConfig* config, void* below, void*) {\n    if (m_below != 0) {",
      "void AtKinematicsSystemBase::Init(const AtKinematicsConfig* config, void* below, void*) {\n    if (m_below == 0) {"),
@@ -151,13 +151,13 @@ KIN = [
     ("Init: heap pushed", M, "    AtPushHeap(config->m_heap);\n    void* block", "    AtPushHeap(config->m_factoryHeap);\n    void* block"),
     ("Init: pop", M, "    AtPopHeap();\n    if (factory == 0) {", "    if (factory == 0) {"),
     ("Init: raise", M, "    if (factory == 0) {\n        AtRaise(-4, 0, 0, 0);", "    if (factory == 0) {\n        AtRaise(-2, 0, 0, 0);"),
-    ("Init: constructed", M, "block != 0 ? new (block, Placement()) AtKinematicsFactory() : 0", "(AtKinematicsFactory*)block"),
+    ("Init: constructed", M, "block != 0 ? new (block, Placement()) AtGrD3DAnimationDevice() : 0", "(AtGrD3DAnimationDevice*)block"),
     ("Init: stored", M, "    m_factory = factory;\n", ""),
     ("Shutdown: freed", M, "        operator delete(factory);\n", ""),
     ("Shutdown: cleared", M, "        m_factory = 0;\n", ""),
     ("Shutdown: base", M, "    AtKinematicsSystemBase::Shutdown();\n}", "}"),
-    ("SetHeaps: base", M, "    AtKinematicsSystemBase::SetHeaps(config);\n    AtKinematicsFactory", "    AtKinematicsFactory"),
-    ("SetHeaps: factory", M, "AtKinematicsFactory::SetHeap(config->m_factoryHeap != 0 ? config->m_factoryHeap : config->m_heap)", "AtKinematicsFactory::SetHeap(config->m_heap)"),
+    ("SetHeaps: base", M, "    AtKinematicsSystemBase::SetHeaps(config);\n    AtGrD3DAnimationDevice", "    AtGrD3DAnimationDevice"),
+    ("SetHeaps: factory", M, "AtGrD3DAnimationDevice::SetHeap(config->m_factoryHeap != 0 ? config->m_factoryHeap : config->m_heap)", "AtGrD3DAnimationDevice::SetHeap(config->m_heap)"),
 ]
 
 MUTANTS = MATH + DATA + SCRIPT + KIN
