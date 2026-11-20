@@ -253,13 +253,6 @@ void AtGraphicsSystemBase::SetHeaps(const AtGraphicsConfig* config) {
 
 // ---- the layer -----------------------------------------------------------------------------------------------------------------
 
-AtDisplayMode::AtDisplayMode() {
-    m_unknown00 = 0;
-    m_unknown04 = 0;
-    m_unknown1C = 0;
-    m_unknown20 = 0;
-}
-
 AtGraphicsSystem::AtGraphicsSystem() {
     m_unknown34 = 0;
     m_unknown38 = 0;

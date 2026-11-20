@@ -11,7 +11,10 @@
 #include <string>
 #include <vector>
 
+#include "at/AtGraphicsFactory.h"
+#include "at/AtGraphicsLayer.h"
 #include "at/AtHeap.h"
+#include "at/AtMatrix.h"
 #include "at/AtIoJam.h"
 #include "at/AtIoMountManager.h"
 #include "gm/GmApp.h"
@@ -202,7 +205,11 @@ static void test_main(const char* directory) {
     // The first call of App::Init is GmApp's start-up. The host answers its memory query (platform/host_sdk.cpp), and the AtAp layers come up from the
     // base (at/atap): memory and the heaps, events, the network (off), I/O; the math layer's object is the first that is not recovered. No disc file is
     // read before it.
-    CHECK(stopped == "Graphics layer: the graphics factory's start (0x000C7C60: the render function tables and the factory at 0x003ADF64) is not recovered");
+    // Then graphics: the factory's start (at/grfactory) runs on the host's answer to Direct3D (platform/host_d3d.cpp: one adapter, no device
+    // capabilities), and the layer's Init makes the real graphics device (at/gfxdev), whose first texture member is the texture work's.
+    CHECK(stopped == "Atlas Graphics: the texture at vftable 0x00289768 (0x000FCEE0) is the texture work's, not recovered here");
+    CHECK(g_atGraphicsFactory.m_adapters.Count() == 1 && g_atGraphicsFactory.m_adapters.At(0)->m_info[0].m_modes == nullptr);
+    CHECK(g_atMatrix.Copy == AtMatrixCopy && g_atRender.m_matrix.Copy == AtMatrixCopy);
     CHECK(App::s_memoryTotal != 0);
     CHECK(g_app.m_memory.m_started == 1 && g_app.m_heaps[0] != nullptr && g_app.m_heaps[3] != nullptr);
     CHECK(g_app.m_io.m_below == &g_app.m_network && AtIoContext::s_instance == &g_app.m_io.m_context && g_app.m_io.m_context.m_device != nullptr);

@@ -43,10 +43,6 @@ const float kLargestReal = 3.4028234663852886e38f;  // 0x7F7FFFFF
 
 // ---- the base ---------------------------------------------------------------------------------------------------
 
-void AtSceneDevice::DrawScale(float*) {
-    AtFatal("not recovered: a concrete device's scale, in the graphics layer", 0, 0, 0);
-}
-
 void* AtSceneDevice::FindFont(const char* name, const char* ns) {
     if (ns != 0 && ns[0] != 0) {
         return m_fontSpaces.Find(ns, name);

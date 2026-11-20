@@ -12,6 +12,8 @@
 #pragma once
 #include "at/AtApLayer.h"
 #include "at/AtCoordSys.h"
+#include "at/AtDisplayDevice.h"
+#include "at/AtGraphicsFactory.h"
 #include "at/AtPixelFormat.h"
 
 class AtDatabaseLoader;
@@ -211,63 +213,19 @@ extern void* g_heap3B13D0;           // 0x003B13D0
 // The layer's own heaps beyond those its base sets: 0x000C7CA0, a free function (cdecl), the second half of the layer's SetHeaps.
 void AtGraphicsSetHeaps(const AtGraphicsConfig* config);  // 0x000C7CA0
 
-// ---- the graphics factory, a seam ---------------------------------------------------------------------------------------
+// ---- the graphics factory -------------------------------------------------------------------------------------------------
 
-// The static object at 0x003ADF64 (vftable 0x00288BE0, 34 slots), App+0x5F90 (App's AppGraphics). Not recovered: every slot stops with a diagnostic.
-// The odd slots from 4 to 26 are one function, 0x000EB9D0, which deletes what it is handed through its slot 1.
-class AtGraphicsFactory {
-public:
-    virtual void* Slot0();           // 0x000EB540 the object at +4 of the factory (App+0x5F94)
-    virtual void Slot1();
-    virtual void Slot2();
-    virtual AtMaterialOwner* CreateDevice();  // slot 3, 0x000EBE90 makes the graphics device, 0x305C0 bytes from 0x003B13CC's heap; App's material owner
-    virtual void Destroy(void* object);       // slot 4, 0x000EB9D0
-    virtual void Slot5();
-    virtual void Slot6();
-    virtual void Slot7();
-    virtual void Slot8();
-    virtual void Slot9();
-    virtual void Slot10();
-    virtual void Slot11();
-    virtual void Slot12();
-    virtual void Slot13();
-    virtual void Slot14();
-    virtual void Slot15();
-    virtual void Slot16();
-    virtual void Slot17();
-    virtual void Slot18();
-    virtual void Slot19();
-    virtual void Slot20();
-    virtual void Slot21();
-    virtual void Slot22();
-    virtual void Slot23();
-    virtual void Slot24();
-    virtual void Slot25();
-    virtual void Slot26();
-    virtual void Slot27();
-    virtual void Slot28();
-    virtual AtDatabaseLoader* DatabaseLoader();  // slot 29, 0x000EBB50
-    virtual void DeleteLoader(AtDatabaseLoader* loader);  // slot 30, 0x000EBBF0 frees what slot 29 made (the level manifest's graphics items, gm/dbmanifest)
-};
+// The factory (0x003ADF64, AtGraphicsFactory) is at/grfactory's: include/at/AtGraphicsFactory.h.
 
-// Not recovered (hardware); each stops with a diagnostic (src/at/AtGraphicsLayerSeams.cpp). Start: restores the saved globals (so the render table's
-// matrix part, zero until now, is copied over the matrix table), writes both function tables (0x000EC670), starts the factory's device list
-// (0x000EB520, 0x000FA7F0, from 0x003B1FA8's heap), saves the globals again and returns the factory. config is handed on and not read.
+// Recovered in at/grfactory (src/at/AtGraphicsFactory.cpp). Start: restores the saved globals (so the render table's matrix part, zero until now, is
+// copied over the matrix table), writes both function tables (0x000EC670), starts the factory's adapter list (0x000EB520, 0x000FA7F0), saves the
+// globals again and returns the factory. config is handed on and not read. Stop: the adapter list cleared.
 AtGraphicsFactory* AtGraphicsStartFactory(AtGraphicsGlobals* saved, const AtGraphicsConfig* config);  // 0x000C7C60
 void AtGraphicsStopFactory();        // 0x000C7C90 the factory's device list, 0x000FA5C0
 
 // ---- the layer's object ---------------------------------------------------------------------------------------------------
 
-// The display mode at +0x54 of the layer (0x24 bytes): two words, a pixel format and two words more. Its constructor alone is recovered; the layer's slot
-// 4 copies a mode in (0x00043450). The name is inferred from slot 5's report.
-struct AtDisplayMode {
-    AtDisplayMode();                 // 0x00043480 all zero
-    int m_unknown00;                 // +0x00
-    int m_unknown04;                 // +0x04
-    AtPixelFormat m_format;          // +0x08
-    int m_unknown1C;                 // +0x1C
-    int m_unknown20;                 // +0x20
-};
+// The display mode at +0x54 of the layer is AtDisplayMode (include/at/AtDisplayDevice.h, at/gfxdev); the layer's slot 4 copies a mode in (0x00043450).
 
 // vftable 0x00286608 (0x30 bytes).
 class AtGraphicsSystemBase {
@@ -335,7 +293,6 @@ static_assert(sizeof(AtGraphicsGlobals) == 0x1C, "AtGraphicsGlobals");
 static_assert(sizeof(AtGraphicsConfig) == 0xF0, "AtGraphicsConfig");
 static_assert(offsetof(AtGraphicsConfig, m_nameSpaceHeap) == 0xD0, "AtGraphicsConfig::m_nameSpaceHeap");
 static_assert(offsetof(AtGraphicsConfig, m_unknownDC) == 0xDC, "AtGraphicsConfig::m_unknownDC");
-static_assert(sizeof(AtDisplayMode) == 0x24, "AtDisplayMode");
 static_assert(sizeof(AtGraphicsSystemBase) == 0x30, "AtGraphicsSystemBase");
 static_assert(offsetof(AtGraphicsSystem, m_mode) == 0x54, "AtGraphicsSystem::m_mode");
 static_assert(offsetof(AtGraphicsSystem, m_format) == 0x78, "AtGraphicsSystem::m_format");

@@ -221,7 +221,7 @@ static float g_scale[2] = {1.0f, 1.0f};
 class TestDevice : public AtSceneDevice {
 public:
     void Slot0() override {} void Slot1() override {} void Slot2() override {} void Slot3() override {} void Slot4() override {} void Slot5() override {} void Slot6() override {} void Slot7() override {} void Slot8() override {}
-    void Slot9() override {} void Slot10() override {} void Slot11() override {} void Slot12() override {} void Slot13() override {} void Slot14() override {} void Slot15() override {} void Slot16() override {}
+    void Slot9() override {} void Slot10() override {} void Slot11() override {} void Slot12() override {}
     AtMatrixDevice* MatrixDevice() override { return nullptr; }
     void DrawScale(float* out) override { g_log[g_side].add('S'); out[0] = g_scale[0]; out[1] = g_scale[1]; }
 };

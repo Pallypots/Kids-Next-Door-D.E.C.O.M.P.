@@ -65,8 +65,7 @@ BASE = [
 ]
 
 LAYER = [
-    ("display mode ctor: +0", G, "AtDisplayMode::AtDisplayMode() {\n    m_unknown00 = 0;\n", "AtDisplayMode::AtDisplayMode() {\n"),
-    ("display mode ctor: +0x20", G, "    m_unknown1C = 0;\n    m_unknown20 = 0;\n}", "    m_unknown1C = 0;\n}"),
+    # The display mode's constructor is gfxdev's (src/at/AtMaterialOwnerBase.cpp), with its mutants in tests/oracle/suites/gfxdev.py.
     ("ctor: +0x34", G, "AtGraphicsSystem::AtGraphicsSystem() {\n    m_unknown34 = 0;\n", "AtGraphicsSystem::AtGraphicsSystem() {\n"),
     ("ctor: +0x24", G, "    m_unknown24 = 0;  // ORIGINAL: the base's", "    m_unknown24 = 1;  // ORIGINAL: the base's"),
     ("ctor: +0x50", G, "    m_unknown94 = 0;\n    m_unknown50 = 0;\n}\n\nvoid AtGraphicsSetHeaps", "    m_unknown94 = 0;\n}\n\nvoid AtGraphicsSetHeaps"),

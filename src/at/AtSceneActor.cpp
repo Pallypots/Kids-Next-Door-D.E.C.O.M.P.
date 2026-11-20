@@ -365,7 +365,7 @@ void AtSceneActor::ReadBody(AtNameTableOwner* owner, AtIoTokenizer* tokenizer, i
             tokenizer->Error(kAtProblemWrongUse);
         }
         tokenizer->ExpectName(name);
-        AtCoordSysDatabase* from = (AtCoordSysDatabase*)owner->m_device->m_coordSysDatabases.Find(name);
+        AtCoordSysDatabase* from = (AtCoordSysDatabase*)owner->m_device->m_coordSystems.Find(name);
         if (from == 0) {
             tokenizer->Error(kAtProblemNotFound);
         }

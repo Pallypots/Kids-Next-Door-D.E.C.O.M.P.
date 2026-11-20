@@ -8,7 +8,8 @@
 
 class AtAudioBankLoader;  // include/at/AtAudioBank.h
 class AtMatrixDevice;     // include/at/AtCoordSys.h
-class AtSceneDevice;      // include/at/AtScene.h
+struct AtMaterialOwner;   // include/at/AtMaterial.h
+typedef AtMaterialOwner AtSceneDevice;  // the scene code's name for it: include/at/AtScene.h
 class AtSceneNode;        // include/at/AtScene.h
 class AtSceneParticleDrawerMaker;  // include/at/AtSceneParticle.h
 

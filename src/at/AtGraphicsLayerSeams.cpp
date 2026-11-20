@@ -1,4 +1,4 @@
-// What the graphics layer reaches and is not recovered (at/grlayer): the hardware, behind the factory's start and stop, the factory's slots, the display
+// What the graphics layer reaches and is not recovered (at/grlayer): the factory's slots but 0, 3 and 4 (at/grfactory recovers those and the start and stop), the display
 // slots and the deleting destructors. Each stops with a diagnostic; none is recorded or counted. In a file of its own, so that a harness can supply them
 // instead. See include/at/AtGraphicsLayer.h.
 #include "at/AtGraphicsLayer.h"
@@ -11,11 +11,6 @@ void StopHere(const char* what) {
 }
 }
 
-AtGraphicsFactory* AtGraphicsStartFactory(AtGraphicsGlobals*, const AtGraphicsConfig*) {
-    StopHere("Graphics layer: the graphics factory's start (0x000C7C60: the render function tables and the factory at 0x003ADF64) is not recovered");
-    return 0;
-}
-void AtGraphicsStopFactory() { StopHere("Graphics layer: the graphics factory's stop (0x000C7C90) is not recovered"); }
 
 void AtGraphicsSystemBase::DeletingDestructor(unsigned int) { StopHere("Graphics layer: the base's deleting destructor (0x000C85B0) is not recovered"); }
 void AtGraphicsSystemBase::SetDisplay(AtDisplayMode*, int, int, int, const AtPixelFormat*, int, int) {
@@ -27,9 +22,6 @@ void AtGraphicsSystem::SetDisplay(AtDisplayMode*, int, int, int, const AtPixelFo
 }
 void AtGraphicsSystem::UpdateDisplay() { StopHere("Graphics layer: slot 5 (0x000B3350) is not recovered"); }
 
-void* AtGraphicsFactory::Slot0() { StopHere("Graphics factory: slot 0 (0x000EB540) is not recovered"); return 0; }
-AtMaterialOwner* AtGraphicsFactory::CreateDevice() { StopHere("Graphics factory: making the device (slot 3, 0x000EBE90) is not recovered"); return 0; }
-void AtGraphicsFactory::Destroy(void*) { StopHere("Graphics factory: slot 4 (0x000EB9D0) is not recovered"); }
 AtDatabaseLoader* AtGraphicsFactory::DatabaseLoader() { StopHere("Graphics factory: the database loader (slot 29, 0x000EBB50) is not recovered"); return 0; }
 void AtGraphicsFactory::DeleteLoader(AtDatabaseLoader*) { StopHere("Graphics factory: freeing a database loader (slot 30, 0x000EBBF0) is not recovered"); }
 #define SLOT(n) \

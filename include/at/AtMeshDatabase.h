@@ -60,12 +60,35 @@ public:
     unsigned char m_flags;    // +0x08
 };
 
-// An index array. Its base's reader is recovered; where the indices live is the graphics layer's.
-class AtIndexArray {
+// The index array's base: vftable 0x002762B8, nine slots, 0xC bytes; constructor 0x00044800, whose one caller is AtIndexArray's. Name inferred. Only the constructor is recovered (at/gfxdev). Its slots
+// 1 to 8 are those AtIndexArray declares: slot 1 is its deleting destructor (0x00044910), slot 2 clears the three fields (0x000448E0), 3 to 8 are pure; none is recovered, and each stops here.
+class AtGeometryArray {
+public:
+    AtGeometryArray();                                         // 0x00044800 the three fields cleared
+    virtual void Allocate(unsigned int count, unsigned int flags) {}  // slot 0, 0x000447F0: does nothing
+    virtual void Slot1();
+    virtual void Slot2();
+    virtual void Lock(void** out, int mode);
+    virtual void Unlock();
+    virtual void Finish();
+    virtual void Slot6();
+    virtual void Slot7();
+    virtual void Slot8();
+
+    unsigned int m_count;      // +0x04
+    unsigned short m_flags;    // +0x08
+    unsigned char m_loadFlags; // +0x0A
+    unsigned char m_unknown0B; // +0x0B
+};
+
+// An index array: vftable 0x00274D48, nine slots, 0x18 bytes. Its base's reader is recovered; where the indices live is the graphics layer's: the concrete Xbox index array is AtIndexArrayXbox,
+// include/at/AtGraphicsDevice.h, which the matrix device's slot 3 makes (its AtMatrixDeviceItemB, the same class).
+class AtIndexArray : public AtGeometryArray {
 public:
     enum Flags { kFrequentModify = 1, kInfrequentModify = 2, kFixedSysMem = 4, kFixedSysMemOnly = 8, kIndex8Bit = 0x10, kIndex32Bit = 0x20 };
     enum LoadFlags { kDemandLoad = 0x20 };
 
+    AtIndexArray();                                            // 0x00037370 the name emptied and the index cleared (at/gfxdev)
     virtual void Allocate(unsigned int count, unsigned int flags) = 0;  // slot 0
     virtual void Destroy(unsigned int flags) = 0;  // slot 1: the deleting destructor (the graphics layer's, 0x00110620, is what AtMatrixDeviceXbox's FreeIndexArray calls with 1)
     virtual void Slot2() = 0;
@@ -77,10 +100,6 @@ public:
     void Read(AtIoTokenizer* tokenizer, unsigned int index);
     void ReadIndices(AtIoTokenizer* tokenizer, unsigned int flags);  // 0x00044820 each cut to the size the flags say
 
-    unsigned int m_count;      // +0x04
-    unsigned short m_flags;    // +0x08
-    unsigned char m_loadFlags; // +0x0A
-    unsigned char m_unknown0B; // +0x0B
     char m_name[8];            // +0x0C
     unsigned int m_index;      // +0x14
 };

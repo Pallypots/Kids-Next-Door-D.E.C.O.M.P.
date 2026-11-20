@@ -291,7 +291,7 @@ evidence = "the string AST at 0x002752F8; called from 0x0002EF45"
 [[function]]
 va = 0x00048E50
 size = 55
-symbol = "?FindImage@AtSceneDevice@@QAEPAXPBD0@Z"
+symbol = "?FindImage@AtMaterialOwner@@QAEPAXPBD0@Z"
 source = "src/at/AtDrawItem.cpp"
 subsystem = "at/asd"
 evidence = "the device's +0x294 and +0x2AC; called by 0x000490EA"
@@ -339,7 +339,7 @@ evidence = "stores vftable 0x002764F0; passed to the array iterator by 0x0003B1A
 [[function]]
 va = 0x00049290
 size = 55
-symbol = "?FindFont@AtSceneDevice@@QAEPAXPBD0@Z"
+symbol = "?FindFont@AtMaterialOwner@@QAEPAXPBD0@Z"
 source = "src/at/AtDrawItem.cpp"
 subsystem = "at/asd"
 evidence = "the device's +0x258 and +0x270; called by 0x000495DA"

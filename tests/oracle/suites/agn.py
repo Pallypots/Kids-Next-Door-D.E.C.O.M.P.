@@ -355,7 +355,7 @@ MUTANTS = [
     ("Flare read: no reset", E, "    if (m_owner != 0) {\n        Reset();\n    }\n", ""),
     ("Flare read: no owner", E, "    m_owner = owner;\n", ""),
     ("Flare read: flags", E, "    m_flags = kDistanceColoring | kDepthColoring;\n", "    m_flags = kDistanceColoring;\n"),
-    ("Flare read: left curly", E, "(AtMaterialOwner*)owner->m_device;  // By its use here it has AtMaterialOwner's tables. AtSceneDevice and AtMaterialOwner may be one class.\n    tokenizer->ExpectLeftCurly();\n", "(AtMaterialOwner*)owner->m_device;\n"),
+    ("Flare read: left curly", E, "(AtMaterialOwner*)owner->m_device;  // By its use here it has AtMaterialOwner's tables. AtSceneDevice is AtMaterialOwner.\n    tokenizer->ExpectLeftCurly();\n", "(AtMaterialOwner*)owner->m_device;\n"),
     ("Flare read: centre", E, "ReadColor(&m_centerColor, tokenizer);", "ReadColor(&m_innerColor, tokenizer);"),
     ("Flare read: inner order", E, "            m_innerStart = tokenizer->ExpectReal();\n            m_innerEnd = tokenizer->ExpectReal();", "            m_innerEnd = tokenizer->ExpectReal();\n            m_innerStart = tokenizer->ExpectReal();"),
     ("Flare read: inner colour", E, "ReadColor(&m_innerColor, tokenizer);", "ReadColor(&m_outerColor, tokenizer);"),
