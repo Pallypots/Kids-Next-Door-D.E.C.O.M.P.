@@ -6,7 +6,7 @@ R = "GmRandom.cpp"
 # Dropped as equivalent, with the reason:
 # * m_seed = kDefaultSeed in SeedDefaultReturningSeed: Seed stores the same value next.
 # * The tempering mask 0x9D2C5680 with its low bit set: it is applied to y << 7, whose low seven bits are 0.
-# * The position zeroed in PlayNote: it is passed only to GmActorSoundNodes::Play, which does not read it, and is overwritten when the actor has a node.
+# * The position zeroed in PlayNote: it is passed only to GmAcAudio::Play, which does not read it, and is overwritten when the actor has a node.
 # * ClearNode's stores of m_owner, m_emitter, m_unknown58, m_range and m_unknown84: the node's construction (new[] in the original) has just stored the same zeroes, and the loader reads
 #   nothing in between. Likewise the instance and collision loaders' resets of m_instanceCount and m_emitter after AllocateInstanceBank and the collision array's construction.
 # * FreeNodes clearing node->m_emitter, FreeInstanceSounds clearing a sound's name and m_collision, FreeCollisionSounds clearing names, m_emitter and the flags: the array is freed
@@ -86,7 +86,7 @@ MUTANTS = [
     ("at actor: bound", P, "if (++i >= kVoiceSlots) {", "if (++i >= kVoiceSlots - 1) {"),
     ("at actor: state", P, "slot->m_state = GmSoundVoiceSlot::kActor;", "slot->m_state = GmSoundVoiceSlot::kNode;"),
     ("at actor: actor kept", P, "        slot->m_actor = actor;\n", ""),
-    ("at actor: motion", P, "actor->GetMotion(&position, 0, 0, 0, 0);", "actor->GetMotion(&position, &position, 0, 0, 0);"),
+    ("at actor: motion", P, "actor->Slot22(&position, 0, 0, 0, 0);", "actor->Slot22(&position, &position, 0, 0, 0);"),
     ("at actor: place", P, "        PlaceEmitter(slot->m_emitter, &position);\n", ""),
     ("at actor: update", P, "    slot->m_emitter->Unknown21();\n    slot->m_emitter->Play(segment, 0);", "    slot->m_emitter->Play(segment, 0);"),
     ("at actor: actor null", P, "    if (actor != 0) {\n        slot->m_actor", "    if (actor != 0 || i == 0) {\n        slot->m_actor"),
@@ -97,8 +97,8 @@ MUTANTS = [
     ("note: stop segment", P, "&& other->m_choiceCount != 0 && other->m_choices[0].m_segment != 0) {", "&& other->m_choiceCount != 0) {"),
     ("note: stop which", P, "AtAudioSegment* segment = other->m_choices[0].m_segment;", "AtAudioSegment* segment = other->m_choices[other->m_choiceCount - 1].m_segment;"),
     ("note: stop emitter", P, "                note->m_emitter->StopSegment(segment);\n", "                note->m_emitter->StopAll();\n"),
-    ("note: stop nodes", P, "actor->m_audio->m_soundNodes->StopSegment(segment, 0);", "actor->m_audio->m_soundNodes->StopSegment(segment, 1);"),
-    ("note: stop nodes test", P, "} else if (actor != 0 && actor->m_audio != 0 && actor->m_audio->m_soundNodes != 0) {", "} else if (actor != 0 && actor->m_audio != 0) {"),
+    ("note: stop nodes", P, "actor->m_component->m_audio->StopSegment(segment, 0);", "actor->m_component->m_audio->StopSegment(segment, 1);"),
+    ("note: stop nodes test", P, "} else if (actor != 0 && actor->m_component != 0 && actor->m_component->m_audio != 0) {", "} else if (actor != 0 && actor->m_component != 0) {"),
     # Conditional and the choice.
     ("note: conditional", P, "if (note->m_conditional != 0 && note->m_conditional->m_firstVoice != 0) {", "if (note->m_conditional != 0) {"),
     ("note: no choices", P, "    if (note->m_choiceCount == 0) {\n        return;\n    }\n    // A pick", "    // A pick"),
@@ -115,18 +115,18 @@ MUTANTS = [
     ("note: emitter returns", P, "        PlayOnEmitter(note->m_emitter, note->m_choices[chosen].m_segment);\n        return;\n", "        PlayOnEmitter(note->m_emitter, note->m_choices[chosen].m_segment);\n"),
     # At the actor.
     ("note: no actor", P, "if (actor == 0 || choices[chosen].m_segment == 0) {", "if (actor == 0) {"),
-    ("note: node test", P, "    if (actor->m_node != 0) {\n        actor->m_node->GetWorldPosition(&position);", "    if (actor->m_node != 0 && actor->m_audio != 0) {\n        actor->m_node->GetWorldPosition(&position);"),
-    ("note: node position", P, "        actor->m_node->GetWorldPosition(&position);\n", ""),
-    ("note: nodes play", P, "actor->m_audio->m_soundNodes->Play(note->m_choices[chosen].m_segment, 0, &position, note->m_singleton);",
-     "actor->m_audio->m_soundNodes->Play(note->m_choices[chosen].m_segment, 0, &position, 0);"),
-    ("note: nodes test", P, "        if (actor->m_audio != 0 && actor->m_audio->m_soundNodes != 0) {\n            actor->m_audio->m_soundNodes->Play", "        if (actor->m_audio != 0) {\n            actor->m_audio->m_soundNodes->Play"),
+    ("note: node test", P, "    if (actor->m_unknownA0 != 0) {\n        actor->m_unknownA0->GetWorldPosition(&position);", "    if (actor->m_unknownA0 != 0 && actor->m_component != 0) {\n        actor->m_unknownA0->GetWorldPosition(&position);"),
+    ("note: node position", P, "        actor->m_unknownA0->GetWorldPosition(&position);\n", ""),
+    ("note: nodes play", P, "actor->m_component->m_audio->Play(note->m_choices[chosen].m_segment, 0, &position, note->m_singleton);",
+     "actor->m_component->m_audio->Play(note->m_choices[chosen].m_segment, 0, &position, 0);"),
+    ("note: nodes test", P, "        if (actor->m_component != 0 && actor->m_component->m_audio != 0) {\n            actor->m_component->m_audio->Play", "        if (actor->m_component != 0) {\n            actor->m_component->m_audio->Play"),
     ("note: nodes returns", P, "&position, note->m_singleton);\n            return;\n", "&position, note->m_singleton);\n"),
     ("note: at actor", P, "    PlayAtActor(actor, note->m_choices[chosen].m_segment);\n}", "    PlayAtActor(actor, choices[0].m_segment);\n}"),
     # Dynamic nodes.
     ("dynamic: pool", P, "GmSoundNodeBank* pool = &m_nodeBanks[0];", "GmSoundNodeBank* pool = &m_nodeBanks[1];"),
     ("dynamic: free test", P, "if (pool->m_nodes[i].m_owner == 0) {", "if (pool->m_nodes[i].m_source == 0) {"),
     ("dynamic: owner", P, "pool->m_nodes[i].m_owner = actor;", "pool->m_nodes[i].m_owner = 0;"),
-    ("dynamic: source", P, "pool->m_nodes[i].m_source = actor->m_soundSource;", "pool->m_nodes[i].m_source = actor->m_node;"),
+    ("dynamic: source", P, "pool->m_nodes[i].m_source = actor->m_sceneNode;", "pool->m_nodes[i].m_source = actor->m_unknownA0;"),
     ("dynamic: range", P, "pool->m_nodes[i].m_range = 0;", "pool->m_nodes[i].m_range = 1;"),
     ("dynamic: bound", P, "for (unsigned int i = 0; i < pool->m_count; i++) {", "for (unsigned int i = 0; i + 1 < pool->m_count; i++) {"),
     # PlayNode.
@@ -153,7 +153,7 @@ MUTANTS = [
     ("actor stop: segment", P, "m_nodes[index]->m_emitter->StopSegment(segment);", "m_nodes[index]->m_emitter->StopAll();"),
     ("actor play: segment", P, "if (segment == 0 || index < 0 || index >= m_count) {", "if (index < 0 || index >= m_count) {"),
     ("actor play: high", P, "|| index < 0 || index >= m_count) {", "|| index < 0 || index > m_count) {"),
-    ("actor play: take", P, "m_nodes[index] = m_manager->TakeDynamicNode(m_actor, m_actor->Unknown52());", "m_nodes[index] = m_manager->TakeDynamicNode(m_actor, 0);"),
+    ("actor play: take", P, "m_nodes[index] = m_manager->TakeDynamicNode(m_actor, m_actor->Unknown27C());", "m_nodes[index] = m_manager->TakeDynamicNode(m_actor, 0);"),
     ("actor play: taken", P, "    if (m_nodes[index] == 0) {\n        return;\n    }\n    if (singleton", "    if (singleton"),
     ("actor play: singleton", P, "if (singleton != 0 && m_nodes[index]->m_emitter != 0 && m_nodes[index]->m_emitter->IsPlaying(segment) != 0) {", "if (singleton != 0 && m_nodes[index]->m_emitter != 0) {"),
     ("actor play: noaudio", P, "    if (App::GetGmApp()->m_noAudio != 0) {\n        return;\n    }\n    m_manager->PlayNode", "    m_manager->PlayNode"),

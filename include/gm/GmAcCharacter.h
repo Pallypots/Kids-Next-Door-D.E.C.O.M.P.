@@ -127,10 +127,11 @@ public:
     Registration* m_registration;       // +0x04
 };
 
-// +0x2E4: nothing here makes it. Slot names say who calls them.
-class GmAcSightCone {
+// +0x2E4: the character's combat object, GmCmCombat (RTTI; vftable 0x0028F5C4, constructor 0x001645F0), on which FaCmCombat (include/gm/GmAcNPC.h) is built: FaAcNPC's and
+// FaAcPlayer's slot 15 make one there (gm/gmnpc, gm/gmplayer). gm/gmchar called it a sight cone; renamed on integrate-batch7. Slot names say who calls them.
+class GmCmCombat {
 public:
-    virtual ~GmAcSightCone() = 0;       // slot 0, through which the character deletes it
+    virtual ~GmCmCombat() = 0;       // slot 0, through which the character deletes it
     virtual void Slot1() = 0;
     virtual void Slot2() = 0;
     virtual void Slot3() = 0;
@@ -142,7 +143,7 @@ public:
 
 // What the two above are is not known, so neither is what their destructors do: these bodies are only for host test classes built on them.
 inline GmAcShadow::~GmAcShadow() {}
-inline GmAcSightCone::~GmAcSightCone() {}
+inline GmCmCombat::~GmCmCombat() {}
 
 // +0x2DC: given by the player and NPC classes (0x00131F43, 0x00131F67) and a caller at 0x0009A545. Its +0x08 is told whose it is; its +0x04 is what the character's slot 59 answers. 0x0007DF00 and
 // 0x00154530, the original's two calls, are one-store and one-load bodies folded with other classes' (AtInputAxisHandler, AtAbstractController); they are written in place here.
@@ -200,7 +201,7 @@ public:
 
     GmAcCharController* m_controller;   // +0x2DC
     GmAcShadow* m_shadow;               // +0x2E0
-    GmAcSightCone* m_sightCone;         // +0x2E4
+    GmCmCombat* m_combat;         // +0x2E4
     float* m_sightConeLength;           // +0x2E8 the record's values, where they are: SightConeLength
     float* m_sightConeYaw;              // +0x2EC SightConeYaw
     float* m_sightConePitch;            // +0x2F0 SightConePitch

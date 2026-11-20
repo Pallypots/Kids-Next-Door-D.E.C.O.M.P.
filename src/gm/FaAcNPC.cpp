@@ -83,7 +83,7 @@ void FaAcNPC::Reset() {
     m_lowHealthRange = 0;
     m_medHealthRange = 0;
     m_highHealthRange = 0;
-    m_sightCone = 0;
+    m_combat = 0;
     m_numAIHealthLevels = 0;
     m_lastHealth = kFloatMax;
     m_unknown31C = 0;
@@ -132,9 +132,9 @@ void FaAcNPC::Slot15() {
             AtRaise(-2, 0, 0, 0);
         }
         AtPushHeap(s_heap);
-        m_sightCone = (GmAcSightCone*)new FaCmCombat;
+        m_combat = (GmCmCombat*)new FaCmCombat;
         AtPopHeap();
-        if (m_sightCone == 0) {
+        if (m_combat == 0) {
             AtRaise(-4, 0, 0, 0);
         }
         CombatOf(this)->Attach(this);

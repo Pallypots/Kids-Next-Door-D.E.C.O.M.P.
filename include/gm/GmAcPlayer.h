@@ -13,6 +13,8 @@
 // 21 (level continuation, combat and shooting, the update) and the target sprite's two set-up slots are not recovered and stop with a diagnostic.
 #pragma once
 
+#include "gm/GmApp.h"
+
 #include "at/AtSegmentQuery.h"
 #include "at/AtBoundingGeometry.h"
 #include "at/AtVector3.h"
@@ -26,22 +28,7 @@ class GmNameMap;
 // 0x00014030. How long a name is, up to eight. A null name crashes. Among the name helpers (AtCopyName9 0x00013F90 and the rest), not recovered before; here because the player is its first user.
 int AtNameLength(const char* name);
 
-// What App+0x692C points to (AppUnknown692C in include/gm/GmApp.h on integrate-batch5, made in 0x0008CFB0): the game's input as abstract axes. Only what the players call is declared. A distinct name
-// here so as not to clash with that declaration; the two are one class.
-class GmPlayerInput {
-public:
-    virtual int FindAxis(const char* name) = 0;  // slot 0: an axis's id by its name ("GameAxisForward"). The class is not recovered; its vftable is not known.
-    // 0x0006DFE0 not recovered: stops with a diagnostic. The value of one axis of one controller; a controller of -1 is 0. Reads a table at +0x108 by controller and calls an axis object's slot 10.
-    float AxisValue(int controller, int axis);
-};
-
-// App (0x00304D58, App::s_instance on integrate-batch5): only its +0x692C. Nothing on this branch sets it.
-struct GmPlayerApp {
-    char m_unknown0000[0x692C];
-    GmPlayerInput* m_input;             // +0x692C
-
-    static GmPlayerApp* s_instance;     // 0x00304D58
-};
+// App+0x692C (AppUnknown692C) and App (App::s_instance, 0x00304D58) are include/gm/GmApp.h's; gm/gmplayer's GmPlayerInput and GmPlayerApp were folded into them.
 
 // 0x003B34E4: the world's up, at +0x2C, against which the players straighten a frame. Z is up: a controller frame starts forward (0, 1, 0), up (0, 0, 1), right (1, 0, 0).
 struct GmWorldAxes {
@@ -223,7 +210,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(offsetof(GmPlayerApp, m_input) == 0x692C, "GmPlayerApp::m_input");
 static_assert(offsetof(GmWorldAxes, m_up) == 0x2C, "GmWorldAxes::m_up");
 static_assert(offsetof(GmLoadedPlayers, m_count) == 0x4C, "GmLoadedPlayers::m_count");
 static_assert(offsetof(GmAcQuery, m_names) == 0x1C, "GmAcQuery::m_names");

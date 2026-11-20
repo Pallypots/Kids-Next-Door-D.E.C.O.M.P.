@@ -6,7 +6,7 @@
 // has no RTTI of its own). FaCmCombat's vftable 0x00282EF4 has a locator naming FaCmCombat and GmCmCombat. Every other class, member and method name here is inferred, and says so by being
 // descriptive; record words and condition names are the files' and the executable's own.
 //
-// Finding about the base: GmAcCharacter's +0x2E4, called m_sightCone in include/gm/GmAcCharacter.h, is the character's combat object. FaAcNPC's slot 15 makes a FaCmCombat there (0xE4 bytes,
+// Finding about the base: GmAcCharacter's +0x2E4, called m_combat in include/gm/GmAcCharacter.h, is the character's combat object. FaAcNPC's slot 15 makes a FaCmCombat there (0xE4 bytes,
 // constructor 0x000A3360, vftable 0x00282EF4) when the record says Combat; FaAcNPC's reset clears it; its slot 60 reads FaCmCombat's words through it. GmAcCharacter's uses (slots 4 to 7, delete
 // through slot 0) are consistent with that. Nothing here renames it: the combat object is reached by a cast, CombatOf below.
 #pragma once
@@ -86,7 +86,7 @@ public:
 };
 
 // The combat object at a character's +0x2E4. See the finding above.
-inline FaCmCombat* CombatOf(GmAcCharacter* character) { return (FaCmCombat*)character->m_sightCone; }
+inline FaCmCombat* CombatOf(GmAcCharacter* character) { return (FaCmCombat*)character->m_combat; }
 
 // 0x00013E00, an engine text routine with no owner yet: a bounded comparison, a null text being the empty text; the difference of the first two characters that differ, else 0. Recovered here,
 // in src/gm/FaAcNPC.cpp, for its one caller in this work; it belongs with the text routines (AtNamesEqual 0x00013FC0 is beside it) and should move there.

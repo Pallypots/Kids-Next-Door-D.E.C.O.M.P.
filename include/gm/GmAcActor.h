@@ -283,9 +283,20 @@ public:
 };
 
 // ---- the actor's audio component at +0x20C, and what it holds at +0x68 ---------------------------------------------------
+// The actor's dynamic sound nodes (gm/gmsound called the class GmActorSoundNodes; folded on integrate-batch7). Methods in src/gm/GmSoundPlay.cpp.
 class GmAcAudio {
 public:
     void Slot38(int a);                 // 0x00194BF0 not recovered: stops with a diagnostic
+    void StopSegment(class AtAudioSegment* segment, int index);  // 0x00194BB0 on the emitter of the node at index, if there is one
+    // 0x00194E40. Takes a dynamic node for that index the first time. The position is not used. With singleton, nothing if the segment already plays on the node's emitter.
+    void Play(class AtAudioSegment* segment, int index, const AtVector3* position, int singleton);
+
+    char m_unknown00[0x18];
+    GmAudioData* m_manager;             // +0x18
+    int m_count;                        // +0x1C compared signed
+    struct GmSoundNode** m_nodes;       // +0x20
+    char m_unknown24[0xC];
+    GmAcActor* m_actor;                 // +0x30
 };
 
 class GmAcComponent {
@@ -492,7 +503,7 @@ public:
 // ---- seams in classes declared elsewhere: each one original function, not recovered, stopping with a diagnostic ------------
 void GmDynamicNodeRelease(GmAcNode* node, int flag);                       // 0x0014FB40, a method of GmDynamicNodeLoader (0x003B3984)
 int GmVfxManagerHas(GmVfxManager* manager, const char* name);              // 0x001616C0, a method of GmVfxManager (0x003B3C28)
-void GmAudioDataPlayNote(GmAudioData* audio, GmAcActor* actor, GmSoundNote* note);  // 0x001386D0, a method of GmAudioData (0x003B354C)
+// GmAudioData::PlayNote (0x001386D0), which the animation callback calls, is gm/gmsound's (include/gm/GmAudioData.h).
 // AtCoordSys::WorldPosition 0x000332B0 and AtCoordSys::Place 0x00032EA0 are declared with their class; they stop in src/gm/GmAcSeams.cpp.
 
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
@@ -516,6 +527,8 @@ static_assert(sizeof(GmAcVectorSet) == 0x38, "GmAcVectorSet");
 static_assert(offsetof(GmAcLinkedItem, m_owner) == 0x24, "GmAcLinkedItem::m_owner");
 static_assert(sizeof(GmLinkedListOf<GmAcLinkedItem*>) == 0x18, "GmLinkedListOf<GmAcLinkedItem*>");
 static_assert(offsetof(GmAcComponent, m_audio) == 0x68, "GmAcComponent::m_audio");
+static_assert(offsetof(GmAcAudio, m_manager) == 0x18, "GmAcAudio::m_manager");
+static_assert(offsetof(GmAcAudio, m_actor) == 0x30, "GmAcAudio::m_actor");
 static_assert(sizeof(GmAcActorRecord) == 0x44, "GmAcActorRecord");
 static_assert(sizeof(GmAcAnimationCallback) == 0x14, "GmAcAnimationCallback");
 static_assert(offsetof(GmAcActor, m_triggers) == 0x164, "GmAcActor::m_triggers");

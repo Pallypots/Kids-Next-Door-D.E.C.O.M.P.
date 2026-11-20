@@ -74,14 +74,14 @@ public:
     // Playing. src/gm/GmSoundPlay.cpp. What plays is the emitter's slot 15, and what it reaches is behind the emitter, not here.
     // 0x001386D0. Stops the first segment of the note named by Stop, chooses a segment by weight with the game's random numbers, and plays it: on the note's emitter if it has one, otherwise
     // through the actor's dynamic nodes, or failing those at the actor through a voice slot. Nothing while the Conditional emitter has a voice.
-    void PlayNote(GmActor* actor, GmSoundNote* note);
+    void PlayNote(GmAcActor* actor, GmSoundNote* note);
     void PlayOnEmitter(AtAudioEmitter* emitter, AtAudioSegment* segment);  // 0x00137F50 not with NoAudio; with no App object at all, it plays
     void PlayByName(const char* emitter, const char* segment);  // 0x00137FA0 an emitter of the sound owner's table, and a segment of the lists
-    void PlayAtActor(GmActor* actor, AtAudioSegment* segment);  // 0x00138010 the first free voice slot with an emitter, placed at the actor; nothing if none is free
+    void PlayAtActor(GmAcActor* actor, AtAudioSegment* segment);  // 0x00138010 the first free voice slot with an emitter, placed at the actor; nothing if none is free
     AtAudioEmitter* TakeVoiceSlot();                 // 0x001388B0 round the forty from the last taken: a free one with an emitter and no voice playing
     void ReleaseVoiceSlot(AtAudioEmitter* emitter);  // 0x001367A0 stops everything on it and frees the slot
     void FindEmitters();                             // 0x00137660 the five named emitters, collsn1-5 and actor1-40, by name in the sound owner's table
-    GmSoundNode* TakeDynamicNode(GmActor* actor, float unused);  // 0x00138F00 a node of the first bank with no owner
+    GmSoundNode* TakeDynamicNode(GmAcActor* actor, float unused);  // 0x00138F00 a node of the first bank with no owner
     void PlayNode(GmSoundNode* node, AtAudioSegment* segment);   // 0x00138F70 within range of the listener: plays on its emitter at the node's place. Out of range, a looping segment waits
     void StopBankVoices(AtAudioEmitter* emitter, AtAudioBank* bank);  // 0x00138290 stops each voice of that bank, and waits a tenth until none is left
     void RemoveDatabase(AtAudioDatabase* database);  // 0x00139F90 stops the voices of its banks on the named and actor emitters, and lets go of it. Not the first databases

@@ -280,7 +280,6 @@ static AtDataLink* find_impl(void* registry, void* under, const char* path, int 
     return nullptr;
 }
 static AtDataLink* __fastcall o_find(void* registry, void*, void* under, const char* path, int parents) { return find_impl(registry, under, path, parents); }
-static AtDataLink* r_find(AtDataRegistry* registry, AtDataLink* under, const char* path, int parents) { return find_impl(registry, under, path, parents); }
 
 static uint32_t g_rand;
 static uint32_t rnd() { g_rand = g_rand * 1103515245u + 12345u; return (g_rand >> 16) & 0x7FFF; }
@@ -414,7 +413,7 @@ static void construct_host(ObjKind kind, void* r) {
 
 static GmAcPlayerUnknown304* g_view;   // the player's +0x304, one for both sides
 static InputF g_input;
-static unsigned char* g_app;
+static unsigned char* g_app_block;
 static GmWorldAxes g_world;
 
 struct Pair {
@@ -1067,8 +1066,8 @@ int main(int argc, char** argv) {
         GmAcNode* n = new GmAcNode;
         GmAcCharacter* c = new GmAcCharacter;
         const struct { uint32_t va; void* host; const void* d; } slots[] = {
-            {0x000679E0, (void*)&AtDataRegistryFind, nullptr},
-            {0x0006DFE0, member_address(&GmPlayerInput::AxisValue), (const void*)d_axis},
+            {0x000679E0, member_address(&AtDataRegistry::FindPath), nullptr},  // recovered (at/datalookup), a double on both sides here
+            {0x0006DFE0, member_address(&AppUnknown692C::AxisValue), (const void*)d_axis},
             {0x0014BD90, vptr(n)[22], (const void*)d_node22},
             {0x0014BE10, vptr(n)[23], (const void*)d_node23},
             {0x0014C170, vptr(n)[27], (const void*)d_node27},
@@ -1080,7 +1079,7 @@ int main(int argc, char** argv) {
         for (const auto& s : slots) {
             if (s.va == 0x000679E0) {
                 redirect(s.va, (const void*)o_find);
-                redirect(U(s.host), (const void*)r_find);
+                redirect(U(s.host), (const void*)o_find);
                 continue;
             }
             redirect(s.va, s.d);
@@ -1100,10 +1099,10 @@ int main(int argc, char** argv) {
     at<FnP0>(0x00057B90)(orig_query(), nullptr);   // the original's static initializer 0x00202460, without its atexit
     g_view = (GmAcPlayerUnknown304*)std::calloc(1, sizeof(GmAcPlayerUnknown304));
     g_input.vptr = g_vt_input;
-    g_app = (unsigned char*)std::calloc(1, sizeof(GmPlayerApp));
-    ((GmPlayerApp*)g_app)->m_input = (GmPlayerInput*)&g_input;
-    *(void**)(uintptr_t)0x00304D58 = g_app;
-    GmPlayerApp::s_instance = (GmPlayerApp*)g_app;
+    g_app_block = (unsigned char*)std::calloc(1, sizeof(App));
+    ((App*)g_app_block)->m_unknown692C = (AppUnknown692C*)&g_input;
+    *(void**)(uintptr_t)0x00304D58 = g_app_block;
+    App::s_instance = (App*)g_app_block;
     g_world.m_up = {0, 0, 1};
     *(void**)(uintptr_t)0x003B34E4 = &g_world;
     GmWorldAxes::s_instance = &g_world;

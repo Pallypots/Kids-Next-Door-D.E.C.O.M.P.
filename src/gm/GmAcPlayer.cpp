@@ -2,7 +2,6 @@
 #include "gm/GmAcPlayer.h"
 #include "gm/GmLevelManifest.h"
 
-GmPlayerApp* GmPlayerApp::s_instance;
 GmWorldAxes* GmWorldAxes::s_instance;
 
 namespace {

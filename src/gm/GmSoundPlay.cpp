@@ -7,6 +7,7 @@
 #include "at/AtScene.h"
 #include "gm/GmApp.h"
 #include "gm/GmAppSettings.h"
+#include "gm/GmAcActor.h"
 #include "gm/GmAudioData.h"
 #include "gm/GmLevelManager.h"
 #include "gm/GmRandom.h"
@@ -109,7 +110,7 @@ void GmAudioData::PlayByName(const char* emitterName, const char* segmentName) {
     emitter->Play(segment, 0);
 }
 
-void GmAudioData::PlayAtActor(GmActor* actor, AtAudioSegment* segment) {
+void GmAudioData::PlayAtActor(GmAcActor* actor, AtAudioSegment* segment) {
     // Unlike PlayOnEmitter, no test for there being an App object.
     if (App::GetGmApp()->m_noAudio != 0) {
         return;
@@ -125,14 +126,14 @@ void GmAudioData::PlayAtActor(GmActor* actor, AtAudioSegment* segment) {
     if (actor != 0) {
         slot->m_actor = actor;
         AtVector3 position;
-        actor->GetMotion(&position, 0, 0, 0, 0);
+        actor->Slot22(&position, 0, 0, 0, 0);
         PlaceEmitter(slot->m_emitter, &position);
     }
     slot->m_emitter->Unknown21();
     slot->m_emitter->Play(segment, 0);
 }
 
-void GmAudioData::PlayNote(GmActor* actor, GmSoundNote* note) {
+void GmAudioData::PlayNote(GmAcActor* actor, GmSoundNote* note) {
     if (!AtNamesEqual(note->m_stop, "")) {
         char stop[8];
         AtCopyName8(stop, note->m_stop);
@@ -141,8 +142,8 @@ void GmAudioData::PlayNote(GmActor* actor, GmSoundNote* note) {
             AtAudioSegment* segment = other->m_choices[0].m_segment;
             if (note->m_emitter != 0) {
                 note->m_emitter->StopSegment(segment);
-            } else if (actor != 0 && actor->m_audio != 0 && actor->m_audio->m_soundNodes != 0) {
-                actor->m_audio->m_soundNodes->StopSegment(segment, 0);
+            } else if (actor != 0 && actor->m_component != 0 && actor->m_component->m_audio != 0) {
+                actor->m_component->m_audio->StopSegment(segment, 0);
             }
         }
     }
@@ -179,10 +180,10 @@ void GmAudioData::PlayNote(GmActor* actor, GmSoundNote* note) {
     position.x = 0;
     position.y = 0;
     position.z = 0;
-    if (actor->m_node != 0) {
-        actor->m_node->GetWorldPosition(&position);
-        if (actor->m_audio != 0 && actor->m_audio->m_soundNodes != 0) {
-            actor->m_audio->m_soundNodes->Play(note->m_choices[chosen].m_segment, 0, &position, note->m_singleton);
+    if (actor->m_unknownA0 != 0) {
+        actor->m_unknownA0->GetWorldPosition(&position);
+        if (actor->m_component != 0 && actor->m_component->m_audio != 0) {
+            actor->m_component->m_audio->Play(note->m_choices[chosen].m_segment, 0, &position, note->m_singleton);
             return;
         }
     }
@@ -191,12 +192,12 @@ void GmAudioData::PlayNote(GmActor* actor, GmSoundNote* note) {
 
 // ---- dynamic nodes --------------------------------------------------------------------------------------------------------
 
-GmSoundNode* GmAudioData::TakeDynamicNode(GmActor* actor, float) {
+GmSoundNode* GmAudioData::TakeDynamicNode(GmAcActor* actor, float) {
     GmSoundNodeBank* pool = &m_nodeBanks[0];
     for (unsigned int i = 0; i < pool->m_count; i++) {
         if (pool->m_nodes[i].m_owner == 0) {
             pool->m_nodes[i].m_owner = actor;
-            pool->m_nodes[i].m_source = actor->m_soundSource;
+            pool->m_nodes[i].m_source = actor->m_sceneNode;
             pool->m_nodes[i].m_range = 0;
             return &pool->m_nodes[i];
         }
@@ -240,19 +241,19 @@ void GmAudioData::PlayNode(GmSoundNode* node, AtAudioSegment* segment) {
     node->m_active = 1;
 }
 
-void GmActorSoundNodes::StopSegment(AtAudioSegment* segment, int index) {
+void GmAcAudio::StopSegment(AtAudioSegment* segment, int index) {
     if (index < 0 || index >= m_count || m_nodes[index] == 0 || m_nodes[index]->m_emitter == 0) {
         return;
     }
     m_nodes[index]->m_emitter->StopSegment(segment);
 }
 
-void GmActorSoundNodes::Play(AtAudioSegment* segment, int index, const AtVector3*, int singleton) {
+void GmAcAudio::Play(AtAudioSegment* segment, int index, const AtVector3*, int singleton) {
     if (segment == 0 || index < 0 || index >= m_count) {
         return;
     }
     if (m_nodes[index] == 0) {
-        m_nodes[index] = m_manager->TakeDynamicNode(m_actor, m_actor->Unknown52());
+        m_nodes[index] = m_manager->TakeDynamicNode(m_actor, m_actor->Unknown27C());
     }
     if (m_nodes[index] == 0) {
         return;

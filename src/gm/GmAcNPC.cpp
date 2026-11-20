@@ -18,7 +18,7 @@ AtDataComponent* GmAcNode::FindValueObject(const char* name, int) {
     if (name[0] == 0) {
         return 0;
     }
-    AtDataLink* link = AtDataRegistryFind((AtDataRegistry*)m_unknown10, (AtDataLink*)m_descriptor, name, 1);
+    AtDataLink* link = ((AtDataRegistry*)m_unknown10)->FindPath((AtDataLink*)m_descriptor, name, 1);
     if (link == 0) {
         return 0;
     }

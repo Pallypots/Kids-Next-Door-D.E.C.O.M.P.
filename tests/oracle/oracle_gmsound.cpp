@@ -28,6 +28,7 @@
 #include "at/AtScene.h"
 #include "gm/GmApp.h"
 #include "gm/GmAppSettings.h"
+#include "gm/GmAcActor.h"
 #include "gm/GmAudioData.h"
 #include "gm/GmRandom.h"
 #include "oracle_guard.h"
@@ -229,7 +230,7 @@ static void __fastcall node_finish(void* self, void*) {
 }
 static void* g_node_table[32];
 static int nid(const AtSceneNode* n) { return n ? n->m_unknown60 : -1; }
-static int aid(const GmActor* a) { return a ? *(const int*)((const char*)a + 4) : -1; }
+static int aid(const GmAcActor* a) { return a ? *(const int*)((const char*)a + 4) : -1; }
 
 static void build_tables() {
     for (void*& s : g_actor_table) s = (void*)wild_slot;
@@ -259,9 +260,9 @@ struct World {
     Segment* segments[kSegments];
     TestDb* dbs[2];
     AtSceneNode* nodes[kNodes];
-    GmActor* actors[kActors];
-    GmActorAudio* audio[kActors];
-    GmActorSoundNodes* comps[kActors];
+    GmAcActor* actors[kActors];
+    GmAcComponent* audio[kActors];
+    GmAcAudio* comps[kActors];
     AtCoordSys* listener;
     TestLoader loader;
     App* app;
@@ -426,22 +427,22 @@ static World* build_world(int side) {
     }
     // Actors: 0 with a node, audio and dynamic nodes; 1 with audio but none; 2 with nothing; 3 with a node without coordinates and dynamic nodes, but no sound source.
     for (int i = 0; i < kActors; i++) {
-        char* p = (char*)std::calloc(1, sizeof(GmActor));
+        char* p = (char*)std::calloc(1, sizeof(GmAcActor));
         *(void***)p = g_actor_table;
         *(int*)(p + 4) = i;
         float* position = (float*)(p + 0x48);
         position[0] = 10.0f + i;
         position[1] = -2.0f;
         position[2] = 0.125f * i;
-        GmActor* a = (GmActor*)p;
-        a->m_node = i == 4 ? nullptr : (i == 3 ? w->nodes[3] : (i == 2 ? w->nodes[7] : w->nodes[1 + i]));
-        a->m_soundSource = i == 3 ? nullptr : w->nodes[i == 0 ? 4 : 6];
+        GmAcActor* a = (GmAcActor*)p;
+        a->m_unknownA0 = i == 4 ? nullptr : (i == 3 ? w->nodes[3] : (i == 2 ? w->nodes[7] : w->nodes[1 + i]));
+        a->m_sceneNode = i == 3 ? nullptr : w->nodes[i == 0 ? 4 : 6];
         if (i != 2 && i != 4) {
-            w->audio[i] = (GmActorAudio*)std::calloc(1, sizeof(GmActorAudio));
-            a->m_audio = w->audio[i];
+            w->audio[i] = (GmAcComponent*)std::calloc(1, sizeof(GmAcComponent));
+            a->m_component = w->audio[i];
         }
         if (i == 0 || i == 3) {
-            GmActorSoundNodes* c = (GmActorSoundNodes*)std::calloc(1, sizeof(GmActorSoundNodes));
+            GmAcAudio* c = (GmAcAudio*)std::calloc(1, sizeof(GmAcAudio));
             c->m_manager = w->mgr;
             c->m_count = i == 0 ? 2 : 1;
             c->m_nodes = (GmSoundNode**)std::calloc(4, sizeof(GmSoundNode*));
@@ -449,7 +450,7 @@ static World* build_world(int side) {
             c->m_nodes[c->m_count] = &w->beyond;
             c->m_actor = a;
             w->comps[i] = c;
-            w->audio[i]->m_soundNodes = c;
+            w->audio[i]->m_audio = c;
         }
         w->actors[i] = a;
     }
@@ -874,8 +875,8 @@ static void run_notes() {
             for (int n = 0; n < kNotes; n++) {
                 for (int actor = -1; actor < kActors; actor++) {
                     g_context = "note n" + std::to_string(n) + " actor " + std::to_string(actor) + " round " + std::to_string(round) + " seed " + std::to_string(seed);
-                    GmActor* ao = actor < 0 ? nullptr : O(actors[actor]);
-                    GmActor* ar = actor < 0 ? nullptr : R(actors[actor]);
+                    GmAcActor* ao = actor < 0 ? nullptr : O(actors[actor]);
+                    GmAcActor* ar = actor < 0 ? nullptr : R(actors[actor]);
                     both("play note", [&] { at<Fn2>(0x001386D0)(O(mgr), nullptr, ao, &O(notes)[n]); }, [&] { R(mgr)->PlayNote(ar, &R(notes)[n]); });
                     compare_worlds("play note");
                     g_note_calls++;
@@ -968,8 +969,8 @@ static void run_play() {
         for (int i = 0; i < 44; i++) {
             g_context = "play at actor " + std::to_string(i) + ", app " + std::to_string(app);
             const int actor = i % 5 - 1;
-            GmActor* ao = actor < 0 ? nullptr : O(actors[actor]);
-            GmActor* ar = actor < 0 ? nullptr : R(actors[actor]);
+            GmAcActor* ao = actor < 0 ? nullptr : O(actors[actor]);
+            GmAcActor* ar = actor < 0 ? nullptr : R(actors[actor]);
             both("play at actor", [&] { at<Fn2>(0x00138010)(O(mgr), nullptr, ao, O(segments[i % 8])); }, [&] { R(mgr)->PlayAtActor(ar, R(segments[i % 8])); });
             compare_worlds("play at actor");
             if (i % 11 == 10) {

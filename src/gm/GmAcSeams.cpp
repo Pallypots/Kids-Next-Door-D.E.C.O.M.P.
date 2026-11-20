@@ -29,4 +29,3 @@ GmSoundNote* GmAcTriggerTable::FindNote(const char*) { AtFatal("Gm actor: 0x0017
 void GmEventManager::Post(const char*, const char*, GmAcActor*) { AtFatal("Gm actor: 0x001511E0, posting a game event, is not recovered", 0, 0, 0); }
 void GmDynamicNodeRelease(GmAcNode*, int) { AtFatal("Gm actor: 0x0014FB40, releasing an attached node, is not recovered", 0, 0, 0); }
 int GmVfxManagerHas(GmVfxManager*, const char*) { AtFatal("Gm actor: 0x001616C0, finding an effect, is not recovered", 0, 0, 0); return 0; }
-void GmAudioDataPlayNote(GmAudioData*, GmAcActor*, GmSoundNote*) { AtFatal("Gm actor: 0x001386D0, playing a sound note, is not recovered", 0, 0, 0); }

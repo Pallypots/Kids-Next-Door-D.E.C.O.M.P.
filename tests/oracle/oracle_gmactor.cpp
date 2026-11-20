@@ -214,7 +214,6 @@ static void r_release_node(GmAcNode* node, int flag) { log_('R' << 8, C(GmDynami
 static int __fastcall o_vfx_has(void* manager, void*, const char* name) { log_('H', C(manager)); log_('h', hash_name(name)); return g_vfx_has; }
 static int r_vfx_has(GmVfxManager* manager, const char* name) { log_('H', C(manager)); log_('h', hash_name(name)); return g_vfx_has; }
 static void __fastcall o_play(void* audio, void*, void* actor, void* note) { log_('L', C(audio)); log_('l', C(actor)); log_('l', U(note)); }
-static void r_play(GmAudioData* audio, GmAcActor* actor, GmSoundNote* note) { log_('L', C(audio)); log_('l', C(actor)); log_('l', U(note)); }
 static void __fastcall o_position(void* cs, void*, AtVector3* out) { log_('W', C(cs)); *out = g_position; }
 static uint32_t fbits(float f) { uint32_t u; std::memcpy(&u, &f, 4); return u; }
 static void log_vector(const AtVector3* v) { log_('v', fbits(v->x)); log_('v', fbits(v->y)); log_('v', fbits(v->z)); }
@@ -1060,7 +1059,7 @@ int main(int argc, char** argv) {
         {0x0003A310, member_address(&AtSpaceGraph::RemoveAsKind1), (const void*)d_remove_kind1, (const void*)d_remove_kind1},
         {0x0014FB40, (void*)&GmDynamicNodeRelease, (const void*)o_release_node, (const void*)r_release_node},
         {0x001616C0, (void*)&GmVfxManagerHas, (const void*)o_vfx_has, (const void*)r_vfx_has},
-        {0x001386D0, (void*)&GmAudioDataPlayNote, (const void*)o_play, (const void*)r_play},
+        {0x001386D0, member_address(&GmAudioData::PlayNote), (const void*)o_play, (const void*)o_play},  // recovered (gm/gmsound), a double on both sides here
         {0x000332B0, member_address(&AtCoordSys::WorldPosition), (const void*)o_position, (const void*)o_position},
         {0x00032EA0, member_address(&AtCoordSys::Place), (const void*)o_place, (const void*)o_place},
         // The node's slots 28 and 29, which the actor's call directly: not recovered.

@@ -4,7 +4,7 @@
 
 void AtFatal(const char* message, int file, int line, int unused);
 
-float GmPlayerInput::AxisValue(int, int) {
+float AppUnknown692C::AxisValue(int, int) {
     AtFatal("Gm player: 0x0006DFE0, the input's value of a controller's axis, is not recovered", 0, 0, 0);
     return 0.0f;
 }

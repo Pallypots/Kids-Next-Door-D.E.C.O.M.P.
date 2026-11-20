@@ -14,6 +14,7 @@
 #include "at/AtNameTableOwner.h"
 #include "gm/GmApp.h"
 #include "gm/GmAppSettings.h"
+#include "gm/GmAcActor.h"
 #include "gm/GmAudioData.h"
 #include "gm/GmRandom.h"
 

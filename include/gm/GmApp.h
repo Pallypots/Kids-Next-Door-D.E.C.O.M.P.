@@ -223,11 +223,15 @@ public:
     static GmClock* s_instance;      // 0x002CD11C
 };
 
-// What App+0x692C points to; made in 0x0008CFB0. Not recovered.
+// What App+0x692C points to; made in 0x0008CFB0: the game's input as abstract axes. Not recovered. gm/gmplayer called it GmPlayerInput; folded on integrate-batch7.
 class AppUnknown692C {
 public:
+    virtual int FindAxis(const char* name) = 0;  // slot 0: an axis's id by its name ("GameAxisForward"); the class's vftable is not known
     void Init();                     // 0x00090210
     void Update(int time);           // 0x0006DEA0
+    // 0x0006DFE0 not recovered: stops with a diagnostic (src/gm/GmAcPlayerSeams.cpp). The value of one axis of one controller; a controller of -1 is 0. Reads a table at +0x108
+    // by controller and calls an axis object's slot 10.
+    float AxisValue(int controller, int axis);
 };
 
 // The object at 0x003B357C, whose registry at +0x2C start-up hangs every registry under: GmDataRoot, include/gm/GmDataRoot.h.

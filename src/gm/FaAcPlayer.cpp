@@ -48,7 +48,7 @@ AtDataLink* GmAcNode::FindRecord(const char* name, int) {
     if (length == 0) {
         return 0;
     }
-    return AtDataRegistryFind((AtDataRegistry*)m_unknown10, (AtDataLink*)m_descriptor, name, 1);
+    return ((AtDataRegistry*)m_unknown10)->FindPath((AtDataLink*)m_descriptor, name, 1);
 }
 
 // ---- the sight query -----------------------------------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ void FaAcPlayer::Reset() {
     m_unknown334 = 0;
     m_unknown364[0] = 0;
     m_unknown364[1] = 0;
-    m_sightCone = 0;
+    m_combat = 0;
     m_unknown3A8 = 1;
     m_unknown3AC = 0;
     m_unknown3B0 = 1;
@@ -173,17 +173,17 @@ int FaAcPlayer::Slot2() {
     m_powuhUp = (const char*)FindValueOrDefault("PowuhUp", 0);
     m_level2x4PickupType = FindValueOrDefault("Level2x4PickupType", 0);
     m_level2x4PickupName = FindValueOrDefault("Level2x4PickupName", 0);
-    m_gameAxisForward = GmPlayerApp::s_instance->m_input->FindAxis("GameAxisForward");
-    m_gameAxisTurning = GmPlayerApp::s_instance->m_input->FindAxis("GameAxisTurning");
+    m_gameAxisForward = App::s_instance->m_unknown692C->FindAxis("GameAxisForward");
+    m_gameAxisTurning = App::s_instance->m_unknown692C->FindAxis("GameAxisTurning");
     if (m_powuhUp != 0 && AtNameLength(m_powuhUp) > 0) {
         AtCopyName9(name, m_powuhUp);
         m_powuhUpRecord = FindRecord(name, 0);
         if (m_powuhUpRecord != 0) {
-            AtDataLink* link = AtDataRegistryFind((AtDataRegistry*)m_unknown10, m_powuhUpRecord, "PowuhUpDecay", 1);
+            AtDataLink* link = ((AtDataRegistry*)m_unknown10)->FindPath(m_powuhUpRecord, "PowuhUpDecay", 1);
             if (link != 0) {
                 m_powuhUpDecay = link->m_value->ElementAt(0);
             }
-            link = AtDataRegistryFind((AtDataRegistry*)m_unknown10, m_powuhUpRecord, "PowuhUpDeduct", 1);
+            link = ((AtDataRegistry*)m_unknown10)->FindPath(m_powuhUpRecord, "PowuhUpDeduct", 1);
             if (link != 0) {
                 m_powuhUpDeduct = link->m_value->ElementAt(0);
             }
@@ -194,8 +194,8 @@ int FaAcPlayer::Slot2() {
 
 // Quirk kept: the combat object is deleted and left in place for Reset to clear.
 void FaAcPlayer::Shutdown() {
-    if (m_sightCone != 0) {
-        delete m_sightCone;
+    if (m_combat != 0) {
+        delete m_combat;
     }
     m_target.Clear();
     Reset();
@@ -219,9 +219,9 @@ void FaAcPlayer::Slot21(int) { AtFatal("Gm player: FaAcPlayer slot 21, 0x0009345
 // The original tests the square root of the sum of squares against zero, in the x87's precision; the sum in double is above zero exactly when that is. The scale of right is kept in double, as
 // the x87 kept it in a register; it is exact there, and the product with each component is rounded twice in both, to 53 or 64 bits and then to a float.
 int FaAcPlayer::MoveFrame(AtVector3* forward, AtVector3* up, AtVector3* right) {
-    GmPlayerInput* input = GmPlayerApp::s_instance->m_input;
+    AppUnknown692C* input = App::s_instance->m_unknown692C;
     float turning = input->AxisValue(Slot59(), m_gameAxisTurning);
-    input = GmPlayerApp::s_instance->m_input;
+    input = App::s_instance->m_unknown692C;
     float moving = input->AxisValue(Slot59(), m_gameAxisForward);
     if (Abs(turning) < (m_minMoveStick != 0 ? *m_minMoveStick : kDefaultMinMoveStick)) {
         turning = 0.0f;
@@ -271,8 +271,8 @@ float FaAcPlayer::FollowMinVerticalLook() {
 
 // The two look axes of this player's controller; kept again unless the controller has a frame pending. Quirk kept: the controller is not tested.
 void FaAcPlayer::ReadLook() {
-    m_look[0] = GmPlayerApp::s_instance->m_input->AxisValue(Slot59(), 0x84);
-    m_look[1] = GmPlayerApp::s_instance->m_input->AxisValue(Slot59(), 0x85);
+    m_look[0] = App::s_instance->m_unknown692C->AxisValue(Slot59(), 0x84);
+    m_look[1] = App::s_instance->m_unknown692C->AxisValue(Slot59(), 0x85);
     if (m_controller->HasPending() == 0) {
         m_unknown318[0] = m_look[0];
         m_unknown318[1] = m_look[1];

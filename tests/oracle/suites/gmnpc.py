@@ -12,7 +12,7 @@ MUTANTS = [
     ("FindValueObject: empty name searched", G, "AtDataComponent* GmAcNode::FindValueObject(const char* name, int) {\n    if (name[0] == 0) {\n        return 0;\n    }\n", "AtDataComponent* GmAcNode::FindValueObject(const char* name, int) {\n"),
     ("FindValueObject: no parents", G, "(AtDataLink*)m_descriptor, name, 1);", "(AtDataLink*)m_descriptor, name, 0);"),
     ("FindValueObject: element", G, "    return link->m_value;\n", "    return (AtDataComponent*)link->m_value->ElementAt(0);\n"),
-    ("FindValueObject: registry tested", G, "    AtDataLink* link = AtDataRegistryFind((AtDataRegistry*)m_unknown10,", "    if (m_unknown10 == 0) {\n        return 0;\n    }\n    AtDataLink* link = AtDataRegistryFind((AtDataRegistry*)m_unknown10,"),
+    ("FindValueObject: registry tested", G, "    AtDataLink* link = ((AtDataRegistry*)m_unknown10)->FindPath(", "    if (m_unknown10 == 0) {\n        return 0;\n    }\n    AtDataLink* link = ((AtDataRegistry*)m_unknown10)->FindPath("),
     # the range
     ("Range: no stat", G, "    if (stat == 0 || range == 0) {", "    if (range == 0) {"),
     ("Range: lower closed", G, "    if (!(value > span * bounds->m_realFloor + low)) {", "    if (!(value >= span * bounds->m_realFloor + low)) {"),
@@ -84,9 +84,9 @@ MUTANTS = [
     ("Fa 15: no base", A, "    GmAcNPC::Slot15();\n    int* combat", "    int* combat"),
     ("Fa 15: base after", A, "    GmAcNPC::Slot15();\n    int* combat = (int*)FindValueOrDefault(\"Combat\", 0);\n", "    int* combat = (int*)FindValueOrDefault(\"Combat\", 0);\n    GmAcNPC::Slot15();\n"),
     ("Fa 15: value not read", A, "    if (combat != 0 && *combat != 0) {", "    if (combat != 0) {"),
-    ("Fa 15: no heap raise", A, "        if (s_heap == 0) {\n            AtRaise(-2, 0, 0, 0);\n        }\n        AtPushHeap(s_heap);\n        m_sightCone", "        AtPushHeap(s_heap);\n        m_sightCone"),
-    ("Fa 15: no pop", A, "        m_sightCone = (GmAcSightCone*)new FaCmCombat;\n        AtPopHeap();\n", "        m_sightCone = (GmAcSightCone*)new FaCmCombat;\n"),
-    ("Fa 15: no memory raise", A, "        if (m_sightCone == 0) {\n            AtRaise(-4, 0, 0, 0);\n        }\n", ""),
+    ("Fa 15: no heap raise", A, "        if (s_heap == 0) {\n            AtRaise(-2, 0, 0, 0);\n        }\n        AtPushHeap(s_heap);\n        m_combat", "        AtPushHeap(s_heap);\n        m_combat"),
+    ("Fa 15: no pop", A, "        m_combat = (GmCmCombat*)new FaCmCombat;\n        AtPopHeap();\n", "        m_combat = (GmCmCombat*)new FaCmCombat;\n"),
+    ("Fa 15: no memory raise", A, "        if (m_combat == 0) {\n            AtRaise(-4, 0, 0, 0);\n        }\n", ""),
     ("Fa 15: no attach", A, "        CombatOf(this)->Attach(this);\n", ""),
     ("Fa 15: no start", A, "        CombatOf(this)->Start();\n", ""),
     # the health levels

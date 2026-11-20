@@ -133,7 +133,7 @@ MUTANTS = [
     ("Trigger: search with audio missing", A, "        if (!play && (component == 0 || component->m_audio != 0)) {", "        if (!play) {"),
     ("Trigger: bank ignored", A, "            note = GmAudioData::s_instance->FindNoteByTrigger(name, bank);", "            note = GmAudioData::s_instance->FindNoteByTrigger(name, \"\");"),
     ("Trigger: no fallback", A, "            if (note == 0) {\n                note = GmAudioData::s_instance->FindNoteByTrigger(name, \"\");\n            }\n", ""),
-    ("Trigger: not played", A, "            GmAudioDataPlayNote(GmAudioData::s_instance, m_actor, note);\n", ""),
+    ("Trigger: not played", A, "            GmAudioData::s_instance->PlayNote(m_actor, note);\n", ""),
     ("Trigger: slot 49 lost", A, "        m_actor->Slot49(name, 0, 1);\n", ""),
     ("Trigger: slot 49 args", A, "        m_actor->Slot49(name, 0, 1);\n", "        m_actor->Slot49(name, 1, 1);\n"),
     ("Trigger: no node check", A, "        if (m_node == 0 || m_place == 0) {", "        if (m_place == 0) {"),

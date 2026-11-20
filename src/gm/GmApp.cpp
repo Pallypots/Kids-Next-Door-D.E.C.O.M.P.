@@ -22,7 +22,7 @@ namespace {
 const double kBytesToMegabytes = 1.0 / 1048576.0;  // 0x0027A910
 }
 
-App* App::s_instance;
+// App::s_instance is defined in src/gm/GmAppStatics.cpp, so that the player classes, which read it, do not pull in start-up.
 AtHeap* App::s_heap;
 unsigned int App::s_heapMemory;
 unsigned int App::s_memoryTotal;

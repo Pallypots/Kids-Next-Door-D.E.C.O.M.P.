@@ -15,8 +15,8 @@ namespace {
 
 std::string g_log;
 
-// What CombatOf reads: FaCmCombat's words behind a vftable pointer, on GmAcSightCone (the declared type of the character's +0x2E4), so that the layout is the same on any host.
-class TestCombat : public GmAcSightCone {
+// What CombatOf reads: FaCmCombat's words behind a vftable pointer, on GmCmCombat (the declared type of the character's +0x2E4), so that the layout is the same on any host.
+class TestCombat : public GmCmCombat {
 public:
     ~TestCombat() override { g_log += "combat-deleted;"; }
     void Slot1() override {}
@@ -63,11 +63,11 @@ void test_lifetimes() {
         CHECK(f.m_lastHealth > 3.4e38f);
         CHECK(f.m_lowHealthRange == nullptr && f.m_numAIHealthLevels == nullptr && f.m_unknown31C == 0);
         TestCombat* combat = new TestCombat;
-        f.m_sightCone = combat;
+        f.m_combat = combat;
         g_log.clear();
         f.Shutdown();  // GmAcCharacter's shutdown stops and deletes the combat object, then FaAcNPC's reset clears it
         CHECK(g_log == "combat-stop;combat-deleted;");
-        CHECK(f.m_sightCone == nullptr);
+        CHECK(f.m_combat == nullptr);
     }
 }
 
@@ -79,7 +79,7 @@ void test_conditions() {
     health.m_max = 100.0f;
     health.m_value = 30.0f;
     combat.m_health = &health;
-    n.m_sightCone = &combat;
+    n.m_combat = &combat;
     AtDataDescriptor low, med, high;
     low.m_realFloor = 0.0f; low.m_realCeiling = 0.25f;
     med.m_realFloor = 0.25f; med.m_realCeiling = 0.5f;
@@ -136,7 +136,7 @@ void test_conditions() {
     GmDynamicNodeLoader::s_instance = (GmDynamicNodeLoader*)&loader;
     CHECK(n.TestCondition("cTgtPlr") == 1);
     CHECK(n.TestCondition("cNTgtPlr") == 0);
-    n.m_sightCone = nullptr;
+    n.m_combat = nullptr;
     CHECK(n.TestCondition("cAlive") == 1);
     CHECK(n.TestCondition("cNThreat") == 1);
     CHECK(n.TestCondition("cAtkRg0") == 0);
@@ -150,7 +150,7 @@ void test_health_levels() {
     health.m_max = 100.0f;
     health.m_value = 40.0f;
     combat.m_health = &health;
-    n.m_sightCone = &combat;
+    n.m_combat = &combat;
     n.m_flagsA4 = 2;  // slot 27 says so
     n.UpdateHealthLevels();  // no levels: only the last value changes
     CHECK(n.m_lastHealth == 40.0f);
@@ -162,7 +162,7 @@ void test_health_levels() {
     n.UpdateHealthLevels();
     CHECK(n.m_lastHealth == 7.0f);
     CHECK(n.m_posted.empty());
-    n.m_sightCone = nullptr;
+    n.m_combat = nullptr;
 }
 
 void test_helpers() {

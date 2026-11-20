@@ -702,4 +702,3 @@ source = "src/gm/GmAcActor.cpp"
 "?Post@GmEventManager@@QAEXPBD0PAVGmAcActor@@@Z" = 0x001511E0
 "?GmDynamicNodeRelease@@YAXPAVGmAcNode@@H@Z" = 0x0014FB40
 "?GmVfxManagerHas@@YAHPAVGmVfxManager@@PBD@Z" = 0x001616C0
-"?GmAudioDataPlayNote@@YAXPAVGmAudioData@@PAVGmAcActor@@PAUGmSoundNote@@@Z" = 0x001386D0

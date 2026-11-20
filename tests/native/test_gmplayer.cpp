@@ -37,12 +37,12 @@ public:
     }
 };
 
-class TestInput : public GmPlayerInput {
+class TestInput : public AppUnknown692C {
 public:
     int FindAxis(const char* name) override { return std::strcmp(name, "GameAxisForward") == 0 ? 7 : 9; }
 };
 
-class TestCombat : public GmAcSightCone {
+class TestCombat : public GmCmCombat {
 public:
     ~TestCombat() override { g_log += "combat-deleted;"; }
     void Slot1() override {}
@@ -175,18 +175,18 @@ void test_fa() {
         p.m_followMaxVerticalLook = &look;
         CHECK(p.FollowMaxVerticalLook() == 12.0f);
         TestInput input;
-        GmPlayerApp* app = (GmPlayerApp*)std::calloc(1, sizeof(GmPlayerApp));
-        app->m_input = &input;
-        GmPlayerApp::s_instance = app;
+        App* app = (App*)std::calloc(1, sizeof(App));  // only its +0x692C is read
+        app->m_unknown692C = &input;
+        App::s_instance = app;
         CHECK(input.FindAxis("GameAxisForward") == 7);
         p.m_gameAxisForward = 7;
-        p.m_sightCone = new TestCombat;
+        p.m_combat = new TestCombat;
         g_log.clear();
         p.FaAcPlayer::Shutdown();
-        CHECK(g_log == "combat-deleted;" && p.m_sightCone == nullptr && p.m_gameAxisForward == -1);
+        CHECK(g_log == "combat-deleted;" && p.m_combat == nullptr && p.m_gameAxisForward == -1);
         FaAcPlayer q;
         CHECK(GmAcSightQuery::s_count == 2);
-        GmPlayerApp::s_instance = nullptr;
+        App::s_instance = nullptr;
         std::free(app);
     }
     CHECK(GmAcSightQuery::s_count == 0 && GmAcSightQuery::s_query.m_capacity == 0);
@@ -204,9 +204,9 @@ void test_fa() {
 void seam() {
     FaAcPlayer p;
     TestInput input;
-    GmPlayerApp* app = (GmPlayerApp*)std::calloc(1, sizeof(GmPlayerApp));
-    app->m_input = &input;
-    GmPlayerApp::s_instance = app;
+    App* app = (App*)std::calloc(1, sizeof(App));  // only its +0x692C is read
+    app->m_unknown692C = &input;
+    App::s_instance = app;
     GmAcCharController controller;
     p.m_controller = &controller;
     p.ReadLook();  // the input's axis value is a seam: stops

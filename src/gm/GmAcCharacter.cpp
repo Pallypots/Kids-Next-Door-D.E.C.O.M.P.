@@ -43,7 +43,7 @@ GmAcCharacter::~GmAcCharacter() {
 void GmAcCharacter::Reset() {
     m_controller = 0;
     m_flags98 |= kCharacterReset;
-    m_sightCone = 0;
+    m_combat = 0;
     m_sightConeLength = 0;
     m_sightConeYaw = 0;
     m_sightConePitch = 0;
@@ -59,10 +59,10 @@ void GmAcCharacter::Reset() {
 // The sight cone and the shadow are read again after their slots, and deleted without being cleared until Reset.
 void GmAcCharacter::Shutdown() {
     GmAcObject::Shutdown();
-    if (m_sightCone != 0) {
-        m_sightCone->Stop();
-        if (m_sightCone != 0) {
-            delete m_sightCone;
+    if (m_combat != 0) {
+        m_combat->Stop();
+        if (m_combat != 0) {
+            delete m_combat;
         }
     }
     if (m_shadow != 0) {
@@ -116,8 +116,8 @@ int GmAcCharacter::Slot2() {
 }
 
 void GmAcCharacter::Slot4() {
-    if (m_sightCone != 0) {
-        m_sightCone->Slot5();
+    if (m_combat != 0) {
+        m_combat->Slot5();
     }
     GmAcActor::Slot4();
 }
@@ -134,8 +134,8 @@ void GmAcCharacter::Slot15() {
 }
 
 void GmAcCharacter::Slot20(int a) {
-    if (Slot27() != 0 && m_sightCone != 0) {
-        m_sightCone->Update(a);
+    if (Slot27() != 0 && m_combat != 0) {
+        m_combat->Update(a);
     }
     GmAcObject::Slot20(a);
     if (m_shadow != 0 && IsVisible()) {
@@ -169,8 +169,8 @@ void GmAcCharacter::Slot49(const char* event, int b, int c) {
 }
 
 int GmAcCharacter::Slot55() {
-    if (m_sightCone != 0) {
-        return m_sightCone->Slot7();
+    if (m_combat != 0) {
+        return m_combat->Slot7();
     }
     return GmAcObject::Slot55();
 }

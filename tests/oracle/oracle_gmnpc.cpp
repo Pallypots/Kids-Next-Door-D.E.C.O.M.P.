@@ -249,7 +249,6 @@ static AtDataLink* find_impl(void* registry, void* under, const char* path, int 
     return nullptr;
 }
 static AtDataLink* __fastcall o_find(void* registry, void*, void* under, const char* path, int parents) { return find_impl(registry, under, path, parents); }
-static AtDataLink* r_find(AtDataRegistry* registry, AtDataLink* under, const char* path, int parents) { return find_impl(registry, under, path, parents); }
 
 static uint32_t g_rand;
 static uint32_t rnd() { g_rand = g_rand * 1103515245u + 12345u; return (g_rand >> 16) & 0x7FFF; }
@@ -942,7 +941,7 @@ int main(int argc, char** argv) {
     void* event_ctor = call_target((const void*)&construct_event);
     if (!manager_ctor || !manager_dtor || !combat_ctor || !event_ctor) { std::printf("cannot find a seam's host address\n"); return 2; }
     const Seam seams[] = {
-        {0x000679E0, (void*)&AtDataRegistryFind, (const void*)o_find, (const void*)r_find},
+        {0x000679E0, member_address(&AtDataRegistry::FindPath), (const void*)o_find, (const void*)o_find},  // recovered (at/datalookup), a double on both sides here
         {0x0014D590, member_address(&GmAcNode::ApplyMatAssignment), (const void*)d_apply, (const void*)d_apply},
         {0x0014C1B0, member_address(&GmAcNode::IsVisible), (const void*)d_visible, (const void*)d_visible},
         {0x0017D420, manager_ctor, (const void*)d_manager_ctor, (const void*)d_manager_ctor},
@@ -987,7 +986,7 @@ int main(int argc, char** argv) {
     *(void**)(state + 4) = holder;
     holder->m_device = (AtSceneDevice*)device;
     *(void**)(uintptr_t)0x003B357C = state;
-    GmDynamicNodeState::s_instance = (GmDynamicNodeState*)state;
+    GmDataRoot::s_instance = (GmDataRoot*)state;
     {
         GmNameMapGroup* plain = new (device + 0x1A4, Placement()) GmNameMapGroup;
         GmNameSpaceDb* spaces = new (device + 0x1BC, Placement()) GmNameSpaceDb;

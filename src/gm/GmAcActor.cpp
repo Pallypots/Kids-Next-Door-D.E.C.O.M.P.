@@ -139,7 +139,7 @@ void GmAcAnimationCallback::OnTrigger(const char* trigger, int, int) {
             play = note != 0;
         }
         if (play) {
-            GmAudioDataPlayNote(GmAudioData::s_instance, m_actor, note);
+            GmAudioData::s_instance->PlayNote(m_actor, note);
         }
         m_actor->Slot49(name, 0, 1);
     } else {
