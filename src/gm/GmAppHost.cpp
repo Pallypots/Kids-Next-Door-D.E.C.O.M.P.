@@ -22,45 +22,7 @@ void App::ReadMatrixDevice() { StopHere("App start-up: the matrix device (0x0014
 void App::CreateSubsystems() { StopHere("App start-up: the subsystems (0x0008CFB0) are not recovered"); }
 
 // The parts of App with classes of their own.
-void AppDevice::Slot0() { StopHere("App device: slot 0 is not recovered"); }
-void AppDevice::Init(const void*, void*, void*) { StopHere("App start-up: the graphics layer's Init (0x000B3000) is not recovered"); }
-void AppDevice::Slot2() { StopHere("App device: slot 2 is not recovered"); }
-void AppDevice::Slot3() { StopHere("App device: slot 3 is not recovered"); }
-void AppDevice::Slot4() { StopHere("App device: slot 4 is not recovered"); }
-void AppDevice::Slot5() { StopHere("App device: slot 5 is not recovered"); }
-int AppDevice::RunFrame() { StopHere("App device: a frame (slot 6) is not recovered"); return 0; }
-
-void AppGraphics::Slot0() { StopHere("App graphics: not recovered"); }
-void AppGraphics::DeleteLoader(AtDatabaseLoader*) { StopHere("App graphics: slot 30 is not recovered"); }
-void AppGraphics::Slot1() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot2() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot3() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot4() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot5() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot6() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot7() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot8() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot9() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot10() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot11() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot12() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot13() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot14() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot15() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot16() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot17() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot18() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot19() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot20() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot21() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot22() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot23() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot24() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot25() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot26() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot27() { StopHere("App graphics: not recovered"); }
-void AppGraphics::Slot28() { StopHere("App graphics: not recovered"); }
-AtDatabaseLoader* AppGraphics::DatabaseLoader() { StopHere("App graphics: the database loader (slot 29) is not recovered"); return 0; }
+// The graphics layer's object (App's AppDevice) and its factory (AppGraphics) are at/grlayer's: src/at/AtGraphicsLayer.cpp, and its seams.
 
 // The AtAp layers' objects above the I/O layer.
 void AppControllerLayer::Slot0() { StopHere("App controller layer: slot 0 is not recovered"); }

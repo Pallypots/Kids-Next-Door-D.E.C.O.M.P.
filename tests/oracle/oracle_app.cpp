@@ -380,8 +380,9 @@ void App::StartUpUserInterface() { d_ui(this, nullptr); }
 void App::SetDisplayMode() { d_display(this, nullptr); }
 void App::ReadMatrixDevice() { d_matrix(this, nullptr); }
 void App::CreateSubsystems() { d_subsystems(this, nullptr); }
-void AppDevice::Slot0() { L('BAD', 9100); }
-void AppDevice::Init(const void*, void*, void*) { L('BAD', 9101); }
+// The graphics layer's seams (at/grlayer), so that src/at/AtGraphicsLayerSeams.cpp is not linked. Its recovered members are linked; no case reaches them.
+AtGraphicsFactory* AtGraphicsStartFactory(AtGraphicsGlobals*, const AtGraphicsConfig*) { L('BAD', 9100); return nullptr; }
+void AtGraphicsStopFactory() { L('BAD', 9101); }
 #define LAYER3(C, n) void C::Slot0() { L('BAD', n); } void C::Init(const void*, void*, void*) { L('BAD', n + 1); }
 #define LAYER2(C, n) void C::Slot0() { L('BAD', n); } void C::Init(const void*, void*) { L('BAD', n + 1); }
 LAYER3(AppControllerLayer, 9708)
@@ -394,13 +395,16 @@ void AtPlatformFreeRegion(void*) { L('BAD', 9801); }
 void AtPlatformInitDevices() { L('BAD', 9802); }
 // And the heap stack's query, so that src/at/AtMemory.cpp (whose push and pop are doubled here) is not linked: the doubles never push.
 AtHeap* AtCurrentHeap() { return nullptr; }
-void AppDevice::Slot2() { L('BAD', 9102); }
-void AppDevice::Slot3() { L('BAD', 9103); }
-void AppDevice::Slot4() { L('BAD', 9104); }
-void AppDevice::Slot5() { L('BAD', 9105); }
-int AppDevice::RunFrame() { L('BAD', 9106); return 0; }
+void AtGraphicsSystemBase::DeletingDestructor(unsigned int) { L('BAD', 9102); }
+void AtGraphicsSystemBase::SetDisplay(AtDisplayMode*, int, int, int, const AtPixelFormat*, int, int) { L('BAD', 9103); }
+void AtGraphicsSystem::DeletingDestructor(unsigned int) { L('BAD', 9104); }
+void AtGraphicsSystem::SetDisplay(AtDisplayMode*, int, int, int, const AtPixelFormat*, int, int) { L('BAD', 9105); }
+void AtGraphicsSystem::UpdateDisplay() { L('BAD', 9106); }
 #define GSLOT(n) void AppGraphics::Slot##n() { L('BAD', 9200 + n); }
-GSLOT(0) GSLOT(1) GSLOT(2) GSLOT(3) GSLOT(4) GSLOT(5) GSLOT(6) GSLOT(7) GSLOT(8) GSLOT(9) GSLOT(10) GSLOT(11) GSLOT(12) GSLOT(13) GSLOT(14) GSLOT(15) GSLOT(16) GSLOT(17)
+void* AppGraphics::Slot0() { L('BAD', 9200); return nullptr; }
+AtMaterialOwner* AppGraphics::CreateDevice() { L('BAD', 9203); return nullptr; }
+void AppGraphics::Destroy(void*) { L('BAD', 9204); }
+GSLOT(1) GSLOT(2) GSLOT(5) GSLOT(6) GSLOT(7) GSLOT(8) GSLOT(9) GSLOT(10) GSLOT(11) GSLOT(12) GSLOT(13) GSLOT(14) GSLOT(15) GSLOT(16) GSLOT(17)
 GSLOT(18) GSLOT(19) GSLOT(20) GSLOT(21) GSLOT(22) GSLOT(23) GSLOT(24) GSLOT(25) GSLOT(26) GSLOT(27) GSLOT(28)
 AtDatabaseLoader* AppGraphics::DatabaseLoader() { L('BAD', 9229); return 0; }
 void AppGraphics::DeleteLoader(AtDatabaseLoader*) { L('BAD', 9230); }

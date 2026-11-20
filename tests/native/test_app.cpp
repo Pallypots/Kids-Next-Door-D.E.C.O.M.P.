@@ -202,7 +202,7 @@ static void test_main(const char* directory) {
     // The first call of App::Init is GmApp's start-up. The host answers its memory query (platform/host_sdk.cpp), and the AtAp layers come up from the
     // base (at/atap): memory and the heaps, events, the network (off), I/O; the math layer's object is the first that is not recovered. No disc file is
     // read before it.
-    CHECK(stopped == "App start-up: the graphics layer's Init (0x000B3000) is not recovered");
+    CHECK(stopped == "Graphics layer: the graphics factory's start (0x000C7C60: the render function tables and the factory at 0x003ADF64) is not recovered");
     CHECK(App::s_memoryTotal != 0);
     CHECK(g_app.m_memory.m_started == 1 && g_app.m_heaps[0] != nullptr && g_app.m_heaps[3] != nullptr);
     CHECK(g_app.m_io.m_below == &g_app.m_network && AtIoContext::s_instance == &g_app.m_io.m_context && g_app.m_io.m_context.m_device != nullptr);

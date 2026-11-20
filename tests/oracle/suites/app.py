@@ -138,8 +138,8 @@ STARTUP = [
 
 PARTS = [
     ("DirtyDisk: heap", A, "AtHeapManager::s_instance->m_override = s_instance->GetHeap(0);", "AtHeapManager::s_instance->m_override = s_instance->GetHeap(1);"),
-    ("DirtyDisk: kept", A, "m_dirtyDiskLoader = s_instance->m_graphics->DatabaseLoader();\n    m_dirtyDiskLoader->Load(", "AtDatabaseLoader* loader = s_instance->m_graphics->DatabaseLoader();\n    loader->Load("),
-    ("DirtyDisk: owner", A, "m_dirtyDiskLoader->Load(s_instance->m_materialOwner,", "m_dirtyDiskLoader->Load(0,"),
+    ("DirtyDisk: kept", A, "m_dirtyDiskLoader = s_instance->m_device->m_factory->DatabaseLoader();\n    m_dirtyDiskLoader->Load(", "AtDatabaseLoader* loader = s_instance->m_device->m_factory->DatabaseLoader();\n    loader->Load("),
+    ("DirtyDisk: owner", A, "m_dirtyDiskLoader->Load(s_instance->m_device->m_materialOwner,", "m_dirtyDiskLoader->Load(0,"),
     ("DirtyDisk: mode", A, '", 0, 0, 1);', '", 1, 0, 1);'),
     ("DirtyDisk: in directory", A, '", 0, 0, 1);', '", 0, 0, 0);'),
     ("DirtyDisk: override cleared", A, "    AtHeapManager::s_instance->m_override = 0;\n", ""),

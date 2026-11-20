@@ -15,6 +15,7 @@
 #include "at/AtApMidLayers.h"
 #include "at/AtDataLibrary.h"
 #include "at/AtDataRegistry.h"
+#include "at/AtGraphicsLayer.h"
 #include "at/AtHeap.h"
 #include "at/AtIoMountManager.h"
 #include "at/AtMemory.h"
@@ -46,60 +47,13 @@ struct AtSdkMemoryStatus {
 };
 void AtSdkGlobalMemoryStatus(AtSdkMemoryStatus* status);  // 0x00085451 SDK; the platform's, or a stop
 
-// The object at +0x5F7C of App, by its slots: the graphics layer's (at/atap). Slot 1 is its Init, from the graphics layer's start-up; slot 4 sets a display
-// mode (from 0x0008DBA0), slot 6 runs one frame and returns 0 to end the loop. Its class and the meaning of its flags are not known beyond what start-up
-// and the loop test. vftable 0x0028478C, then App's 0x0028DC48 over it (constructor 0x000B2F80).
-class AppDevice {
-public:
-    enum Flags { kRunning = 1, kNoPresent = 4, kQuit = 8 };  // names from use: start-up shuts down first on 1, 0x0009CA90 skips a call on 4, the loop ends on 8
-    virtual void Slot0();
-    virtual void Init(const void* config, void* below, void* memory);  // slot 1, 0x000B3000 not recovered
-    virtual void Slot2();
-    virtual void Slot3();
-    virtual void Slot4();
-    virtual void Slot5();
-    virtual int RunFrame();          // slot 6
+// The object at +0x5F7C of App: the graphics layer's (at/grlayer, include/at/AtGraphicsLayer.h). Its flag 4 makes 0x0009CA90 skip a call, and the main
+// loop ends on its flag 8. vftable 0x0028478C, then App's 0x0028DC48 over it (constructor 0x000B2F80).
+typedef AtGraphicsSystem AppDevice;
 
-    int m_unknown04;                 // +0x04
-    int m_unknown08;                 // +0x08
-    unsigned int m_flags;            // +0x0C, App+0x5F88
-};
-
-// What App+0x5F90 points to. Slot 29 gives the database loader start-up loads the dirty-disc screen with; slot 21 is read by 0x0009D9C0.
-class AppGraphics {
-public:
-    virtual void Slot0();
-    virtual void Slot1();
-    virtual void Slot2();
-    virtual void Slot3();
-    virtual void Slot4();
-    virtual void Slot5();
-    virtual void Slot6();
-    virtual void Slot7();
-    virtual void Slot8();
-    virtual void Slot9();
-    virtual void Slot10();
-    virtual void Slot11();
-    virtual void Slot12();
-    virtual void Slot13();
-    virtual void Slot14();
-    virtual void Slot15();
-    virtual void Slot16();
-    virtual void Slot17();
-    virtual void Slot18();
-    virtual void Slot19();
-    virtual void Slot20();
-    virtual void Slot21();
-    virtual void Slot22();
-    virtual void Slot23();
-    virtual void Slot24();
-    virtual void Slot25();
-    virtual void Slot26();
-    virtual void Slot27();
-    virtual void Slot28();
-    virtual AtDatabaseLoader* DatabaseLoader();  // slot 29 makes a concrete database loader (the level manifest's GraphicsDatabasesLoaders too)
-    virtual void DeleteLoader(AtDatabaseLoader* loader);  // slot 30 frees what slot 29 made (gm/dbmanifest)
-};
+// What App+0x5F90 points to: the graphics factory (at/grlayer). Slot 29 gives the database loader start-up loads the dirty-disc screen with; slot 21 is
+// read by 0x0009D9C0.
+typedef AtGraphicsFactory AppGraphics;
 
 // The layer objects that GmApp's start-up initialises, one for each AtAp layer. Only the first two are reached here: the atlas layer's at +0x6450, which is a
 // vftable alone (its flag follows at +0x6454), and the user interface layer's at +0x6358 (flag at +0x644C), initialised by 0x0009C3C0.
@@ -154,12 +108,7 @@ typedef AtMathConfig AppMathConfig;                      // slot 19
 typedef AtDataManagementConfig AppDataManagementConfig;  // slot 23
 typedef AtScriptConfig AppScriptConfig;                  // slot 27
 typedef AtKinematicsConfig AppKinematicsConfig;          // slot 31
-struct AppGraphicsConfig {           // slot 35
-    int m_unknown00;                 // 1
-    int m_unknown04;
-    AtHeap* m_heap;                  // +0x08
-    int m_unknown0C[57];
-};
+typedef AtGraphicsConfig AppGraphicsConfig;              // slot 35, at/grlayer's
 struct AppControllerConfig {         // slot 40
     int m_unknown00;                 // 1
     AtHeap* m_heap;                  // +0x04
@@ -480,11 +429,7 @@ public:
     AtDataManagementSystem m_dataManagement;     // +0x0390 its owner at +0x0394; m_below at +0x0410
     AtScriptSystem m_script;                     // +0x0414 m_running at +0x0418; the host at +0x0420
     AtKinematicsSystem m_kinematics;             // +0x5F70 m_below at +0x5F78
-    AppPart<AppDevice, 0x14> m_device;           // +0x5F7C the graphics layer's
-    AppGraphics* m_graphics;                     // +0x5F90
-    int m_unknown5F94;                           // +0x5F94
-    AtMaterialOwner* m_materialOwner;            // +0x5F98
-    char m_unknown5F9C[0x84];                    // +0x5F9C the rest of the graphics layer's object
+    AppPart<AppDevice, 0xA4> m_device;           // +0x5F7C the graphics layer's (at/grlayer): its factory at +0x5F90, its device (the material owner) at +0x5F98
     AppPart<AppControllerLayer, 0x84> m_controller;  // +0x6020
     int m_controllerRunning;                     // +0x60A4
     char m_unknown60A8[8];                       // +0x60A8
@@ -606,8 +551,6 @@ static_assert(sizeof(AppSoundConfig) == 0x30, "AppSoundConfig");
 static_assert(sizeof(AppSceneConfig) == 0x8C, "AppSceneConfig");
 static_assert(sizeof(AppUserInterfaceConfig) == 0x68, "AppUserInterfaceConfig");
 static_assert(offsetof(App, m_device) == 0x5F7C, "App::m_device");
-static_assert(offsetof(App, m_graphics) == 0x5F90, "App::m_graphics");
-static_assert(offsetof(App, m_materialOwner) == 0x5F98, "App::m_materialOwner");
 static_assert(offsetof(App, m_userInterface) == 0x6358, "App::m_userInterface");
 static_assert(offsetof(App, m_atlas) == 0x6450, "App::m_atlas");
 static_assert(offsetof(App, m_noMusic) == 0x645C, "App::m_noMusic");
