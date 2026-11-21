@@ -245,7 +245,7 @@ public:
     AtGraphicsFactory* m_factory;    // +0x14 App+0x5F90
     void* m_unknown18;               // +0x18 App+0x5F94, the factory's slot 0
     AtMaterialOwner* m_materialOwner;  // +0x1C App+0x5F98, the factory's slot 3
-    int m_unknown20;                 // +0x20
+    class AtGr2DRenderer* m_unknown20;  // +0x20 App+0x5F9C, what the fatal error screen draws with (0x0008E2E9, at/fatal)
     int m_unknown24;                 // +0x24 slot 5 tests it for 0 and 2
     int m_unknown28;                 // +0x28 config +0x04
     int m_unknown2C;                 // +0x2C

@@ -6,8 +6,13 @@
 #include "at/AtIoTokenizer.h"
 #include "gm/GmNameMap.h"
 
+struct AtColorF;  // include/at/AtGr2D.h
+struct AtRect;    // include/at/AtGr2D.h
+
 struct AtColor {
     void SetWhite();                           // 0x000412B0 all 255
+    void Lerp(const AtColor& from, const AtColor& to, float t);      // 0x000412D0 each byte from + (to - from) * t, truncated; src/at/AtGr2D.cpp
+    void LerpReal(const AtColorF& from, const AtColorF& to, float t);  // 0x00041380 each made a byte, times 255 and truncated, then Lerp; src/at/AtGr2D.cpp
     void SetBlack();                           // 0x000412C0 0, 0, 0 and alpha 255; in src/at/AtImage.cpp
     void Read(AtIoTokenizer* tokenizer);       // 0x00041270 four integers
     unsigned char r, g, b, a;
@@ -19,6 +24,8 @@ struct AtColorRectangle {
     AtColorRectangle();                                // 0x00042170 all white
     void Read(AtIoTokenizer* tokenizer);               // 0x00042140 four colours of four integers
     void SetAll(const AtColor& color);                 // 0x000421A0
+    // 0x00042280. The colours at the corners of part, a rectangle within full, when colors are at full's corners. src/at/AtGr2D.cpp
+    void Clip(const AtColorRectangle& colors, const AtRect& full, const AtRect& part);
     AtColor m_colors[4];
 };
 
@@ -47,7 +54,7 @@ struct AtMaterialOwner : AtDisplayDevice {
     virtual void Slot6();              // slot 6, pure
     virtual void Slot7();              // slot 7, pure
     virtual void Slot8();              // slot 8, pure
-    virtual void Slot9();              // slot 9, pure
+    virtual void Present(int unknown);  // slot 9, pure: shows the frame; the fatal error screen calls it with 1 (0x0008E404, at/fatal)
     virtual void Slot10();             // slot 10, pure
     virtual void Slot11() {}           // slot 11, 0x000447F0: takes two arguments in the original, does nothing
     virtual void Slot12() {}           // slot 12, 0x001CC9F0: does nothing

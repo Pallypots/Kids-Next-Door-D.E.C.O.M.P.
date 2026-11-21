@@ -145,8 +145,9 @@ void AtGraphicsFactory::DeleteLoader(AtDatabaseLoader*) { L('BAD', 9130); }
 #define SLOT(n) \
     void AtGraphicsFactory::Slot##n() { L('BAD', 9100 + n); }
 SLOT(1) SLOT(2) SLOT(5) SLOT(6) SLOT(7) SLOT(8) SLOT(9) SLOT(10) SLOT(11) SLOT(12) SLOT(13) SLOT(14) SLOT(15) SLOT(16) SLOT(17) SLOT(18) SLOT(19)
-SLOT(20) SLOT(21) SLOT(22) SLOT(23) SLOT(24) SLOT(25) SLOT(26) SLOT(27) SLOT(28)
+SLOT(20) SLOT(21) SLOT(22) SLOT(23) SLOT(24) SLOT(25) SLOT(26) SLOT(28)
 #undef SLOT
+AtCamera* AtGraphicsFactory::Camera2D() { L('BAD', 9127); return nullptr; }
 
 // ---- tables of doubles for the layer's own slots -----------------------------------------------------------------------------
 typedef void(__fastcall* Fn0)(void*, void*);
@@ -454,7 +455,7 @@ static void set_state(uint32_t flags, bool device, bool factory, uint32_t kind) 
         for (uint32_t i = 0x34; i < 0x54; i += 4) word_at(g, i) = 0x100 + i;
         for (uint32_t i = 0x8C; i < 0x98; i += 4) word_at(g, i) = 0x200 + i;
         g->m_unknown24 = 0x24;
-        g->m_unknown20 = 0x20;
+        g->m_unknown20 = (AtGr2DRenderer*)(uintptr_t)0x20;
         g->m_unknown2C = 0x2C;
         g->m_unknown04 = 0x04;
     }

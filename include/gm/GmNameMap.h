@@ -26,6 +26,7 @@ public:
     void* Find(const char* name);                 // 0x00025150
     void* Find(const char* name, unsigned int* index);  // 0x000251D0
     void GetName(unsigned int index, char* out);  // 0x00024C00
+    void* ValueAt(unsigned int index);            // 0x00024B70 no bound; src/gm/GmControllerModule.cpp
     void GetNameOf(const void* value, char* out);  // 0x00024BB0 linear; an empty name when absent
     unsigned int HashOf(const char* name);        // 0x00024C20
     void Grow();                                  // 0x00024C80

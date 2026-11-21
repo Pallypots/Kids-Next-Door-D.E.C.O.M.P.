@@ -242,7 +242,7 @@ class TestDevice : public AtSceneDevice {
 public:
     int side = 0;
     void Slot0() override {} void Slot1() override {} void Slot2() override {} void Slot3() override {} void Slot4() override {} void Slot5() override {}
-    void Slot6() override {} void Slot7() override {} void Slot8() override {} void Slot9() override {} void Slot10() override {} void Slot11() override {}
+    void Slot6() override {} void Slot7() override {} void Slot8() override {} void Present(int) override {} void Slot10() override {} void Slot11() override {}
     void Slot12() override {}
     AtMatrixDevice* MatrixDevice() override { note(side, 'd'); return &g_matdev[side]; }
 };

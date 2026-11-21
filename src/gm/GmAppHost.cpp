@@ -81,7 +81,6 @@ void GmGetStringByName(char*, unsigned int, const char*) { StopHere("Game text: 
 GmClock* GmClock::s_instance;
 void GmClock::Tick(int) { StopHere("Clock: 0x00071A60 is not recovered"); }
 void AppUnknown692C::Init() { StopHere("App+0x692C: 0x00090210 is not recovered"); }
-void AppUnknown692C::Update(int) { StopHere("App+0x692C: 0x0006DEA0 is not recovered"); }
 
 // The neighbours of the registry members start-up calls (those are at/datalookup's, src/at/AtDataLookup.cpp).
 GmRegistryUser* GmRegistryUser::s_instance;

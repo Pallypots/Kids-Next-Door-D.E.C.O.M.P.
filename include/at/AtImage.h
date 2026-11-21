@@ -11,6 +11,10 @@
 
 class AtImageDatabase;  // include/at/AtImageDatabase.h
 class AtFontDatabase;
+class AtMaterial;       // include/at/AtMaterial.h
+class AtGr2DRenderer;   // include/at/AtGr2D.h
+struct AtRect;
+struct AtVector2;       // include/at/AtEmitter.h
 
 // What slot 5 of an image hands a name to. Known only by the one slot called; not recovered. Slots stop with a diagnostic.
 class AtGrNameSink {
@@ -66,10 +70,11 @@ public:
 
     AtImage();                                // 0x00057E30
 
-    virtual void Slot0() = 0;
+    virtual AtMaterial* Material() = 0;  // slot 0: what Draw takes the flat colour from, at +0x0C, when nothing else gives one (0x000583D3)
     virtual void Slot1() = 0;
     virtual void Slot2() = 0;
-    virtual void Slot3() = 0;
+    // Slot 3: one strip of the image, from Draw (0x000585ED). rect is where on the screen, uv the part of the strip, both clipped.
+    virtual void DrawStrip(AtGr2DRenderer* renderer, unsigned int strip, AtMaterial* material, const AtRect* rect, const AtRect* uv, const AtColorRectangle* colors) = 0;
     // Slot 4, 0x00057DC0. Splits total into widths: each a power of two times the smallest (minimum, but at least 4), the largest that maximum allows, as long as one is wanted; the last is what is left,
     // rounded up the same way. Writes them to out and returns how many. this and unused are not read.
     virtual unsigned int SplitStrips(unsigned int minimum, unsigned int maximum, unsigned int total, unsigned int unused, unsigned int* out);
@@ -90,6 +95,9 @@ public:
 
     // 0x00057FD0. One word of the body. owner is not read. A word not of an image is reported, PntSource among them: it has no case.
     void ReadWord(AtMaterialOwner* owner, AtIoTokenizer* tokenizer, int token);
+    // 0x000582F0, src/at/AtGr2D.cpp. The image's strips, row by row from at, each scaled, clipped and handed to DrawStrip. Nothing unless kOwnsData is set. scale null means 1 by 1,
+    // colors null the image's own colour rectangle if it has one, else a flat colour; clip null the renderer's viewport.
+    void Draw(AtGr2DRenderer* renderer, const AtVector2* at, const AtVector2* scale, const AtColorRectangle* colors, const AtRect* clip);
 
     char m_name[8];                 // +0x04
     unsigned int m_flags;           // +0x0C Flags

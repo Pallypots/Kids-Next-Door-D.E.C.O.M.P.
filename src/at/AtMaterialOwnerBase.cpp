@@ -125,7 +125,7 @@ void AtMaterialOwner::Slot5() { Pure("AtMaterialOwner: slot 5 is pure"); }
 void AtMaterialOwner::Slot6() { Pure("AtMaterialOwner: slot 6 is pure"); }
 void AtMaterialOwner::Slot7() { Pure("AtMaterialOwner: slot 7 is pure"); }
 void AtMaterialOwner::Slot8() { Pure("AtMaterialOwner: slot 8 is pure"); }
-void AtMaterialOwner::Slot9() { Pure("AtMaterialOwner: slot 9 is pure"); }
+void AtMaterialOwner::Present(int) { Pure("AtMaterialOwner: slot 9, showing the frame, is pure"); }
 void AtMaterialOwner::Slot10() { Pure("AtMaterialOwner: slot 10 is pure"); }
 void* AtMaterialOwner::RenderTarget0() { Pure("AtMaterialOwner: slot 13 is pure"); return 0; }
 void* AtMaterialOwner::RenderTarget1() { Pure("AtMaterialOwner: slot 14 is pure"); return 0; }

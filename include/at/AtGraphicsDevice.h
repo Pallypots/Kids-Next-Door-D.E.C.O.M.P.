@@ -292,7 +292,7 @@ public:
     void Slot6() override;             // slot 6, 0x000F2270 not recovered
     void Slot7() override;             // slot 7, 0x000EFEC0 not recovered
     void Slot8() override;             // slot 8, 0x000F0010 not recovered
-    void Slot9() override;             // slot 9, 0x000F0310 not recovered
+    void Present(int unknown) override;  // slot 9, 0x000F0310 not recovered: shows the frame (at/fatal's name)
     void Slot10() override;            // slot 10, 0x000F0350 not recovered
     void Slot11() override;            // slot 11, 0x000F14C0 not recovered
     void Slot12() override;            // slot 12, 0x000F1560 not recovered: turns off waiting for the vertical refresh

@@ -161,7 +161,7 @@ public:
     void Slot24() override {}
     void Slot25() override {}
     void Slot26() override {}
-    void Slot27() override {}
+    AtCamera* Camera2D() override { return nullptr; }
     void Slot28() override {}
     AtDatabaseLoader* DatabaseLoader() override { note("new-loader"); return &loaders[made++ % 2]; }
     void DeleteLoader(AtDatabaseLoader*) override { note("delete-loader"); }

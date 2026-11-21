@@ -48,8 +48,9 @@ void AtGraphicsFactory::DeleteLoader(AtDatabaseLoader*) { g_log.push_back("BAD")
 #define SLOT(n) \
     void AtGraphicsFactory::Slot##n() { g_log.push_back("BAD"); }
 SLOT(1) SLOT(2) SLOT(5) SLOT(6) SLOT(7) SLOT(8) SLOT(9) SLOT(10) SLOT(11) SLOT(12) SLOT(13) SLOT(14) SLOT(15) SLOT(16) SLOT(17) SLOT(18) SLOT(19)
-SLOT(20) SLOT(21) SLOT(22) SLOT(23) SLOT(24) SLOT(25) SLOT(26) SLOT(27) SLOT(28)
+SLOT(20) SLOT(21) SLOT(22) SLOT(23) SLOT(24) SLOT(25) SLOT(26) SLOT(28)
 #undef SLOT
+AtCamera* AtGraphicsFactory::Camera2D() { g_log.push_back("BAD"); return nullptr; }
 static AtGraphicsFactory g_factory;
 
 AtGraphicsFactory* AtGraphicsStartFactory(AtGraphicsGlobals* saved, const AtGraphicsConfig*) {

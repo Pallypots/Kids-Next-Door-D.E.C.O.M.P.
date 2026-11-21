@@ -115,10 +115,10 @@ class AtGrD3DImage : public AtImage {
 public:
     AtGrD3DImage();                           // 0x00124580
     ~AtGrD3DImage() override;                 // slot 6; 0x00111B00 vector deleting, 0x00124660 complete. As Free, then the members and the base.
-    void Slot0() override;                    // 0x001247D0 the image's material, or one of two of the device's own
+    AtMaterial* Material() override;          // slot 0, 0x001247D0 the image's material, or one of two of the device's own
     void Slot1() override;                    // 0x00124EB0
     void Slot2() override;                    // 0x00124630 slot 3 with its six arguments
-    void Slot3() override;                    // 0x00124800
+    void DrawStrip(AtGr2DRenderer* renderer, unsigned int strip, AtMaterial* material, const AtRect* rect, const AtRect* uv, const AtColorRectangle* colors) override;  // slot 3, 0x00124800
     int PassName(AtGrDevice* device, const AtImage* image, int value) override;  // slot 5, 0x001246F0
     void Free() override;                     // slot 9, 0x001245E0 its surface reset, its textures cleared, then the image's Free
     void OnLoaded(AtMaterialOwner* owner) override;  // slot 10, 0x00124CD0: the seam

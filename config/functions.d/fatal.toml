@@ -1,0 +1,235 @@
+# The fatal error path: the report, AtFatal, the rumble it stops and the error screen. Names inferred; see include/at/AtFatal.h, include/at/AtControllerManager.h,
+# include/at/AtGr2D.h. Sizes are the inventory's, to the padding after each function. 0x00085197 (XLaunchNewImage) and the C library are not recorded: library code.
+
+[[function]]
+va = 0x00014230
+size = 24
+symbol = "?AtReport@@YAXHPBDZZ"
+source = "src/at/AtReport.cpp"
+subsystem = "at/fatal"
+evidence = "cdecl, variadic: hands 0x000141C0 its va_list; called by every loader on a failed open with %s.%s; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x000141C0
+size = 98
+symbol = "?AtReportV@@YAXHPBDPAD@Z"
+source = "src/at/AtReport.cpp"
+subsystem = "at/fatal"
+evidence = "sprintf of the text of 0x000140D0 and a colon, vsprintf of the rest, then 0x00011070 (msg, 0, 0, 0); <No Message> for a null format; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00011070
+size = 250
+symbol = "?AtFatal@@YAXPBDHHH@Z"
+source = "src/at/AtFatal.cpp"
+subsystem = "at/fatal"
+evidence = "tests 0x002CD0C8, 0x002C6060, 0x002C605C; 0x0008E2B0 on 0x002BF310; 0x00085197 (XLaunchNewImage); printf of the message, file and line; exit(1); tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0006D7E0
+size = 39
+symbol = "?StopEffects@AtRumblePlayer@@QAEXXZ"
+source = "src/at/AtControllerManager.cpp"
+subsystem = "at/fatal"
+evidence = "over +0x3C pointers at +0x14, 0x00073E00 each; called by 0x00011070 over the manager +0x6C array, stride 0x40; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0006D810
+size = 430
+symbol = "?Update@AtRumblePlayer@@QAEXM@Z"
+source = "src/at/AtControllerManager.cpp"
+subsystem = "at/fatal"
+evidence = "ret 4 (float); the device +0x18 of +0x08, slot 23 with +0x04; virtual base +0x10 motors, slots 15 and 16; called by 0x0006CE30; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0006CE30
+size = 176
+symbol = "?Update@AtControllerManager@@QAEHHH@Z"
+source = "src/at/AtControllerManager.cpp"
+subsystem = "at/fatal"
+evidence = "ret 8; +0x84 suspended (5), callback +0x88 with +0x8C; device slot 14; +0x30/+0x34 slots; ms * 0.001f to each player at +0x6C/+0x70; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00072610
+size = 36
+symbol = "?Update@AtInputControllerSlot@@QAEHH@Z"
+source = "src/at/AtControllerManager.cpp"
+subsystem = "at/fatal"
+evidence = "ret 4; +0x14 set: tail call of slot 8 of +0x08; else 0x00072A30(0xFF) on +0x08 +0xD8; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00073E00
+size = 23
+symbol = "?Stop@GmRumblePlayback@@QAEXXZ"
+source = "src/gm/GmRumblePlayback.cpp"
+subsystem = "gm/fatal"
+evidence = "clears +0x0C, +0x08 = 0x00074930 of +0x04; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00073E20
+size = 56
+symbol = "?Advance@GmRumblePlayback@@QAEXM@Z"
+source = "src/gm/GmRumblePlayback.cpp"
+subsystem = "gm/fatal"
+evidence = "ret 4 (float); wraps once when +0x0C is set; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00073E60
+size = 152
+symbol = "?Intensity@GmRumblePlayback@@QAEMH@Z"
+source = "src/gm/GmRumblePlayback.cpp"
+subsystem = "gm/fatal"
+evidence = "ret 4; last frame strictly before +0x08; 0x000748F0 of the next is called and not used; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00073F00
+size = 39
+symbol = "?Finished@GmRumblePlayback@@QAEHXZ"
+source = "src/gm/GmRumblePlayback.cpp"
+subsystem = "gm/fatal"
+evidence = "not +0x0C and 0x00074930 <= +0x08; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x000B9A90
+size = 14
+symbol = "?Clear@GmRumblePlayback@@QAEXXZ"
+source = "src/gm/GmRumblePlayback.cpp"
+subsystem = "gm/fatal"
+evidence = "four words cleared; folded with other classes' bodies; called by 0x0006D97F; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00074930
+size = 14
+symbol = "?Duration@GmRumbleEffect@@QAEMXZ"
+source = "src/gm/GmRumblePlayback.cpp"
+subsystem = "gm/fatal"
+evidence = "fld of the last frame's time, +0x0C items, +0x10 count; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x000ED690
+size = 4
+symbol = "?FrameCount@GmRumbleEffect@@QAEIXZ"
+source = "src/gm/GmRumblePlayback.cpp"
+subsystem = "gm/fatal"
+evidence = "returns +0x10; folded with other classes' accessors; called by 0x00073E60 on the effect; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0006DEA0
+size = 98
+symbol = "?Update@AppUnknown692C@@QAEXH@Z"
+source = "src/gm/GmControllerModule.cpp"
+subsystem = "gm/fatal"
+evidence = "ret 4; four GmNameMaps at +0xB8, slot 8 of each value; then 0x0006CE30(ms, 1) on [[0x002CF15C]]; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00024B70
+size = 17
+symbol = "?ValueAt@GmNameMap@@QAEPAXI@Z"
+source = "src/gm/GmControllerModule.cpp"
+subsystem = "gm/fatal"
+evidence = "ret 4; +0x04 entries, 12 bytes each, the value at +8; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0008F4F0
+size = 5
+symbol = "?Instance@AppUnknown692C@@SAPAV1@XZ"
+source = "src/gm/GmControllerModule.cpp"
+subsystem = "gm/fatal"
+evidence = "jmp 0x0006DA50; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0006DA50
+size = 6
+symbol = "?BaseInstance@AppUnknown692C@@SAPAV1@XZ"
+source = "src/gm/GmControllerModule.cpp"
+subsystem = "gm/fatal"
+evidence = "returns 0x002CD0D4, set by 0x0008FA70; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0008E2B0
+size = 353
+symbol = "?DrawFatalScreen@App@@QAEXXZ"
+source = "src/gm/GmFatalScreen.cpp"
+subsystem = "gm/fatal"
+evidence = "thiscall on 0x002BF310 from 0x00011070; +0x6490 loader slot 19; GERMAN/FRENCH/ITALIAN by 0x00013F00; loop of renderer slots 3 and 62, 0x000582F0 twice, owner slot 9; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00013F00
+size = 68
+symbol = "?AtCompareName8@@YAHPBD0@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "cdecl; eight characters at most; null as the empty string at 0x00270F0B; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00037EB0
+size = 78
+symbol = "?Attach@AtCamera@@QAEXPAUAtMaterialOwner@@@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 4; owner slot 17, its slot 8 four times, then 0x000324A0; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x000582F0
+size = 802
+symbol = "?Draw@AtImage@@QAEXPAVAtGr2DRenderer@@PBUAtVector2@@1PBUAtColorRectangle@@PBUAtRect@@@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 0x14; strips of +0x30, +0x1E of them; 0x0005F600, 0x00042280, slot 3 with six arguments; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x0005F600
+size = 282
+symbol = "?Clip@AtRect@@QAEHABU1@0PAU1@@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 0xC; flags 1, 2, 4, 8 for the sides cut; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00042280
+size = 359
+symbol = "?Clip@AtColorRectangle@@QAEXABU1@ABUAtRect@@1@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 0xC; 0x00023CB0, 0x000358D0, 0x00041380; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x000412D0
+size = 170
+symbol = "?Lerp@AtColor@@QAEXABU1@0M@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 0xC; fild, fmul, fiadd, _ftol2 for each byte; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00041380
+size = 183
+symbol = "?LerpReal@AtColor@@QAEXABUAtColorF@@0M@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 0xC; times 255.0f (0x00276204) and _ftol2, then 0x000412D0; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x00035840
+size = 144
+symbol = "?Lerp@AtColorF@@QAEXABU1@0M@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 0xC; tests/oracle/oracle_fatal.cpp"
+
+[[function]]
+va = 0x000358D0
+size = 210
+symbol = "?LerpBytes@AtColorF@@QAEXABUAtColor@@0M@Z"
+source = "src/at/AtGr2D.cpp"
+subsystem = "at/fatal"
+evidence = "ret 0xC; 1/255 (0x00272D4C), then 0x00035840; tests/oracle/oracle_fatal.cpp"
+
+[symbols]
+"?g_atFatalScreenShown@@3HA" = 0x002C6060
+"?g_atFatalExiting@@3HA" = 0x002C605C
+"?s_instance@AtControllerManager@@2PAV1@A" = 0x002CD0C4
+"?s_ready@AtControllerManager@@2HA" = 0x002CD0C8
+"?s_instance@AppUnknown692C@@2PAV1@A" = 0x002CD0D4
+"?s_instance@GmRumbleSystem@@2PAU1@A" = 0x002CF15C
+"??_C@_0N@NCPBJEMO@?$DMNo?5Message?$DO@" = 0x00271940  # "<No Message>"

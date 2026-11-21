@@ -27,5 +27,6 @@ void AtGraphicsFactory::DeleteLoader(AtDatabaseLoader*) { StopHere("Graphics fac
 #define SLOT(n) \
     void AtGraphicsFactory::Slot##n() { StopHere("Graphics factory: slot " #n " is not recovered"); }
 SLOT(1) SLOT(2) SLOT(5) SLOT(6) SLOT(7) SLOT(8) SLOT(9) SLOT(10) SLOT(11) SLOT(12) SLOT(13) SLOT(14) SLOT(15) SLOT(16) SLOT(17) SLOT(18) SLOT(19)
-SLOT(20) SLOT(21) SLOT(22) SLOT(23) SLOT(24) SLOT(25) SLOT(26) SLOT(27) SLOT(28)
+SLOT(20) SLOT(21) SLOT(22) SLOT(23) SLOT(24) SLOT(25) SLOT(26) SLOT(28)
 #undef SLOT
+AtCamera* AtGraphicsFactory::Camera2D() { StopHere("Graphics factory: the 2D camera (slot 27) is not recovered"); return 0; }

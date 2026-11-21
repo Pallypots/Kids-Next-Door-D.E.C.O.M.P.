@@ -59,10 +59,10 @@ void AtGrD3DFont2D::Slot11() { STOP(0x00123750); }
 void AtGrD3DFont2D::Slot12() { STOP(0x00123C40); }
 int AtGrD3DFont2D::PassName(AtGrDevice*, const AtGrI2DFont* font, int value) { return (int)AtGrD3DUnrecovered(0x001238D0, this, font != 0, (unsigned int)value); }
 
-void AtGrD3DImage::Slot0() { STOP(0x001247D0); }
+AtMaterial* AtGrD3DImage::Material() { STOP(0x001247D0); return 0; }
 void AtGrD3DImage::Slot1() { STOP(0x00124EB0); }
 void AtGrD3DImage::Slot2() { STOP(0x00124630); }
-void AtGrD3DImage::Slot3() { STOP(0x00124800); }
+void AtGrD3DImage::DrawStrip(AtGr2DRenderer*, unsigned int strip, AtMaterial*, const AtRect*, const AtRect*, const AtColorRectangle*) { STOP1(0x00124800, strip); }
 int AtGrD3DImage::PassName(AtGrDevice*, const AtImage* image, int value) { return (int)AtGrD3DUnrecovered(0x001246F0, this, image != 0, (unsigned int)value); }
 void AtGrD3DImage::Slot14() { STOP(0x00124610); }
 

@@ -264,7 +264,7 @@ public:
     virtual void Slot24();
     virtual void Slot25();
     virtual void Slot26();
-    virtual void Slot27();
+    virtual class AtCamera* Camera2D();  // slot 27: the camera the fatal error screen draws with (0x0008E2FB, at/fatal)
     virtual void Slot28();
     virtual AtDatabaseLoader* DatabaseLoader();  // slot 29, 0x000EBB50
     virtual void DeleteLoader(AtDatabaseLoader* loader);  // slot 30, 0x000EBBF0 frees what slot 29 made (the level manifest's graphics items, gm/dbmanifest)

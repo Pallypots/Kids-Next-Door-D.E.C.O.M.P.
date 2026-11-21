@@ -81,10 +81,10 @@ static void* g_db_of[2];
 
 class TestImage : public AtImage {
 public:
-    void Slot0() override { never(0); }
+    AtMaterial* Material() override { never(0); return nullptr; }
     void Slot1() override { never(1); }
     void Slot2() override { never(2); }
-    void Slot3() override { never(3); }
+    void DrawStrip(AtGr2DRenderer*, unsigned int, AtMaterial*, const AtRect*, const AtRect*, const AtColorRectangle*) override { never(3); }
     void Read(AtMaterialOwner* owner, AtImageDatabase* database, const char* name, AtIoTokenizer* tokenizer) override;
     void OnLoaded(AtMaterialOwner* owner) override;
     void Slot14() override { never(14); }

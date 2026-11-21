@@ -483,7 +483,7 @@ void AtGraphicsDeviceXbox::Slot5() { NotRecovered("Atlas Graphics: the device's 
 void AtGraphicsDeviceXbox::Slot6() { NotRecovered("Atlas Graphics: the device's slot 6, 0x000F2270, is not recovered"); }
 void AtGraphicsDeviceXbox::Slot7() { NotRecovered("Atlas Graphics: the device's slot 7, 0x000EFEC0, is not recovered"); }
 void AtGraphicsDeviceXbox::Slot8() { NotRecovered("Atlas Graphics: the device's slot 8, 0x000F0010, is not recovered"); }
-void AtGraphicsDeviceXbox::Slot9() { NotRecovered("Atlas Graphics: the device's slot 9, 0x000F0310, is not recovered"); }
+void AtGraphicsDeviceXbox::Present(int) { NotRecovered("Atlas Graphics: the device's slot 9, 0x000F0310, is not recovered"); }
 void AtGraphicsDeviceXbox::Slot10() { NotRecovered("Atlas Graphics: the device's slot 10, 0x000F0350, is not recovered"); }
 void AtGraphicsDeviceXbox::Slot11() { NotRecovered("Atlas Graphics: the device's slot 11, 0x000F14C0, is not recovered"); }
 void AtGraphicsDeviceXbox::Slot12() { NotRecovered("Atlas Graphics: the device's slot 12, 0x000F1560, is not recovered"); }

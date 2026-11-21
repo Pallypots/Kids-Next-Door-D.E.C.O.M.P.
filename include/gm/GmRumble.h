@@ -31,6 +31,8 @@ public:
     GmRumbleFrame* Frame(unsigned int index);                 // 0x000748F0
     void SetFrame(unsigned int index, const GmRumbleFrame& frame);  // 0x00074900
     const char* Name();        // 0x000EB540 folded with other classes' accessors
+    float Duration();          // 0x00074930 the last frame's time; reads before the frames if there are none. src/gm/GmRumblePlayback.cpp
+    unsigned int FrameCount(); // 0x000ED690 folded with other classes' accessors. src/gm/GmRumblePlayback.cpp
 
     int m_ready;               // +0x00
     char m_name[8];            // +0x04
@@ -66,6 +68,33 @@ public:
     GmRumbleEffectArray m_effects;  // +0x18
 };
 
+// One effect playing on a controller: 16 bytes, from a pool of ten each rumble player keeps (include/at/AtControllerManager.h). src/gm/GmRumblePlayback.cpp. Its start, 0x00073DD0, is
+// not recovered.
+class GmRumblePlayback {
+public:
+    void Stop();                        // 0x00073E00 no longer looping, and at the end
+    void Advance(float seconds);        // 0x00073E20 a looping one past its end goes back by one length, once
+    float Intensity(int motor);         // 0x00073E60 motor 1 the right, any other the left, of the last frame strictly before now; no blending
+    int Finished();                     // 0x00073F00 1 if not looping and at or past the end
+    void Clear();                       // 0x000B9A90 all four words; folded with other classes' bodies
+
+    int m_unknown00;           // +0x00
+    GmRumbleEffect* m_effect;  // +0x04
+    float m_time;              // +0x08 seconds from the start
+    int m_loop;                // +0x0C
+};
+
+// The object at 0x002CF15C, set by its constructor 0x00073F30 (not recovered): five words, of which two are known.
+struct GmRumbleSystem {
+    class AtControllerManager* m_manager;  // +0x00 told of the time by the controller module's update
+    int m_unknown04;           // +0x04
+    int m_unknown08;           // +0x08
+    GmRumbleEffects* m_effects;  // +0x0C where 0x0006D750 finds effects by name
+    int m_unknown10;           // +0x10
+
+    static GmRumbleSystem* s_instance;  // 0x002CF15C src/gm/GmRumblePlayback.cpp
+};
+
 #if (defined(_M_IX86) || defined(__i386__)) && (__cplusplus >= 201103L || (defined(_MSC_VER) && _MSC_VER >= 1900))
 #pragma push_macro("offsetof")
 #undef offsetof
@@ -74,5 +103,7 @@ static_assert(sizeof(GmRumbleFrame) == 12, "GmRumbleFrame");
 static_assert(sizeof(GmRumbleEffect) == 0x14, "GmRumbleEffect");
 static_assert(offsetof(GmRumbleEffects, m_effects) == 0x18, "GmRumbleEffects::m_effects");
 static_assert(sizeof(GmRumbleEffects) == 0x20, "GmRumbleEffects");
+static_assert(sizeof(GmRumblePlayback) == 0x10, "GmRumblePlayback");
+static_assert(sizeof(GmRumbleSystem) == 0x14, "GmRumbleSystem");
 #pragma pop_macro("offsetof")
 #endif

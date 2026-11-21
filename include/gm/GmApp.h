@@ -26,7 +26,9 @@
 #include "gm/GmSocket.h"
 
 class App;
+class AtCamera;
 class AtDatabaseLoader;
+class AtGr2DRenderer;
 class GmAudioData;
 class GmLevelManifest;
 struct AtMaterialOwner;
@@ -233,17 +235,47 @@ public:
     static GmClock* s_instance;      // 0x002CD11C
 };
 
-// What App+0x692C points to; made in 0x0008CFB0: the game's input as abstract axes. Not recovered. gm/gmplayer called it GmPlayerInput; folded on integrate-batch7.
+// What App+0x692C points to; made in 0x0008CFB0. RTTI names its class FaCoControllerModule (vftable 0x0027AFAC, constructor 0x0008FA70), deriving GmCoControllerModule
+// (vftable 0x00277A38, constructor 0x0006DCA0); the name here is kept, as other work uses it. Its vftable and constructors are not recovered; the vftable is kept as a word.
+// Init is not recovered. Update and the instance are, in src/gm/GmControllerModule.cpp (at/fatal). gm/gmplayer called it GmPlayerInput; folded on integrate-batch7.
+class GmCoTicker;
 class AppUnknown692C {
 public:
-    virtual int FindAxis(const char* name) = 0;  // slot 0: an axis's id by its name ("GameAxisForward"); the class's vftable is not known
+    // Slot 0: an axis's id by its name ("GameAxisForward"). The class's vftable is not recovered: this stops with a diagnostic (src/gm/GmControllerModule.cpp) unless a
+    // test's class overrides it. Not pure, so that at/fatal's harnesses can make one.
+    virtual int FindAxis(const char* name);
     void Init();                     // 0x00090210
-    void Update(int time);           // 0x0006DEA0
+    void Update(int time);           // 0x0006DEA0 GmCoControllerModule's: each ticker of the four maps, then the controller manager, forced
     // 0x0006DFE0 not recovered: stops with a diagnostic (src/gm/GmAcPlayerSeams.cpp). The value of one axis of one controller; a controller of -1 is 0. Reads a table at +0x108
     // by controller and calls an axis object's slot 10.
     float AxisValue(int controller, int axis);
     // 0x0008F5D0 not recovered (gm/combat's seam, src/gm/CombatSeams.cpp): a button of one controller by its name ("GameButtonLockOn"), returned by value. include/gm/FaCmCombat.h.
     struct GmButtonState FindButton(int controller, const char* name);
+    static AppUnknown692C* Instance();      // 0x0008F4F0 FaCoControllerModule's, a jump to the next
+    static AppUnknown692C* BaseInstance();  // 0x0006DA50
+
+    // +0x00 the vftable (FindAxis above is its slot 0)
+    int m_ready;                     // +0x04 set by 0x0006DDE0
+    unsigned char m_unknown08[0x60]; // +0x08 four objects of 0x18 bytes (constructor 0x00074CA0)
+    GmNameMap m_maps68[4];           // +0x68 objects of 0x14 bytes, made by 0x0006DAF0
+    GmNameMap m_tickers[4];          // +0xB8 what Update ticks
+    int m_unknown108[4];             // +0x108 0, 1, 2, 3 after 0x0006DDE0
+
+    static AppUnknown692C* s_instance;  // 0x002CD0D4 set by FaCoControllerModule's constructor
+};
+
+// What the controller module's second four maps hold: known only by slot 8, given the milliseconds. Not recovered; each slot stops with a diagnostic (src/gm/GmControllerModule.cpp).
+class GmCoTicker {
+public:
+    virtual void Slot0();
+    virtual void Slot1();
+    virtual void Slot2();
+    virtual void Slot3();
+    virtual void Slot4();
+    virtual void Slot5();
+    virtual void Slot6();
+    virtual void Slot7();
+    virtual void Tick(int milliseconds);  // slot 8
 };
 
 // The object at 0x003B357C, whose registry at +0x2C start-up hangs every registry under: GmDataRoot, include/gm/GmDataRoot.h.
@@ -426,6 +458,8 @@ public:
     void StartUpBase();                          // 0x0009D4F0 the memory system, then App's heaps
     void SetDisplayMode();                       // 0x0008DBA0 not recovered: graphics
     void LoadDirtyDiskScreen();                  // 0x0008E240
+    // 0x0008E2B0, src/gm/GmFatalScreen.cpp. The dirty-disc screen, in the language of the settings, drawn for ever; nothing if LoadDirtyDiskScreen has not run. AtFatal calls it.
+    void DrawFatalScreen();
     void CreateMountManager();                   // 0x0008CE00 also the history logs, and the stream heap
     void ReadMatrixDevice();                     // 0x001416A0 not recovered: graphics
     void CreateSubsystems();                     // 0x0008CFB0 not recovered: 634 functions beneath it
@@ -535,6 +569,9 @@ static_assert(offsetof(AppDevice, m_flags) == 0xC, "AppDevice::m_flags");
 static_assert(offsetof(GmMoFramework, m_request) == 0xC, "GmMoFramework::m_request");
 static_assert(sizeof(AppLogParams) == 0x20, "AppLogParams");
 static_assert(offsetof(GmClock, m_frame) == 0x1C, "GmClock::m_frame");
+static_assert(offsetof(AppUnknown692C, m_maps68) == 0x68, "AppUnknown692C::m_maps68");
+static_assert(offsetof(AppUnknown692C, m_tickers) == 0xB8, "AppUnknown692C::m_tickers");
+static_assert(sizeof(AppUnknown692C) == 0x118, "AppUnknown692C");
 static_assert(offsetof(GmDataRoot, m_registry) == 0x2C, "GmDataRoot::m_registry");
 static_assert(offsetof(GmRegistryUser, m_root) == 0x44, "GmRegistryUser::m_root");
 static_assert(sizeof(GmSaveType) == 0x14, "GmSaveType");
