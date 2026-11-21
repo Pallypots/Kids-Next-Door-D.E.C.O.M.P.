@@ -693,7 +693,6 @@ source = "src/gm/GmAcActor.cpp"
 "??1GmAcAnimSlot@@QAE@XZ" = 0x001B3B80
 "?Release@GmAcLinkedItem@@QAEXPBUReleaseArgs@1@@Z" = 0x001B1420
 "?SpawnEffect@GmAcActor@@QAEXPBDH0HHH@Z" = 0x0014A260
-"?GetNoteBank@GmAcActor@@QAEXPAD@Z" = 0x000A1E10
 "?SceneSetFlag10@GmAcActor@@QAEXH@Z" = 0x0014A8D0
 "?Slot38@GmAcAudio@@QAEXH@Z" = 0x00194BF0
 "?SendEvent@GmAcComponent@@QAEXHPBD@Z" = 0x0015EC10

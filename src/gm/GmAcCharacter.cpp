@@ -56,7 +56,7 @@ void GmAcCharacter::Reset() {
 }
 
 // Quirks kept: GmAcObject's shutdown comes first and runs whether or not the character is initialized, as do the rest. "Shadow" is looked up in the name map again and what is found is not used.
-// The sight cone and the shadow are read again after their slots, and deleted without being cleared until Reset.
+// The combat module and the shadow are read again after their slots, and deleted without being cleared until Reset.
 void GmAcCharacter::Shutdown() {
     GmAcObject::Shutdown();
     if (m_combat != 0) {

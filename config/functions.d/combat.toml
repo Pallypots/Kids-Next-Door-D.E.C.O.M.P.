@@ -1,0 +1,296 @@
+# FaCmCombat's update (slot 6) and what it alone reaches in its own range, with the small helpers it needs from others. Names are inferred; see include/gm/FaCmCombat.h.
+# Recorded sizes are the inventory's. 0x000920D0 (GmAcTargetOf) is also recovered on the gmnpc branch: one record goes at integration.
+
+[[function]]
+va = 0x000A4BB0
+size = 256
+symbol = "?Update@FaCmCombat@@UAEXH@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A2BB0
+size = 388
+symbol = "?SpawnWeapons@FaCmCombat@@QAEXXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A4170
+size = 1077
+symbol = "?UpdateThreat@FaCmCombat@@QAEXH@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A46F0
+size = 448
+symbol = "?UpdateTargetMe@FaCmCombat@@QAEXXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A48B0
+size = 763
+symbol = "?UpdateLockOn@FaCmCombat@@QAEXXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A30D0
+size = 327
+symbol = "?UpdateZap@FaCmCombat@@QAEXXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A24E0
+size = 209
+symbol = "?UpdateLockTag@FaCmCombat@@QAEXXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A23A0
+size = 310
+symbol = "?ReadLockStick@FaCmCombat@@QAEXPADHH@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A34F0
+size = 251
+symbol = "?UpdateBumpTag@FaCmCombat@@QAEXXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A2620
+size = 493
+symbol = "?TestThreat@FaCmCombat@@QAEXPAVGmAcActor@@HHPAH1PAMH@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A2810
+size = 142
+symbol = "?IsAlive@FaCmCombat@@QAEHPAVGmAcActor@@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A28A0
+size = 335
+symbol = "?PostThreat@FaCmCombat@@QAEXHHHPAVGmAcActor@@H@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A2D40
+size = 123
+symbol = "?TargetPosition@FaCmCombat@@QAEXPAVAtVector3@@PAVGmAcActor@@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A3790
+size = 323
+symbol = "?IsEnemy@FaCmCombat@@QAEHPAVGmAcActor@@H@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A38E0
+size = 234
+symbol = "?InRange@FaCmCombat@@QAEHMMPAVGmAcActor@@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A39D0
+size = 358
+symbol = "?InAimCone@FaCmCombat@@QAEHHMPAVGmAcActor@@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A3B40
+size = 72
+symbol = "?InLockOnRange@FaCmCombat@@QAEHPAVGmAcActor@@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A3B90
+size = 72
+symbol = "?InLockOffRange@FaCmCombat@@QAEHPAVGmAcActor@@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A3C30
+size = 1340
+symbol = "?ChooseTarget@FaCmCombat@@QAEPAVGmAcActor@@HHMH@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A1E90
+size = 29
+symbol = "?MaxAimAngleH@FaCmCombat@@QAENXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A1ED0
+size = 27
+symbol = "?ThreatEnterRange@FaCmCombat@@QAENXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A1EF0
+size = 27
+symbol = "?ThreatExitRange@FaCmCombat@@QAENXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A1E10
+size = 23
+symbol = "?GetNoteBank@GmAcActor@@QAEXPAD@Z"
+source = "src/gm/CombatNames.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000A1E30
+size = 88
+symbol = "?IsOfType@GmAcActor@@QAEHPBD@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00013E50
+size = 113
+symbol = "?AtCompareNoCaseN@@YAHPBD0H@Z"
+source = "src/gm/CombatNames.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00013F50
+size = 19
+symbol = "?AtCompareNoCase8@@YAHPBD0@Z"
+source = "src/gm/CombatNames.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00092C50
+size = 104
+symbol = "?AngleTo@AtVector3@@QBENABV1@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x0014BBB0
+size = 14
+symbol = "??1GmButtonState@@QAE@XZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00075300
+size = 21
+symbol = "?IsDown@GmButtonState@@QAEHXZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x000B06D0
+size = 42
+symbol = "?SetTargetName@FaHud@@QAEXPBD@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00152590
+size = 101
+symbol = "??0GmGameEvent@@QAE@XZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00152780
+size = 60
+symbol = "?Set@GmGameEvent@@QAEXPAVGmAcActor@@HHH@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00164670
+size = 22
+symbol = "??0GmDynamicNodeIterator@@QAE@XZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00164740
+size = 20
+symbol = "??1GmDynamicNodeIterator@@QAE@XZ"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[[function]]
+va = 0x00164690
+size = 47
+symbol = "?Begin@GmDynamicNodeIterator@@QAEHPAVGmDynamicNodeLoader@@@Z"
+source = "src/gm/FaCmCombatUpdate.cpp"
+subsystem = "gm/combat"
+evidence = "tests/oracle/oracle_combat.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcActor.h or include/at/AtVector3.h"
+
+[symbols]
+"?Find@GmDynamicNodeIterator@@QAEXPBD@Z" = 0x00164760  # not recovered: a seam in src/gm/CombatSeams.cpp
+"?Next@GmDynamicNodeIterator@@QAEXXZ" = 0x001646C0  # not recovered: a seam
+"?GmAcCharacterCanSee@@YAHPAVGmAcCharacter@@PAVGmAcActor@@HHHPAMHHHHH@Z" = 0x00130E50  # not recovered: a seam (a method of GmAcCharacter)
+"?FaAcPlayerReadStick@@YAXPAVGmAcActor@@PAMHH@Z" = 0x00093300  # not recovered: a seam (a method of FaAcPlayer)
+"?FaAcPlayerStickAngle@@YAMPAVGmAcActor@@HHH@Z" = 0x00093350  # not recovered: a seam (a method of FaAcPlayer)
+"?GmAcFindAttached@@YAPAVGmAcActor@@PAV1@PBD@Z" = 0x00169730  # not recovered: a seam
+"?GmAcNodeAimNode@@YAPAVAtSceneNode@@PAVGmAcNode@@@Z" = 0x0014C300  # not recovered: a seam (a method of GmAcNode)
+"?Spawn@GmSpawnManager@@QAEPAVGmAcActor@@PBD@Z" = 0x00153CA0  # not recovered: a seam
+"?FindButton@AppUnknown692C@@QAE?AUGmButtonState@@HPBD@Z" = 0x0008F5D0  # not recovered: a seam
+"?Owner@GmAcCharController@@QAEPAVGmAcActor@@XZ" = 0x00154540  # folded (AtAbstractController::AxisCount); inline in the header
+"?s_instance@FaHud@@2PAU1@A" = 0x003B353C
+"?s_instance@GmSpawnManager@@2PAU1@A" = 0x003B3A3C

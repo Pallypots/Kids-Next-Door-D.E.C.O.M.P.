@@ -22,11 +22,22 @@ public:
     virtual void SetLength(int lines) = 0;   // slot 5
 };
 
+// What +0x08 of the object at 0x002CB0A8 points to. Its +0x90 is searched with GmNameMapGroup::Find elsewhere (0x000B1A42, 0x0014FC75), as AtNameTableOwner's is, whose +0x08 is the
+// emitters' matrix source: it may be that class, which is not established. Only the word FaAcPlayer's slot 15 reads is named.
+struct GmSystemScenes {
+    int m_unknown00;
+    void* m_unknown04;
+    struct GmSpriteScene* m_spriteScene;  // +0x08 what the player's target sprite is set up from (include/gm/GmAcPlayer.h)
+};
+
+// The object at 0x002CB0A8 (constructor 0x0006C2A0, which sets that global to itself and clears its words) is more than the logs: the game's classes reach scenes through its +0x08, the
+// other objects through +0x0C and +0x10. Only what recovered code reads is declared.
 struct GmHistoryLogs {
     void SetTraceHistory(int lines);   // 0x0006C2D0
     void SetErrorHistory(int lines);   // 0x0006C2F0
 
-    char m_unknown00[0xC];
+    char m_unknown00[0x08];
+    GmSystemScenes* m_scenes;  // +0x08 (gm/plsetup)
     App* m_app;                // +0x0C the level manifest's base words take their items' owners from it (0x0015D23C)
     struct GmRandom* m_random; // +0x10 the game's random numbers: include/gm/GmRandom.h
     char m_unknown14[4];
@@ -92,6 +103,8 @@ public:
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
 static_assert(offsetof(GmHistoryLogs, m_traces) == 0x1C, "GmHistoryLogs::m_traces");
+static_assert(offsetof(GmHistoryLogs, m_scenes) == 0x08, "GmHistoryLogs::m_scenes");
+static_assert(offsetof(GmSystemScenes, m_spriteScene) == 0x08, "GmSystemScenes::m_spriteScene");
 static_assert(offsetof(GmAppSettings, m_controllerDeadZone) == 0x30, "GmAppSettings::m_controllerDeadZone");
 static_assert(offsetof(GmAppSettings, m_character) == 0x44, "GmAppSettings::m_character");
 static_assert(offsetof(GmAppSettings, m_language) == 0x60, "GmAppSettings::m_language");

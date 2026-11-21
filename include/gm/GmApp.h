@@ -139,7 +139,8 @@ public:
 };
 
 // RTTI FaAcPlayerGameStateData, deriving GmAcPlayerGameStateData; vftable 0x0027CE08, constructor 0x0009DA50. At App+0x65B8, 0x214 bytes.
-// Start-up calls slots 1 and 3, and hands slot 5 the registry read from Generic.ADR. Not recovered.
+// Start-up calls slots 1 and 3, and hands slot 5 the registry read from Generic.ADR. Its slots are not recovered. gm/plsetup knew it as the saved game's values
+// (GmSaveData, folded here on integrate-batch8): a registry at +0x04, read by section and name with a type.
 class FaAcPlayerGameStateData {
 public:
     virtual void Slot0();
@@ -148,6 +149,14 @@ public:
     virtual void Slot3();                        // 0x0009DA20
     virtual void Slot4();
     virtual void SetRegistry(AtDataRegistry* registry);  // slot 5, 0x0019D010
+
+    // 0x00144A50 (gm/plsetup, src/gm/FaAcPlayerSetup.cpp). The value named `name` in the section named `section`, if its type is `type`; null otherwise. The section is a node found
+    // anywhere in the registry by its name, exactly; within it the value is searched with parents. An empty or missing section looks for `name` as a node itself, and failing
+    // that searches from the root. 0x00144B00 (booleans) and 0x00144AE0 (integers) are the same as FindReal with types 1 and 2.
+    void* Find(const char* section, const char* name, unsigned int type);
+    float* FindReal(const char* section, const char* name);  // 0x00144B20 type 3
+
+    AtDataRegistry m_registry;           // +0x04
 };
 
 // RTTI GmMoFramework, deriving GmPlug; vftable 0x0028DBD8, constructor 0x00140F70. App holds three, made by 0x0008DC70: FaMoIntroFramework, FaMoFlashMainMenuFramework
@@ -233,6 +242,8 @@ public:
     // 0x0006DFE0 not recovered: stops with a diagnostic (src/gm/GmAcPlayerSeams.cpp). The value of one axis of one controller; a controller of -1 is 0. Reads a table at +0x108
     // by controller and calls an axis object's slot 10.
     float AxisValue(int controller, int axis);
+    // 0x0008F5D0 not recovered (gm/combat's seam, src/gm/CombatSeams.cpp): a button of one controller by its name ("GameButtonLockOn"), returned by value. include/gm/FaCmCombat.h.
+    struct GmButtonState FindButton(int controller, const char* name);
 };
 
 // The object at 0x003B357C, whose registry at +0x2C start-up hangs every registry under: GmDataRoot, include/gm/GmDataRoot.h.

@@ -20,7 +20,6 @@ void GmAcLinkedItem::Release(const ReleaseArgs*) {
     AtFatal("Gm actor: 0x001B1420, releasing an item of an actor's list, is not recovered", 0, 0, 0);
 }
 void GmAcActor::SpawnEffect(const char*, int, const char*, int, int, int) { AtFatal("Gm actor: 0x0014A260, an actor's effect, is not recovered", 0, 0, 0); }
-void GmAcActor::GetNoteBank(char*) { AtFatal("Gm actor: 0x000A1E10, an actor's note bank, is not recovered", 0, 0, 0); }
 void GmAcActor::SceneSetFlag10(int) { AtFatal("Gm actor: 0x0014A8D0, an actor's scene flag, is not recovered", 0, 0, 0); }
 void GmAcAudio::Slot38(int) { AtFatal("Gm actor: 0x00194BF0, the audio component, is not recovered", 0, 0, 0); }
 void GmAcComponent::SendEvent(int, const char*) { AtFatal("Gm actor: 0x0015EC10, the component's events, is not recovered", 0, 0, 0); }

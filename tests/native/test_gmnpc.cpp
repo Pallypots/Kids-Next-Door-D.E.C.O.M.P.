@@ -15,24 +15,16 @@ namespace {
 
 std::string g_log;
 
-// What CombatOf reads: FaCmCombat's words behind a vftable pointer, on GmCmCombat (the declared type of the character's +0x2E4), so that the layout is the same on any host.
-class TestCombat : public GmCmCombat {
+// What CombatOf reads: FaCmCombat's words.
+// Since batch 8 FaCmCombat is the recovered class (gm/plsetup), so the test's combat object is one, with its logging slots.
+class TestCombat : public FaCmCombat {
 public:
+    TestCombat() { m_health = nullptr; m_threat = 0; m_attackRange = -1; }
     ~TestCombat() override { g_log += "combat-deleted;"; }
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
     void Stop() override { g_log += "combat-stop;"; }
     void Slot5() override { g_log += "combat-5;"; }
     void Update(int) override {}
     int Slot7() override { return 0; }
-
-    char m_unknown04[0x7C];
-    GmAcStat* m_health = nullptr;
-    char m_unknown84[0x10];
-    int m_threat = 0;
-    int m_attackRange = -1;
-    char m_unknown9C[0x48];
 };
 
 class TestNPC : public FaAcNPC {

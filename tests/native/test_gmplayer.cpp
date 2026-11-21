@@ -45,9 +45,6 @@ public:
 class TestCombat : public GmCmCombat {
 public:
     ~TestCombat() override { g_log += "combat-deleted;"; }
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
     void Stop() override {}
     void Slot5() override {}
     void Update(int) override {}

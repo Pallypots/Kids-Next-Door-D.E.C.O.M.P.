@@ -88,7 +88,7 @@ MUTANTS = [
     ("Fa 15: no pop", A, "        m_combat = (GmCmCombat*)new FaCmCombat;\n        AtPopHeap();\n", "        m_combat = (GmCmCombat*)new FaCmCombat;\n"),
     ("Fa 15: no memory raise", A, "        if (m_combat == 0) {\n            AtRaise(-4, 0, 0, 0);\n        }\n", ""),
     ("Fa 15: no attach", A, "        CombatOf(this)->Attach(this);\n", ""),
-    ("Fa 15: no start", A, "        CombatOf(this)->Start();\n", ""),
+    ("Fa 15: no start", A, "        CombatOf(this)->Slot3();\n", ""),
     # the health levels
     ("Levels: no combat test", A, "    if (combat == 0 || combat->m_health == 0) {\n        return;\n    }\n", "    if (combat->m_health == 0) {\n        return;\n    }\n"),
     ("Levels: no health test", A, "    if (combat == 0 || combat->m_health == 0) {\n        return;\n    }\n", "    if (combat == 0) {\n        return;\n    }\n"),

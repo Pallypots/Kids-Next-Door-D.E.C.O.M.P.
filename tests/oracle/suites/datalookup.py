@@ -41,6 +41,15 @@ M = [
     ("find: part not skipped", L, "        while (*path != 0 && *path != '\\\\') {\n            path++;\n        }\n        if (*path == '\\\\') {\n            path++;\n        }\n    }\n    return from;", "        while (*path != 0) {\n            path++;\n        }\n    }\n    return from;"),
     ("find: backslash kept", L, "        if (*path == '\\\\') {\n            path++;\n        }\n    }\n    return from;", "    }\n    return from;"),
     # FindLink
+    # gm/plsetup's mutants of its AtDataRegistryFindNamed (0x000678A0), folded into FindLink in batch 8: the same mutations here.
+    ("plsetup link: root always", L, "    if (under == 0) {\n        under = &m_root;\n    }\n    if (under->m_name", "    under = &m_root;\n    if (under->m_name"),
+    ("plsetup link: exactness", L, "(exact != 0 ? Equal(under->m_name, name)", "(exact == 0 ? Equal(under->m_name, name)"),
+    ("plsetup link: no children", L, "    if (under->m_firstChild != 0) {\n        AtDataLink* found", "    if (0) {\n        AtDataLink* found"),
+    ("plsetup link: no siblings", L, "        AtDataLink* found = FindLink(name, under->m_sibling, exact);", "        AtDataLink* found = 0;"),
+    ("plsetup link: siblings exact", L, "FindLink(name, under->m_sibling, exact);", "FindLink(name, under->m_sibling, 1);"),
+    ("plsetup link: unnamed", L, "    if (under->m_name != 0 && (exact", "    if (under->m_name != 0 && under->m_firstChild == 0 && (exact"),
+    ("plsetup compare: order", L, "    for (;; a++, b++) {\n        if (*a != *b) {\n            return false;", "    for (;; a++, b++) {\n        if (*a < *b) {\n            return false;"),
+    ("plsetup compare case: prefix", L, "        if (x == 0) {\n            return true;\n        }\n    }\n}\n\n// Inline in the original, as strcmp", "        if (x == 'E') {\n            return true;\n        }\n    }\n}\n\n// Inline in the original, as strcmp"),
     ("link: under the root", L, "    if (under == 0) {\n        under = &m_root;\n    }\n    if (under->m_name", "    if (under == 0) {\n        under = m_root.m_firstChild;\n        if (under == 0) {\n            return 0;\n        }\n    }\n    if (under->m_name"),
     ("link: exact flag", L, "    if (under->m_name != 0 && (exact != 0 ? Equal(under->m_name, name) : EqualIgnoringCase(under->m_name, name))) {", "    if (under->m_name != 0 && (exact == 0 ? Equal(under->m_name, name) : EqualIgnoringCase(under->m_name, name))) {"),
     ("link: children skipped", L, "    if (under->m_firstChild != 0) {\n        AtDataLink* found = FindLink(name, under->m_firstChild, exact);", "    if (under->m_firstChild != 0 && exact == 7) {\n        AtDataLink* found = FindLink(name, under->m_firstChild, exact);"),

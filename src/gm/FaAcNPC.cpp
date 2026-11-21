@@ -15,7 +15,6 @@ inline void* operator new(Size, void* where, Placement) { return where; }
 inline void operator delete(void*, void*, Placement) {}
 
 // The combat object's empty slot, folded in the original with others of the same body. The rest of the class is not recovered: src/gm/GmAcNPCSeams.cpp.
-void FaCmCombat::Start() {}
 
 // ---- the helpers ---------------------------------------------------------------------------------------------------------------
 // Quirk kept: unlike the C library's strncmp, the characters are compared as signed chars.
@@ -138,7 +137,7 @@ void FaAcNPC::Slot15() {
             AtRaise(-4, 0, 0, 0);
         }
         CombatOf(this)->Attach(this);
-        CombatOf(this)->Start();
+        CombatOf(this)->Slot3();
     }
 }
 

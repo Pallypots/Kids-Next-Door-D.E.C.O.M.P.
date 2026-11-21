@@ -1,0 +1,161 @@
+# Mutants of FaAcPlayer's set-up and the combat modules. Each text occurs exactly once in its file. See docs/verification.md.
+#
+# Dropped as equivalent, each provably:
+#  * FaCmCombat::Stop without zeroing each weapon before freeing the set's array: the stores go to memory freed at once after, which nothing reads.
+#  * FaCmPlayerCombat's destructor without its Stop: FaCmCombat's destructor, which always runs next, does the same Stop on the same state, so the frees, logs and words come out the same.
+#  * FaAcPlayer's slot 15 without the combat module's slot 3: FaCmPlayerCombat's slot 3 is GmCmCombat's, empty (0x001CC9F0).
+#  * FaCmCombat::ReleaseWeapons without its null test of the list: the list is null only with a count of 0 (Reset and Stop clear both, MakeWeaponSets sets both), so the loop does not run.
+#  * FaCmCombat::Stop without clearing each set's weapons pointer after freeing it: the pointer is in the list, which is freed next and not read again.
+#  * The sprite's SetupNamed with 0x2080 for 0xA080: with one texture coordinate AtVertexFormat::Set adds 0x8000 itself (replaced by 0xA081).
+#  * FindComponent's second argument, and FaCmCombat::ReadRecord's call of GmCmCombat::ReadRecord: neither the argument nor that body (returns 0, nothing else) is observable.
+S = "FaAcPlayerSetup.cpp"
+C = "GmCmCombat.cpp"
+
+MUTANTS = [
+    # GmCmCombat
+    ("Gm ctor: 08", C, "GmCmCombat::GmCmCombat() {\n    m_owner = 0;\n    m_unknown08 = 1;", "GmCmCombat::GmCmCombat() {\n    m_owner = 0;\n    m_unknown08 = 2;"),
+    ("Gm ctor: owner", C, "GmCmCombat::GmCmCombat() {\n    m_owner = 0;\n", "GmCmCombat::GmCmCombat() {\n"),
+    ("Gm dtor: 08", C, "GmCmCombat::~GmCmCombat() {\n    m_owner = 0;\n    m_unknown08 = 1;", "GmCmCombat::~GmCmCombat() {\n    m_owner = 0;\n    m_unknown08 = 0;"),
+    ("Gm attach: no read", C, "    m_owner = owner;\n    ReadRecord();\n", "    m_owner = owner;\n"),
+    ("Gm read: answer", C, "int GmCmCombat::ReadRecord() {\n    return 0;", "int GmCmCombat::ReadRecord() {\n    return 1;"),
+    ("Gm stop: owner kept", C, "void GmCmCombat::Stop() {\n    m_owner = 0;\n", "void GmCmCombat::Stop() {\n"),
+    ("Gm slot 5: 08", C, "void GmCmCombat::Slot5() {\n    m_unknown08 = 1;", "void GmCmCombat::Slot5() {\n    m_unknown08 = 0;"),
+    ("Gm slot 7: 0", C, "int GmCmCombat::Slot7() {\n    return 1;", "int GmCmCombat::Slot7() {\n    return 0;"),
+    # the combat heap
+    ("Heap: untested", C, "    if (FaCmCombat::s_heap == 0) {\n        AtRaise(-2, 0, 0, 0);\n    }\n", ""),
+    ("Heap: not pushed", C, "    AtPushHeap(FaCmCombat::s_heap);\n", ""),
+    ("Heap: no memory silent", C, "    if (block == 0) {\n        AtRaise(-4, 0, 0, 0);\n    }\n", ""),
+    # FaCmCombat: construction, reset
+    ("Fa ctor: no reset", C, "FaCmCombat::FaCmCombat() {\n    Reset();\n}", "FaCmCombat::FaCmCombat() {\n}"),
+    ("Fa dtor: no stop", C, "FaCmCombat::~FaCmCombat() {\n    FaCmCombat::Stop();\n}", "FaCmCombat::~FaCmCombat() {\n}"),
+    ("Reset: 98", C, "    m_attackRange = -1;\n    m_unknownA4 = -1;\n    m_unknown90 = -1;", "    m_attackRange = 0;\n    m_unknownA4 = -1;\n    m_unknown90 = -1;"),
+    ("Reset: 90", C, "    m_unknownA4 = -1;\n    m_unknown90 = -1;", "    m_unknownA4 = -1;\n    m_unknown90 = 0;"),
+    ("Reset: ranges kept", C, "    m_attackRangeCount = 0;\n    m_attackRanges = 0;\n", "    m_attackRangeCount = 0;\n"),
+    ("Reset: health kept", C, "    m_health = 0;\n", ""),
+    ("Reset: list kept", C, "    m_weaponSetList = 0;\n", ""),
+    ("Reset: D0", C, "    m_unknownD0 = 1;\n", "    m_unknownD0 = 0;\n"),
+    ("Reset: B0 short", C, "    for (int i = 0; i < 8; i++) {\n        m_unknownB0[i] = 0;\n    }\n    m_unknownD0 = 1;", "    for (int i = 0; i < 7; i++) {\n        m_unknownB0[i] = 0;\n    }\n    m_unknownD0 = 1;"),
+    ("Reset: E0", C, "    m_unknownE0 = 1;\n}\n\n// GmCmCombat's Attach", "    m_unknownE0 = 0;\n}\n\n// GmCmCombat's Attach"),
+    ("Reset: 60 cleared", C, "    m_canAttackSiblings = 0;\n", "    m_canAttackSiblings = 0;\n    m_useStartPositionForAttackRange = 0;\n"),
+    # Attach and the health stat
+    ("Attach: value not from base", C, "        health->m_value = health->m_base;\n", ""),
+    ("Attach: unchanged", C, "        health->m_changed = 1;\n", "        health->m_changed = 0;\n"),
+    ("Attach: no maximum", C, "        if (value > health->m_max) {\n            value = health->m_max;\n        }\n", ""),
+    ("Attach: no minimum", C, "        if (value < health->m_min) {\n            value = health->m_min;\n        }\n", ""),
+    ("Attach: minimum first", C, "        if (value > health->m_max) {\n            value = health->m_max;\n        }\n        if (value < health->m_min) {\n            value = health->m_min;\n        }\n",
+     "        if (value < health->m_min) {\n            value = health->m_min;\n        }\n        if (value > health->m_max) {\n            value = health->m_max;\n        }\n"),
+    ("Attach: base kept", C, "            health->m_base = health->m_value;\n", ""),
+    ("Attach: stat not held", C, "    m_health = health;\n", ""),
+    ("Attach: stat name", C, 'Find("sHealth", 0)', 'Find("sArmour", 0)'),
+    ("Attach: no weapon sets", C, "    MakeWeaponSets();\n}\n\n// Quirks kept: WeaponSets", "}\n\n// Quirks kept: WeaponSets"),
+    # the record
+    ("Read: weapon sets type", C, "AtDataRegistry::kShortNameArray", "AtDataRegistry::kIntArray"),
+    ("Read: priorities type", C, "== AtDataRegistry::kIntArray", "== AtDataRegistry::kRealArray"),
+    ("Read: weapon sets untested", C, "    if (sets != 0 && sets->m_descriptor", "    if (sets != 0 || sets->m_descriptor"),
+    ("Read: enemies word", C, '"Enemies"', '"Enemy"'),
+    ("Read: lock-on word", C, 'm_lockOnMaxRange = m_owner->FindValueOrDefault("LockOnMaxRange", 0);', 'm_lockOnMaxRange = m_owner->FindValueOrDefault("LockOffMaxRange", 0);'),
+    ("Read: update word lost", C, '    m_updateCombatModule = m_owner->FindValueOrDefault("UpdateCombatModule", 0);\n', ""),
+    ("Read: bump word", C, '"BumpTargetAngle"', '"BumpTarget"'),
+    ("Read: aim V", C, 'm_maxAimAngleV = m_owner->FindValueOrDefault("MaxAimAngleV", 0);', 'm_maxAimAngleV = m_owner->FindValueOrDefault("MaxAimAngleH", 0);'),
+    ("Read: count default", C, "    m_attackRangeCount = count != 0 ? *count : 0;", "    m_attackRangeCount = count != 0 ? *count : 1;"),
+    ("Read: none allocates", C, "    if (m_attackRangeCount > 0) {", "    if (m_attackRangeCount >= 0) {"),
+    ("Read: range index", C, '"AttackRange%d", i);', '"AttackRange%d", i + 1);'),
+    ("Read: enter word", C, '"AttackRangeEnterEvent%d"', '"AttackRangeExitEvent%d"'),
+    ("Read: exit into enter", C, "            m_attackRanges[i].m_exitEvent = ", "            m_attackRanges[i].m_enterEvent = "),
+    ("Read: answer", C, "    return answer;\n", "    return 1;\n"),
+    # the weapon sets
+    ("Make: twice", C, "    if (m_weaponSetList != 0 || m_weaponSets == 0) {", "    if (m_weaponSets == 0) {"),
+    ("Make: none allocates", C, "    if (count == 0) {\n        return;\n    }\n", ""),
+    ("Make: count", C, "    m_weaponSetCount = count;\n", "    m_weaponSetCount = count + 1;\n"),
+    ("Make: name not cleared", C, "        for (int k = 0; k < 8; k++) {\n            set->m_name[k] = 0;\n        }\n", ""),
+    ("Make: count not cleared", C, "        set->m_count = 0;\n", ""),
+    ("Make: weapons not cleared", C, "        set->m_weapons = 0;\n        AtCopyName9", "        AtCopyName9"),
+    ("Make: unterminated", C, "FindValueObject(terminated, 0)", "FindValueObject(name, 0)"),
+    ("Make: nameless", C, "            AtCopyName8(set->m_name, name);\n", ""),
+    ("Make: room", C, "            set->m_count = value->m_descriptor->m_count;", "            set->m_count = value->m_descriptor->m_count + 1;"),
+    ("Make: weapons dirty", C, "            for (unsigned int j = 0; j < set->m_count; j++) {\n                set->m_weapons[j] = 0;\n            }\n", ""),
+    # releasing and stopping
+    ("Release: not released", C, "                set->m_weapons[j]->Release();\n", ""),
+    ("Release: kept", C, "                set->m_weapons[j]->Release();\n                set->m_weapons[j] = 0;\n", "                set->m_weapons[j]->Release();\n"),
+    ("Stop: weapons not freed", C, "                operator delete(set->m_weapons);\n", ""),
+    ("Stop: list not freed", C, "        operator delete(m_weaponSetList);\n", ""),
+    ("Stop: ranges not freed", C, "    if (m_attackRanges != 0) {\n        operator delete(m_attackRanges);\n    }\n", ""),
+    ("Stop: no base", C, "    GmCmCombat::Stop();\n    Reset();\n}", "    Reset();\n}"),
+    ("Stop: no reset", C, "    GmCmCombat::Stop();\n    Reset();\n}", "    GmCmCombat::Stop();\n}"),
+    ("Slot 5: no release", C, "void FaCmCombat::Slot5() {\n    ReleaseWeapons();\n", "void FaCmCombat::Slot5() {\n"),
+    ("Slot 5: 98", C, "    m_attackRange = -1;\n    m_unknownA4 = -1;\n    m_unknown2C = 0;", "    m_unknownA4 = -1;\n    m_unknown2C = 0;"),
+    ("Slot 5: 94", C, "    m_unknown7C = 0;\n    m_threat = 0;\n    m_unknown9C = 1;", "    m_unknown7C = 0;\n    m_unknown9C = 1;"),
+    ("Slot 5: E0", C, "    m_unknownE0 = 1;\n    m_unknownD4[0] = 0;", "    m_unknownD4[0] = 0;"),
+    ("Slot 5: no base", C, "    GmCmCombat::Slot5();\n", ""),
+    ("Slot 7: zero alive", C, "    if (m_health != 0 && !(m_health->m_value > 0.0f)) {", "    if (m_health != 0 && !(m_health->m_value >= 0.0f)) {"),
+    ("Slot 7: NaN alive", C, "    if (m_health != 0 && !(m_health->m_value > 0.0f)) {", "    if (m_health != 0 && m_health->m_value <= 0.0f) {"),
+    # FaCmPlayerCombat
+    ("Player attach: one read", C, "    FaCmCombat::Attach(owner);\n    ReadRecord();\n", "    FaCmCombat::Attach(owner);\n"),
+    ("Player read: answer", C, "    return FaCmCombat::ReadRecord();", "    FaCmCombat::ReadRecord();\n    return 1;"),
+    ("Player stop: slot 5", C, "void FaCmPlayerCombat::Stop() {\n    FaCmCombat::Stop();", "void FaCmPlayerCombat::Stop() {\n    FaCmCombat::Slot5();"),
+    ("Player slot 5: nothing", C, "void FaCmPlayerCombat::Slot5() {\n    FaCmCombat::Slot5();\n", "void FaCmPlayerCombat::Slot5() {\n"),
+    ("Player update: argument", C, "    FaCmCombat::Update(a);", "    FaCmCombat::Update(0);"),
+    # the registry's search by name: 0x000678A0 is at/datalookup's AtDataRegistry::FindLink since batch 8; this suite's eight mutants of it moved to
+    # tests/oracle/suites/datalookup.py (a gm suite cannot mutate src/at), same mutations.
+    # the saved game
+    ("Save: section test", S, "    if (section[0] != 0 && (under", "    if (section[0] == 0 && (under"),
+    ("Save: section exact", S, "(under = m_registry.FindLink(section, 0, 0))", "(under = m_registry.FindLink(section, 0, 1))"),
+    ("Save: under lost", S, "        link = m_registry.FindPath(under, name, 1);\n    } else {", "        link = m_registry.FindPath(0, name, 1);\n    } else {"),
+    ("Save: no parents", S, "        link = m_registry.FindPath(under, name, 1);\n    } else {", "        link = m_registry.FindPath(under, name, 0);\n    } else {"),
+    ("Save: no fallback", S, "        if (link == 0) {\n            link = m_registry.FindPath(under, name, 1);\n        }\n", ""),
+    ("Save: type", S, "link->m_value->m_descriptor->m_type == type", "link->m_value->m_descriptor->m_type != type"),
+    ("Save: element", S, "return link->m_value->ElementAt(0);", "return link->m_value->ElementAt(1);"),
+    ("Save: real type", S, "AtDataRegistry::kReal);", "AtDataRegistry::kInt);"),
+    ("Saved: default", S, "    return 0.0f;\n}\n\n// ---- the record and the joints", "    return 1.0f;\n}\n\n// ---- the record and the joints"),
+    # the record's value, the joints
+    ("Component: empty searched", "GmAcNPC.cpp", "    if (name[0] == 0) {\n        return 0;\n    }\n    AtDataLink* link = ((AtDataRegistry*)m_unknown10)->FindPath(", "    AtDataLink* link = ((AtDataRegistry*)m_unknown10)->FindPath("),
+    ("Component: parents", "GmAcNPC.cpp", "FindPath((AtDataLink*)m_descriptor, name, 1);\n    if (link == 0) {\n        return 0;\n    }\n    return link->m_value;", "FindPath((AtDataLink*)m_descriptor, name, 0);\n    if (link == 0) {\n        return 0;\n    }\n    return link->m_value;"),
+    ("Component: the link", "GmAcNPC.cpp", "    return link->m_value;\n}\n\n// The original", "    return (AtDataComponent*)link;\n}\n\n// The original"),
+    ("Rot trans: first excluded", S, "found >= m_rotTrans &&", "found > m_rotTrans &&"),
+    ("Rot trans: end included", S, "found < m_rotTrans + m_rotTransCount", "found <= m_rotTrans + m_rotTransCount"),
+    # the sight query
+    ("Set: length squared", S, "    m_unknown20 = length * length;", "    m_unknown20 = length;"),
+    ("Set: length", S, "    m_unknown1C = length;", "    m_unknown1C = length * length;"),
+    ("Set: least", S, "    m_unknown18 = minDistance * minDistance;", "    m_unknown18 = minDistance;"),
+    ("Set: yaw", S, "    m_unknown24 = (float)AtCos((double)yaw * kDegreesToRadians);", "    m_unknown24 = (float)AtCos((double)pitch * kDegreesToRadians);"),
+    ("Set: pitch radians", S, "    m_unknown28 = (float)AtCos((double)pitch * kDegreesToRadians);", "    m_unknown28 = (float)AtCos((double)pitch);"),
+    ("Set: direction", S, "    m_direction = *direction;", "    m_direction = *position;"),
+    ("Setup: moved", S, "        if ((node->m_flags & AtSceneNode::kMoved) != 0) {", "        if ((node->m_flags & AtSceneNode::kMoved) == 0) {"),
+    ("Setup: sphere", S, "        from = node->m_worldSphere.center;", "        from = node->m_sphere.center;"),
+    ("Setup: direction", S, "        direction = (const AtVector3*)m_unknown18;", "        direction = (const AtVector3*)m_unknown30;"),
+    ("Setup: least default", S, "m_sightConeMinDistance : 0.0f;", "m_sightConeMinDistance : 1.0f;"),
+    ("Setup: pitch default", S, "*m_sightConePitch : kDefaultSightPitch;", "*m_sightConePitch : kDefaultSightYaw;"),
+    ("Setup: yaw constant", S, "const float kDefaultSightYaw = 25.0f;", "const float kDefaultSightYaw = 26.0f;"),
+    ("Setup: length constant", S, "const float kDefaultSightLength = 1000.0f;", "const float kDefaultSightLength = 999.0f;"),
+    ("Setup: pitch constant", S, "const float kDefaultSightPitch = 20.0f;", "const float kDefaultSightPitch = 21.0f;"),
+    ("Setup: length given", S, "const float far = length != 0 ? *length :", "const float far = 0 ? *length :"),
+    ("Setup: yaw record", S, "yaw != 0 ? *yaw : m_sightConeYaw != 0 ? *m_sightConeYaw", "yaw != 0 ? *yaw : m_sightConeLength != 0 ? *m_sightConeLength"),
+    ("Setup: order", S, "    query->Set(&from, direction, far, across, down, least);", "    query->Set(&from, direction, far, down, across, least);"),
+    # the sprite
+    ("Sprite: no slot 21", S, "    m_unknown20 = scene->m_materials->BufferSet();\n    m_format.Set(0xA080, 0, 1);\n    m_material = 0;", "    m_format.Set(0xA080, 0, 1);\n    m_material = 0;"),
+    ("Sprite: format", S, "    m_format.Set(0xA080, 0, 1);\n    m_material = 0;", "    m_format.Set(0xA080, 0, 2);\n    m_material = 0;"),
+    ("Sprite: material kept", S, "    m_material = 0;\n", ""),
+    ("Sprite: scene", S, "void GmAcSprite::Setup(GmSpriteScene* scene) {\n    m_scene = scene;\n", "void GmAcSprite::Setup(GmSpriteScene* scene) {\n"),
+    ("Sprite named: no space", S, "FindMaterial(name, ns)", "FindMaterial(name, 0)"),
+    ("Sprite named: format", S, "    m_format.Set(0xA080, 0, 1);\n    m_material = m_scene", "    m_format.Set(0xA081, 0, 1);\n    m_material = m_scene"),
+    # slot 15
+    ("Slot 15: no character", S, "    GmAcCharacter::Slot15();\n    char level[16];", "    char level[16];"),
+    ("Slot 15: continuation untested", S, "    if (continuation != 0 && *continuation != 0) {", "    if (continuation != 0) {"),
+    ("Slot 15: saved word", S, '"SavedTime");', '"SavedTim");'),
+    ("Slot 15: level", S, "GetReal(level, ", 'GetReal("", '),
+    ("Slot 15: saved where", S, "->m_unknown060 = ", "->m_unknown05C = "),
+    ("Slot 15: joints untested", S, "    if (actor != 0 && actor->m_joints.m_database != 0) {", "    if (actor != 0) {"),
+    ("Slot 15: head kept", S, "    m_head = head;\n", ""),
+    ("Slot 15: head name", S, "        AtCopyName(g_playerHeadJoint, name);\n", '        AtCopyName("HEADL", name);\n'),
+    ("Slot 15: no sight", S, "    SetupSightQuery(&m_sightQuery, 0, 0, 0, 0, 0, 0);\n", ""),
+    ("Slot 15: combat untested", S, "    if (combat != 0 && *combat != 0) {", "    if (combat != 0) {"),
+    ("Slot 15: heap untested", S, "        if (s_heap == 0) {\n            AtRaise(-2, 0, 0, 0);\n        }\n        AtPushHeap(s_heap);\n        void* block", "        AtPushHeap(s_heap);\n        void* block"),
+    ("Slot 15: not popped", S, "        AtPopHeap();\n        if (m_combat == 0) {", "        if (m_combat == 0) {"),
+    ("Slot 15: no memory silent", S, "        if (m_combat == 0) {\n            AtRaise(-4, 0, 0, 0);\n        }\n", ""),
+    ("Slot 15: not attached", S, "        m_combat->Attach(this);\n", ""),
+    ("Slot 15: sprite name", S, '"Target", "");', '"Other", "");'),
+    ("Slot 15: sprite space", S, '"Target", "");', '"Target", "sp");'),
+    ("Slot 15: no sprite", S, "    target->SetupNamed(", "    if (0) target->SetupNamed("),
+]
+
+SUITE = {"target": "oracle_plsetup", "subsystem": "gm/plsetup", "src": "gm", "var": "KND_GM_SRC", "cases": "tok", "mutants": MUTANTS}

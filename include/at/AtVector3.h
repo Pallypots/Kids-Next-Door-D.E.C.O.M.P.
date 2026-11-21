@@ -25,6 +25,9 @@ public:
     void SetNormalized(const AtVector3& from);                           // 0x00042E80 likewise
     float NormalizeReturningLength();                                    // 0x00042EF0 0 when it was too short
     float Distance(const AtVector3& other) const;                        // 0x00042F60
+    // 0x00092C50 (in FaAcNPC's range; src/gm/FaCmCombatUpdate.cpp, gm/combat). The angle to another unit vector: the acos of the dot product (which is rounded to float first); a dot product
+    // outside [-1, 1] gives 0 above, pi (as a float) below, and a NaN pi.
+    double AngleTo(const AtVector3& other) const;
     void Rotate(const AtVector3& axis, float angle);                     // 0x00042F90 about a unit axis
     // 0x000430A0. Writes as it goes, so from must not be this vector.
     void SetRotated(const AtVector3& axis, float angle, const AtVector3& from);

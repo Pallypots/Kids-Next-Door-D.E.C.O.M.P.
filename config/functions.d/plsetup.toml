@@ -1,0 +1,301 @@
+# FaAcPlayer's set-up (slot 15) and what it alone needs, and the combat modules GmCmCombat, FaCmCombat and FaCmPlayerCombat. Names other than RTTI names are inferred; see
+# include/gm/FaCmCombat.h and include/gm/GmAcPlayer.h. Recorded sizes are the inventory's.
+
+[[function]]
+va = 0x000940A0
+size = 428
+symbol = "?Slot15@FaAcPlayer@@UAEXXZ"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00130BF0
+size = 295
+symbol = "?SetupSightQuery@GmAcCharacter@@QAEXPAUGmAcSightQuery@@PBVAtVector3@@1PBM222@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00152B00
+size = 103
+symbol = "?Set@GmAcSightQuery@@QAEXPBVAtVector3@@0MMMM@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00026860
+size = 43
+symbol = "?FindRotTrans@AtCoordSysDatabase@@QAEPAVAtRotTransCoordSys@@PBD@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x0009D980
+size = 45
+symbol = "?GetReal@GmSavedGame@@QAEMPBD0@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00144B20
+size = 30
+symbol = "?FindReal@FaAcPlayerGameStateData@@QAEPAMPBD0@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00144A50
+size = 131
+symbol = "?Find@FaAcPlayerGameStateData@@QAEPAXPBD0I@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x0006E2E0
+size = 55
+symbol = "?Setup@GmAcSprite@@UAEXPAUGmSpriteScene@@@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x0006E260
+size = 113
+symbol = "?SetupNamed@GmAcSprite@@UAEXPAUGmSpriteScene@@PBD1@Z"
+source = "src/gm/FaAcPlayerSetup.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x001645F0
+size = 23
+symbol = "??0GmCmCombat@@QAE@XZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00164620
+size = 21
+symbol = "??1GmCmCombat@@UAE@XZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00164640
+size = 47
+symbol = "??_GGmCmCombat@@UAEPAXI@Z"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x001645D0
+size = 15
+symbol = "?Attach@GmCmCombat@@UAEXPAVGmAcActor@@@Z"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x00164610
+size = 15
+symbol = "?Stop@GmCmCombat@@UAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x001645E0
+size = 8
+symbol = "?Slot5@GmCmCombat@@UAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A3360
+size = 25
+symbol = "??0FaCmCombat@@QAE@XZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A2210
+size = 247
+symbol = "?Reset@FaCmCombat@@QAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A3BE0
+size = 79
+symbol = "??1FaCmCombat@@UAE@XZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A46D0
+size = 30
+symbol = "??_GFaCmCombat@@UAEPAXI@Z"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A33B0
+size = 127
+symbol = "?Attach@FaCmCombat@@UAEXPAVGmAcActor@@@Z"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A1F10
+size = 768
+symbol = "?ReadRecord@FaCmCombat@@UAEHXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A29F0
+size = 436
+symbol = "?MakeWeaponSets@FaCmCombat@@QAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A3430
+size = 186
+symbol = "?Stop@FaCmCombat@@UAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A2310
+size = 140
+symbol = "?Slot5@FaCmCombat@@UAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A1C50
+size = 112
+symbol = "?ReleaseWeapons@FaCmCombat@@QAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A3380
+size = 35
+symbol = "?Slot7@FaCmCombat@@UAEHXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4D00
+size = 18
+symbol = "??0FaCmPlayerCombat@@QAE@XZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4D30
+size = 79
+symbol = "??1FaCmPlayerCombat@@UAE@XZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4D80
+size = 30
+symbol = "??_GFaCmPlayerCombat@@UAEPAXI@Z"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4CB0
+size = 24
+symbol = "?Attach@FaCmPlayerCombat@@UAEXPAVGmAcActor@@@Z"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4CD0
+size = 5
+symbol = "?ReadRecord@FaCmPlayerCombat@@UAEHXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4D20
+size = 5
+symbol = "?Stop@FaCmPlayerCombat@@UAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4CE0
+size = 5
+symbol = "?Slot5@FaCmPlayerCombat@@UAEXXZ"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[function]]
+va = 0x000A4CF0
+size = 5
+symbol = "?Update@FaCmPlayerCombat@@UAEXH@Z"
+source = "src/gm/GmCmCombat.cpp"
+subsystem = "gm/plsetup"
+evidence = "tests/oracle/oracle_plsetup.cpp; address noted beside the declaration in include/gm/FaCmCombat.h, include/gm/GmAcPlayer.h, include/gm/GmAcCharacter.h, include/gm/GmAcActor.h or include/at/AtCoordSys.h"
+
+[[vtable]]
+va = 0x0028F5C4
+slots = 8
+symbol = "??_7GmCmCombat@@6B@"
+source = "src/gm/GmCmCombat.cpp"
+
+[[vtable]]
+va = 0x00282EF4
+slots = 8
+symbol = "??_7FaCmCombat@@6B@"
+source = "src/gm/GmCmCombat.cpp"
+
+[[vtable]]
+va = 0x00282F5C
+slots = 8
+symbol = "??_7FaCmPlayerCombat@@6B@"
+source = "src/gm/GmCmCombat.cpp"
+
+[symbols]
+"?ReadRecord@GmCmCombat@@UAEHXZ" = 0x000AB720  # folded: returns 0
+"?Slot3@GmCmCombat@@UAEXXZ" = 0x001CC9F0  # folded: empty
+"?Update@GmCmCombat@@UAEXH@Z" = 0x000CBF30  # folded: empty
+"?Slot7@GmCmCombat@@UAEHXZ" = 0x001A2B40  # folded: returns 1
+"?s_heap@FaCmCombat@@2PAXA" = 0x003B3C5C
+"?s_instance@GmSavedGame@@2PAU1@A" = 0x00305A48
+"?g_playerHeadJoint@@3PBDB" = 0x002B422C  # points to "HEADR" at 0x0027B550

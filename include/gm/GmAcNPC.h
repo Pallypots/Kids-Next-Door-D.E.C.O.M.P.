@@ -13,6 +13,7 @@
 
 #include "at/AtDataRegistry.h"
 #include "gm/GmAcCharacter.h"
+#include "gm/FaCmCombat.h"
 
 class FaAcNPC;
 class GmAcNPC;
@@ -26,21 +27,12 @@ struct AtTempText {
 };
 AtTempText* AtFormatTemp(AtTempText* out, const char* format, ...);
 
-// The event FaAcNPC's health levels post: vftable 0x0028EBCC, 0x28 bytes, built on the stack and never destroyed (the original calls no destructor). Not recovered: its constructor and the one
-// method used stop with a diagnostic.
-struct GmGameEvent {
-    GmGameEvent();                                      // 0x00152590
-    void Set(GmAcActor* actor, int b, int c, int d);    // 0x00152780 FaAcNPC passes itself, 0, 0, -1
-
-    char m_unknown00[0x28];
-};
+// The event FaAcNPC's health levels post is GmGameEvent, recovered by gm/combat: include/gm/FaCmCombat.h.
 
 // 0x001512B0, a method of GmEventManager (0x003B3990): the event by name in a namespace, with the event object. A free function so as not to change include/gm/GmAcActor.h. Not recovered.
 void GmEventManagerSend(GmEventManager* manager, const char* event, const char* nameSpace, GmGameEvent* object, int d);
 
-// 0x00130E50, a method of GmAcCharacter: whether it sees a target, 10 arguments (ret 0x28), 0 for a null target; reaches the scene node of both and 0x00130D20. A free function so as not to
-// change include/gm/GmAcCharacter.h. Not recovered.
-int GmAcCharacterCanSee(GmAcCharacter* character, GmAcActor* target, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, int a10);
+// GmAcCharacterCanSee (0x00130E50) is declared with gm/combat's types in include/gm/FaCmCombat.h (its sixth argument a float*).
 
 // ---- what GmAcNPC makes: the AI action manager -------------------------------------------------------------------------------------
 // 0x24 bytes, no vftable (its destructor is called directly before the memory is freed). Made by GmAcNPC's slot 15 when the record says CreateAiActionManager, held at GmAcNPC's +0x304; driven
@@ -63,27 +55,7 @@ public:
 };
 
 // ---- what FaAcNPC makes: the combat object ------------------------------------------------------------------------------------------
-// FaCmCombat (RTTI), 0xE4 bytes, on GmCmCombat (RTTI; vftable 0x0028F5C4, constructor 0x001645F0, which sets +0x04 to 0 and +0x08 to 1). Its constructor resets every word (0x000A2210). Only the
-// words FaAcNPC reads are named. Not recovered: its constructor and slots stop with a diagnostic, but slot 3, an empty body folded with others, which is written.
-class FaCmCombat {
-public:
-    FaCmCombat();                       // 0x000A3360
-    virtual ~FaCmCombat();              // slot 0; 0x000A46D0 deleting, not recovered
-    virtual void Attach(GmAcActor* owner);  // slot 1, 0x000A33B0 not recovered; given the NPC that made it
-    virtual void Slot2();               // slot 2, 0x000A1F10 not recovered
-    virtual void Start();               // slot 3, 0x001CC9F0 empty, folded; called right after Attach
-    virtual void Stop();                // slot 4, 0x000A3430 not recovered; GmAcCharacter's shutdown calls it
-    virtual void Slot5();               // slot 5, 0x000A2310 not recovered
-    virtual void Update(int a);         // slot 6, 0x000A4BB0 not recovered
-    virtual int Slot7();                // slot 7, 0x000A3380 not recovered
-
-    char m_unknown04[0x7C];
-    GmAcStat* m_health;                 // +0x80 the owner's health stat: its +0x0C and +0x10 are the bounds, +0x1C the value
-    char m_unknown84[0x10];
-    int m_threat;                       // +0x94 "cThreat" when not 0
-    int m_attackRange;                  // +0x98 -1 when out of every attack range, else which; "cAtkRg<n>"
-    char m_unknown9C[0x48];
-};
+// FaCmCombat (RTTI), 0xE4 bytes, on GmCmCombat: recovered by gm/plsetup and gm/combat, include/gm/FaCmCombat.h. gm/gmnpc's seams for it were folded on integrate-batch8.
 
 // The combat object at a character's +0x2E4. See the finding above.
 inline FaCmCombat* CombatOf(GmAcCharacter* character) { return (FaCmCombat*)character->m_combat; }
@@ -173,13 +145,8 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(sizeof(GmGameEvent) == 0x28, "GmGameEvent");
 static_assert(sizeof(GmAiActionManager) == 0x24, "GmAiActionManager");
 static_assert(offsetof(GmAiActionManager, m_pattern) == 0x1C, "GmAiActionManager::m_pattern");
-static_assert(offsetof(FaCmCombat, m_health) == 0x80, "FaCmCombat::m_health");
-static_assert(offsetof(FaCmCombat, m_threat) == 0x94, "FaCmCombat::m_threat");
-static_assert(offsetof(FaCmCombat, m_attackRange) == 0x98, "FaCmCombat::m_attackRange");
-static_assert(sizeof(FaCmCombat) == 0xE4, "FaCmCombat");
 static_assert(offsetof(GmControlledCharacters, m_count) == 0x4C, "GmControlledCharacters::m_count");
 static_assert(offsetof(GmAcNPC, m_aiActions) == 0x304, "GmAcNPC::m_aiActions");
 static_assert(sizeof(GmAcNPC) == 0x308, "GmAcNPC");

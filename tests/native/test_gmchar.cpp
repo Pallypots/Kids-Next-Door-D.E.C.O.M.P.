@@ -44,9 +44,6 @@ public:
 class TestSightCone : public GmCmCombat {
 public:
     ~TestSightCone() override { g_log += "cone-deleted;"; }
-    void Slot1() override {}
-    void Slot2() override {}
-    void Slot3() override {}
     void Stop() override { g_log += "cone-stop;"; }
     void Slot5() override { g_log += "cone-5;"; }
     void Update(int a) override { g_log += "cone-update" + std::to_string(a) + ";"; }
