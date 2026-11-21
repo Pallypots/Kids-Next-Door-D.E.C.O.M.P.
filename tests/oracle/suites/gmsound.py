@@ -36,7 +36,7 @@ MUTANTS = [
     ("random: below zero", R, "    if (bound == 0) {\n        return 0;", "    if (bound == 0) {\n        return 1;"),
     ("random: below", R, "return Next() % bound;", "return Next() % (bound + 1);"),
     ("random: unit steps", R, "const int step = (int)(Next() % 10000);", "const int step = (int)(Next() % 9999);"),
-    ("random: unit as float", R, "return (float)(step * (double)0.0001f);", "return (float)(step * 0.0001);"),
+    ("random: unit as float", R, "    return (double)step * (double)0.0001f;", "    return (double)step * 0.0001;"),
     ("random: default returns", R, "    Seed(kDefaultSeed);\n    return 0;", "    Seed(kDefaultSeed);\n    return 1;"),
     ("random: default seed", R, "int GmRandom::SeedDefault() {\n    Seed(kDefaultSeed);", "int GmRandom::SeedDefault() {\n    Seed(kDefaultSeed + 1);"),
     ("random: returning seed's seed", R, "    m_seed = kDefaultSeed;\n    Seed(kDefaultSeed);", "    m_seed = kDefaultSeed;\n    Seed(kDefaultSeed - 1);"),

@@ -60,6 +60,9 @@ template <class F> static F at(uint32_t va) { return (F)(uintptr_t)va; }
 
 // The manifest loader is linked in for statics this code reads; its clock is not used here.
 unsigned int AtPlatformMilliseconds() { return 0; }
+// GmAppSettings is linked in now that the AI action manager is recovered (it reads the random generator through GmHistoryLogs::s_instance); its platform services are not used here.
+int AtPlatformLanguage() { return 0; }
+int AtPlatformGameRegion() { return 0; }
 int AtFormat(char* out, const char* format, ...);  // src/at/AtIoFormatHost.cpp
 
 static uint32_t U(const void* p) { return (uint32_t)(uintptr_t)p; }

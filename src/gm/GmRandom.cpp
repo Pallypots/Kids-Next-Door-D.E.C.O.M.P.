@@ -60,9 +60,9 @@ unsigned int GmRandom::NextBelow(unsigned int bound) {
     return Next() % bound;
 }
 
-float GmRandom::NextUnit() {
+double GmRandom::NextUnit() {
     const int step = (int)(Next() % 10000);
-    return (float)(step * (double)0.0001f);
+    return (double)step * (double)0.0001f;
 }
 
 int GmRandom::SeedDefault() {

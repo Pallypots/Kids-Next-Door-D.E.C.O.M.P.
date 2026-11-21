@@ -12,7 +12,3 @@ AtTempText* AtFormatTemp(AtTempText* out, const char*, ...) {
 
 void GmEventManagerSend(GmEventManager*, const char*, const char*, GmGameEvent*, int) { AtFatal("Gm NPC: 0x001512B0, sending a game event, is not recovered", 0, 0, 0); }
 
-GmAiActionManager::GmAiActionManager() { AtFatal("Gm NPC: 0x0017D420, the AI action manager, is not recovered", 0, 0, 0); }
-GmAiActionManager::~GmAiActionManager() { AtFatal("Gm NPC: 0x0017D6C0, destroying the AI action manager, is not recovered", 0, 0, 0); }
-void GmAiActionManager::Setup(GmAcNPC*) { AtFatal("Gm NPC: 0x0017D4E0, setting up the AI action manager, is not recovered", 0, 0, 0); }
-

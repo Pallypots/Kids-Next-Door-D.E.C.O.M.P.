@@ -3,6 +3,8 @@
 #pragma once
 #include "at/AtIoMountManager.h"
 
+class AtRandomGenerator;
+
 // Supplied by the platform layer. On Xbox: 0x001B7B84, reading the console's language, and 0x001B7B12, its game region.
 int AtPlatformLanguage();
 int AtPlatformGameRegion();
@@ -39,7 +41,7 @@ struct GmHistoryLogs {
     char m_unknown00[0x08];
     GmSystemScenes* m_scenes;  // +0x08 (gm/plsetup)
     App* m_app;                // +0x0C the level manifest's base words take their items' owners from it (0x0015D23C)
-    struct GmRandom* m_random; // +0x10 the game's random numbers: include/gm/GmRandom.h
+    struct GmRandom* m_random; // +0x10 the game's random numbers: made, seeded and destroyed by this object (0x0006C3E0, 0x0006C310); include/gm/GmRandom.h
     char m_unknown14[4];
     GmHistoryLog* m_errors;    // +0x18
     GmHistoryLog* m_traces;    // +0x1C both setters test this one
@@ -102,6 +104,7 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
+static_assert(offsetof(GmHistoryLogs, m_random) == 0x10, "GmHistoryLogs::m_random");
 static_assert(offsetof(GmHistoryLogs, m_traces) == 0x1C, "GmHistoryLogs::m_traces");
 static_assert(offsetof(GmHistoryLogs, m_scenes) == 0x08, "GmHistoryLogs::m_scenes");
 static_assert(offsetof(GmSystemScenes, m_spriteScene) == 0x08, "GmSystemScenes::m_spriteScene");

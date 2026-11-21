@@ -10,7 +10,8 @@ struct GmRandom {
     void Seed(unsigned int seed);    // 0x00071CA0 Knuth's 69069, then a regeneration at once
     unsigned int Next();             // 0x00071D00 tempered; regenerates first if the index has reached the end. Unlike the reference code, it never seeds by itself
     unsigned int NextBelow(unsigned int bound);  // 0x00071D50 0 for a bound of 0
-    float NextUnit();                // 0x00071D70 (Next() % 10000) * 0.0001: steps of a ten-thousandth, below 1
+    // 0x00071D70 (Next() % 10000) * 0.0001f: steps of a ten-thousandth, below 1. The product stays in the x87 register, not rounded to a float (gm/gmai showed it): double here.
+    double NextUnit();
     int SeedDefault();               // 0x00071D90 seeds with 4357 and returns 0
     unsigned int SeedDefaultReturningSeed();  // 0x00071DA0 the same, returning the seed
 

@@ -40,6 +40,9 @@ M = [
     ("find: no climb failure goes on", L, "            from = FindChild(path, from);\n            if (from == 0) {\n                return 0;\n            }", "            from = FindChild(path, from);"),
     ("find: part not skipped", L, "        while (*path != 0 && *path != '\\\\') {\n            path++;\n        }\n        if (*path == '\\\\') {\n            path++;\n        }\n    }\n    return from;", "        while (*path != 0) {\n            path++;\n        }\n    }\n    return from;"),
     ("find: backslash kept", L, "        if (*path == '\\\\') {\n            path++;\n        }\n    }\n    return from;", "    }\n    return from;"),
+    # gm/gmai's mutants of its AtDataRegistryFindValue (0x00067CF0), folded into ValueAt in batch 8: the same mutations here.
+    ("gmai value at: link", L, "    return found != 0 ? found->m_value : 0;\n}\n\nAtDataLink* AtDataRegistry::FindFromRoot", "    return found != 0 ? (AtDataComponent*)found : 0;\n}\n\nAtDataLink* AtDataRegistry::FindFromRoot"),
+    ("gmai value at: parents", L, "    AtDataLink* found = FindPath(from, path, climb);\n    return found != 0 ? found->m_value : 0;", "    AtDataLink* found = FindPath(from, path, 1);\n    return found != 0 ? found->m_value : 0;"),
     # FindLink
     # gm/plsetup's mutants of its AtDataRegistryFindNamed (0x000678A0), folded into FindLink in batch 8: the same mutations here.
     ("plsetup link: root always", L, "    if (under == 0) {\n        under = &m_root;\n    }\n    if (under->m_name", "    under = &m_root;\n    if (under->m_name"),

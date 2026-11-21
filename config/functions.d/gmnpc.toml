@@ -254,6 +254,3 @@ source = "src/gm/FaAcNPC.cpp"
 "??_C@_0BC@EACCEBJK@NumAIHealthLevels@" = 0x0027B2B4  # "NumAIHealthLevels"
 "?AtFormatTemp@@YAPAUAtTempText@@PAU1@PBDZZ" = 0x00072330  # seams
 "?GmEventManagerSend@@YAXPAVGmEventManager@@PBD1PAUGmGameEvent@@H@Z" = 0x001512B0  # a method of GmEventManager
-"??0GmAiActionManager@@QAE@XZ" = 0x0017D420
-"??1GmAiActionManager@@QAE@XZ" = 0x0017D6C0  # a jump to 0x0017D450
-"?Setup@GmAiActionManager@@QAEXPAVGmAcNPC@@@Z" = 0x0017D4E0

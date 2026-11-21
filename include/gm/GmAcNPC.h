@@ -14,6 +14,7 @@
 #include "at/AtDataRegistry.h"
 #include "gm/GmAcCharacter.h"
 #include "gm/FaCmCombat.h"
+#include "gm/GmAiActionManager.h"
 
 class FaAcNPC;
 class GmAcNPC;
@@ -34,25 +35,7 @@ void GmEventManagerSend(GmEventManager* manager, const char* event, const char* 
 
 // GmAcCharacterCanSee (0x00130E50) is declared with gm/combat's types in include/gm/FaCmCombat.h (its sixth argument a float*).
 
-// ---- what GmAcNPC makes: the AI action manager -------------------------------------------------------------------------------------
-// 0x24 bytes, no vftable (its destructor is called directly before the memory is freed). Made by GmAcNPC's slot 15 when the record says CreateAiActionManager, held at GmAcNPC's +0x304; driven
-// from the behaviour chart's commands (0x0016C0C0 and 0x0016C180, entries of a table at 0x00170BE8) through that word. Its code is 0x0017C030-0x0017DA00. Not recovered: what is used here stops
-// with a diagnostic. Words from its constructor and destructor; the names are inferred from what its setup reads.
-class GmAiActionManager {
-public:
-    GmAiActionManager();                // 0x0017D420 every word 0
-    ~GmAiActionManager();               // 0x0017D6C0, a jump to 0x0017D450: frees each action's +0x0C, the actions and +0x10, then every word 0
-    void Setup(GmAcNPC* owner);         // 0x0017D4E0 keeps the owner; reads DefaultAIAction and DefaultAIPattern (0x0017D3C0), and the actions (0x0017CEA0, "AIActions") when it has none
-
-    GmAcNPC* m_owner;                   // +0x00
-    void* m_defaultAction;              // +0x04 DefaultAIAction, a name
-    void* m_actions;                    // +0x08 0x24-byte entries
-    unsigned int m_actionCount;         // +0x0C
-    float* m_weights;                   // +0x10 one per action
-    char m_current[8];                  // +0x14 an eight-byte name
-    AtDataComponent* m_pattern;         // +0x1C DefaultAIPattern's value, when its type is 10
-    unsigned int m_patternIndex;        // +0x20
-};
+// ---- what GmAcNPC makes: the AI action manager, include/gm/GmAiActionManager.h ------------------------------------------------
 
 // ---- what FaAcNPC makes: the combat object ------------------------------------------------------------------------------------------
 // FaCmCombat (RTTI), 0xE4 bytes, on GmCmCombat: recovered by gm/plsetup and gm/combat, include/gm/FaCmCombat.h. gm/gmnpc's seams for it were folded on integrate-batch8.
@@ -145,8 +128,6 @@ public:
 #pragma push_macro("offsetof")
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
-static_assert(sizeof(GmAiActionManager) == 0x24, "GmAiActionManager");
-static_assert(offsetof(GmAiActionManager, m_pattern) == 0x1C, "GmAiActionManager::m_pattern");
 static_assert(offsetof(GmControlledCharacters, m_count) == 0x4C, "GmControlledCharacters::m_count");
 static_assert(offsetof(GmAcNPC, m_aiActions) == 0x304, "GmAcNPC::m_aiActions");
 static_assert(sizeof(GmAcNPC) == 0x308, "GmAcNPC");
