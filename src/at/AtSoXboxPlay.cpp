@@ -176,7 +176,7 @@ void AtSoXboxEmitter::UpdatePosition() {
         return;
     }
     AtVector3 position;
-    GetWorldPosition(&position);
+    WorldPosition(&position);
     const double scale = 1.0 / m_owner->m_unknown14;  // Kept unrounded, as on the x87.
     AtSoXboxXactSetPosition(m_stream, (float)(position.x * scale), (float)(position.y * scale), (float)(position.z * scale), kApplyNow);
 }
