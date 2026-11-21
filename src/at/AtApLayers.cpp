@@ -4,6 +4,7 @@
 //
 // The AtIoContext and AtIoBufferPool members are here, not beside src/at/AtIoFileSystem.cpp, so that this subsystem's mutants reach them.
 #include "at/AtApLayer.h"
+#include "at/AtEvent.h"
 
 #include "at/AtIoJam.h"
 #include "at/AtIoTokenizer.h"
@@ -17,9 +18,7 @@ struct Placement {};
 inline void* operator new(decltype(sizeof(0)), void* where, Placement) noexcept { return where; }
 inline void operator delete(void*, void*, Placement) noexcept {}
 
-void* AtEventSystem::s_heap3ADF9C;
 void* AtEventSystem::s_heap305918;
-void* AtEventSystem::s_heap3ADF98;
 void* AtEventSystem::s_heap3ADF94;
 void* AtEventSystem::s_heap3ADF90;
 void* AtEventSystem::s_heap3ADF8C;
@@ -62,9 +61,9 @@ void AtEventSystem::Init(const AtEventConfig* config, void* below) {
 }
 
 void AtEventSystem::SetHeaps(const AtEventConfig* config) {
-    AtSetHeap3ADF9C(config->m_heap10 != 0 ? config->m_heap10 : config->m_heap);
+    AtEventDatabase::SetHeap(config->m_heap10 != 0 ? config->m_heap10 : config->m_heap);
     AtSetHeap305918(config->m_heap14 != 0 ? config->m_heap14 : config->m_heap);
-    AtSetHeap3ADF98(config->m_heap18 != 0 ? config->m_heap18 : config->m_heap);
+    AtEventList::SetHeap(config->m_heap18 != 0 ? config->m_heap18 : config->m_heap);
     AtSetHeap3ADF94(config->m_heap1C != 0 ? config->m_heap1C : config->m_heap);
     AtSetHeap3ADF90(config->m_heap20 != 0 ? config->m_heap20 : config->m_heap);
     AtSetHeap3ADF8C(config->m_heap24 != 0 ? config->m_heap24 : config->m_heap);
@@ -76,9 +75,7 @@ void AtEventSystem::SetHeaps(const AtEventConfig* config) {
     }
 }
 
-void AtSetHeap3ADF9C(void* heap) { AtEventSystem::s_heap3ADF9C = heap; }
 void AtSetHeap305918(void* heap) { AtEventSystem::s_heap305918 = heap; }
-void AtSetHeap3ADF98(void* heap) { AtEventSystem::s_heap3ADF98 = heap; }
 void AtSetHeap3ADF94(void* heap) { AtEventSystem::s_heap3ADF94 = heap; }
 void AtSetHeap3ADF90(void* heap) { AtEventSystem::s_heap3ADF90 = heap; }
 void AtSetHeap3ADF8C(void* heap) { AtEventSystem::s_heap3ADF8C = heap; }

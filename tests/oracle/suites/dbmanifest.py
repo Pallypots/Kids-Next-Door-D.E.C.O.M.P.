@@ -116,8 +116,8 @@ MUTANTS = [
     ("AEE slot 0: path kept", D, "void GmEventDatabaseItem::Unknown0() {\n    m_database.Clear();\n    m_path[0] = 0;\n", "void GmEventDatabaseItem::Unknown0() {\n    m_database.Clear();\n"),
     ("AEE run: no load", D, "    AtFormat(unused, \"%3s][%s\", m_extension, m_path);\n    m_database.Load(m_owner, m_path, 0);\n}\n\nvoid GmEventDatabaseItem::Configure", "}\n\nvoid GmEventDatabaseItem::Configure"),
     ("AEE configure: extension", D, "AtFormat(m_extension, \"AEE\");", "AtFormat(m_extension, \"AES\");"),
-    ("AEE configure: owner", D, "    m_owner = (GmEventOwner*)request->m_context;\n", ""),
-    ("AEE configure: path", D, "    m_owner = (GmEventOwner*)request->m_context;\n    strcpy(m_path, request->m_path);\n", "    m_owner = (GmEventOwner*)request->m_context;\n"),
+    ("AEE configure: owner", D, "    m_owner = (AtDataRegistryOwner*)request->m_context;\n", ""),
+    ("AEE configure: path", D, "    m_owner = (AtDataRegistryOwner*)request->m_context;\n    strcpy(m_path, request->m_path);\n", "    m_owner = (AtDataRegistryOwner*)request->m_context;\n"),
     ("AEE destructor: nothing", D, "    GmEventDatabaseItem::Unknown0();\n", ""),
     # ADR.
     ("ADR slot 0: no clear", D, "    m_registry.Clear();\n", ""),
@@ -151,17 +151,6 @@ MUTANTS = [
     ("cinema destructor: nothing", D, "    AtCinemaDatabase::Clear();\n", ""),
     ("cinema constructor: 04", D, "AtCinemaDatabase::AtCinemaDatabase() {\n    m_unknown04 = 0;\n", "AtCinemaDatabase::AtCinemaDatabase() {\n"),
     ("cinema constructor: count 24", D, "    m_count1C = 0;\n    m_count24 = 0;\n}\n\nAtCinemaDatabase::~", "    m_count1C = 0;\n}\n\nAtCinemaDatabase::~"),
-    # AtEventList and AtEventDatabase.
-    ("list destructor: count kept", D, "        DeleteObjects(m_entries);\n        m_entries = 0;\n        m_count = 0;\n", "        DeleteObjects(m_entries);\n        m_entries = 0;\n"),
-    ("list free: count kept", D, "        DeleteObjects(m_entries);\n    }\n    m_entries = 0;\n    m_count = 0;\n", "        DeleteObjects(m_entries);\n    }\n    m_entries = 0;\n"),
-    ("list free: nothing", D, "    if (m_entries != 0) {\n        DeleteObjects(m_entries);\n    }\n", ""),
-    ("list constructor: count", D, "AtEventList::AtEventList() {\n    m_entries = 0;\n    m_count = 0;\n", "AtEventList::AtEventList() {\n    m_entries = 0;\n"),
-    ("event constructor: 24", D, "    m_block = 0;\n    m_unknown24 = 0;\n}\n\nAtEventDatabase::~", "    m_block = 0;\n}\n\nAtEventDatabase::~"),
-    ("event clear: no test", D, "    if (m_list.m_entries == 0) {\n        return;\n    }\n", ""),
-    ("event clear: block kept", D, "    operator delete(m_block);\n", ""),
-    ("event clear: no free", D, "    m_list.Free();\n", "    m_list.Reset();\n"),
-    ("event clear: map kept", D, "    GmNameMap::Clear();\n", ""),
-    ("event clear: 24 kept", D, "    m_block = 0;\n    m_unknown24 = 0;\n    GmNameMap::Clear();\n", "    m_block = 0;\n    GmNameMap::Clear();\n"),
-    ("event destructor: nothing", D, "    AtEventDatabase::Clear();\n", ""),
+    # AtEventList and AtEventDatabase: their life cycle and its mutants are at/aee's now (tests/oracle/suites/aee.py).
 ]
 SUITE = {"target": "oracle_dbmanifest", "subsystem": "gm/dbmanifest", "src": "gm", "var": "KND_GM_SRC", "cases": "tok", "mutants": MUTANTS}

@@ -1,18 +1,20 @@
 // The base class of the level manifest's own words and items: what GmDatabaseManifest (include/gm/GmLevelManifest.h) makes for SoundDatabaseLoaders, GraphicsDatabasesLoaders,
 // SceneDatabasesLoaders, CinemaDatabaseLoaders, BoundingGeometryDatabase, EventDatabases and InstanceRegistries, and the three small database classes that its scene, cinema and event items
-// hold in place, of which only the life cycle is recovered here. All class and member names are inferred; the extensions are the original's, from each Configure.
+// hold in place, of which only the life cycle is recovered here (the event database's classes, life cycle included, are at/aee's: include/at/AtEvent.h). All class and member names are inferred; the extensions are the original's, from each Configure.
 // Original address clusters 0x0015C900-0x0015CB96 (the items' deleting destructors, compiler-made), 0x0015D000-0x0015D9D1, 0x001B3FF0-0x001B4B6D, 0x0002ED40-0x0002EECF, 0x0002F470-0x0002F7E1,
-// 0x000C5720-0x000C5B27 less 0x000C5B30 on, 0x000C9470-0x000C9518, 0x000C9600, 0x000C9660-0x000C99F1, 0x0013D9D0-0x0013DA1F, 0x00137AD0.
+// 0x000C5780-0x000C5B27, 0x0013D9D0-0x0013DA1F, 0x00137AD0.
 #pragma once
 #include "at/AtAudioDatabase.h"
 #include "at/AtBoundingGeometry.h"
 #include "at/AtDataRegistry.h"
 #include "at/AtDatabaseLoader.h"
+#include "at/AtEvent.h"
 #include "at/AtNameTableOwner.h"
 #include "at/AtSceneDatabaseLoader.h"
 #include "at/AtSpaceGraph.h"
 #include "gm/GmApp.h"
 #include "gm/GmLevelManifest.h"
+#include "gm/GmRegistryNames.h"
 
 // ---- What the items' contexts come from: start-up's objects, not recovered beyond what is named here ---------------------------------------------------------------------------------------
 
@@ -36,26 +38,23 @@ struct GmCinemaOwner {
     int m_unknown00;
 };
 
-// What EventDatabases hands its items. Only its address is taken here.
-struct GmEventOwner {
-    int m_unknown00;
-};
-
-// The object at 0x003B358C: only the owner at +0x08 is known.
+// The object at 0x003B358C: only the owner at +0x08 is known, what EventDatabases hands its items. It is an AtDataRegistryOwner: AtEventDatabase::Read calls 0x000992D0 on it.
 struct GmEventHome {
     int m_unknown00;
     int m_unknown04;
-    GmEventOwner m_owner;                      // +0x08
+    AtDataRegistryOwner m_owner;               // +0x08
 
     static GmEventHome* s_instance;            // 0x003B358C
 };
+
+// The name map at 0x002CD138, which is told of each registry InstanceRegistries loads, is GmRegistryNames (gm/regnames, include/gm/GmRegistryNames.h).
 
 class AtSceneDatabaseLoader;
 
 // The language's directory, what a SoundDatabaseLoaders path's %s becomes. 0x003B3BE4; set by start-up, not recovered.
 extern const char* g_audioLanguage;
 
-// ---- What the scene, cinema and event items hold in place. Only their life cycle and the scene's walks are recovered; their loads are not. -----------------------------------------------
+// ---- What the scene and cinema items hold in place. Only their life cycle and the scene's walks are recovered; their loads are not. -----------------------------------------------
 
 // What a cinema database's five arrays hold: classes not recovered, each deleted through its slot 0.
 class AtCinemaDatabaseEntry {
@@ -85,37 +84,7 @@ public:
     unsigned short m_count24;                  // +0x24
 };
 
-// What an event list holds: a class not recovered, deleted through its slot 0.
-class AtEventEntry {
-public:
-    virtual ~AtEventEntry();                   // slot 0, the vector deleting destructor of a class not recovered
-};
-
-// Vftable 0x00286674, 0x0C bytes: an array an event database keeps.
-class AtEventList {
-public:
-    AtEventList();                             // 0x000C94B0
-    virtual ~AtEventList();                    // slot 0; 0x000C9600 deleting; 0x000C94D0 complete
-    void Free();                               // 0x000C9470
-    void Reset();                              // 0x000E7880 folded with others: forgets both words
-
-    AtEventEntry* m_entries;                   // +0x04
-    unsigned int m_count;                      // +0x08
-};
-
-// .AEE. Vftable 0x00286688, 0x28 bytes. A name map of its own events.
-class AtEventDatabase : public GmNameMap {
-public:
-    AtEventDatabase();                         // 0x000C9660
-    ~AtEventDatabase() override;               // slot 0; 0x000C5720 deleting, for arrays too; 0x000C9960 complete
-    void Clear() override;                     // slot 1, 0x000C96D0 nothing at all unless the list holds an array, the map's own Clear included
-
-    void Load(GmEventOwner* owner, const char* name, int unused);   // 0x000C9A00 NOT recovered: stops with a diagnostic
-
-    AtEventList m_list;                        // +0x14
-    void* m_block;                             // +0x20 freed by Clear
-    int m_unknown24;                           // +0x24
-};
+// The event database an EventDatabases item holds in place, AtEventDatabase, with its list and events: include/at/AtEvent.h (at/aee).
 
 // ---- The items --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -207,7 +176,7 @@ public:
     void Run() override;                       // slot 1, 0x001B4830
     void Configure(const GmManifestItemRequest* request);  // 0x001B4880 AEE
 
-    GmEventOwner* m_owner;                     // +0x8C
+    AtDataRegistryOwner* m_owner;              // +0x8C
     AtEventDatabase m_database;                // +0x90
 };
 
@@ -231,9 +200,6 @@ public:
 #undef offsetof
 #define offsetof(t, m) __builtin_offsetof(t, m)
 static_assert(sizeof(AtCinemaDatabase) == 0x28, "AtCinemaDatabase");
-static_assert(sizeof(AtEventList) == 0x0C, "AtEventList");
-static_assert(offsetof(AtEventDatabase, m_list) == 0x14, "AtEventDatabase::m_list");
-static_assert(sizeof(AtEventDatabase) == 0x28, "AtEventDatabase");
 static_assert(sizeof(GmRegistryItemRequest) == 0x90, "GmRegistryItemRequest");
 static_assert(sizeof(GmSoundDatabaseItem) == kSoundDatabaseItemSize, "GmSoundDatabaseItem");
 static_assert(sizeof(GmGraphicsDatabaseItem) == kGraphicsDatabaseItemSize, "GmGraphicsDatabaseItem");

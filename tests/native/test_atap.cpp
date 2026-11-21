@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "at/AtApLayer.h"
+#include "at/AtEvent.h"
 #include "at/AtIoJam.h"
 #include "at/AtIoTokenizer.h"
 #include "at/AtText.h"
@@ -130,7 +131,7 @@ static void test_event() {
     char below;
     events.Init(&config, &below);
     CHECK(events.m_below == &below);
-    CHECK(AtEventSystem::s_heap3ADF9C == &g_heapA && AtEventSystem::s_heap305918 == &g_heapB && AtEventSystem::s_heap3ADF8C == &g_heapA);
+    CHECK(AtEventDatabase::s_heap == &g_heapA && AtEventSystem::s_heap305918 == &g_heapB && AtEventSystem::s_heap3ADF8C == &g_heapA);
     CHECK(GmNameMap::s_heap == &g_heapA && GmNameSpaceDb::s_heap == &g_heapA);
     CHECK(events.m_names.m_group.m_used == 1 && events.m_names.m_group2.m_used == 1 && events.m_names.m_group.m_name[0] == 0);
     CHECK(events.m_names.m_spaces.m_pool == nullptr && events.m_names.m_spaces2.m_pool != nullptr && events.m_names.m_spaces2.m_poolSize == 5);

@@ -495,7 +495,7 @@ void GmEventDatabaseItem::Run() {
 void GmEventDatabaseItem::Configure(const GmManifestItemRequest* request) {
     Unknown0();
     AtFormat(m_extension, "AEE");
-    m_owner = (GmEventOwner*)request->m_context;
+    m_owner = (AtDataRegistryOwner*)request->m_context;
     strcpy(m_path, request->m_path);
 }
 
@@ -596,52 +596,4 @@ void AtCinemaDatabase::Clear() {
     m_count24 = 0;
 }
 
-// ---- AtEventList and AtEventDatabase ----------------------------------------------------------------------------------------------------------------------------------------------------
-
-AtEventList::AtEventList() {
-    m_entries = 0;
-    m_count = 0;
-}
-
-AtEventList::~AtEventList() {
-    if (m_entries != 0) {
-        DeleteObjects(m_entries);
-        m_entries = 0;
-        m_count = 0;
-    }
-}
-
-void AtEventList::Free() {
-    if (m_entries != 0) {
-        DeleteObjects(m_entries);
-    }
-    m_entries = 0;
-    m_count = 0;
-}
-
-void AtEventList::Reset() {
-    m_entries = 0;
-    m_count = 0;
-}
-
-AtEventDatabase::AtEventDatabase() {
-    m_list.Reset();
-    m_block = 0;
-    m_unknown24 = 0;
-}
-
-AtEventDatabase::~AtEventDatabase() {
-    AtEventDatabase::Clear();
-}
-
-void AtEventDatabase::Clear() {
-    if (m_list.m_entries == 0) {
-        return;
-    }
-    m_list.Free();
-    operator delete(m_block);
-    m_list.Reset();
-    m_block = 0;
-    m_unknown24 = 0;
-    GmNameMap::Clear();
-}
+// ---- AtEventList and AtEventDatabase: their life cycle is at/aee's, src/at/AtEvent.cpp. --------------------------------------------------------------------------------------

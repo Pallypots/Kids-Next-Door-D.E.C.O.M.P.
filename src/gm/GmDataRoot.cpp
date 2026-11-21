@@ -2,4 +2,3 @@
 #include "gm/GmApp.h"
 
 GmDataRoot* GmDataRoot::s_instance;            // 0x003B357C
-GmRegistryNames* GmRegistryNames::s_instance;  // 0x002CD138

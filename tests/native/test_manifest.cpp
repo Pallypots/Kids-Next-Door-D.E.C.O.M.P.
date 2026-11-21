@@ -8,6 +8,7 @@
 #include "at/AtIoFileSystem.h"
 #include "gm/GmAudioData.h"
 #include "gm/GmLevelManifest.h"
+#include "gm/GmRegistryNames.h"
 
 static int g_fail = 0;
 #define CHECK(c) do { if (!(c)) { std::printf("FAIL %s:%d: %s\n", __FILE__, __LINE__, #c); g_fail++; } } while (0)
@@ -38,7 +39,7 @@ void GmDatabaseManifest::Finished() { note("base-finished"); }
 void GmDatabaseItemsDelete(int, GmManifestItem*) { note("base-delete"); }
 void GmAudioFreeDatabase(void*) {}
 void GmSceneItemLeave(void*, AtSpaceGraph*) {}
-void GmRegistryRelease(void*) {}
+void GmRegistryNames::Release(AtDataRegistry*) {}
 void GmBehaviorList::Prepare() { note("prepare"); }
 GmBehaviorList* GmBehaviorListOwner::LoadAnimations(const char* path) { note("animations", path); return (GmBehaviorList*)&g_object; }
 GmBehaviorList* GmBehaviorListOwner::LoadSounds(const char* path) { note("sounds", path); return 0; }

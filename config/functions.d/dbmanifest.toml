@@ -417,70 +417,6 @@ source = "src/gm/GmDatabaseManifest.cpp"
 subsystem = "gm/dbmanifest"
 evidence = "vftable 0x00286474 slot 0, compiler-made, called directly in tests/oracle/oracle_dbmanifest.cpp"
 
-[[function]]
-va = 0x000C9660
-size = 104
-symbol = "??0AtEventDatabase@@QAE@XZ"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "from 0x001B4914; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x000C96D0
-size = 65
-symbol = "?Clear@AtEventDatabase@@UAEXXZ"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "vftable 0x00286688 slot 1; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x000C9960
-size = 146
-symbol = "??1AtEventDatabase@@UAE@XZ"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "from 0x001B498C; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x000C5720
-size = 84
-symbol = "??_GAtEventDatabase@@UAEPAXI@Z"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "vftable 0x00286688 slot 0, compiler-made, called directly in tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x000C94B0
-size = 17
-symbol = "??0AtEventList@@QAE@XZ"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "from 0x000C9696; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x000C9470
-size = 56
-symbol = "?Free@AtEventList@@QAEXXZ"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "from 0x000C96E0 and 0x000C9998; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x000C94D0
-size = 73
-symbol = "??1AtEventList@@UAE@XZ"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "from 0x000C99CE; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x000C9600
-size = 79
-symbol = "??_GAtEventList@@UAEPAXI@Z"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "vftable 0x00286674 slot 0, scalar deleting, compiler-made, called directly in tests/oracle/oracle_dbmanifest.cpp"
-
 [[vtable]]
 va = 0x002950E0
 slots = 3
@@ -529,23 +465,9 @@ slots = 2
 symbol = "??_7AtCinemaDatabase@@6B@"
 source = "src/gm/GmDatabaseManifest.cpp"
 
-[[vtable]]
-va = 0x00286688
-slots = 2
-symbol = "??_7AtEventDatabase@@6B@"
-source = "src/gm/GmDatabaseManifest.cpp"
-
-[[vtable]]
-va = 0x00286674
-slots = 1
-symbol = "??_7AtEventList@@6B@"
-source = "src/gm/GmDatabaseManifest.cpp"
-
 [symbols]
-"?Reset@AtEventList@@QAEXXZ" = 0x000E7880  # folded with AtDataComponent::Reset (at/adr) and others
 "?s_instance@GmAudioDatabaseMaker@@2PAV1@A" = 0x003B3550
 "?s_instance@GmEventHome@@2PAU1@A" = 0x003B358C
 "?g_audioLanguage@@3PBDB" = 0x003B3BE4
 "?Load@AtCinemaDatabase@@QAEXPAUGmCinemaOwner@@PBDH@Z" = 0x000C5B30  # NOT recovered: a seam, src/gm/GmDatabaseManifestHost.cpp
-"?Load@AtEventDatabase@@QAEXPAUGmEventOwner@@PBDH@Z" = 0x000C9A00  # NOT recovered: a seam, src/gm/GmDatabaseManifestHost.cpp
 "?SetGraph@GmSpaceGraphOwner@@QAEXPAVAtSpaceGraph@@@Z" = 0x00140E40  # NOT recovered: a seam, src/gm/GmDatabaseManifestHost.cpp

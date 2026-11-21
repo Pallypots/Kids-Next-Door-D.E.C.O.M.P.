@@ -14,7 +14,6 @@ void StopHere(const char* what) {
 
 // Recovered in src/gm/GmSoundPlay.cpp: this forwards to the sound manager, as the original calls its member.
 void GmAudioFreeDatabase(void* database) { GmAudioData::s_instance->RemoveDatabase((AtAudioDatabase*)database); }
-void GmRegistryRelease(void*) { StopHere("Level manifest: 0x00071DC0 is not recovered"); }
 
 void GmBehaviorList::Prepare() { StopHere("Behaviour lists (0x00198C90) are not recovered"); }
 GmBehaviorList* GmBehaviorListOwner::LoadAnimations(const char*) { StopHere("Behaviour lists (0x0019C5E0) are not recovered"); return 0; }

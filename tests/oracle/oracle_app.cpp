@@ -460,6 +460,9 @@ int AtDataRegistry::Prepare(AtDataRegistryOwner* owner, unsigned int a, unsigned
 void AtDataRegistry::SetFileName(const char* name) { d_set_name(this, nullptr, name); }
 AtDataLink* AtDataRegistry::FindPath(AtDataLink* from, const char* path, int deep) { return (AtDataLink*)d_find_path(this, nullptr, from, path, deep); }
 void GmRegistryNames::Add(AtDataRegistry* r) { d_names_add(this, nullptr, r); }
+// The level manifest's Free calls Release (gm/regnames); start-up never frees a manifest, so reaching it is a harness error. Defined here so that
+// the recovered Add and Release (src/gm/GmRegistryNamesAdd.cpp) are not linked beside the double above.
+void GmRegistryNames::Release(AtDataRegistry*) { std::printf("oracle_app: GmRegistryNames::Release reached\n"); std::abort(); }
 char* g_unknown30567C;
 void AppSaveDataInit(void* part) { d_savedata(part, nullptr); }
 void GmAudioReadSavedVolumes(GmAudioData* audio) { d_volumes(audio, nullptr); }

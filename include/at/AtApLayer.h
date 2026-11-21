@@ -74,16 +74,13 @@ public:
     AtEventNames m_names;            // +0x04
     void* m_below;                   // +0x84 set while running
 
-    static void* s_heap3ADF9C;       // 0x003ADF9C
     static void* s_heap305918;       // 0x00305918
-    static void* s_heap3ADF98;       // 0x003ADF98
     static void* s_heap3ADF94;       // 0x003ADF94
     static void* s_heap3ADF90;       // 0x003ADF90
     static void* s_heap3ADF8C;       // 0x003ADF8C
 };
-void AtSetHeap3ADF9C(void* heap);    // 0x000C9650
+// 0x000C9650 and 0x000C9460, the first and third setters, are at/aee's AtEventDatabase::SetHeap and AtEventList::SetHeap (include/at/AtEvent.h).
 void AtSetHeap305918(void* heap);    // 0x000991E0
-void AtSetHeap3ADF98(void* heap);    // 0x000C9460
 void AtSetHeap3ADF94(void* heap);    // 0x000C93F0
 void AtSetHeap3ADF90(void* heap);    // 0x000C93E0
 void AtSetHeap3ADF8C(void* heap);    // 0x000C93D0

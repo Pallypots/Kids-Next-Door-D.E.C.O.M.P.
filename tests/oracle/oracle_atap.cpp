@@ -24,6 +24,7 @@
 #include <vector>
 
 #include "at/AtApLayer.h"
+#include "at/AtEvent.h"
 #include "at/AtIoJam.h"
 #include "at/AtIoTokenizer.h"
 #include "at/AtText.h"
@@ -204,9 +205,9 @@ static Global g_globals[] = {
     {"GmNameSpaceDb heap", 0x002C6274, &GmNameSpaceDb::s_heap},
     {"0x003B23EC", 0x003B23EC, &g_heap3B23EC},
     {"0x00301B6C", 0x00301B6C, &g_heap301B6C},
-    {"0x003ADF9C", 0x003ADF9C, &AtEventSystem::s_heap3ADF9C},
+    {"0x003ADF9C", 0x003ADF9C, &AtEventDatabase::s_heap},
     {"0x00305918", 0x00305918, &AtEventSystem::s_heap305918},
-    {"0x003ADF98", 0x003ADF98, &AtEventSystem::s_heap3ADF98},
+    {"0x003ADF98", 0x003ADF98, &AtEventList::s_heap},
     {"0x003ADF94", 0x003ADF94, &AtEventSystem::s_heap3ADF94},
     {"0x003ADF90", 0x003ADF90, &AtEventSystem::s_heap3ADF90},
     {"0x003ADF8C", 0x003ADF8C, &AtEventSystem::s_heap3ADF8C},
@@ -385,7 +386,7 @@ typedef void(__cdecl* Cfn1)(void*);
 static void run_setters() {
     struct S { uint32_t va; void (*rec)(void*); };
     static const S setters[] = {
-        {0x000C9650, AtSetHeap3ADF9C}, {0x000991E0, AtSetHeap305918}, {0x000C9460, AtSetHeap3ADF98}, {0x000C93F0, AtSetHeap3ADF94},
+        {0x000C9650, AtEventDatabase::SetHeap}, {0x000991E0, AtSetHeap305918}, {0x000C9460, AtEventList::SetHeap}, {0x000C93F0, AtSetHeap3ADF94},
         {0x000C93E0, AtSetHeap3ADF90}, {0x000C93D0, AtSetHeap3ADF8C}, {0x00024B60, GmNameMap::SetHeap}, {0x00019180, AtIoContext::SetHeap},
         {0x00025C10, AtIoBufferPool::SetHeap}, {0x0001F550, AtTextTable::SetHeap}, {0x00080CC0, AtSetHeap301B64}, {0x00103050, AtSetHeap3B23EC},
         {0x00081760, AtSetHeap301B6C},

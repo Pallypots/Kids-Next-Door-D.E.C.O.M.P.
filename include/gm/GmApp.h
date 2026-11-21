@@ -21,6 +21,7 @@
 #include "at/AtMemory.h"
 #include "at/AtNameTableOwner.h"
 #include "gm/GmAppSettings.h"
+#include "gm/GmRegistryNames.h"
 #include "gm/GmDataRoot.h"
 #include "gm/GmSocket.h"
 
@@ -243,10 +244,7 @@ struct GmRegistryUser {
     AtDataLink* m_root;              // +0x44
     static GmRegistryUser* s_instance;  // 0x003B3524
 };
-struct GmRegistryNames {
-    void Add(AtDataRegistry* registry);  // 0x00071F20
-    static GmRegistryNames* s_instance;  // 0x002CD138
-};
+// The name map at 0x002CD138 is GmRegistryNames (gm/regnames), include/gm/GmRegistryNames.h.
 
 // The save-data part at App+0x67CC, 0x120 bytes (constructor 0x0009D5D0); 0x0009D9C0 initialises it. Not recovered.
 void AppSaveDataInit(void* part);    // 0x0009D9C0

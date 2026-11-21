@@ -283,28 +283,12 @@ subsystem = "at/atap"
 evidence = "vftable 0x00284830 slot 3; tests/oracle/oracle_atap.cpp"
 
 [[function]]
-va = 0x000C9650
-size = 10
-symbol = "?AtSetHeap3ADF9C@@YAXPAX@Z"
-source = "src/at/AtApLayers.cpp"
-subsystem = "at/atap"
-evidence = "stores 0x003ADF9C; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
-
-[[function]]
 va = 0x000991E0
 size = 10
 symbol = "?AtSetHeap305918@@YAXPAX@Z"
 source = "src/at/AtApLayers.cpp"
 subsystem = "at/atap"
 evidence = "stores 0x00305918; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
-
-[[function]]
-va = 0x000C9460
-size = 10
-symbol = "?AtSetHeap3ADF98@@YAXPAX@Z"
-source = "src/at/AtApLayers.cpp"
-subsystem = "at/atap"
-evidence = "stores 0x003ADF98; called by 0x000B3C90; tests/oracle/oracle_atap.cpp"
 
 [[function]]
 va = 0x000C93F0
@@ -584,9 +568,7 @@ evidence = "called by 0x000B3960; returns 0x003ADF84; tests/oracle/oracle_atap.c
 "?s_context2C6328@AtIoContext@@2PAV1@A" = 0x002C6328  # set at 0x0001951A
 "?s_context2C633C@AtIoContext@@2PAV1@A" = 0x002C633C  # set at 0x00019526
 "?s_heap@AtIoBufferPool@@2PAXA" = 0x002C6340  # read at 0x00025D51
-"?s_heap3ADF9C@AtEventSystem@@2PAXA" = 0x003ADF9C  # stored by 0x000C9650
 "?s_heap305918@AtEventSystem@@2PAXA" = 0x00305918  # stored by 0x000991E0
-"?s_heap3ADF98@AtEventSystem@@2PAXA" = 0x003ADF98  # stored by 0x000C9460
 "?s_heap3ADF94@AtEventSystem@@2PAXA" = 0x003ADF94  # stored by 0x000C93F0
 "?s_heap3ADF90@AtEventSystem@@2PAXA" = 0x003ADF90  # stored by 0x000C93E0
 "?s_heap3ADF8C@AtEventSystem@@2PAXA" = 0x003ADF8C  # stored by 0x000C93D0

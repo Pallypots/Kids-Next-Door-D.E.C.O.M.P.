@@ -263,7 +263,6 @@ evidence = "App vftable 0x0027AE44 slot 68; tests/oracle/oracle_app.cpp"
 "?s_instance@GmClock@@2PAV1@A" = 0x002CD11C
 "?s_instance@GmDataRoot@@2PAU1@A" = 0x003B357C
 "?s_instance@GmRegistryUser@@2PAU1@A" = 0x003B3524
-"?s_instance@GmRegistryNames@@2PAU1@A" = 0x002CD138
 # NOT recovered: src/gm/GmAppHost.cpp
 "?AtSdkGlobalMemoryStatus@@YAXPAUAtSdkMemoryStatus@@@Z" = 0x00085451
 "?SetDisplayMode@App@@QAEXXZ" = 0x0008DBA0
@@ -288,7 +287,6 @@ evidence = "App vftable 0x0027AE44 slot 68; tests/oracle/oracle_app.cpp"
 "?Init@AppUnknown692C@@QAEXXZ" = 0x00090210
 "?Update@AppUnknown692C@@QAEXH@Z" = 0x0006DEA0
 "?SetScreenSize@AppViewport@@QAEXHH@Z" = 0x0009EA00
-"?Add@GmRegistryNames@@QAEXPAVAtDataRegistry@@@Z" = 0x00071F20
 "?AppSaveDataInit@@YAXPAX@Z" = 0x0009D9C0
 "?GmAudioReadSavedVolumes@@YAXPAVGmAudioData@@@Z" = 0x00139F10
 "?GmUnknown97EB0@@YAXPAX@Z" = 0x00097EB0

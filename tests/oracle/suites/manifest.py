@@ -46,7 +46,7 @@ MUTANTS = [
     ("base Free: scene part", L, "GmSceneItemLeave(&item->m_database, GmSpaceGraphOwner::s_instance->m_graph);", "GmSceneItemLeave(&item->m_owner, GmSpaceGraphOwner::s_instance->m_graph);"),
     ("base Free: database field", L, "GmAudioFreeDatabase(item->m_database);", "GmAudioFreeDatabase(item->m_maker);"),
     ("base Free: slot 0", L, "            GmAudioFreeDatabase(item->m_database);\n            item->Unknown0();\n", "            GmAudioFreeDatabase(item->m_database);\n"),
-    ("base Free: registry part", L, "GmRegistryRelease(&static_cast<GmRegistryItem*>(m_registries)[i].m_registry);", "GmRegistryRelease(&static_cast<GmRegistryItem*>(m_registries)[i].m_manager);"),
+    ("base Free: registry part", L, "GmRegistryNames::s_instance->Release(&static_cast<GmRegistryItem*>(m_registries)[i].m_registry);", "GmRegistryNames::s_instance->Release((AtDataRegistry*)&static_cast<GmRegistryItem*>(m_registries)[i].m_manager);"),
     ("base Free: cinema count", L, "        m_cinemaDatabases = 0;\n        m_cinemaDatabaseCount = 0;\n", "        m_cinemaDatabases = 0;\n"),
     ("base Free: graphics kept", L, "        GmDatabaseItemsDelete(kGraphicsDatabaseItems, m_graphicsDatabases);\n        m_graphicsDatabases = 0;\n", "        m_graphicsDatabases = 0;\n"),
     ("base Free: events pointer", L, "        m_events = 0;\n        m_eventCount = 0;\n    }\n    if (m_registries", "        m_eventCount = 0;\n    }\n    if (m_registries"),
