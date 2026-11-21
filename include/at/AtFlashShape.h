@@ -53,17 +53,20 @@ struct AtFlashGraphics {
     char m_unknown00[0x10];
     AtMaterialOwner* m_owner;          // +0x10
 };
-// The display manager at +0x004 and the remote function calls at +0x264 are what the action script machine reaches (include/at/AtFpDisplay.h); neither is recovered.
+// The display manager at +0x004 and the remote function calls at +0x264 are what the action script machine reaches (include/at/AtFpDisplay.h).
 struct AtFlashApplication {
     char m_unknown000[4];
     AtFpDisplayManager m_display;      // +0x004
-    char m_unknown1D4[0x260 - 0x1D4];  // perhaps more of the display manager: its size is not known
     AtFlashGraphics* m_graphics;       // +0x260
     AtFpRfcTable m_rfc;                // +0x264
 };
-struct AtFlashEnvironment {            // The class that reads .AFE, by its callers at 0x0002BBC8 to 0x0002CCFE.
+struct AtFlashEnvironment {            // The class that reads .AFE, by its callers at 0x0002BBC8 to 0x0002CCFE. A level's +0x320, and the display manager's +0x248.
     AtFlashApplication* m_application; // +0x000
-    char m_unknown004[0x1F0];
+    char m_unknown004[0x19C];
+    AtFpActionQueue m_actions;         // +0x1A0 what frames' actions queue for the player
+    char m_unknown1B8[0xC];
+    AtFlashList m_dead;                // +0x1C4 nodes removed from their parents, newest first
+    char m_unknown1CC[0x28];
     int m_platformSpecificFiles;       // +0x1F4 not 0 means .XFF over .AFF. The name guesses at the .AFE word of that name; the .AFE reader is not recovered.
 };
 
@@ -113,6 +116,8 @@ static_assert(offsetof(AtFlashApplication, m_display) == 0x4, "AtFlashApplicatio
 static_assert(offsetof(AtFlashApplication, m_graphics) == 0x260, "AtFlashApplication::m_graphics");
 static_assert(offsetof(AtFlashApplication, m_rfc) == 0x264, "AtFlashApplication::m_rfc");
 static_assert(offsetof(AtFlashEnvironment, m_platformSpecificFiles) == 0x1F4, "AtFlashEnvironment::m_platformSpecificFiles");
+static_assert(offsetof(AtFlashEnvironment, m_actions) == 0x1A0, "AtFlashEnvironment::m_actions");
+static_assert(offsetof(AtFlashEnvironment, m_dead) == 0x1C4, "AtFlashEnvironment::m_dead");
 static_assert(offsetof(AtFlashShape, m_rectangle) == 0x1C, "AtFlashShape::m_rectangle");
 static_assert(offsetof(AtFlashShape, m_heap) == 0x34, "AtFlashShape::m_heap");
 static_assert(sizeof(AtFlashShape) == 0x38, "AtFlashShape");

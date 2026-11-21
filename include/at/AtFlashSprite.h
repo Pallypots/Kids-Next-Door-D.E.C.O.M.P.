@@ -139,7 +139,7 @@ public:
     struct FrameRef {
         char* m_name;                  // +0x00 null for most
         int m_frame;                   // +0x04 -1 until read
-        int m_unknown08;               // +0x08
+        union { int m_unknown08; AtFlashFrame* m_frameData; };  // +0x08 set when the sprite is acquired (0x000169B0, not recovered)
     };
 
     AtFpSprite();                      // 0x00016AE0
@@ -148,6 +148,8 @@ public:
     void ReadData(AtIoTokenizer* tokenizer);       // 0x00016C80
     void Clear();                      // 0x00016B40 nothing unless used
     void Allocate(int index, unsigned int capacity);  // 0x00016BB0
+    AtFlashFrame* Frame(unsigned int index);          // 0x00016A60 0 past the end; reports no frames and reads them all the same. src/at/AtFpDisplay.cpp
+    const char* FrameName(unsigned int index);        // 0x00016AA0 reports no frames or past the end, and reads it all the same
 
     int m_used;                        // +0x1C
     unsigned int m_unknown20;          // +0x20
