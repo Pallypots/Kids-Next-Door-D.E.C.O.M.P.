@@ -539,23 +539,7 @@ void GmRegistryItem::Configure(const GmRegistryItemRequest* request) {
 
 // ---- AtSceneDatabaseLoader: the two walks; the rest of the class is at/asd's (stand-ins in src/gm/GmDatabaseManifestAsd.cpp) ----------------------------------------------------------------
 
-void AtSceneDatabaseLoader::InsertInto(AtSpaceGraph* graph) {
-    for (unsigned int i = 0; i < m_nodeCount; i++) {
-        m_nodes[i].InsertInto(graph);
-    }
-    for (unsigned int i = 0; i < m_loaderCount; i++) {
-        m_loaders[i].InsertInto(graph);
-    }
-}
-
-void AtSceneDatabaseLoader::RemoveFrom(AtSpaceGraph* graph) {
-    for (unsigned int i = 0; i < m_loaderCount; i++) {
-        m_loaders[i].RemoveFrom(graph);
-    }
-    for (unsigned int i = 0; i < m_nodeCount; i++) {
-        m_nodes[i].RemoveFrom(graph);
-    }
-}
+// AtSceneDatabaseLoader::InsertInto and RemoveFrom (0x0002ED70, 0x0002EDD0) are at/scenenodes': src/at/AtSceneLoaderWalk.cpp. Folded on integrate-batch8.
 
 // ---- AtCinemaDatabase -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

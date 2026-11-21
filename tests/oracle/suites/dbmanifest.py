@@ -130,17 +130,7 @@ MUTANTS = [
     ("ADR configure: parent", D, "    m_parent = (AtDataRegistry*)request->m_context2;\n", ""),
     ("ADR configure: owner", D, "    m_owner = (AtDataRegistryOwner*)request->m_context3;\n", "    m_owner = (AtDataRegistryOwner*)request->m_context2;\n"),
     ("ADR destructor: nothing", D, "    GmRegistryItem::Unknown0();\n", ""),
-    # The scene loader's walks.
-    ("insert: nodes", D, "        m_nodes[i].InsertInto(graph);\n", ""),
-    ("insert: nested", D, "        m_loaders[i].InsertInto(graph);\n", ""),
-    ("insert: order", D,
-     "    for (unsigned int i = 0; i < m_nodeCount; i++) {\n        m_nodes[i].InsertInto(graph);\n    }\n    for (unsigned int i = 0; i < m_loaderCount; i++) {\n        m_loaders[i].InsertInto(graph);\n    }\n",
-     "    for (unsigned int i = 0; i < m_loaderCount; i++) {\n        m_loaders[i].InsertInto(graph);\n    }\n    for (unsigned int i = 0; i < m_nodeCount; i++) {\n        m_nodes[i].InsertInto(graph);\n    }\n"),
-    ("remove: nodes", D, "        m_nodes[i].RemoveFrom(graph);\n", ""),
-    ("remove: nested", D, "        m_loaders[i].RemoveFrom(graph);\n", ""),
-    ("remove: order", D,
-     "    for (unsigned int i = 0; i < m_loaderCount; i++) {\n        m_loaders[i].RemoveFrom(graph);\n    }\n    for (unsigned int i = 0; i < m_nodeCount; i++) {\n        m_nodes[i].RemoveFrom(graph);\n    }\n",
-     "    for (unsigned int i = 0; i < m_nodeCount; i++) {\n        m_nodes[i].RemoveFrom(graph);\n    }\n    for (unsigned int i = 0; i < m_loaderCount; i++) {\n        m_loaders[i].RemoveFrom(graph);\n    }\n"),
+    # The scene loader's walks are at/scenenodes' since batch 8 (src/at/AtSceneLoaderWalk.cpp): their eight mutants moved to tests/oracle/suites/scenenodes.py.
     # AtCinemaDatabase.
     ("cinema clear: order", D, "    DeleteObjects(m_entries18);\n    DeleteObjects(m_entries08);\n", "    DeleteObjects(m_entries08);\n    DeleteObjects(m_entries18);\n"),
     ("cinema clear: 14 kept", D, "    DeleteObjects(m_entries14);\n", ""),

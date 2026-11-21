@@ -37,8 +37,8 @@ public:
     AtScene* NodeDatabaseAt(unsigned int index);          // 0x0002ED20
     AtSpaceGraph* SpaceGraphAt(unsigned int index);       // 0x0002ED40
     AtSceneDatabaseLoader* LoaderAt(unsigned int index);  // 0x0002ED60
-    void InsertInto(AtSpaceGraph* graph);     // 0x0002ED70 its nodes, then its nested loaders. src/gm/GmDatabaseManifest.cpp (gm/dbmanifest)
-    void RemoveFrom(AtSpaceGraph* graph);     // 0x0002EDD0 its nested loaders, then its nodes. src/gm/GmDatabaseManifest.cpp (gm/dbmanifest)
+    void InsertInto(AtSpaceGraph* graph);     // 0x0002ED70 its nodes, then its nested loaders. src/at/AtSceneLoaderWalk.cpp (at/scenenodes; gm/dbmanifest recovered it too)
+    void RemoveFrom(AtSpaceGraph* graph);     // 0x0002EDD0 its nested loaders, then its nodes. src/at/AtSceneLoaderWalk.cpp (at/scenenodes; gm/dbmanifest recovered it too)
 
     static void SetHeap(void* heap);          // 0x0002E200
 

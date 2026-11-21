@@ -38,8 +38,6 @@ void GmVfxManager::Delete(GmVfxDatabase*) { StopHere("VFX databases are not reco
 
 void GmDynamicNodeLoader::Load(const char*, int, AtScene*) { StopHere("Dynamic nodes (0x0014FF60) are not recovered"); }
 void GmDynamicNodeLoader::Unload(AtScene*, int) { StopHere("Dynamic nodes (0x00150020) are not recovered"); }
-void AtScene::InsertInto(AtSpaceGraph*) { StopHere("Atlas Scene: 0x0003E860 is not recovered"); }
-void AtScene::RemoveFrom(AtSpaceGraph*) { StopHere("Atlas Scene: 0x0003E890 is not recovered"); }
 
 // Recovered in src/gm/GmSoundNodes.cpp: these forward to the sound manager, as the original calls its members.
 void* GmAudioAllocateNodeBank() { return GmAudioData::s_instance->AllocateNodeBank(); }

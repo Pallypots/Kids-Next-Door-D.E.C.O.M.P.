@@ -34,22 +34,6 @@ subsystem = "gm/dbmanifest"
 evidence = "called from 0x001B4133 on 0x003B354C; writes +0x38 + 4i, i < 0x3C; tests/oracle/oracle_dbmanifest.cpp"
 
 [[function]]
-va = 0x0002ED70
-size = 86
-symbol = "?InsertInto@AtSceneDatabaseLoader@@QAEXPAVAtSpaceGraph@@@Z"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "called from 0x0015D9B8; recursive on +0x30 stride 0x78, 0x0003E860 on +0x08 stride 0xF8; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
-va = 0x0002EDD0
-size = 86
-symbol = "?RemoveFrom@AtSceneDatabaseLoader@@QAEXPAVAtSpaceGraph@@@Z"
-source = "src/gm/GmDatabaseManifest.cpp"
-subsystem = "gm/dbmanifest"
-evidence = "called from 0x0015CE04 (GmDatabaseManifest::Free) through GmSceneItemLeave; tests/oracle/oracle_dbmanifest.cpp"
-
-[[function]]
 va = 0x001B4150
 size = 69
 symbol = "??0GmSoundDatabaseItem@@QAE@XZ"

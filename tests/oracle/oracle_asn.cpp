@@ -4,11 +4,9 @@
 //
 // Cases: every .ASN file listed in index.txt, loaded through the file code on both sides; text written for each word and error path; and coordinate systems, nodes and modifier sets driven directly.
 //
-// ModelActor, JointedModelActor and ParticleSystemActor are the real thing on both sides, and every word of them is compared, down through their channels, blends, copied databases and layers. The emitters a particle system finds and the drawers
-// it makes are stand-ins, the same on both sides: what real ones hold comes from .ASE files. The classes of node still not recovered are doubles on both sides: the
-// real actor base (the real node for SoundNode) with a reader that takes the few words those classes own and goes on to the base for the rest. On the original's side the double is its base class's code with the constructors redirected
-// and a vftable of the harness's, so its array handling, its eh iterators and its vector deleters still run. So those words (Mesh and Emitter on such a class, WorldAdditive*) are consumed and not compared. The matrix table, the graphics
-// device and the tables it and the owner hold are the harness's: what they would hold comes from other files, and is here a stand-in for each name in the file.
+// Every class of node is the real thing on both sides, and every word of them is compared, down through their channels, blends, copied databases and layers. The emitters a particle system finds and the drawers
+// it makes are stand-ins, the same on both sides: what real ones hold comes from .ASE files. So are the water drawers, the lens flares, and the sound owner's emitters and segments, and the two emitter slots a sound node calls. The matrix
+// table, the graphics device and the tables it and the owner hold are the harness's: what they would hold comes from other files, and is here a stand-in for each name in the file.
 #define NOMINMAX
 #include <windows.h>
 
@@ -30,6 +28,7 @@
 #include "at/AtSceneActor.h"
 #include "at/AtSpaceGraph.h"
 #include "at/AtSceneParticle.h"
+#include "at/AtSceneNodes.h"
 #include "at/AtText.h"
 #include "oracle_guard.h"
 #include "oracle_image.h"
@@ -76,7 +75,14 @@ static void __cdecl o_fatal2(const char* m, int a, int b, int c) { o_fatal(m, a,
 
 static void* g_refuse_heap;
 static int g_refusing;
-static void note_push(void* h) { if (h == g_refuse_heap && h) { g_fail_alloc = true; g_refusing++; } }
+static int g_refuse_skip[2];  // Pushes of the refused heap let through first, on each side. Reset by nothing but the case that sets it.
+static void note_push(void* h) {
+    if (h == g_refuse_heap && h) {
+        if (g_refuse_skip[g_side] > 0) { g_refuse_skip[g_side]--; return; }
+        g_fail_alloc = true;
+        g_refusing++;
+    }
+}
 static void note_pop() { if (g_refusing) { g_refusing--; g_fail_alloc = false; } }
 void AtPushHeap(void* h) { AtPushHeapInDoubles(h); note_push(h); }
 void AtPopHeap() { AtPopHeapInDoubles(); note_pop(); }
@@ -177,6 +183,17 @@ static void __cdecl m_transform(const AtMatrix* m, const AtVector3* from, AtVect
     to->x = f[0]; to->y = f[1]; to->z = f[2];
 }
 
+static void __cdecl m_make_rotation(AtMatrix* m, const AtQuaternion* q) {
+    const int s = side_of(m);
+    note(s, 'r', mat_id(s, m));
+    mix((Mat*)m, 'r' ^ bits(q->w), bits(q->x), bits(q->y), bits(q->z));
+}
+static void __cdecl m_scale_axes(AtMatrix* m, const AtVector3* p) {
+    const int s = side_of(m);
+    note(s, 'S', mat_id(s, m));
+    mix((Mat*)m, 'S' ^ sum((const Mat*)m), bits(p->x), bits(p->y), bits(p->z));
+}
+
 static void set_tables() {
     g_atMatrix.Copy = m_copy;
     g_atMatrix.Identity = m_identity;
@@ -188,6 +205,10 @@ static void set_tables() {
     g_atMatrix.Multiply = m_multiply;
     g_atMatrix.SetProduct = m_product;
     g_atMatrix.TransformPoint = m_transform;
+    g_atMatrix.MakeRotation = m_make_rotation;
+    g_atMatrix.ScaleAxes = m_scale_axes;
+    *(void**)(uintptr_t)0x002C6108 = (void*)m_make_rotation;
+    *(void**)(uintptr_t)0x002C6168 = (void*)m_scale_axes;
     *(void**)(uintptr_t)0x002C60C8 = (void*)m_copy;
     *(void**)(uintptr_t)0x002C60CC = (void*)m_identity;
     *(void**)(uintptr_t)0x002C60D4 = (void*)m_translation;
@@ -250,24 +271,22 @@ static TestDevice* g_device[2];
 
 // ---- the classes ------------------------------------------------------------------------------------------------------------
 static const unsigned kSizes[kAtActorKinds] = {0xA0, 0xCC, 0xFC, 0xB8, 0x13C, 0xA8, 0xAC, 0xB0, 0x70};
-static const uint16_t kClasses[kAtActorKinds] = {2, 3, 8, 9, 10, 11, 12, 13, 15};
+static const uint16_t kClasses[kAtActorKinds] = {2, 3, 8, 9, 10, 11, 12, 13, 16};
 static const uint32_t kOriginalCtor[kAtActorKinds] = {0x0004B0B0, 0x0004B680, 0x0004D1D0, 0x0004E4A0, 0x0004EBE0, 0x0004D520, 0x0004E300, 0x0004DB60, 0x0004EF90};
-static const uint32_t kOriginalDtor[kAtActorKinds] = {0x0004B5E0, 0x0004C040, 0x0004D390, 0x0004E6F0, 0x0004EF00, 0x0004DA30, 0x0004E180, 0x0004E100, 0};  // The last is the real 0x0003B910.
+static const uint32_t kOriginalDtor[kAtActorKinds] = {0x0004B5E0, 0x0004C040, 0x0004D390, 0x0004E6F0, 0x0004EF00, 0x0004DA30, 0x0004E180, 0x0004E100, 0x0003B910};  // The last is the modifier node's, folded.
 static const uint32_t kOriginalDeleter[kAtActorKinds] = {0x0003B850, 0x0003B8B0, 0x0003B920, 0x0003BAA0, 0x0003BB00, 0x0003B980, 0x0003BA40, 0x0003B9E0, 0x0003CD00};
 
 typedef void(__fastcall* Fn0)(void*, void*);
 typedef int(__fastcall* FnI)(void*, void*);
 typedef void*(__fastcall* FnDel)(void*, void*, unsigned);
 
-// The sound node is 0x70 bytes and built on the plain node, so it has none of the actor's fields, and keeps the base's slots.
-static const uint16_t kSoundClass = 15;
 static void*& raw(void* p, unsigned off) { return *(void**)((char*)p + off); }
 static void* raw(const void* p, unsigned off) { return *(void* const*)((const char*)p + off); }
 
 // A jointed actor the harness makes to attach to in other files: every name in the file as a joint.
 static GmNameMap* g_joints[2];
 
-// What a class not recovered does with a word of its own: takes its arguments. True if it was one. Both sides run this.
+// The double of the abstract actor base that oracle_actor.cpp deletes: a word of the particle system's or the model's it takes and logs. True if it was one.
 static bool actor_word(AtIoTokenizer* t, int token, int side) {
     char name[8];
     switch (token) {
@@ -279,30 +298,6 @@ static bool actor_word(AtIoTokenizer* t, int token, int side) {
     return true;
 }
 
-// The original's side. All slots but this and the deleter are its own code for an actor, or for a node on the sound node.
-static void __fastcall o_body(void* self, void*, void* owner, AtIoTokenizer* t, int token) {
-    if (actor_word(t, token, 0)) return;
-    at<void(__fastcall*)(void*, void*, void*, void*, int)>(((AtSceneNode*)self)->m_class == kSoundClass ? 0x0004AA10 : 0x00056500)(self, nullptr, owner, t, token);
-}
-static const void* g_actor_table[kAtActorKinds][44];
-
-template <int K> static void* __fastcall o_ctor(void* self, void*) {
-    at<Fn0>(K == kAtActorSound ? 0x0004A740 : 0x00055DB0)(self, nullptr);
-    *(const void***)self = g_actor_table[K];
-    *(uint16_t*)((char*)self + 8) = kClasses[K];
-    if (kSizes[K] > 0xA0) raw(self, 0xA0) = nullptr;
-    return self;
-}
-template <int K> static void install_kind() {
-    const void** table = g_actor_table[K];
-    for (int i = 0; i < 44; i++) table[i] = *(const void**)(uintptr_t)((K == kAtActorSound ? 0x002765A0 : 0x00276FA8) + i * 4);
-    table[1] = (const void*)o_body;
-    table[7] = (const void*)(uintptr_t)kOriginalDeleter[K];
-    redirect(kOriginalCtor[K], (const void*)o_ctor<K>);
-    if (kOriginalDtor[K]) redirect(kOriginalDtor[K], (const void*)(uintptr_t)0x000564B0);
-}
-
-// The recovered side's doubles.
 class TestActor : public AtSceneActor {
 public:
     void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
@@ -313,31 +308,6 @@ public:
     void Slot38() override {}
     void Slot39() override {}
 };
-class TestSound : public AtSceneNode {
-public:
-    void ReadBody(AtNameTableOwner* owner, AtIoTokenizer* t, int token) override {
-        if (actor_word(t, token, 1)) return;
-        AtSceneNode::ReadBody(owner, t, token);
-    }
-};
-
-unsigned int AtSceneUnrecoveredActorsSize(int kind) { return kSizes[kind]; }
-void AtSceneUnrecoveredActorsConstruct(int kind, void* first, unsigned int count) {
-    for (unsigned i = 0; i < count; i++) {
-        char* p = (char*)first + i * kSizes[kind];
-        if (kind == kAtActorSound) new (p) TestSound;
-        else new (p) TestActor;
-        *(uint16_t*)(p + 8) = kClasses[kind];
-        if (kSizes[kind] > 0xA0) raw(p, 0xA0) = nullptr;
-    }
-}
-void AtSceneUnrecoveredActorsDestroy(int kind, void* first, unsigned int count) {
-    for (unsigned i = count; i > 0; i--) {
-        char* p = (char*)first + (i - 1) * kSizes[kind];
-        if (kind == kAtActorSound) ((TestSound*)p)->~TestSound();
-        else ((TestActor*)p)->~TestActor();
-    }
-}
 
 // DataLink: no real file has it, and what it looks in is not recovered, on either side. Its arguments are logged.
 static void* data_link(int side, const char* path, const char* ns) {
@@ -491,9 +461,41 @@ public:
         m_owner = owner;
     }
 };
+static unsigned g_water_made[2];
+static uint64_t bytes_hash(const void* p, size_t n) {
+    uint64_t h = 0xCBF29CE484222325ULL;
+    for (size_t i = 0; i < n; i++) h = (h ^ ((const unsigned char*)p)[i]) * 0x100000001B3ULL;
+    return h;
+}
+class TestWaterDrawer : public AtSceneWaterDrawer {
+public:
+    int side;
+    unsigned id;
+    TestWaterDrawer(int s, unsigned i) : side(s), id(i) {}
+    void Slot0() override {}
+    void Start(AtSceneDevice* device, unsigned count, const AtSceneWaterPatch* patches, float rate, float damping, float generation) override {
+        note(side, 'W', id);
+        note(side, 'w', device == g_device[side]);
+        note(side, '#', count);
+        note(side, 'p', patches != nullptr);
+        if (patches) { const uint64_t h = bytes_hash(patches, (size_t)count * sizeof(AtSceneWaterPatch)); note(side, '%', (uint32_t)h); note(side, '^', (uint32_t)(h >> 32)); }
+        note(side, 'g', bits(rate));
+        note(side, 'd', bits(damping));
+        note(side, 'G', bits(generation));
+    }
+};
 class TestDrawerMaker : public AtSceneParticleDrawerMaker {
 public:
     int side = 0;
+    AtSceneWaterDrawer* NewWater() override {
+        const unsigned id = g_water_made[side]++;
+        note(side, 'H', id);
+        return new (std::malloc(sizeof(TestWaterDrawer))) TestWaterDrawer(side, id);
+    }
+    void ReleaseWater(AtSceneWaterDrawer* drawer) override {
+        note(side, 'h', ((TestWaterDrawer*)drawer)->id);
+        std::free(drawer);
+    }
     AtSceneParticleDrawer* New() override {
         const unsigned id = g_drawers_made[side]++;
         note(side, 'M', id);
@@ -505,6 +507,64 @@ public:
     }
 };
 static TestDrawerMaker g_drawer_maker[2];
+
+static const unsigned kSoundEmitterRoom = 0x60;
+static char* g_sound_emitters[2];
+static unsigned g_sound_emitter_count;
+static AtCoordSys* g_emitter_parent[2];
+static std::vector<AtCoordSys*> g_emitter_children[2];
+static AtNameTableOwner* g_sound_own[2];
+static const void* g_emitter_table[26];
+static unsigned sound_emitter_id(int side, const void* e) {
+    const char* p = (const char*)e;
+    if (p >= g_sound_emitters[side] && p < g_sound_emitters[side] + (size_t)g_sound_emitter_count * kSoundEmitterRoom) return (unsigned)((p - g_sound_emitters[side]) / kSoundEmitterRoom);
+    return 0xFFFF;
+}
+static void sound_velocity(int side, const void* e, const AtVector3* v) {
+    note(side, 'u', sound_emitter_id(side, e));
+    note(side, 'U', bits(v->x));
+    note(side, 'U', bits(v->y));
+    note(side, 'U', bits(v->z));
+}
+static void sound_play(int side, const void* e, const void* segment, int b) {
+    note(side, 'y', sound_emitter_id(side, e));
+    note(side, 'Y', (uint32_t)(uintptr_t)segment);
+    note(side, 'b', (uint32_t)b);
+}
+static void __fastcall o_sound_velocity(void* self, void*, const AtVector3* v) { sound_velocity(0, self, v); }
+static void __fastcall o_sound_play(void* self, void*, void* segment, int b) { sound_play(0, self, segment, b); }
+static void __fastcall o_emitter_slot(void*, void*) { note(0, '!'); *(volatile int*)nullptr = 0; }
+void AtSceneSoundSetVelocity(AtAudioEmitter* e, const AtVector3* v) { sound_velocity(1, e, v); }
+void AtSceneSoundPlay(AtAudioEmitter* e, AtAudioSegment* segment, int b) { sound_play(1, e, segment, b); }
+
+// A stand-in emitter: a coordinate system with matrices and a child. A name beginning Q has a parent too, so that the local matrix comes through it.
+static void make_sound_emitter(int side, char* p, const std::string& name) {
+    std::memset(p, 0xAB, kSoundEmitterRoom);
+    if (side == 0) {
+        at<Fn0>(0x00026830)(p, nullptr);
+        *(const void**)p = g_emitter_table;
+    } else {
+        new (p) AtRotTransCoordSys;
+    }
+    AtCoordSys* e = (AtCoordSys*)p;
+    e->m_local = fresh_matrix(side);
+    e->m_world = fresh_matrix(side);
+    mix((Mat*)e->m_local, 'k', hash_of(name), 1, 2);
+    mix((Mat*)e->m_world, 'K', hash_of(name), 3, 4);
+    e->m_dirty = hash_of(name) & 0x3F;
+    AtCoordSys* child = make_cs(side);
+    child->m_dirty = 0x40;
+    g_emitter_children[side].push_back(child);
+    // Attach by hand: on the original's side the emitter's table has no slot 4 of its own to call.
+    child->m_parent = e;
+    child->m_nextSibling = nullptr;
+    e->m_firstChild = child;
+    if (name[0] == 'Q') {
+        e->m_parent = g_emitter_parent[side];
+        e->m_nextSibling = g_emitter_parent[side]->m_firstChild;
+        g_emitter_parent[side]->m_firstChild = e;
+    }
+}
 
 struct Env {
     std::vector<GmNameMap*> maps[2];
@@ -524,11 +584,12 @@ struct Env {
             g_pool[side].side = side;
             g_own[side] = new AtNameTableOwner;
             AtNameTableOwner& w = *g_own[side];
-            w.m_unknown08 = 0; w.m_loader = 0; w.m_unknown10 = 0; w.m_unknown14 = 0;
+            w.m_unknown08 = 0; w.m_loader = 0; w.m_unknown10 = 0; w.m_soundOwner = 0;
             w.m_device = g_device[side];
             g_drawer_maker[side].side = side;
             g_drawers_made[side] = 0;
             w.m_particleDrawers = &g_drawer_maker[side];
+            g_water_made[side] = 0;
             const unsigned pool = (unsigned)spaces.size() + 8;
             w.m_emitterSpaces.Init(pool);
             w.m_nodeSpaces.Init(pool);
@@ -584,11 +645,44 @@ struct Env {
             w.m_nodes.Add(nodes());
             w.m_modifiers.Add(fill(1));
             w.m_geometry.Add(fill(2));
+            w.m_lensFlareSpaces.Init(pool);
+            w.m_lensFlares.Add(fill(12));
             for (const std::string& s : spaces) {
                 w.m_nodeSpaces.Add(s.c_str(), nodes());
                 w.m_modifierSpaces.Add(s.c_str(), fill(3));
                 w.m_geometrySpaces.Add(s.c_str(), fill(4));
+                w.m_lensFlareSpaces.Add(s.c_str(), fill(13));
             }
+
+            // The sound owner, unless a name says Mute: emitters by name in its third table, segments in its second, a name space's different ones.
+            g_sound_own[side] = new AtNameTableOwner;
+            AtNameTableOwner& so = *g_sound_own[side];
+            so.m_nodeSpaces.Init(pool);
+            so.m_secondSpaces.Init(pool);
+            g_sound_emitter_count = ((unsigned)names.size() + 1) * ((unsigned)spaces.size() + 1);
+            g_sound_emitters[side] = (char*)std::malloc((size_t)g_sound_emitter_count * kSoundEmitterRoom);
+            g_emitter_parent[side] = make_cs(side);
+            g_emitter_children[side].clear();
+            unsigned sound_given = 0;
+            const auto sound_emitters = [&]() {
+                GmNameMap* m = new GmNameMap;
+                m->Init((unsigned)names.size() + 1);
+                for (const std::string& n : names) {
+                    char* e = g_sound_emitters[side] + (size_t)sound_given++ * kSoundEmitterRoom;
+                    make_sound_emitter(side, e, n);
+                    m->Insert(n.c_str(), e);
+                }
+                maps[side].push_back(m);
+                return m;
+            };
+            so.m_nodes.Add(sound_emitters());
+            so.m_second.Add(fill(14));
+            for (const std::string& s : spaces) {
+                so.m_nodeSpaces.Add(s.c_str(), sound_emitters());
+                so.m_secondSpaces.Add(s.c_str(), fill(15));
+            }
+            g_sound_emitter_count = sound_given;  // Only those made are compared.
+            w.m_soundOwner = names.count("Mute") ? nullptr : g_sound_own[side];
 
             TestDevice& d = *g_device[side];
             d.m_meshSpaces.Init(pool);
@@ -650,6 +744,11 @@ struct Env {
             // One name space's animations are enough: a lookup caches the last one, and that is GmNameSpaceDb's, tested elsewhere.
             d.m_matAnimationSpaces.Add("Space", mat_spaced);
         }
+        // What a load that stopped part way may have left in the two statics: each starts empty.
+        *(void**)(uintptr_t)0x002C7E14 = nullptr;
+        AtSceneWaterActor::s_patches = nullptr;
+        *(void**)(uintptr_t)0x002C7E18 = nullptr;
+        AtSceneSoundNode::s_pending = nullptr;
         g_refuse_heap = refused;
         g_fail_alloc = failing;
         g_recording = was;
@@ -722,7 +821,8 @@ static const void* g_rot_table, *g_scale_table;
 static void same_cs(const AtCoordSys* o, const AtCoordSys* r, unsigned size) {
     const uint32_t ov = dword(o, 0);
     const void* rv = *(void* const*)r;
-    eq("cs class", ov == 0x00273100 ? 1 : ov == 0x00274B08 ? 2 : ov == 0x00274AE8 ? 3 : 0, rv == g_rot_table ? 1 : rv == g_scale_table ? 2 : 3);
+    // A sound emitter's stand-in on the original's side has the harness's table in place of a coordinate system's.
+    eq("cs class", ov == 0x00273100 || ov == (uint32_t)(uintptr_t)g_emitter_table ? 1 : ov == 0x00274B08 ? 2 : ov == 0x00274AE8 ? 3 : 0, rv == g_rot_table ? 1 : rv == g_scale_table ? 2 : 3);
     // Known or not on both sides: a database copied twice leaves the first behind, attached, in memory no one holds.
     eq("cs parent", canon_known(0, o->m_parent), canon_known(1, r->m_parent));
     eq("cs sibling", canon_known(0, o->m_nextSibling), canon_known(1, r->m_nextSibling));
@@ -736,8 +836,21 @@ static void same_cs(const AtCoordSys* o, const AtCoordSys* r, unsigned size) {
     for (unsigned off = 0x28; off < size; off += 4) eq("cs scale", dword(o, off), dword(r, off));
 }
 
+static const void* g_query_table;
+static void same_class_words(const void* o, const void* r, unsigned short cls);
+
 static void same_node(const void* o, const void* r, unsigned size) {
-    for (unsigned off = 4; off < size; off += 4) {
+    // The group, water and lens flare classes' own words, and the sound node's emitter, are compared by what they are, after the base's.
+    const unsigned short cls = ((const AtSceneNode*)o)->m_class;
+    // Only an object of one of the six classes, by its class number and its exact size (water 0xB8, lens flare 0x13C, group 0xA8, switch 0xAC, level of detail
+    // 0xB0, sound node 0x70): a node of the asn suite's own cases, of another size, can carry one of their class numbers (batch 8: one of class 13 and 0xCC bytes,
+    // filled with 0xCD, was read as a level-of-detail group, and the comparison crashed in the asn suite). Objects whose construction stopped part way keep the base's
+    // vftable but are of these sizes, and are compared as these classes, as before.
+    static const unsigned kOwnSizes[8] = {0xB8, 0x13C, 0xA8, 0xAC, 0xB0, 0, 0, 0x70};
+    const bool own = cls == ((const AtSceneNode*)r)->m_class && cls >= 9 && cls <= 16 && kOwnSizes[cls - 9] != 0 && size == kOwnSizes[cls - 9];
+    const unsigned end = own ? (cls == 16 ? 0x6C : 0x98) : size;
+    if (own) same_class_words(o, r, cls);
+    for (unsigned off = 4; off < end; off += 4) {
         switch (off) {
         case 0x30:
             eq("node's owner", raw(o, off) == g_own[0], raw(r, off) == g_own[1]);
@@ -757,6 +870,67 @@ static void same_node(const void* o, const void* r, unsigned size) {
             eq("node", dword(o, off), dword(r, off));
             break;
         }
+    }
+}
+
+static void same_class_words(const void* o, const void* r, unsigned short cls) {
+    switch (cls) {
+    case 16:
+        eq("sound node's emitter", canon_known(0, raw(o, 0x6C)), canon_known(1, raw(r, 0x6C)));
+        return;
+    case 9: {
+        const AtSceneWaterActor* x = (const AtSceneWaterActor*)o;
+        const AtSceneWaterActor* y = (const AtSceneWaterActor*)r;
+        eq("water's drawer", x->m_drawer != nullptr, y->m_drawer != nullptr);
+        if (x->m_drawer && y->m_drawer) eq("water's drawer's id", ((const TestWaterDrawer*)x->m_drawer)->id, ((const TestWaterDrawer*)y->m_drawer)->id);
+        for (unsigned off = 0x9C; off < 0xB8; off += 4) eq("water's word", dword(o, off), dword(r, off));
+        return;
+    }
+    case 10: {
+        // The flare is a stand-in made from a name, the same on both sides.
+        eq("flare", dword(o, 0x98), dword(r, 0x98));
+        eq("flare's +9C", dword(o, 0x9C), dword(r, 0x9C));
+        eq("flare's query's class", dword(o, 0xA0) == 0x002770F4, raw(r, 0xA0) == g_query_table);
+        for (unsigned off = 0xA4; off < 0x138; off += 4) {
+            switch (off - 0xA0) {
+            case 0x20: case 0x24: case 0x58: case 0x5C:
+                // Into the query itself.
+                eq("flare's query's own pointer", (long long)((const char*)raw(o, off) - (const char*)o), (long long)((const char*)raw(r, off) - (const char*)r));
+                break;
+            case 0x80: case 0x84: case 0x90:
+                eq("flare's query's storage", raw(o, off) != nullptr, raw(r, off) != nullptr);
+                break;
+            default:
+                eq("flare's query's word", dword(o, off), dword(r, off));
+                break;
+            }
+        }
+        eq("flare's +138", dword(o, 0x138), dword(r, 0x138));
+        return;
+    }
+    default: {
+        const AtSceneGroupActor* x = (const AtSceneGroupActor*)o;
+        const AtSceneGroupActor* y = (const AtSceneGroupActor*)r;
+        eq("group's owner", x->m_readOwner == g_own[0], y->m_readOwner == g_own[1]);
+        eq("group's owner is null", x->m_readOwner == nullptr, y->m_readOwner == nullptr);
+        eq("group's room", x->m_capacity, y->m_capacity);
+        eq("group's count", x->m_count, y->m_count);
+        eq("group's children", x->m_children != nullptr, y->m_children != nullptr);
+        if (x->m_children && y->m_children && x->m_count == y->m_count) {
+            for (unsigned i = 0; i < x->m_count; i++) eq("group's child", canon_known(0, x->m_children[i]), canon_known(1, y->m_children[i]));
+        }
+        if (cls == 13) {
+            const AtSceneLodGroupActor* a = (const AtSceneLodGroupActor*)o;
+            const AtSceneLodGroupActor* b = (const AtSceneLodGroupActor*)r;
+            eq("distances", a->m_distances != nullptr, b->m_distances != nullptr);
+            if (a->m_distances && b->m_distances && a->m_count == b->m_count) {
+                for (unsigned i = 0; i < a->m_count; i++) eq("distance", bits(a->m_distances[i]), bits(b->m_distances[i]));
+            }
+            eq("lod +AC", a->m_unknownAC, b->m_unknownAC);
+        }
+        if (cls == 12) eq("switch", dword(o, 0xA8), dword(r, 0xA8));
+        return;
+    }
     }
 }
 
@@ -831,6 +1005,9 @@ static void register_scene(int side, const AtScene* s) {
     add_range(side, g_fake_cs[side], sizeof(AtRotTransCoordSys), 3);
     add_range(side, g_joint_cs[side], sizeof(AtRotTransCoordSys), 4);
     add_range(side, g_joints[side], sizeof(GmNameMap), 40);
+    add_range(side, g_sound_emitters[side], (size_t)g_sound_emitter_count * kSoundEmitterRoom, 42);
+    add_range(side, g_emitter_parent[side], sizeof(AtRotTransCoordSys), 43);
+    for (size_t i = 0; i < g_emitter_children[side].size(); i++) add_range(side, g_emitter_children[side][i], sizeof(AtRotTransCoordSys), 0x200 + (uint32_t)i);
     add_range(side, s->m_coordSys.m_rotTrans, (size_t)s->m_coordSys.m_rotTransCount * sizeof(AtRotTransCoordSys), 5);
     add_range(side, s->m_coordSys.m_scaled, (size_t)s->m_coordSys.m_scaledCount * sizeof(AtScaleCoordSys), 6);
     add_range(side, s->m_motionStates, (size_t)s->m_motionCount * sizeof(AtSceneMotionState), 7);
@@ -939,8 +1116,18 @@ static void same_actor(int k, const AtSceneActor* o, const AtSceneActor* r) {
     }
 }
 
-static unsigned g_nodes_seen, g_files, g_actors_seen, g_files_clean, g_real_actors, g_double_actors;
-static bool g_last_load_clean, g_last_load_doubles;
+static unsigned g_nodes_seen, g_files, g_actors_seen, g_files_clean, g_real_actors;
+static bool g_last_load_clean;
+
+static void same_sound_state() {
+    for (unsigned i = 0; i < g_sound_emitter_count; i++) same_cs((const AtCoordSys*)(g_sound_emitters[0] + (size_t)i * kSoundEmitterRoom), (const AtCoordSys*)(g_sound_emitters[1] + (size_t)i * kSoundEmitterRoom), sizeof(AtRotTransCoordSys));
+    if (g_emitter_parent[0]) same_cs(g_emitter_parent[0], g_emitter_parent[1], sizeof(AtRotTransCoordSys));
+    if (g_emitter_children[0].size() == g_emitter_children[1].size()) {
+        for (size_t i = 0; i < g_emitter_children[0].size(); i++) same_cs(g_emitter_children[0][i], g_emitter_children[1][i], sizeof(AtRotTransCoordSys));
+    }
+    eq("water patches left", *(void**)(uintptr_t)0x002C7E14 != nullptr, AtSceneWaterActor::s_patches != nullptr);
+    eq("pending segments", *(void**)(uintptr_t)0x002C7E18 != nullptr, AtSceneSoundNode::s_pending != nullptr);
+}
 
 static void same_scene(const char* what, const AtScene* o, const AtScene* r) {
     g_recording = false;
@@ -982,6 +1169,7 @@ static void same_scene(const char* what, const AtScene* o, const AtScene* r) {
     same_cs(g_joint_cs[0], g_joint_cs[1], sizeof(AtRotTransCoordSys));
     same_node(g_fake_jointed[0], g_fake_jointed[1], kSizes[kAtActorJointedModel]);
     same_node(g_fake_plain[0], g_fake_plain[1], kSizes[kAtActorModel]);
+    same_sound_state();
     if (o->m_motionStates && r->m_motionStates && o->m_motionCount == r->m_motionCount) eq("motion states", std::memcmp(o->m_motionStates, r->m_motionStates, o->m_motionCount * sizeof(AtSceneMotionState)), 0);
     const auto nodes = [&](const void* x, const void* y, unsigned count, unsigned size) {
         if (x && y) {
@@ -1042,8 +1230,10 @@ static void destroy(AtScene* o, AtScene* r, const char* what) {
     std::free(r);
 }
 
+static unsigned g_texts, g_text_crashes;  // How many texts were run, and how many of them crashed on both sides: written cases that crash compare only logs.
 static void run_text(const std::vector<unsigned char>& data, const std::string& context, unsigned char fill, bool crashes_allowed) {
     g_context = context;
+    g_texts++;
     if (getenv("KND_TRACE")) std::printf("text [%s]\n", context.c_str());
     std::set<std::string> names, spaces;
     gather(data, names, spaces);
@@ -1068,6 +1258,7 @@ static void run_text(const std::vector<unsigned char>& data, const std::string& 
     eq("crash", oc, rc);
     if (!crashes_allowed && oc) std::printf("unexpected crash on %s\n", context.c_str());
     if (oc || rc) {
+        g_text_crashes++;
         // After a crash the two are comparable only as far as it: what was logged and said. The scene stays allocated.
         compare_logs("crash");
         g_hash[0] = g_hash[1] = 0;
@@ -1076,12 +1267,10 @@ static void run_text(const std::vector<unsigned char>& data, const std::string& 
     // The file's name is logged on opening. Anything more was a report.
     g_last_load_clean = !std::strcmp(g_message[1], "ART\\THING.ASN|");
     same_scene("load", o, r);
-    g_last_load_doubles = false;
     for (int k = 0; k < kAtActorKinds; k++) {
         const unsigned count = dword(r, kActorFields[k].count);
         g_actors_seen += count;
-        if (k == kAtActorModel || k == kAtActorJointedModel || k == kAtActorParticleSystem) g_real_actors += count;
-        else if (count) { g_double_actors += count; g_last_load_doubles = true; }
+        g_real_actors += count;
     }
     // Over what is there.
     oc = guarded([&] { load_o(o); });
@@ -2430,8 +2619,10 @@ static int oracle_main(int argc, char** argv, void (*tests)()) {
     redirect(0x00011070, (const void*)o_fatal2);
     redirect(0x00011170, (const void*)o_raise);
     at<void(__cdecl*)()>(0x00125BC7)();
-    // Kinds 0, 1 and 2 are the real classes.
-    install_kind<3>(); install_kind<4>(); install_kind<5>(); install_kind<6>(); install_kind<7>(); install_kind<8>();
+    // The emitters' table on the original's side: a coordinate system's eight slots, then a stop for every slot but the two a sound node calls.
+    for (int i = 0; i < 26; i++) g_emitter_table[i] = i < 8 ? *(const void**)(uintptr_t)(0x00273100 + i * 4) : (const void*)o_emitter_slot;
+    g_emitter_table[15] = (const void*)o_sound_play;
+    g_emitter_table[25] = (const void*)o_sound_velocity;
     redirect(0x0005F130, (const void*)o_data_link);
     set_tables();
     if (entries && !arm_entries(entries)) return 2;
@@ -2441,6 +2632,8 @@ static int oracle_main(int argc, char** argv, void (*tests)()) {
         AtScaleCoordSys b;
         g_rot_table = *(void**)&a;
         g_scale_table = *(void**)&b;
+        AtSegmentQuery q;
+        g_query_table = *(void**)&q;
     }
     g_fs = new MemFs;
     g_ctx.m_stackCount = 1;
@@ -2478,11 +2671,11 @@ static int oracle_main(int argc, char** argv, void (*tests)()) {
         std::fclose(f);
         run_text(data, line, 0xCD, false);
         g_files++;
-        if (g_last_load_clean && !g_last_load_doubles) g_files_clean++;
+        if (g_last_load_clean) g_files_clean++;
     }
     std::fclose(index);
     report_entries();
-    std::printf("real classes: %u files of %u held no double and reported nothing; %u model and jointed actors, %llu words of what they own compared; %u actors of classes still doubles\n", g_files_clean, g_files, g_real_actors, g_actor_words, g_double_actors);
+    std::printf("real classes: %u files of %u reported nothing; %u actors and sound nodes, %llu words of what they own compared; no class of node is a double\n", g_files_clean, g_files, g_real_actors, g_actor_words);
     std::printf("%s: %u files, %u nodes seen, %u actors; %llu comparisons, %d differences\n", g_failures ? "DIFFERENT" : "NO DIFFERENCE OBSERVED", g_files, g_nodes_seen, g_actors_seen, g_checks, g_failures);
     return g_failures ? 1 : 0;
 }

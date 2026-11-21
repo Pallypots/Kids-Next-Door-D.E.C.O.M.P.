@@ -134,6 +134,9 @@ public:
     void Place(const AtVector3* axis, float angle, const AtVector3* position, const AtVector3* scale);
     void LocalFromWorld();                     // 0x00032DF0 m_local from m_world and the parent's; marks this and its children (not theirs) kAllLocal
     void MarkChildrenDirty(unsigned int mask); // 0x00032310 only the children, not theirs
+    // A world matrix given from outside, as a sound node gives its emitter one (at/scenenodes, src/at/AtSceneEffectNodes.cpp). Each ends in LocalFromWorld.
+    void SetWorldFrom(AtCoordSys* from, const AtVector3* scale);  // 0x00032E50 from's world matrix, its axes scaled if given
+    void SetWorld(const AtQuaternion* rotation, const AtVector3* position, const AtVector3* scale);  // 0x00032EF0
     // 0x000324E0 for a file's word that either kind takes: Parent, or LocalDrawingTransform. Anything else is reported. The parent must have come earlier in the file; if it has not, the report is followed by
     // a call through null, as it is not in the game, where a report does not return.
     void ReadWord(AtIoTokenizer* tokenizer, AtCoordSysDatabase* database, int token);

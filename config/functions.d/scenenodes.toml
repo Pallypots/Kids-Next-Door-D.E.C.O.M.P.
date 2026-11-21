@@ -1,0 +1,448 @@
+# The group, water, lens flare and sound classes of a scene node, and the walks into a space graph. See include/at/AtSceneNodes.h. Sizes are from the disassembly.
+
+[[function]]
+va = 0x0002ED70
+size = 86
+symbol = "?InsertInto@AtSceneDatabaseLoader@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneLoaderWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "scenes at +0x08 (0xF8 each, count +0x5C) through 0x0003E860, then nested loaders at +0x30 (0x78 each, count +0x70) through itself"
+
+[[function]]
+va = 0x0002EDD0
+size = 86
+symbol = "?RemoveFrom@AtSceneDatabaseLoader@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneLoaderWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "the same in the other order, through 0x0003E890"
+
+[[function]]
+va = 0x0003E860
+size = 43
+symbol = "?InsertInto@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "calls 0x0003D920, 0x0003DDB0, 0x0003E2B0, 0x0003E7C0 with its graph"
+
+[[function]]
+va = 0x0003E890
+size = 43
+symbol = "?RemoveFrom@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "calls 0x0003DBB0, 0x0003E070, 0x0003E580, 0x0003E810 with its graph"
+
+[[function]]
+va = 0x0003D920
+size = 641
+symbol = "?AddDrawing@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "each actor array: bit 0x800, +0x4C and +0x90 null, then 0x0003AE70"
+
+[[function]]
+va = 0x0003DBB0
+size = 512
+symbol = "?RemoveDrawing@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "each actor array: +0x4C set, then 0x0003A9C0"
+
+[[function]]
+va = 0x0003DDB0
+size = 692
+symbol = "?AddCollision@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "plain nodes then actors: bit 2, +0x48 null, actors +0x90 null, then 0x0003AE80"
+
+[[function]]
+va = 0x0003E070
+size = 561
+symbol = "?RemoveCollision@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "+0x48 set, then 0x0003A310"
+
+[[function]]
+va = 0x0003E2B0
+size = 708
+symbol = "?AddLineSegIntersect@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "bit 0x200, +0x50 null, then 0x0003AEB0"
+
+[[function]]
+va = 0x0003E580
+size = 561
+symbol = "?RemoveLineSegIntersect@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "+0x50 set, then 0x0003A340"
+
+[[function]]
+va = 0x0003E7C0
+size = 67
+symbol = "?AddModification@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "modifier nodes: bit 0x800, +0x44 null, then 0x0003AEE0"
+
+[[function]]
+va = 0x0003E810
+size = 74
+symbol = "?RemoveModification@AtScene@@QAEXPAVAtSpaceGraph@@@Z"
+source = "src/at/AtSceneWalk.cpp"
+subsystem = "at/scenenodes"
+evidence = "modifier nodes: +0x44 set, then 0x0003A370"
+
+[[function]]
+va = 0x0004D520
+size = 50
+symbol = "??0AtSceneGroupActor@@QAE@XZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "sets vftable 0x00276870 and class 11 after the actor constructor 0x00055DB0"
+
+[[function]]
+va = 0x0004D600
+size = 470
+symbol = "?ReadBody@AtSceneGroupActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 1 of 0x00276870; word 85, Actor"
+
+[[function]]
+va = 0x0003B980
+size = 87
+symbol = "??_GAtSceneGroupActor@@UAEPAXI@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 7 of 0x00276870; a vector deleting destructor over 0xA8 with 0x0004DA30"
+
+[[function]]
+va = 0x0004D410
+size = 19
+symbol = "?Read@AtSceneGroupActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 10 of 0x00276870; stores its first argument at +0x98, then 0x00055C20"
+
+[[function]]
+va = 0x0004D7E0
+size = 110
+symbol = "?Clear@AtSceneGroupActor@@UAEXXZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 11 of 0x00276870 and of 0x002769D0; each child slot 33, then 0x00055E00"
+
+[[function]]
+va = 0x0004DA30
+size = 79
+symbol = "??1AtSceneGroupActor@@UAE@XZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by the deleter 0x0003B980; sets 0x00276870, 0x0004D7E0, then the actor destructor 0x000564B0"
+
+[[function]]
+va = 0x0004DB60
+size = 38
+symbol = "??0AtSceneLodGroupActor@@QAE@XZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "the group constructor, then vftable 0x00276920 and class 13"
+
+[[function]]
+va = 0x0004DC10
+size = 540
+symbol = "?ReadBody@AtSceneLodGroupActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 1 of 0x00276920; word 89, Lod"
+
+[[function]]
+va = 0x0004DAC0
+size = 152
+symbol = "?Insert@AtSceneLodGroupActor@@QAEXPAVAtSceneActor@@M@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by 0x0004DC10 with the square of each distance; keeps +0xA4 and +0xA8 in order"
+
+[[function]]
+va = 0x0003B9E0
+size = 87
+symbol = "??_GAtSceneLodGroupActor@@UAEPAXI@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 7 of 0x00276920; a vector deleting destructor over 0xB0 with 0x0004E100"
+
+[[function]]
+va = 0x0004DA80
+size = 5
+symbol = "?Read@AtSceneLodGroupActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 10 of 0x00276920 and of 0x002769D0; a jump to 0x0004D410"
+
+[[function]]
+va = 0x0004DE30
+size = 51
+symbol = "?Clear@AtSceneLodGroupActor@@UAEXXZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 11 of 0x00276920; frees +0xA8, then 0x0004D7E0"
+
+[[function]]
+va = 0x0004E100
+size = 120
+symbol = "??1AtSceneLodGroupActor@@UAE@XZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by the deleter 0x0003B9E0; 0x0004DE30 inline, then 0x0004DA30"
+
+[[function]]
+va = 0x0004E300
+size = 34
+symbol = "??0AtSceneSwitchGroupActor@@QAE@XZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "the group constructor, then vftable 0x002769D0, class 12 and +0xA8"
+
+[[function]]
+va = 0x0004E1D0
+size = 53
+symbol = "?ReadBody@AtSceneSwitchGroupActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 1 of 0x002769D0; word 87, Switch, then the group reader 0x0004D600"
+
+[[function]]
+va = 0x0003BA40
+size = 87
+symbol = "??_GAtSceneSwitchGroupActor@@UAEPAXI@Z"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 7 of 0x002769D0; a vector deleting destructor over 0xAC with 0x0004E180"
+
+[[function]]
+va = 0x0004E180
+size = 79
+symbol = "??1AtSceneSwitchGroupActor@@UAE@XZ"
+source = "src/at/AtSceneGroup.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by the deleter 0x0003BA40; 0x0004D7E0, then 0x0004DA30"
+
+[[function]]
+va = 0x0004E4A0
+size = 66
+symbol = "??0AtSceneWaterActor@@QAE@XZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "sets vftable 0x00276A80, class 9 and 60.0 at +0xA8"
+
+[[function]]
+va = 0x0004E780
+size = 909
+symbol = "?ReadBody@AtSceneWaterActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 1 of 0x00276A80; words 156 WaterPatch, 80, 72, 161, 162, and 157 to 160 in a patch"
+
+[[function]]
+va = 0x0003BAA0
+size = 87
+symbol = "??_GAtSceneWaterActor@@UAEPAXI@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 7 of 0x00276A80; a vector deleting destructor over 0xB8 with 0x0004E6F0"
+
+[[function]]
+va = 0x0004E4F0
+size = 119
+symbol = "?Read@AtSceneWaterActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 10 of 0x00276A80; 0x00055C20, then slot 2 of the owner's +0x00 and slot 1 of what it gives, then frees 0x002C7E14"
+
+[[function]]
+va = 0x0004E570
+size = 76
+symbol = "?Clear@AtSceneWaterActor@@UAEXXZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 11 of 0x00276A80; slot 3 of the owner's +0x00 with +0x98"
+
+[[function]]
+va = 0x0004E6F0
+size = 141
+symbol = "??1AtSceneWaterActor@@UAE@XZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by the deleter 0x0003BAA0; 0x0004E570 inline, then 0x000564B0"
+
+[[function]]
+va = 0x0004EBE0
+size = 112
+symbol = "??0AtSceneLensFlareActor@@QAE@XZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "sets vftable 0x00276B30, constructs the query at +0xA0 with 0x00057B90, class 10"
+
+[[function]]
+va = 0x0004ECE0
+size = 195
+symbol = "?ReadBody@AtSceneLensFlareActor@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 1 of 0x00276B30; words 136 LensFlare in the owner's +0x144 and +0x15C, 137, 138"
+
+[[function]]
+va = 0x0003BB00
+size = 87
+symbol = "??_GAtSceneLensFlareActor@@UAEPAXI@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 7 of 0x00276B30; a vector deleting destructor over 0x13C with 0x0004EF00"
+
+[[function]]
+va = 0x0004EBA0
+size = 16
+symbol = "?Read@AtSceneLensFlareActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 10 of 0x00276B30; 0.0001 to +0x18 and +0x28, then 0x00055C20"
+
+[[function]]
+va = 0x0004ECA0
+size = 58
+symbol = "?Clear@AtSceneLensFlareActor@@UAEXXZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 11 of 0x00276B30; slot 3 of the query, then 0x00055E00"
+
+[[function]]
+va = 0x0004EF00
+size = 142
+symbol = "??1AtSceneLensFlareActor@@UAE@XZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by the deleter 0x0003BB00; 0x0004ECA0 inline, the query's 0x00057BF0, then 0x000564B0"
+
+[[function]]
+va = 0x0004EF90
+size = 31
+symbol = "??0AtSceneSoundNode@@QAE@XZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "the node constructor 0x0004A740, then vftable 0x00276BE0 and class 16"
+
+[[function]]
+va = 0x0004F0D0
+size = 375
+symbol = "?ReadBody@AtSceneSoundNode@@UAEXPAUAtNameTableOwner@@PAVAtIoTokenizer@@H@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 1 of 0x00276BE0; words 82 Emitter and 152 PlaySegment, in the owner's +0x14"
+
+[[function]]
+va = 0x0004EFB0
+size = 249
+symbol = "?Read@AtSceneSoundNode@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 10 of 0x00276BE0; 0x000499F0, then the list at 0x002C7E18"
+
+[[function]]
+va = 0x0004F0B0
+size = 17
+symbol = "?Clear@AtSceneSoundNode@@UAEXXZ"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "slot 11 of 0x00276BE0; 0x0004AF30, then +0x6C"
+
+[[function]]
+va = 0x00032E50
+size = 66
+symbol = "?SetWorldFrom@AtCoordSys@@QAEXPAV1@PBVAtVector3@@@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by 0x0004EFB0 with the node's coordinate system; 0x000325A0 on it, then copies +0x18"
+
+[[function]]
+va = 0x00032EF0
+size = 69
+symbol = "?SetWorld@AtCoordSys@@QAEXPBVAtQuaternion@@PBVAtVector3@@1@Z"
+source = "src/at/AtSceneEffectNodes.cpp"
+subsystem = "at/scenenodes"
+evidence = "called by 0x0004EFB0 with (0, 0, 0, 1) and the origin; matrix slots 0x002C6108 and 0x002C60D4"
+
+[[vtable]]
+va = 0x00276870
+slots = 43
+symbol = "??_7AtSceneGroupActor@@6B@"
+source = "src/at/AtSceneGroup.cpp"
+
+[[vtable]]
+va = 0x00276920
+slots = 43
+symbol = "??_7AtSceneLodGroupActor@@6B@"
+source = "src/at/AtSceneGroup.cpp"
+
+[[vtable]]
+va = 0x002769D0
+slots = 43
+symbol = "??_7AtSceneSwitchGroupActor@@6B@"
+source = "src/at/AtSceneGroup.cpp"
+
+[[vtable]]
+va = 0x00276A80
+slots = 43
+symbol = "??_7AtSceneWaterActor@@6B@"
+source = "src/at/AtSceneEffectNodes.cpp"
+
+[[vtable]]
+va = 0x00276B30
+slots = 43
+symbol = "??_7AtSceneLensFlareActor@@6B@"
+source = "src/at/AtSceneEffectNodes.cpp"
+
+[[vtable]]
+va = 0x00276BE0
+slots = 32
+symbol = "??_7AtSceneSoundNode@@6B@"
+source = "src/at/AtSceneEffectNodes.cpp"
+
+[symbols]
+"?s_patches@AtSceneWaterActor@@2PAUAtSceneWaterPatch@@A" = 0x002C7E14
+"?s_pending@AtSceneSoundNode@@2PAUAtScenePendingSegment@@A" = 0x002C7E18
+"?Read@AtSceneSwitchGroupActor@@UAEXPAUAtNameTableOwner@@PAVAtScene@@PAVAtIoTokenizer@@@Z" = 0x0004DA80  # vftable slot: the same code as the level-of-detail group's, folded
+"??_GAtSceneSoundNode@@UAEPAXI@Z" = 0x0003CD00  # vftable slot: the modifier node's deleter, folded
+"?Slot12@AtSceneGroupActor@@UAEXXZ" = 0x0004D4D0  # vftable slots from here on: not recovered
+"?Slot14@AtSceneGroupActor@@UAEXXZ" = 0x0004D960
+"?Slot15@AtSceneGroupActor@@UAEXXZ" = 0x0004D9C0
+"?Slot34@AtSceneGroupActor@@UAEXXZ" = 0x0004D510
+"?Slot38@AtSceneGroupActor@@UAEXXZ" = 0x0004D430
+"?Slot39@AtSceneGroupActor@@UAEXXZ" = 0x0004D850
+"?Slot42@AtSceneGroupActor@@UAEXXZ" = 0x0004D480
+"?Slot14@AtSceneLodGroupActor@@UAEXXZ" = 0x0004E020
+"?Slot15@AtSceneLodGroupActor@@UAEXXZ" = 0x0004E090
+"?Slot38@AtSceneLodGroupActor@@UAEXXZ" = 0x0004DA90
+"?Slot39@AtSceneLodGroupActor@@UAEXXZ" = 0x0004DF40
+"?Slot42@AtSceneLodGroupActor@@UAEXXZ" = 0x0004DFA0
+"?Slot12@AtSceneSwitchGroupActor@@UAEXXZ" = 0x0004E290
+"?Slot14@AtSceneSwitchGroupActor@@UAEXXZ" = 0x0004E380
+"?Slot15@AtSceneSwitchGroupActor@@UAEXXZ" = 0x0004E3F0
+"?Slot34@AtSceneSwitchGroupActor@@UAEXXZ" = 0x0004E2D0
+"?Slot38@AtSceneSwitchGroupActor@@UAEXXZ" = 0x0004E210
+"?Slot39@AtSceneSwitchGroupActor@@UAEXXZ" = 0x0004E330
+"?Slot42@AtSceneSwitchGroupActor@@UAEXXZ" = 0x0004E250
+"?Slot12@AtSceneWaterActor@@UAEXXZ" = 0x0004E470
+"?Slot34@AtSceneWaterActor@@UAEXXZ" = 0x0004E460
+"?Slot35@AtSceneWaterActor@@UAEXXZ" = 0x0004E650
+"?Slot38@AtSceneWaterActor@@UAEXXZ" = 0x0004E5C0
+"?Slot39@AtSceneWaterActor@@UAEXXZ" = 0x0004E6A0
+"?Slot34@AtSceneLensFlareActor@@UAEXXZ" = 0x0004EEF0
+"?Slot35@AtSceneLensFlareActor@@UAEXXZ" = 0x0004EBB0
+"?Slot38@AtSceneLensFlareActor@@UAEXXZ" = 0x0004EDB0
+"?Slot39@AtSceneLensFlareActor@@UAEXXZ" = 0x0004EDE0
+"?Slot12@AtSceneSoundNode@@UAEXXZ" = 0x0004F250

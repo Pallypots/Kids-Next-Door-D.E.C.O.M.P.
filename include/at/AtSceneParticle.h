@@ -9,12 +9,16 @@
 #include "at/AtSceneActor.h"
 
 class AtSceneParticleDrawer;
+class AtSceneWaterDrawer;  // include/at/AtSceneNodes.h
 
 // What makes and takes back the drawers: the word at the head of the owner, set from 0x00040770's first argument. In the game a class of the running game's; nothing here makes one. A real build must supply it, as it must the owner's tables.
 class AtSceneParticleDrawerMaker {
 public:
     virtual AtSceneParticleDrawer* New() = 0;                     // slot 0
     virtual void Release(AtSceneParticleDrawer* drawer) = 0;      // slot 1
+    // Slots 2 and 3, the same for a water actor (0x0004E4F0, 0x0004E570). Not pure here, so that a maker for particles alone still builds: these stop with a diagnostic, in src/at/AtSceneEffectNodes.cpp.
+    virtual AtSceneWaterDrawer* NewWater();
+    virtual void ReleaseWater(AtSceneWaterDrawer* drawer);
 };
 
 // The base has vftable 0x00277314. Only what is called in loading and clearing is declared, and only this much is established: Start is slot 1, and a drawer's second word leads back to its maker, in 0x0005ACC0.
