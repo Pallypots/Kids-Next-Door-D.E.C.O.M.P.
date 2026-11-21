@@ -12,6 +12,8 @@
 #include "at/AtDataRegistry.h"
 #include "at/AtHeap.h"
 
+class AtIoFileSystem;
+
 // ---- the math layer ---------------------------------------------------------------------------------------------------
 
 // What App's slot 19 fills in (0x10 bytes). Each heap that is 0 falls back to m_heap.
@@ -81,9 +83,10 @@ struct AtScriptConfig {
     void* m_systemHeap;              // +0x10 AtSmallCSystem's
 };
 
-// A built-in function of the scripts, as the Small language calls them: the abstract machine and the arguments. The signature is inferred from the
-// language; none is called here.
-typedef int (*AtSmallCNative)(void* amx, int* params);
+// A built-in function of the scripts, as the Small language calls them. The machine's callback (0x0007A7D0) calls it with the context registered beside it,
+// the abstract machine and the arguments (at/smallvm, include/at/AtSmallVm.h).
+struct AtAmx;
+typedef int (*AtSmallCNative)(void* context, AtAmx* amx, int* params);
 
 // One built-in, by name (0x1C bytes): both the entries of the tables the system registers from and the entries of its own table.
 struct AtSmallCNativeEntry {
@@ -95,25 +98,25 @@ extern const AtSmallCNativeEntry g_smallCCoreNatives[];   // 0x002B3488 numargs 
 extern const AtSmallCNativeEntry g_smallCFloatNatives[];  // 0x002B3370 float ... floatcmp
 
 // Their functions, not recovered: each stops with a diagnostic (src/at/AtApMidLayersSeams.cpp).
-int AtSmallCNumArgs(void* amx, int* params);     // 0x0007CA10
-int AtSmallCGetArg(void* amx, int* params);      // 0x0007CA30
-int AtSmallCSetArg(void* amx, int* params);      // 0x0007CA60
-int AtSmallCHeapSpace(void* amx, int* params);   // 0x0007CAB0
-int AtSmallCFuncIdx(void* amx, int* params);     // 0x0007CAC0
-int AtSmallCStrLen(void* amx, int* params);      // 0x0007CC30
-int AtSmallCStrPack(void* amx, int* params);     // 0x0007CC70
-int AtSmallCStrUnpack(void* amx, int* params);   // 0x0007CD10
-int AtSmallCToLower(void* amx, int* params);     // 0x0007CDB0
-int AtSmallCToUpper(void* amx, int* params);     // 0x0007CDD0
-int AtSmallCFloat(void* amx, int* params);       // 0x0007C800
-int AtSmallCFloatStr(void* amx, int* params);    // 0x0007C810
-int AtSmallCFloatMul(void* amx, int* params);    // 0x0007C870
-int AtSmallCFloatDiv(void* amx, int* params);    // 0x0007C8A0
-int AtSmallCFloatAdd(void* amx, int* params);    // 0x0007C8D0
-int AtSmallCFloatSub(void* amx, int* params);    // 0x0007C900
-int AtSmallCFloatFract(void* amx, int* params);  // 0x0007C930
-int AtSmallCFloatRound(void* amx, int* params);  // 0x0007C960
-int AtSmallCFloatCmp(void* amx, int* params);    // 0x0007C9D0
+int AtSmallCNumArgs(void* context, AtAmx* amx, int* params);     // 0x0007CA10
+int AtSmallCGetArg(void* context, AtAmx* amx, int* params);      // 0x0007CA30
+int AtSmallCSetArg(void* context, AtAmx* amx, int* params);      // 0x0007CA60
+int AtSmallCHeapSpace(void* context, AtAmx* amx, int* params);   // 0x0007CAB0
+int AtSmallCFuncIdx(void* context, AtAmx* amx, int* params);     // 0x0007CAC0
+int AtSmallCStrLen(void* context, AtAmx* amx, int* params);      // 0x0007CC30
+int AtSmallCStrPack(void* context, AtAmx* amx, int* params);     // 0x0007CC70
+int AtSmallCStrUnpack(void* context, AtAmx* amx, int* params);   // 0x0007CD10
+int AtSmallCToLower(void* context, AtAmx* amx, int* params);     // 0x0007CDB0
+int AtSmallCToUpper(void* context, AtAmx* amx, int* params);     // 0x0007CDD0
+int AtSmallCFloat(void* context, AtAmx* amx, int* params);       // 0x0007C800
+int AtSmallCFloatStr(void* context, AtAmx* amx, int* params);    // 0x0007C810
+int AtSmallCFloatMul(void* context, AtAmx* amx, int* params);    // 0x0007C870
+int AtSmallCFloatDiv(void* context, AtAmx* amx, int* params);    // 0x0007C8A0
+int AtSmallCFloatAdd(void* context, AtAmx* amx, int* params);    // 0x0007C8D0
+int AtSmallCFloatSub(void* context, AtAmx* amx, int* params);    // 0x0007C900
+int AtSmallCFloatFract(void* context, AtAmx* amx, int* params);  // 0x0007C930
+int AtSmallCFloatRound(void* context, AtAmx* amx, int* params);  // 0x0007C960
+int AtSmallCFloatCmp(void* context, AtAmx* amx, int* params);    // 0x0007C9D0
 
 // What the system hands its scripts back to. No fields and no vftable: its constructor (0x00057E20, folded) and its Init and Shutdown (0x001CC9F0,
 // folded) do nothing. Its other members (0x0006F5A0 and on) are not recovered.
@@ -121,7 +124,8 @@ class AtSmallCScriptFactory {
 public:
     void Init() {}                   // 0x001CC9F0 empty (folded)
     void Shutdown() {}               // 0x001CC9F0 empty (folded)
-    void Release(void* script);      // 0x0006F640 not recovered: stops the script, destroys and frees it
+    struct AtSmallCScript* Create();  // 0x0006F5A0 at/smallvm: a new script on s_heap, owned by this
+    void Release(void* script);      // 0x0006F640 at/smallvm: resets the script (even a null one), destroys and frees it
 
     static void SetHeap(void* heap);  // 0x0006F590
     static void* s_heap;             // 0x002CD0E8
@@ -139,20 +143,35 @@ public:
     void Shutdown();                 // 0x000757A0 when running: empties the name map, hands each script back, then as Clear
     int Register(void* context, const char* name, AtSmallCNative function);  // 0x000754D0 0 when the table is full; the name is copied unbounded
 
+    // at/smallvm (src/at/AtSmallCScripts.cpp). The ones taking a name compare at most eight bytes.
+    static AtSmallCSystem* Instance();  // 0x0007AF10 makes one on s_heap when there is none
+    int FindNative(const char* name);   // 0x00075530 the index in m_natives, or -1
+    int Unregister(const char* name);   // 0x00075760 1 if it was there
+    unsigned char* LoadProgram(AtAmx* amx, const char* file, int unused);  // 0x000758B0 "<file>.ASL", at most eight characters of file; null on failure
+    static int Run(AtSmallCSystem* system, struct AtSmallCScript* script, int numparams, const int* params);  // 0x00075860 cdecl; always 1
+    int CallPublic(struct AtSmallCScript* script, int index, int copy);  // 0x00075B20 copy: on a copy of the machine, sharing its memory
+    int StartScript(const struct AtSmallCScriptDesc* desc);  // 0x00075CB0 0 when started
+    int FindScriptIndex(const char* name);   // 0x00075600 by the script's own name; -1
+    struct AtSmallCScript* FindScript(const char* name);  // 0x00075650 through the name map
+    int StopScript(const char* name);        // 0x00075660 1 if it was running
+    int Activate(const char* name);          // 0x00075A90 not while in a call
+    int Cancel(const char* name);            // 0x00075AE0 abandons a suspended call
+
     AtSmallCNativeEntry m_natives[kMaxNatives];  // +0x0000
-    char m_unknown3800[0x3C0];       // +0x3800 not touched here
-    void* m_scripts[kMaxScripts];    // +0x3BC0
+    struct AtSmallCHostVar* HostVars() { return (struct AtSmallCHostVar*)m_hostVars; }
+    unsigned char m_hostVars[0x3C0]; // +0x3800 40 host variables (AtSmallCHostVar); what fills them is not known
+    void* m_scripts[kMaxScripts];    // +0x3BC0 AtSmallCScript
     unsigned int m_nativeCount;      // +0x5B00
     int m_unknown5B04;               // +0x5B04 not touched here
-    int m_unknown5B08;               // +0x5B08
-    int m_unknown5B0C;               // +0x5B0C
+    int m_scriptCount;               // +0x5B08
+    int m_lastStarted;               // +0x5B0C the slot StartScript filled last
     int m_unknown5B10;               // +0x5B10
     AtSmallCScriptFactory* m_factory;  // +0x5B14 set by the host
     int m_unknown5B18;               // +0x5B18
     GmNameMap m_names;               // +0x5B1C
     int m_unknown5B30;               // +0x5B30
-    int m_unknown5B34;               // +0x5B34
-    int m_unknown5B38;               // +0x5B38
+    AtIoFileSystem* m_programFs;     // +0x5B34 where LoadProgram opens; null: every file system
+    int m_stepMode;                  // +0x5B38 while debugging, each LINE suspends
     int m_unknown5B3C;               // +0x5B3C 4 after Clear
     int m_unknown5B40;               // +0x5B40 not touched here
     int m_running;                   // +0x5B44

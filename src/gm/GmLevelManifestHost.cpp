@@ -19,8 +19,6 @@ void GmBehaviorList::Prepare() { StopHere("Behaviour lists (0x00198C90) are not 
 GmBehaviorList* GmBehaviorListOwner::LoadAnimations(const char*) { StopHere("Behaviour lists (0x0019C5E0) are not recovered"); return 0; }
 GmBehaviorList* GmBehaviorListOwner::LoadSounds(const char*) { StopHere("Behaviour lists (0x0019C100) are not recovered"); return 0; }
 void GmBehaviorListOwner::Release(GmBehaviorList*) { StopHere("Behaviour lists (0x00198E70) are not recovered"); }
-GmScript* GmScriptOwner::Load(const char*) { StopHere("Small C scripts (0x00070310) are not recovered"); return 0; }
-void GmScriptOwner::Release(GmScript*) { StopHere("Small C scripts (0x00070150) are not recovered"); }
 
 GmTriggerTable::GmTriggerTable() { StopHere("Trigger tables (0x001963B0) are not recovered"); }
 GmTriggerTable::~GmTriggerTable() { StopHere("Trigger tables (0x00196480) are not recovered"); }

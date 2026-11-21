@@ -18,15 +18,13 @@ void AtScriptSystem::DeletingDestructor(unsigned int) { StopHere("Script layer: 
 void AtKinematicsSystemBase::DeletingDestructor(unsigned int) { StopHere("Kinematics layer: the base's deleting destructor (0x000C87A0) is not recovered"); }
 void AtKinematicsSystem::DeletingDestructor(unsigned int) { StopHere("Kinematics layer: the deleting destructor (0x000B3670) is not recovered"); }
 
-void AtSmallCScriptFactory::Release(void*) { StopHere("Small-C scripts: the factory's Release (0x0006F640) is not recovered"); }
-
 void AtGrD3DAnimationDevice::Slot4() { StopHere("Kinematics factory: slot 4 (0x000C8F50) is not recovered"); }
 void AtGrD3DAnimationDevice::Slot5() { StopHere("Kinematics factory: slot 5 (0x000C91E0) is not recovered"); }
 void AtGrD3DAnimationDevice::Slot6() { StopHere("Kinematics factory: slot 6 (0x000C8FF0) is not recovered"); }
 
 // The built-ins of the Small language's core and float modules, which start-up only registers.
 #define NATIVE(Name, Va) \
-    int Name(void*, int*) { StopHere("Small-C scripts: the built-in " #Name " (" #Va ") is not recovered"); return 0; }
+    int Name(void*, AtAmx*, int*) { StopHere("Small-C scripts: the built-in " #Name " (" #Va ") is not recovered"); return 0; }
 NATIVE(AtSmallCNumArgs, 0x0007CA10)
 NATIVE(AtSmallCGetArg, 0x0007CA30)
 NATIVE(AtSmallCSetArg, 0x0007CA60)

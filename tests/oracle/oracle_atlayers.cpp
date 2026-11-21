@@ -110,7 +110,7 @@ void AtSmallCScriptFactory::Release(void* script) { L('rel', rel(this)); L('rels
 static void __fastcall o_release(void* self, void*, void* script) { L('rel', rel(self)); L('rels', rel(script)); }
 
 #define NATIVE(Name, Va) \
-    int Name(void*, int*) { L('BAD', 9100); return 0; }
+    int Name(void*, AtAmx*, int*) { L('BAD', 9100); return 0; }
 NATIVE(AtSmallCNumArgs, 0x0007CA10)
 NATIVE(AtSmallCGetArg, 0x0007CA30)
 NATIVE(AtSmallCSetArg, 0x0007CA60)
@@ -454,12 +454,12 @@ static void compare_system(const char* what, const AtSmallCSystem& o, const AtSm
         eq(what, native_va(0, o.m_natives[i].m_function), native_va(1, r.m_natives[i].m_function));
         eq(what, rel_on(0, o.m_natives[i].m_context), rel_on(1, r.m_natives[i].m_context));
     }
-    eq(what, std::memcmp(o.m_unknown3800, r.m_unknown3800, sizeof o.m_unknown3800), 0);
+    eq(what, std::memcmp(o.m_hostVars, r.m_hostVars, sizeof o.m_hostVars), 0);
     for (int i = 0; i < AtSmallCSystem::kMaxScripts; i++) eq(what, rel_on(0, o.m_scripts[i]), rel_on(1, r.m_scripts[i]));
     eq(what, o.m_nativeCount, r.m_nativeCount);
     eq(what, o.m_unknown5B04, r.m_unknown5B04);
-    eq(what, o.m_unknown5B08, r.m_unknown5B08);
-    eq(what, o.m_unknown5B0C, r.m_unknown5B0C);
+    eq(what, o.m_scriptCount, r.m_scriptCount);
+    eq(what, o.m_lastStarted, r.m_lastStarted);
     eq(what, o.m_unknown5B10, r.m_unknown5B10);
     eq(what, rel_on(0, o.m_factory), rel_on(1, r.m_factory));
     eq(what, o.m_unknown5B18, r.m_unknown5B18);
@@ -468,8 +468,8 @@ static void compare_system(const char* what, const AtSmallCSystem& o, const AtSm
     eq(what, rel_on(0, o.m_names.m_next), rel_on(1, r.m_names.m_next));
     eq(what, rel_on(0, o.m_names.m_group), rel_on(1, r.m_names.m_group));
     eq(what, o.m_unknown5B30, r.m_unknown5B30);
-    eq(what, o.m_unknown5B34, r.m_unknown5B34);
-    eq(what, o.m_unknown5B38, r.m_unknown5B38);
+    eq(what, rel_on(0, o.m_programFs), rel_on(1, r.m_programFs));
+    eq(what, o.m_stepMode, r.m_stepMode);
     eq(what, o.m_unknown5B3C, r.m_unknown5B3C);
     eq(what, o.m_unknown5B40, r.m_unknown5B40);
     eq(what, o.m_running, r.m_running);
@@ -487,8 +487,8 @@ static void compare_script(const char* what) {
 static void dirty_system(uint32_t seed) {
     for (int side = 0; side < 2; side++) {
         AtSmallCSystem& y = ((AtScriptSystem*)g_obj[side])->m_host.m_system;
-        y.m_unknown5B08 = (int)seed;
-        y.m_unknown5B34 = (int)(seed >> 3);
+        y.m_scriptCount = (int)seed;
+        y.m_programFs = (AtIoFileSystem*)(uintptr_t)(seed >> 3);  // never followed: only Clear writes it here
         y.m_unknown5B3C = 9;
     }
 }
