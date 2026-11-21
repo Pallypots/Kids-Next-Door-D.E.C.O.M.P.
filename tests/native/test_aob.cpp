@@ -45,13 +45,13 @@ class Bank : public AtAudioBank {
 public:
     ~Bank() override { g_deletes++; }
     void OnInit(const AtAudioBankDesc& desc) override { g_inits++; m_flagsSeen = desc.m_flags; }
-    void Unknown3() override {}
-    void Unknown4() override {}
-    void Unknown5() override {}
-    void Unknown6() override {}
-    void Unknown7() override {}
-    void Unknown8() override {}
-    void Unknown9() override {}
+    void Prepare(AtAudioVoice*) override {}
+    void Start(AtAudioVoice*) override {}
+    void Queue(AtAudioVoice*, AtAudioVoice*) override {}
+    void Pause(AtAudioVoice*) override {}
+    void Resume(AtAudioVoice*) override {}
+    void Stop(AtAudioVoice*) override {}
+    void UpdateVoice(AtAudioVoice*, float) override {}
     void Process() override { g_processes++; }
     float SegmentLength(int) override { return g_length; }
     int m_flagsSeen = 0;
@@ -85,8 +85,8 @@ public:
 
 class Loader : public AtAudioBankLoader {
 public:
-    void Unknown0() override {}
-    void Unknown1() override {}
+    void AddEmitter(AtAudioEmitter*) override {}
+    void RemoveEmitter(AtAudioEmitter*) override {}
     void Add(AtAudioBank* bank) override { m_added = bank; }
     void Remove(AtAudioBank* bank) override { m_removed = bank; }
     AtAudioBank* m_added = nullptr;

@@ -65,7 +65,7 @@ MUTANTS = [
      "if (slot->m_state != GmSoundVoiceSlot::kNode && slot->m_emitter != 0 && slot->m_emitter->m_firstVoice == 0) {"),
     ("take: no voice", P, "slot->m_emitter != 0 && slot->m_emitter->m_firstVoice == 0) {", "slot->m_emitter != 0) {"),
     ("take: state", P, "            slot->m_state = GmSoundVoiceSlot::kNode;\n", "            slot->m_state = GmSoundVoiceSlot::kActor;\n"),
-    ("take: update", P, "            slot->m_emitter->Unknown21();\n            m_lastVoiceSlot = i;", "            m_lastVoiceSlot = i;"),
+    ("take: update", P, "            slot->m_emitter->ResumeAll();\n            m_lastVoiceSlot = i;", "            m_lastVoiceSlot = i;"),
     ("take: last", P, "            m_lastVoiceSlot = i;\n", "            m_lastVoiceSlot = i + 1;\n"),
     # ReleaseVoiceSlot.
     ("release: null", P, "if (emitter != 0 && emitter == m_voiceSlots[i].m_emitter) {", "if (emitter == m_voiceSlots[i].m_emitter) {"),
@@ -88,7 +88,7 @@ MUTANTS = [
     ("at actor: actor kept", P, "        slot->m_actor = actor;\n", ""),
     ("at actor: motion", P, "actor->Slot22(&position, 0, 0, 0, 0);", "actor->Slot22(&position, &position, 0, 0, 0);"),
     ("at actor: place", P, "        PlaceEmitter(slot->m_emitter, &position);\n", ""),
-    ("at actor: update", P, "    slot->m_emitter->Unknown21();\n    slot->m_emitter->Play(segment, 0);", "    slot->m_emitter->Play(segment, 0);"),
+    ("at actor: update", P, "    slot->m_emitter->ResumeAll();\n    slot->m_emitter->Play(segment, 0);", "    slot->m_emitter->Play(segment, 0);"),
     ("at actor: actor null", P, "    if (actor != 0) {\n        slot->m_actor", "    if (actor != 0 || i == 0) {\n        slot->m_actor"),
     # PlayNote: Stop.
     ("note: stop test", P, 'if (!AtNamesEqual(note->m_stop, "")) {', 'if (AtNamesEqual(note->m_stop, "")) {'),

@@ -121,7 +121,12 @@ static void install_matrices() {
 
 // ---- voices, emitters, banks, segments ----------------------------------------------------------------------------------
 enum { kStopping = 99 };
-struct TVoice { AtAudioVoice v; int id; };
+// A voice with nothing behind its slots: the manager never calls them. The world is not constructed (calloc), so its table pointer stays null.
+struct TVoiceBody : AtAudioVoice {
+    void SetParameter(int, float, float) override {}
+    float GetParameter(int) override { return 0.0f; }
+};
+struct TVoice { TVoiceBody v; int id; };
 static int vid(const AtAudioVoice* v) { return v ? ((const TVoice*)v)->id : -1; }
 
 class Segment;
@@ -137,7 +142,7 @@ public:
     int m_side = 0;
     void InitPlatform() override {}
     void Play(AtAudioSegment* s, AtAudioVoice** out) override { lg('p', m_id * 100 + sid(s)); if (out) *out = nullptr; take_voice(m_side, this, s); }
-    void Unknown21() override { lg('u', m_id); }
+    void ResumeAll() override { lg('u', m_id); }
     void StopSegment(AtAudioSegment* s) override { lg('s', m_id * 100 + sid(s)); }
     void StopVoice(AtAudioVoice* v) override { lg('v', m_id * 1000 + vid(v)); v->m_state = kStopping; }
     void StopAll() override {
@@ -154,13 +159,13 @@ class TestBank : public AtAudioBank {
 public:
     int m_id = 0;
     void OnInit(const AtAudioBankDesc&) override {}
-    void Unknown3() override {}
-    void Unknown4() override {}
-    void Unknown5() override {}
-    void Unknown6() override {}
-    void Unknown7() override {}
-    void Unknown8() override {}
-    void Unknown9() override {}
+    void Prepare(AtAudioVoice*) override {}
+    void Start(AtAudioVoice*) override {}
+    void Queue(AtAudioVoice*, AtAudioVoice*) override {}
+    void Pause(AtAudioVoice*) override {}
+    void Resume(AtAudioVoice*) override {}
+    void Stop(AtAudioVoice*) override {}
+    void UpdateVoice(AtAudioVoice*, float) override {}
     void Process() override {}
     float SegmentLength(int i) override { lg('L', m_id * 100 + i); return g_lengths[i & 7]; }
     float Unknown12(int i) override { lg('K', m_id * 100 + i); return g_ranges[i & 7]; }
@@ -204,8 +209,8 @@ class TestLoader : public AtAudioBankLoader {
 public:
     int m_side = 0;
     int m_waits = 0;
-    void Unknown0() override {}
-    void Unknown1() override {}
+    void AddEmitter(AtAudioEmitter*) override {}
+    void RemoveEmitter(AtAudioEmitter*) override {}
     void Add(AtAudioBank*) override {}
     void Remove(AtAudioBank*) override {}
     void Wait(float seconds) override;

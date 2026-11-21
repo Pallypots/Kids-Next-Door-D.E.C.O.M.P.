@@ -49,8 +49,8 @@ public:
 
 class System : public AtSoXboxSystem {
 public:
-    void Unknown0() override {}
-    void Unknown1() override {}
+    void AddEmitter(AtAudioEmitter*) override {}
+    void RemoveEmitter(AtAudioEmitter*) override {}
     void Add(AtAudioBank*) override {}
     void Remove(AtAudioBank*) override {}
 };
