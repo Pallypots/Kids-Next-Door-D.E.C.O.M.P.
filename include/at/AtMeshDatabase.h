@@ -66,7 +66,7 @@ class AtGeometryArray {
 public:
     AtGeometryArray();                                         // 0x00044800 the three fields cleared
     virtual void Allocate(unsigned int count, unsigned int flags) {}  // slot 0, 0x000447F0: does nothing
-    virtual void Slot1();
+    virtual void Destroy(unsigned int flags);  // slot 1, 0x00044910 (the deleting destructor; AtIndexArray's slot 1 overrides it)
     virtual void Slot2();
     virtual void Lock(void** out, int mode);
     virtual void Unlock();

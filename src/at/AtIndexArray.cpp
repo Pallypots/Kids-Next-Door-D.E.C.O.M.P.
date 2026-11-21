@@ -17,7 +17,7 @@ void NotRecovered(const char* message) {
 
 }  // namespace
 
-void AtGeometryArray::Slot1() { NotRecovered("AtGeometryArray: slot 1, 0x00044910, is not recovered"); }
+void AtGeometryArray::Destroy(unsigned int) { NotRecovered("AtGeometryArray: slot 1, 0x00044910, is not recovered"); }
 void AtGeometryArray::Slot2() { NotRecovered("AtGeometryArray: slot 2, 0x000448E0, is not recovered"); }
 void AtGeometryArray::Lock(void**, int) { NotRecovered("AtGeometryArray: slot 3 is pure"); }
 void AtGeometryArray::Unlock() { NotRecovered("AtGeometryArray: slot 4 is pure"); }

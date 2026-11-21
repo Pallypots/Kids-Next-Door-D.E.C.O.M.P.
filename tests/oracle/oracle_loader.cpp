@@ -237,6 +237,18 @@ static uint32_t object_index(void* object) {
     return 0xFFFF;
 }
 
+// Index arrays: their constructor (0x000F8010) is recovered since batch 8, so they are not registered as they are made. Each side numbers them
+// by first sight instead, when read or destroyed, in a registry of their own, cleared with the other.
+static std::vector<void*> g_indexArrays[2];
+static uint32_t index_array_index(void* array) {
+    std::vector<void*>& v = g_indexArrays[g_side];
+    for (size_t i = v.size(); i > 0; i--) if (v[i - 1] == array) return (uint32_t)(i - 1);
+    g_recording = false;
+    v.push_back(array);
+    g_recording = true;
+    return (uint32_t)(v.size() - 1);
+}
+
 static bool is_constructor(unsigned int va) {
     for (unsigned int c : {0x00111E50u, 0x001120B0u, 0x000EC890u, 0x000F8010u, 0x000EECA0u, 0x00122460u}) if (c == va) return true;
     return false;
@@ -248,9 +260,12 @@ unsigned int AtGrD3DUnrecovered(unsigned int va, void* object, unsigned int a, u
         g_objects[g_side].push_back(object);
         g_recording = true;
     }
+    const bool recording = g_recording;
+    const uint32_t index = va == 0x000F84B0 ? index_array_index(object) : object_index(object);
+    g_recording = recording;
     slot('u', va);
     slot('a', a);
-    slot('#', object_index(object));
+    slot('#', index);
     // A new item's array begins a new run of its readers.
     if (va == 0x000EC890) std::memset(g_last[g_side][0], 0, sizeof g_last[0][0]);
     if (va == 0x000F8010) std::memset(g_last[g_side][1], 0, sizeof g_last[0][1]);
@@ -280,7 +295,15 @@ void AtGrD3DReadVertexArray(AtGrD3DVertexArray* array, char** records, char** ke
 }
 
 void AtGrD3DReadIndexArray(AtGrD3DIndexArray* array, char** records, char** kept) {
-    slot('2', object_index(array));
+    const bool recording = g_recording;
+    const uint32_t index = index_array_index(array);
+    g_recording = recording;
+    // A new item's array begins a new run of its readers: once at the constructor, when it stopped; now at the first read of an array that
+    // does not follow the last one read (a database's arrays are read in order).
+    static AtGrD3DIndexArray* s_lastRead[2];
+    if (array != s_lastRead[g_side] + 1) std::memset(g_last[g_side][1], 0, sizeof g_last[0][1]);
+    s_lastRead[g_side] = array;
+    slot('2', index);
     log_cursor(1, 0, records);
     log_cursor(1, 1, kept);
     *records += 8;
@@ -562,6 +585,8 @@ static void run_xka(const std::string& path, const std::string& file, Mode mode,
     g_context = "xka " + path;
     g_objects[0].clear();
     g_objects[1].clear();
+    g_indexArrays[0].clear();
+    g_indexArrays[1].clear();
     g_fill = fill;
     g_fill_byte = fill;
     const std::string key = upper(path);
@@ -609,6 +634,8 @@ static void run_xgg(const std::string& path, const std::string& file, Mode mode,
     g_context = "xgg " + path;
     g_objects[0].clear();
     g_objects[1].clear();
+    g_indexArrays[0].clear();
+    g_indexArrays[1].clear();
     g_fill = fill;
     g_fill_byte = fill;
     g_files[upper(path)] = file;
@@ -736,6 +763,8 @@ static void run_agd(const std::string& archive, const std::string& path, const s
     g_context = "agd " + path;
     g_objects[0].clear();
     g_objects[1].clear();
+    g_indexArrays[0].clear();
+    g_indexArrays[1].clear();
     g_archive = archive;
     g_fill = 0xCD;
     g_fill_byte = 0xCD;
