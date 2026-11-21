@@ -294,7 +294,7 @@ public:
     void Slot3() override {}
     void FreeMatrix(AtMatrix*) override {}
     void FreePool(AtMatrixPool*) override {}
-    AtMatrix* NewMatrix8() override { note("matrix"); return &g_matrices[next++]; }
+    AtMatrix* DoNewMatrix() override { note("matrix"); return &g_matrices[next++]; }
 };
 
 class Owner : public AtMaterialOwner {

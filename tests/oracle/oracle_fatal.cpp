@@ -250,7 +250,7 @@ public:
     void Slot3() override {}
     void FreeMatrix(AtMatrix*) override {}
     void FreePool(AtMatrixPool*) override {}
-    AtMatrix* NewMatrix8() override { note(side, 'x', next); return &matrices[next++ & 7]; }
+    AtMatrix* DoNewMatrix() override { note(side, 'x', next); return &matrices[next++ & 7]; }
 };
 
 class Owner : public AtMaterialOwner {

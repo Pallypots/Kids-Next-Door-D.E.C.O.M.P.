@@ -289,10 +289,10 @@ void AtCamera::Attach(AtMaterialOwner* owner) {
     }
     m_owner = owner;
     AtMatrixDevice* device = owner->MatrixDevice();
-    m_matrix2C = device->NewMatrix8();
-    m_matrix30 = device->NewMatrix8();
-    AtMatrix* world = device->NewMatrix8();
-    AtMatrix* local = device->NewMatrix8();
+    m_matrix2C = device->DoNewMatrix();
+    m_matrix30 = device->DoNewMatrix();
+    AtMatrix* world = device->DoNewMatrix();
+    AtMatrix* local = device->DoNewMatrix();
     SetMatrices(local, world);
 }
 

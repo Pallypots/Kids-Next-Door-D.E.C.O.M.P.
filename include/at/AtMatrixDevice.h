@@ -61,10 +61,10 @@ public:
     void Slot3() override;                           // slot 3, 0x000F7D70 NewIndexArray, likewise
     void FreeMatrix(AtMatrix* matrix) override;      // slot 4, 0x000F7D80 operator delete
     void FreePool(AtMatrixPool* pool) override;      // slot 5, 0x000EB9D0 folded: its slot 0 with 1, if not null
-    virtual void FreeVertexArray(AtVertexArray* array);  // slot 6, 0x000EBB30 folded: its slot 2, Destroy, with 1, if not null
-    virtual void FreeIndexArray(AtIndexArray* array);   // slot 7, 0x000F7D20 its slot 1, Destroy, with 1, if not null
+    void FreeVertexArray(AtVertexArray* array) override;  // slot 6, 0x000EBB30 folded: its slot 2, Destroy, with 1, if not null
+    void FreeIndexArray(AtIndexArray* array) override;   // slot 7, 0x000F7D20 its slot 1, Destroy, with 1, if not null
     // Slot 8, 0x000F7BE0. One identity matrix from s_heap. A null heap is reported (AtRaise -2) and pushed all the same; no memory is reported (-4) and null returned.
-    virtual AtMatrix* DoNewMatrix();
+    AtMatrix* DoNewMatrix() override;
     virtual AtMatrixPool* DoNewPool();               // slot 9, 0x000F7C80 an empty pool from s_heap, reported as DoNewMatrix's
     virtual AtVertexArray* NewVertexArray();         // slot 10, 0x000F7D90 not recovered: stops with a diagnostic. The original gives the array m_unknown04 at +0x44
     virtual AtIndexArray* NewIndexArray();           // slot 11, 0x000F7E30 not recovered: stops with a diagnostic. The original gives the array m_unknown04 at +0x18

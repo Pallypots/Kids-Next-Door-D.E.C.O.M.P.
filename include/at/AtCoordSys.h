@@ -90,10 +90,11 @@ public:
     virtual void Slot3() = 0;
     virtual void FreeMatrix(AtMatrix* matrix) = 0;  // slot 4
     virtual void FreePool(AtMatrixPool* pool) = 0;  // slot 5
-    // Known only from 0x00037EB0, which takes four matrices from slot 8. Not pure, so that the doubles of other work need not fill them; each stops with a diagnostic.
-    virtual void Slot6() { AtFatal("AtMatrixDevice: slot 6 is not recovered", 0, 0, 0); }
-    virtual void Slot7() { AtFatal("AtMatrixDevice: slot 7 is not recovered", 0, 0, 0); }
-    virtual AtMatrix* NewMatrix8() { AtFatal("AtMatrixDevice: slot 8, a matrix, is not recovered", 0, 0, 0); return 0; }  // slot 8
+    // Slots 6 to 8, the concrete device's FreeVertexArray, FreeIndexArray and DoNewMatrix (at/matdev, include/at/AtMatrixDevice.h); 0x00037EB0 takes four matrices from
+    // slot 8 (at/fatal called it NewMatrix8). Not pure, so that the doubles of other work need not fill them; each stops with a diagnostic here.
+    virtual void FreeVertexArray(class AtVertexArray* array) { (void)array; AtFatal("AtMatrixDevice: slot 6 is not recovered", 0, 0, 0); }
+    virtual void FreeIndexArray(class AtIndexArray* array) { (void)array; AtFatal("AtMatrixDevice: slot 7 is not recovered", 0, 0, 0); }
+    virtual AtMatrix* DoNewMatrix() { AtFatal("AtMatrixDevice: slot 8, a matrix, is not recovered", 0, 0, 0); return 0; }  // slot 8
 
     int m_unknown04;                                // +0x04 0 from the constructor; handed to what slots 2 and 3 make. Who sets it is not known
 };

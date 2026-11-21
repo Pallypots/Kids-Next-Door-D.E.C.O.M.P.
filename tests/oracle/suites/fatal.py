@@ -201,7 +201,7 @@ CAMERA = [
     ("camera: reset test", G, "if (m_matrix30 != 0) {", "if (m_matrix2C != 0) {"),
     ("camera: no reset", G, "        Reset();\n    }\n    m_owner = owner;", "    }\n    m_owner = owner;"),
     ("camera: owner", G, "    m_owner = owner;\n", ""),
-    ("camera: matrix 2C", G, "    m_matrix2C = device->NewMatrix8();\n    m_matrix30 = device->NewMatrix8();", "    m_matrix30 = device->NewMatrix8();\n    m_matrix2C = device->NewMatrix8();"),
+    ("camera: matrix 2C", G, "    m_matrix2C = device->DoNewMatrix();\n    m_matrix30 = device->DoNewMatrix();", "    m_matrix30 = device->DoNewMatrix();\n    m_matrix2C = device->DoNewMatrix();"),
     ("camera: world and local", G, "SetMatrices(local, world);", "SetMatrices(world, local);"),
 ]
 
