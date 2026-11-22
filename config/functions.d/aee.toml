@@ -4,7 +4,7 @@
 [[function]]
 va = 0x000C9A00
 size = 154
-symbol = "?Load@AtEventDatabase@@QAEXPAUAtDataRegistryOwner@@PBDH@Z"
+symbol = "?Load@AtEventDatabase@@QAEXPAVAtDataRegistryOwner@@PBDH@Z"
 source = "src/at/AtEventLoad.cpp"
 subsystem = "at/aee"
 evidence = "from 0x001B4870 (GmEventDatabaseItem::Run); \"AEE\" at 0x00286690; tests/oracle/oracle_aee.cpp"
@@ -12,7 +12,7 @@ evidence = "from 0x001B4870 (GmEventDatabaseItem::Run); \"AEE\" at 0x00286690; t
 [[function]]
 va = 0x000C9750
 size = 525
-symbol = "?Read@AtEventDatabase@@QAEXPAUAtDataRegistryOwner@@PAVAtIoTokenizer@@@Z"
+symbol = "?Read@AtEventDatabase@@QAEXPAVAtDataRegistryOwner@@PAVAtIoTokenizer@@@Z"
 source = "src/at/AtEvent.cpp"
 subsystem = "at/aee"
 evidence = "from 0x000C9A68; keyword table 0x002B6848; tests/oracle/oracle_aee.cpp"

@@ -261,7 +261,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x00071D70
 size = 29
-symbol = "?NextUnit@GmRandom@@QAEMXZ"
+symbol = "?NextUnit@GmRandom@@QAENXZ"
 source = "src/gm/GmRandom.cpp"
 subsystem = "gm/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/gm/GmRandom.h"
@@ -285,7 +285,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x0011F160
 size = 33
-symbol = "?IsPlaying@AtAudioEmitter@@QAEPAUAtAudioVoice@@PBVAtAudioSegment@@@Z"
+symbol = "?IsPlaying@AtAudioEmitter@@QAEPAVAtAudioVoice@@PBVAtAudioSegment@@@Z"
 source = "src/at/AtAudioVoices.cpp"
 subsystem = "at/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
@@ -293,7 +293,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x0011EBA0
 size = 4
-symbol = "?FirstVoice@AtAudioEmitter@@QAEPAUAtAudioVoice@@XZ"
+symbol = "?FirstVoice@AtAudioEmitter@@QAEPAVAtAudioVoice@@XZ"
 source = "src/at/AtAudioVoices.cpp"
 subsystem = "at/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"
@@ -301,7 +301,7 @@ evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaratio
 [[function]]
 va = 0x0011EBB0
 size = 10
-symbol = "?NextVoice@AtAudioEmitter@@QAEPAUAtAudioVoice@@PAU2@@Z"
+symbol = "?NextVoice@AtAudioEmitter@@QAEPAVAtAudioVoice@@PAV2@@Z"
 source = "src/at/AtAudioVoices.cpp"
 subsystem = "at/gmsound"
 evidence = "tests/oracle/oracle_gmsound.cpp; address noted beside the declaration in include/at/AtAudioDatabase.h"

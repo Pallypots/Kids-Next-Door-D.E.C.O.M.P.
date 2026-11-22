@@ -196,7 +196,7 @@ evidence = "0x002CF174 = this; 0x000754D0 for each entry of the tables at 0x002B
 [[function]]
 va = 0x000754D0
 size = 94
-symbol = "?Register@AtSmallCSystem@@QAEHPAXPBDP6AH0PAH@Z@Z"
+symbol = "?Register@AtSmallCSystem@@QAEHPAXPBDP6AH0PAUAtAmx@@PAH@Z@Z"
 source = "src/at/AtApMidLayers.cpp"
 subsystem = "at/atlayers"
 evidence = "entry +0x5B00 of 0x1C bytes: context, function, name copied; 0 past 0x200; tests/oracle/oracle_atlayers.cpp"

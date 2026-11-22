@@ -164,7 +164,7 @@ evidence = "tests/oracle/oracle_gfxdev.cpp; slot 17, what 0x0001A68C hands to At
 [[function]]
 va = 0x000EF2F0
 size = 7
-symbol = "?Creator@AtGraphicsDeviceXbox@@UAEPAXXZ"
+symbol = "?GraphicsFactory@AtGraphicsDeviceXbox@@UAEPAVAtFlashGraphicsFactory@@XZ"
 source = "src/at/AtGraphicsDevice.cpp"
 subsystem = "at/gfxdev"
 evidence = "tests/oracle/oracle_gfxdev.cpp; slot 18"
@@ -180,7 +180,7 @@ evidence = "tests/oracle/oracle_gfxdev.cpp; slot 21"
 [[function]]
 va = 0x000F02F0
 size = 20
-symbol = "?Scale@AtGraphicsDeviceXbox@@UAEXPAM@Z"
+symbol = "?DrawScale@AtGraphicsDeviceXbox@@UAEXPAM@Z"
 source = "src/at/AtGraphicsDevice.cpp"
 subsystem = "at/gfxdev"
 evidence = "tests/oracle/oracle_gfxdev.cpp; slot 25"
@@ -463,7 +463,7 @@ source = "src/at/AtGraphicsDevice.cpp"
 "?Slot6@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F2270  # NOT recovered
 "?Slot7@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000EFEC0  # NOT recovered
 "?Slot8@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F0010  # NOT recovered
-"?Slot9@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F0310  # NOT recovered
+"?Present@AtGraphicsDeviceXbox@@UAEXH@Z" = 0x000F0310  # NOT recovered
 "?Slot10@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F0350  # NOT recovered
 "?Slot11@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F14C0  # NOT recovered
 "?Slot12@AtGraphicsDeviceXbox@@UAEXXZ" = 0x000F1560  # NOT recovered
