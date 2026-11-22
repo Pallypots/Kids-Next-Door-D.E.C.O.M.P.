@@ -1,6 +1,6 @@
 # STATE — read this first (with CLAUDE.md), then `git status`, build/verify-report.json, build/oracle-report.json
 
-Last updated: 2026-11-20, dev cycle 27 (seventh batch: registry lookups, Xbox textures and materials, sound playback, the level manifest base, start-up layers through graphics, the ActionScript interpreter, NPCs and players).
+Last updated: 2026-11-22, dev cycle 28 (eighth batch: the graphics factory and device, texture loading and shaders, registry names, events, combat and player set-up, enemy AI, fatal-error display, scene nodes, emitters, the small script VM, Flash display lists).
 
 ## Milestones
 
@@ -14,7 +14,7 @@ Last updated: 2026-11-20, dev cycle 27 (seventh batch: registry lookups, Xbox te
 
 ## What is recovered
 
-All source is in `src/`, types in `include/`. 2637 functions and 215 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
+All source is in `src/`, types in `include/`. 3145 functions and 239 vftables are recorded in `config/functions.toml` and `config/functions.d/`.
 
 * `gm/containers` (47 functions): socket/plug connection model, connection base, pooled linked-list node, linked list,
   iterators, one template instantiation. Complete for these classes apart from the freeing path noted below.
@@ -66,6 +66,7 @@ All source is in `src/`, types in `include/`. 2637 functions and 215 vftables ar
 * `at/matdev` (29 functions): the matrix device and pool. All 544 real `.AKC` files load completely through recovered code on x64; on x86 every matrix matches the original bit for bit. Its two item classes are the loader's vertex and index arrays, folded.
 * `gm/gmchar` (36 functions): the record reader, GmAcObject and GmAcCharacter. A real record read now reaches the recovered registry search.
 * Seventh batch (see `docs/worklog/2026-11-19-batch7-fold.md` and each branch worklog): `at/datalookup` (registry lookups and value reads; start-up's registry calls), `at/xdb` (Xbox texture and material databases: every real `.AGT` and `.AGM` loads through them), `gm/gmsound` and `at/gmsound` (sound note playback, the sound manager, `.GOO`), `gm/dbmanifest` (the level manifest base: all 51 real `.MNG` files parse to the end and queue their items), `at/atlayers` and `at/grlayer` (start-up's math, data, script, kinematics and graphics layers; a real x64 start-up now stops at the graphics factory), `at/asvm` (the Flash ActionScript interpreter: all 1062 real UI script blocks run identically), `gm/gmnpc` and `gm/gmplayer` (enemies and playable characters). The random generator, recovered twice, is one class.
+* Eighth batch (see `docs/worklog/2026-11-20-batch8-fold.md` and each branch worklog): the graphics factory and the Xbox graphics device (`grfactory`, `gfxdev`), texture loading and pixel shaders (`texload`, `xshade`), registry names and events (`regnames`, `aee`), combat and player set-up (`combat`, `plsetup`), enemy AI (`gmai`), the fatal-error display (`fatal`), scene nodes (`scenenodes`), emitters and their playback (`emitplay`), the small script VM (`smallvm`) and Flash display lists (`fpdisplay`). **A real x64 start-up now gets through the graphics device's constructor and stops at the controller layer's Init (0x000B2E00).**
 * `at/pixelformat` (27 functions): the texture format descriptor, whose flag names are in the binary: `RGBA`, `LUM`, `INDEX`, `BUMP`, `DEPTH`, `FLOAT`, `DXT1` to `DXT5`, `SWIZZ`, `TILED`, `LUMD`. x64 gives the original's results.
 * `at/quaternion` (11 functions, 2 of them on `AtVector3`): product, lerp, slerp, from rows of a matrix, axis and angle, rotating a vector. The enclosing kinematics class from 0x00033030 is not recovered.
 * `at/vector` (14 functions): the 3D vector, called from all over the engine. Gives the original's bits on x86 and, for the functions without a sine or cosine, on x64 too. **The game's main thread runs at x87 precision 53**, read from the binary: docs/portability.md.
@@ -140,7 +141,7 @@ The JAM directory layout is also recovered as a format (docs/formats.md, tools/j
 
 ## Next concrete task
 
-1. Integrate branches waiting: graphics device, registry lookups, middle and graphics start-up layers, NPCs, players, Xbox textures and materials, sound playback, the manifest base, the ActionScript interpreter; then the work still running.
+1. Integrate branches waiting (batch 9): the merged chart commands with behaviours, game audio, the controller manager, paths, path search, pathfinding and scene paths, node slots, the game camera, motion and the follow camera, sight, Flash levels, image readers and pixel conversion, material slots, the late start-up layers and the user interface layer; then the work still running.
 2. Everything a loader reaches through a failed open goes to `AtFatal` 0x00011070, which stops rumble, draws an error screen and launches out. Plan closures with that cut.
 3. Whether `AtSceneDevice`, `AtMaterialOwner` and the class in 0x00027B70-0x0002AC10 are one class, and whether `AtNameTableOwner` is really the class of vftable 0x00274A78. The pool vftables 0x002770D8 and 0x002764D4 have 7 slots, not the 5 recorded.
 
